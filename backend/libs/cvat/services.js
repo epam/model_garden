@@ -5,7 +5,7 @@ const { ROUTES, DUMP_DOWNLOAD_NAME } = require("./constants");
 
 const baseUrl = config.get("cvatBaseUrl");
 
-// Set up default request parameters to using with CVAT API
+// Set up default request parameters to using with CVAT API.
 axios.defaults.baseURL = baseUrl;
 axios.defaults.headers = {
   "Content-Type": "application/json",
@@ -121,3 +121,4 @@ module.exports = {
   setImagesToTask,
   getDumpAnnotations,
 };
+
