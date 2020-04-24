@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const TaskSchema = new Schema({
+const LabelingTaskSchema = new Schema({
   imagesPaths: {
     type: Array,
     required: true
@@ -12,4 +12,4 @@ const TaskSchema = new Schema({
   }
 });
 
-module.exports = Task = mongoose.model('task', TaskSchema);
+module.exports = LabelingTask = mongoose.model('labeling_task', LabelingTaskSchema);
