@@ -3,11 +3,13 @@ import thunk, { ThunkAction } from 'redux-thunk';
 import { authReducer, AuthState } from './auth';
 import { mainReducer, MainState } from './main';
 import { mediaReducer, MediaState } from './media';
+import { labelingTaskReducer, LabelingTasksState } from './labelingTask';
 
 export interface AppState {
   auth: AuthState;
   main: MainState;
   media: MediaState;
+  labelingTask: LabelingTasksState;
 }
 
 // property should be declared to soothe typescript struggles
@@ -24,6 +26,7 @@ const reducers = combineReducers<AppState>({
   auth: authReducer,
   main: mainReducer,
   media: mediaReducer,
+  labelingTask: labelingTaskReducer,
 });
 
 const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));

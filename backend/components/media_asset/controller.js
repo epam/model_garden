@@ -9,6 +9,7 @@ const uploadImages = async (request, response) => {
   const files = prepareFilesToUpload(request.files);
 
   const bucketDatasetDBResponse = await bucketDatasetServices.saveBucketDataset(
+    bucketName,
     pathToUpload
   );
 

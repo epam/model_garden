@@ -1,4 +1,5 @@
 const MediaAsset = require('./MediaAsset');
+const bucketDatasetServices = require('../bucket_dataset/services');
 
 const saveMediaAsset = async (bucketDatasetId, fileNames) => {
   try {
@@ -18,6 +19,13 @@ const saveMediaAsset = async (bucketDatasetId, fileNames) => {
   }
 };
 
+const getMediaAssets = async (bucketName, bucketPath) => {
+  const dbResult = await bucketDatasetServices.getPath(bucketName, bucketPath);
+  const mediaAssets = await MediaAsset.find({ bucketDatasetId: dbResult._id });
+  return mediaAssets;
+};
+
 module.exports = {
   saveMediaAsset,
+  getMediaAssets
 };

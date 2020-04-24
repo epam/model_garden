@@ -1,32 +1,65 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import {
   Button,
   TextField,
+  InputLabel,
   Select,
   MenuItem,
   Typography,
 } from "@material-ui/core";
 import "./ImagesLocation.css";
+import { useDispatch } from "react-redux";
+import { setCurrentBucketName, setCurrentPath } from '../../../store/labelingTask';
 
-interface ImagesReceiverProps {
+interface ImagesLocationProps {
   bucketNames: string[];
   paths: string[];
+  currentPath: string;
+  handleFormSubmit: () => void;
 }
 
 type FormData = {
   bucketName: string;
+  bucketPaths: string;
   path: string;
 };
 
-export const ImagesReceiver: React.FC<ImagesReceiverProps> = ({
+export const ImagesLocation: React.FC<ImagesLocationProps> = ({
   bucketNames,
   paths,
-}: ImagesReceiverProps) => {
-  const { handleSubmit, control, register } = useForm<FormData>();
+  currentPath,
+  handleFormSubmit,
+}: ImagesLocationProps) => {
+  const dispatch = useDispatch();
+  const { handleSubmit, control, watch, getValues, setValue } = useForm<FormData>({
+    defaultValues: {
+      bucketName: '',
+      bucketPaths: '',
+      path: ''
+    }
+  });
 
-  const onSubmit = handleSubmit(({ bucketName, path }) => {
-    console.log(bucketName, path);
+  useEffect(() => {
+    watch();
+  }, [])
+
+  useEffect(() => {
+    const values = getValues();
+    dispatch(setCurrentBucketName(values.bucketName));
+    if (!paths.length) {
+      dispatch(setCurrentPath(''));
+    } else {
+      dispatch(setCurrentPath(values.bucketPaths));
+    }
+  });
+
+  useEffect(() => {
+    setValue('path', currentPath);
+  }, [currentPath]);
+
+  const onSubmit = handleSubmit(({ bucketName, bucketPaths, path }) => {
+    handleFormSubmit();
   });
 
   const bucketNamesSelectOptions = bucketNames.map((bucketName) => (
@@ -51,34 +84,33 @@ export const ImagesReceiver: React.FC<ImagesReceiverProps> = ({
         Select images location
       </Typography>
       <form onSubmit={onSubmit} className="images-receiver__form">
+        <InputLabel id="images-receiver-bucket-name">Bucket Name</InputLabel>
         <Controller
           className="images-receiver__form-item"
+          labelId="images-receiver-bucket-name"
           name="bucketName"
-          inputRef={register}
+          control={control}
           variant="outlined"
           label="Bucket Name"
-          defaultValue=""
-          control={control}
           as={<Select>{bucketNamesSelectOptions}</Select>}
         />
+        <InputLabel id="images-receiver-paths">Paths</InputLabel>
         <Controller
           className="images-receiver__form-item"
-          name="paths"
+          labelId="images-receiver-paths"
+          name="bucketPaths"
           control={control}
           variant="outlined"
           label="Path"
-          defaultValue=""
           as={<Select>{pathsSelectOptions}</Select>}
         />
         <Controller
           className="images-receiver__form-item"
           name="path"
-          inputRef={register}
+          control={control}
           variant="outlined"
           label="Selected Path"
-          defaultValue=""
-          control={control}
-          as={<TextField />}
+          as={<TextField InputLabelProps={{ shrink: !!currentPath }} />}
         />
         <Button
           className="images-receiver__form-item"

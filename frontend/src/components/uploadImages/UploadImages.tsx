@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import {
-  Paper,
   Typography,
+  InputLabel,
   Select,
   TextField,
   Button,
@@ -61,22 +61,22 @@ export const UploadImages: React.FC<UploadImagesProps> = ({
           />
         </div>
         <div className="upload-images__settings">
+          <InputLabel id="upload-images-bucket-name">Bucket Name</InputLabel>
           <Controller
-            control={control}
-            name="bucketName"
-            label="S3 Bucket name"
+            labelId="upload-images-bucket-name"
             className="upload-images__settings-item"
+            name="bucketName"
+            control={control}
+            label="S3 Bucket name"
             variant="outlined"
             as={<Select>{selectOptions}</Select>}
           />
           <Controller
             className="upload-images__settings-item"
             name="path"
-            inputRef={register}
-            variant="outlined"
-            label="Path"
-            defaultValue=""
             control={control}
+            label="Path"
+            variant="outlined"
             as={<TextField />}
           />
           <Button
