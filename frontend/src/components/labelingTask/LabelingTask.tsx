@@ -1,64 +1,62 @@
-import React from "react";
-import { useForm, Controller } from "react-hook-form";
-import { Typography } from "@material-ui/core";
+import React, { useEffect } from "react";
 import "./LabelingTask.css";
-import { ImagesReceiver } from "./imgaseLocation";
+import { ImagesLocation } from "./imgaseLocation";
 import { Task } from "./task";
+import { useSelector, useDispatch } from "react-redux";
+import { AppState } from "../../store";
+import {
+  getBucketPaths,
+  getLabelingToolUsers,
+  getUnsignedImagesCount,
+} from "../../store/labelingTask";
 
 interface LabelingTaskProps {}
 
 export const LabelingTask: React.FC = ({}: LabelingTaskProps) => {
-  const { handleSubmit, register } = useForm();
+  const dispatch = useDispatch();
+  const bucketNames = useSelector((state: AppState) => state.main.bucketNames);
+  const currentBucketName = useSelector(
+    (state: AppState) => state.labelingTask.currentBucketName
+  );
+  const paths = useSelector((state: AppState) => state.labelingTask.paths);
+  const currentPath = useSelector(
+    (state: AppState) => state.labelingTask.currentPath
+  );
+  const users = useSelector(
+    (state: AppState) => state.labelingTask.labelingToolUsers
+  );
+  const unsignedImagesCount = useSelector(
+    (state: AppState) => state.labelingTask.unsignedImagesCount
+  );
+
+  useEffect(() => {
+    dispatch(getLabelingToolUsers());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (currentBucketName) {
+      dispatch(getBucketPaths(currentBucketName));
+    }
+  }, [dispatch, currentBucketName]);
+
+  const handleGetUnsignedImagesCount = () => {
+    dispatch(getUnsignedImagesCount(currentBucketName, currentPath));
+  };
+
   return (
     <>
-      <ImagesReceiver bucketNames={[]} paths={[]} />
-      <Task users={[]} />
-      {/* <div className="labeling-task">
-        <Typography
-          variant="h5"
-          component="h1"
-          className="labeling-task__title"
-        >
-          UPLOAD IMAGES
-        </Typography>
-        <form onSubmit={onSubmit} className="upload-images__form">
-        <div className="upload-images__dropzone">
-          <DropZone isUploading={isFilesUploading} handleDrop={handleDropFiles} />
-        </div>
-        <div className="upload-images__settings">
-          <Controller
-            control={control}
-            name="bucketName"
-            label="S3 Bucket name"
-            className="upload-images__settings-item"
-            variant="outlined"
-            as={
-              <Select>
-                {selectOptions}
-              </Select>
-            }
-          />
-          <Controller
-            className="upload-images__settings-item"
-            name="path"
-            inputRef={register}
-            variant="outlined"
-            label="Path"
-            defaultValue=""
-            control={control}
-            as={<TextField />}
-          />
-          <Button
-            className="upload-images__settings-item"
-            color="primary"
-            variant="contained"
-            type="submit"
-          >
-            Upload
-          </Button>
-        </div>
-      </form>
-      </div> */}
+      <ImagesLocation
+        bucketNames={bucketNames}
+        paths={paths}
+        // currentBucketName={currentBucketName}
+        currentPath={currentPath}
+        handleFormSubmit={handleGetUnsignedImagesCount}
+      />
+      <Task
+        users={users}
+        taskName={currentPath}
+        filesCount={unsignedImagesCount}
+      />
     </>
   );
 };

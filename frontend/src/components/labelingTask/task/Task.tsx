@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import {
   Typography,
@@ -9,21 +9,40 @@ import {
 } from "@material-ui/core";
 import "./Task.css";
 import { FilesCounter } from "../filesCounter";
+import { LabelingToolUser } from "../../../models/labelingToolUser";
 
 interface TaskProps {
-  users: [];
+  users: LabelingToolUser[];
+  taskName: string;
+  filesCount: number;
 }
 
-type FormData = {};
+type FormData = {
+  taskName: string;
+  user: string;
+};
 
-export const Task: React.FC<TaskProps> = ({ users }: TaskProps) => {
-  const { handleSubmit, register, control } = useForm<FormData>();
+export const Task: React.FC<TaskProps> = ({
+  users,
+  taskName,
+  filesCount,
+}: TaskProps) => {
+  const { handleSubmit, register, setValue, control } = useForm<FormData>({
+    defaultValues: {
+      taskName: "",
+      user: "",
+    },
+  });
+
+  useEffect(() => {
+    setValue("taskName", taskName);
+  }, [taskName]);
 
   const onSubmit = handleSubmit(() => {});
 
   const usersSelectOptions = users.map((user) => (
-    <MenuItem key={user} value={user}>
-      {user}
+    <MenuItem key={user.name} value={user.name}>
+      {user.name}
     </MenuItem>
   ));
 
@@ -36,7 +55,6 @@ export const Task: React.FC<TaskProps> = ({ users }: TaskProps) => {
         <Controller
           className="task__form-item"
           name="taskName"
-          inputRef={register}
           variant="outlined"
           label="Task Name"
           defaultValue=""
@@ -44,11 +62,10 @@ export const Task: React.FC<TaskProps> = ({ users }: TaskProps) => {
           as={<TextField />}
         />
         <div className="task__form-group">
-          <FilesCounter filesCount={1000} className="task__form-item" />
+          <FilesCounter filesCount={filesCount} className="task__form-item" />
           <Controller
             className="task__form-item"
             name="user"
-            inputRef={register}
             variant="outlined"
             label="User"
             defaultValue=""
@@ -60,22 +77,30 @@ export const Task: React.FC<TaskProps> = ({ users }: TaskProps) => {
           <Controller
             className="task__form-item"
             name="filesInTask"
-            inputRef={register}
             variant="outlined"
             label="Files in task"
-            defaultValue="10"
+            defaultValue={filesCount || 0}
             control={control}
-            as={<TextField type="number" inputProps={{ min: 0, max: 40 }} />}
+            as={
+              <TextField
+                type="number"
+                inputProps={{ min: 0, max: filesCount || 0 }}
+              />
+            }
           />
           <Controller
             className="task__form-item"
             name="countOfTasks"
-            inputRef={register}
             variant="outlined"
             label="Count of tasks"
-            defaultValue="1"
+            defaultValue="0"
             control={control}
-            as={<TextField type="number" inputProps={{ min: 0, max: 10 }} />}
+            as={
+              <TextField
+                type="number"
+                inputProps={{ min: 0, max: filesCount || 10 }}
+              />
+            }
           />
         </div>
         <Button

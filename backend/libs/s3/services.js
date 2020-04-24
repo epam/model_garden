@@ -35,7 +35,20 @@ const getBucketNames = async () => {
   }
 };
 
+const getPaths = async (bucketName) => {
+  try {
+    const params = {
+      Bucket: bucketName,
+      Delimiter: '/'
+    };
+    return await s3.listObjectsV2(params).promise();
+  } catch (error) {
+    return error;
+  }
+};
+
 module.exports = {
   uploadFile,
-  getBucketNames
+  getBucketNames,
+  getPaths
 };

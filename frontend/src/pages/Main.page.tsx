@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppBar, Tabs, Tab, Button } from "@material-ui/core";
 // import axios from "axios";
-import { createLabelingTask } from "../store/labelingTasks";
+import { createLabelingTask } from "../store/labelingTask";
 import { Task } from "../models";
 import { login } from "../store/auth";
 import { UploadImages, LabelingTask } from "../components";
