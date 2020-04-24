@@ -1,9 +1,13 @@
 import { createStore, compose, applyMiddleware, Action, combineReducers } from 'redux';
 import thunk, { ThunkAction } from 'redux-thunk';
 import { authReducer, AuthState } from './auth';
+import { mainReducer, MainState } from './main';
+import { mediaReducer, MediaState } from './media';
 
 export interface AppState {
   auth: AuthState;
+  main: MainState;
+  media: MediaState;
 }
 
 // property should be declared to soothe typescript struggles
@@ -17,7 +21,9 @@ declare global {
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const reducers = combineReducers<AppState>({
-  auth: authReducer
+  auth: authReducer,
+  main: mainReducer,
+  media: mediaReducer,
 });
 
 const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
