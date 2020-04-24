@@ -1,8 +1,9 @@
-const BucketDataset = require('./BucketDataset');
+const BucketDataset = require("./BucketDataset");
 
-const saveBucketDataset = async (folderName) => {
+const saveBucketDataset = async (bucketName, folderName) => {
   try {
     const dbResponse = await new BucketDataset({
+      bucketName: bucketName,
       directoryPath: folderName,
     }).save();
     return dbResponse;
@@ -11,6 +12,25 @@ const saveBucketDataset = async (folderName) => {
   }
 };
 
+const getPathsByBucketName = async (bucketName) => {
+  try {
+    return await BucketDataset.find({ bucketName });
+  } catch (error) {
+    return error;
+  }
+};
+
+const getPath = async (bucketName, bucketPath) => {
+  try {
+    const dbResponse = await BucketDataset.findOne({ bucketName, directoryPath: bucketPath });
+    return dbResponse;
+  } catch (error) {
+    return error;
+  }
+};
+
 module.exports = {
-  saveBucketDataset
+  saveBucketDataset,
+  getPathsByBucketName,
+  getPath
 };

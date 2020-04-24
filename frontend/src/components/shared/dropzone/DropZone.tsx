@@ -21,7 +21,6 @@ export const DropZone: React.FC<DropZoneProps> = ({
   const [files, setFiles] = useState<ExtendedFile[]>([]);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    console.log(acceptedFiles);
     const formattedFiles = acceptedFiles.map((file: File) => {
       let preview = "";
       let isCorrect = true;
