@@ -18,7 +18,7 @@ export const FilesCounter: React.FC<FilesCounterProps> = ({
         variant="body1"
         component="div"
       >
-        Files in Task:
+        Files in Queue:
       </Typography>
       <Typography className="files-counter__count">&nbsp;{filesCount}</Typography>
     </div>
