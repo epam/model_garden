@@ -1,0 +1,40 @@
+.task {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 600px;
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #3F51B5;
+  border-radius: 2px;
+}
+
+.task__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.task__form-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.task__form-group .task__form-item {
+  width: 100%;
+  margin: 20px;
+}
+
+.task__form-item.MuiInputBase-root,
+.task__form-item.MuiTextField-root,
+.task__form-item.MuiButton-root {
+  margin-top: 20px;
+  width: 100%;
+}

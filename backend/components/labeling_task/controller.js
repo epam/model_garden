@@ -16,6 +16,7 @@ const createTask = async (request, response) => {
   response.send({ taskId: imagesDataResponse.id });
 };
 
+// TODO: uploadFile, add bucketDataset path. Replace for loop to Promise.all
 const completeTask = async (request, response) => {
   const taskId = request.body.taskId;
   const dumpFormat = DUMP_FORMAT_PASCAL;
@@ -31,7 +32,7 @@ const completeTask = async (request, response) => {
     if (entry.entryName.startsWith(zipXmlFolderName)) {
       const fileName = entry.entryName.replace(zipXmlFolderName, '');
       const fileData = entry.getData().toString('utf-8');
-      await s3Services.uploadXml(fileName, fileData);
+      await s3Services.uploadFile(fileName, fileData);
     }
   };
   response.send('success');

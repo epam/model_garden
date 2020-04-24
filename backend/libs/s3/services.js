@@ -10,43 +10,32 @@ const s3 = new AWS.S3({
   secretAccessKey
 });
 
-/**
- * Upload file to the S3
- * @param {string} key - filename including folder path
- * @param {string} body - file content
- */
-const uploadXml = async (key, body) => {
-  const params = {
-    Bucket: bucketName,
-    Key: key,
-    Body: body
-  };
+const uploadFile = async (bucketName, fileKey, fileBody) => {
+  return new Promise(async (resolve, reject) => {
+    const params = {
+      Bucket: bucketName,
+      Key: fileKey,
+      Body: fileBody
+    };
+    await s3.upload(params, (error, data) => {
+      if (error) reject(error);
+      console.log(`${fileKey} is uploaded`);
+      resolve(data);
+    });
+  });
+};
+
+// TODO: Access denied;
+const getBucketNames = async () => {
   try {
-    const response = await s3.upload(params).promise();
-    console.log(key, ' file has uploaded to S3');
-    return response;
+    // return await s3.listBuckets().promise();
+    return ['epam-mlvc-modeldata', 'epam-mlcv'];
   } catch (error) {
-    console.error(error);
     return error;
   }
 };
 
-// TODO
-const getImagesNames = async (imagesCount) => {
-  const params = {
-    Bucket: bucketName,
-    Key: '.'
-  };
-  const objects = await s3.listObjectsV2({
-    Bucket: bucketName,
-    MaxKeys: 20,
-    Delimiter: '/',
-    StartAfter: 'metal_roll_store.right_side.03.jpg'
-  }).promise();
-  console.log(objects);
-};
-
 module.exports = {
-  uploadXml,
-  getImagesNames
+  uploadFile,
+  getBucketNames
 };
