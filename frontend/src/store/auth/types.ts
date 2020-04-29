@@ -12,6 +12,7 @@ export interface LoginSuccess {
 
 export interface LoginError {
   type: typeof LOGIN_ERROR;
+  error: string;
 }
 
 export type AuthActionTypes =
