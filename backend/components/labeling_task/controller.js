@@ -1,4 +1,5 @@
 const AdmZip = require("adm-zip");
+const { ErrorHandler } = require('../../utils/errorHandler');
 const cvatServices = require("../../libs/cvat/services");
 const s3Services = require("../../libs/s3/services");
 const {
@@ -7,54 +8,102 @@ const {
 } = require("./constants");
 const mediaAssetsServices = require("../media_asset/services");
 
-const getTask = async (request, response) => {
-  const data = await cvatServices.getTask(request.params["taskId"]);
-  response.send(data);
-  response.send("");
+const getTask = async (request, response, next) => {
+  if (!request.params.taskId) {
+    return next(new ErrorHandler(404, 'Missing required url parameter "taskId"'));
+  }
+
+  const taskId = request.params.taskId;
+
+  try {
+    const data = await cvatServices.getTask(taskId);
+    response.send(data);
+    response.send("");
+  } catch (error) {
+    return next(new ErrorHandler(500, error.message));
+  }
 };
 
-const createTask = async (request, response) => {
-  const { task_data, images_data } = request.body;
-  const taskDataResponse = await cvatServices.createTask(task_data);
-  const imagesDataResponse = await cvatServices.setImagesToTask(
-    taskDataResponse.id,
-    images_data
-  );
-  response.send({ taskId: imagesDataResponse.id });
+const createTask = async (request, response, next) => {
+  if (!request.body && ! request.body.task_data) {
+    return next(new ErrorHandler(404, 'Missing required request parameter "task_data"'));
+  }
+
+  if (!request.body && ! request.body.images_data) {
+    return next(new ErrorHandler(404, 'Missing required request parameter "images_data"'));
+  }
+
+  try {
+    const { task_data, images_data } = request.body;
+    const taskDataResponse = await cvatServices.createTask(task_data);
+    const imagesDataResponse = await cvatServices.setImagesToTask(
+      taskDataResponse.id,
+      images_data
+    );
+    response.send({ taskId: imagesDataResponse.id });
+  } catch (error) {
+    return next(new ErrorHandler(500, error.message));
+  }
 };
 
 // TODO: uploadFile, add bucketDataset path. Replace for loop to Promise.all
-const completeTask = async (request, response) => {
+const completeTask = async (request, response, next) => {
+  if (!request.body && !request.body.taskId) {
+    return next(new ErrorHandler(404, 'Missing required parameter "taskId"'));
+  }
+
+  let zipResponseData;
   const taskId = request.body.taskId;
   const dumpFormat = DUMP_FORMAT_PASCAL;
   const zipXmlFolderName = ANNOTATIONS_FOLDER_NAME_PASCAL;
 
-  const zipResponseData = await cvatServices.getDumpAnnotations(
-    taskId,
-    dumpFormat
-  );
-
-  const zip = new AdmZip(zipResponseData);
-  const zipEntries = zip.getEntries();
-
-  for (let i = 0; i < zipEntries.length; i++) {
-    const entry = zipEntries[i];
-    if (entry.entryName.startsWith(zipXmlFolderName)) {
-      const fileName = entry.entryName.replace(zipXmlFolderName, "");
-      const fileData = entry.getData().toString("utf-8");
-      await s3Services.uploadFile(fileName, fileData);
-    }
+  try {
+    zipResponseData = await cvatServices.getDumpAnnotations(
+      taskId,
+      dumpFormat
+    );
+  } catch (error) {
+    return next(new ErrorHandler(500, error.message));
   }
-  response.send("success");
+
+  try {
+    const zip = new AdmZip(zipResponseData);
+    const zipEntries = zip.getEntries();
+  
+    for (let i = 0; i < zipEntries.length; i++) {
+      const entry = zipEntries[i];
+      if (entry.entryName.startsWith(zipXmlFolderName)) {
+        const fileName = entry.entryName.replace(zipXmlFolderName, "");
+        const fileData = entry.getData().toString("utf-8");
+        await s3Services.uploadFile(fileName, fileData);
+      }
+    }
+    response.send("success");
+  } catch (error) {
+    return next(new ErrorHandler(500, error.message));
+  }
+
 };
 
-const getUnsignedImagesCount = async (request, response) => {
-  const { bucket_name, bucket_path } = request.params;
-  const mediaAssets = await mediaAssetsServices.getMediaAssets(
-    bucket_name,
-    bucket_path
-  );
-  response.send({ count: mediaAssets.length });
+const getUnsignedImagesCount = async (request, response, next) => {
+  if (!request.body && !request.body.params.bucket_name) {
+    return next(new ErrorHandler(404, "Missing required url parameter 'bucket_name'"));
+  }
+
+  if (!request.body && !request.body.params.bucket_path) {
+    return next(new ErrorHandler(404, "Missing required url parameter 'bucket_path'"));
+  }
+
+  try {
+    const { bucket_name, bucket_path } = request.params;
+    const mediaAssets = await mediaAssetsServices.getMediaAssets(
+      bucket_name,
+      bucket_path
+    );
+    response.send({ count: mediaAssets.length });
+  } catch (error) {
+    return next(new ErrorHandler(500, error.message));
+  }
 };
 
 module.exports = {

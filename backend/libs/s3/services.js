@@ -3,7 +3,7 @@ const config = require('config');
 
 const accessKeyId = config.get('awsAccessKeyId');
 const secretAccessKey = config.get('awsSecretAccessKey');
-const bucketName = config.get('awsStorageBucketName');
+const bucketNames = require('../../data/bucketNames.json');
 
 const s3 = new AWS.S3({
   accessKeyId,
@@ -25,13 +25,14 @@ const uploadFile = async (bucketName, fileKey, fileBody) => {
   });
 };
 
-// TODO: Access denied;
+// TODO: s3.listBuckets().promise();
+// at the current moment Access denied;
 const getBucketNames = async () => {
   try {
-    // return await s3.listBuckets().promise();
-    return ['epam-mlvc-modeldata', 'epam-mlcv'];
+    return bucketNames;
   } catch (error) {
-    return error;
+    console.error(error);
+    throw new Error(error);
   }
 };
 
@@ -43,7 +44,8 @@ const getPaths = async (bucketName) => {
     };
     return await s3.listObjectsV2(params).promise();
   } catch (error) {
-    return error;
+    console.error(error);
+    throw new Error(error);
   }
 };
 

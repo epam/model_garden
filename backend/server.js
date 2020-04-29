@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const config = require("config");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const apiRouter = require('./routes/api.routes');
+const apiRouter = require("./routes/api.routes");
+const { handleError } = require("./utils/errorHandler");
 
 const app = express();
 app.use(express.json());
@@ -25,6 +26,12 @@ app.get("*", (req, res) => {
   res.send("not found...");
 });
 
+app.use((error, request, response, next) => {
+  handleError(error, response, next);
+});
+
 app.listen(config.get("backendPort"), config.get("backendHost"), () => {
-  console.log(`Server started ${config.get("backendHost")}:${config.get("backendPort")}`);
+  console.log(
+    `Server started ${config.get("backendHost")}:${config.get("backendPort")}`
+  );
 });
