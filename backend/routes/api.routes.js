@@ -7,7 +7,7 @@ const bucket_dataset = require('../components/bucket_dataset/routes');
 const users = require('../components/user/routes');
 
 router.use('/auth', auth);
-router.use('/labeling_tasks', labeling_task);
+router.use('/labeling_task', labeling_task);
 router.use('/media_asset', media_asset);
 router.use('/bucket_dataset', bucket_dataset);
 router.use('/users', users);

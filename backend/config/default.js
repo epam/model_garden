@@ -5,7 +5,6 @@ module.exports = {
 
   awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
   awsSecretAccessKey: process.env.AWS_SECRET_KEY,
-  awsStorageBucketName: process.env.AWS_STORAGE_BUCKET_NAME || 'epam-mlvc-modeldata',
 
   cvatHost: process.env.CVAT_HOST,
   cvatPort: process.env.CVAT_PORT,
