@@ -15,14 +15,27 @@ const saveMediaAsset = async (bucketDatasetId, fileNames) => {
     );
   } catch (error) {
     console.error(error);
-    console.error("Saving media asset to the db is failed");
+    throw new Error(error);
   }
 };
 
 const getMediaAssets = async (bucketName, bucketPath) => {
-  const dbResult = await bucketDatasetServices.getPath(bucketName, bucketPath);
-  const mediaAssets = await MediaAsset.find({ bucketDatasetId: dbResult._id });
-  return mediaAssets;
+  let bucketDatasetId = null;
+
+  try {
+    const dbResult = await bucketDatasetServices.getPath(bucketName, bucketPath);
+    bucketDatasetId = dbResult.id;
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+  try {
+    const mediaAssets = await MediaAsset.find({ bucketDatasetId });
+    return mediaAssets;
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
 };
 
 module.exports = {
