@@ -33,7 +33,7 @@ export const UploadImages: React.FC<UploadImagesProps> = ({
     bucketName: "",
     path: "",
   });
-  const { register, handleSubmit, control } = useForm<FormData>({
+  const { handleSubmit, control } = useForm<FormData>({
     defaultValues: formData,
   });
 

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const uploadMediaFilesRequest = (files: File[], bucketName: string, path?: string): Promise<string>  => {
+export const uploadMediaFilesRequest = (files: File[], bucketName: string, path?: string)  => {
   const formData = new FormData();
   files.forEach(file => formData.append("file", file));
   formData.append("bucketName", bucketName);

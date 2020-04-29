@@ -20,10 +20,10 @@ export const getUnsignedImagesCountRequest = (
   bucketPath: string
 ) => {
   return axios.get(
-    `http://localhost:9000/api/labeling_tasks/unsigned_images_count/${bucketName}/${bucketPath}`
+    `http://localhost:9000/api/labeling_task/unsigned_images_count/${bucketName}/${bucketPath}`
   );
 };
 
 export const createLabelingTaskRequest = (taskData: Task) => {
-  return axios.post("http://localhost:9000/api/labeling_tasks", taskData);
+  return axios.post("http://localhost:9000/api/labeling_task", taskData);
 };

@@ -20,6 +20,8 @@ interface TaskProps {
 type FormData = {
   taskName: string;
   user: string;
+  filesInTask: number;
+  countOfTasks: number;
 };
 
 export const Task: React.FC<TaskProps> = ({
@@ -27,16 +29,18 @@ export const Task: React.FC<TaskProps> = ({
   taskName,
   filesCount,
 }: TaskProps) => {
-  const { handleSubmit, register, setValue, control } = useForm<FormData>({
+  const { handleSubmit, setValue, control } = useForm<FormData>({
     defaultValues: {
       taskName: "",
       user: "",
+      filesInTask: 0,
+      countOfTasks: 0
     },
   });
 
   useEffect(() => {
     setValue("taskName", taskName);
-  }, [taskName]);
+  }, [taskName, setValue]);
 
   const onSubmit = handleSubmit(() => {});
 
@@ -68,7 +72,6 @@ export const Task: React.FC<TaskProps> = ({
             name="user"
             variant="outlined"
             label="User"
-            defaultValue=""
             control={control}
             as={<Select>{usersSelectOptions}</Select>}
           />
@@ -79,12 +82,11 @@ export const Task: React.FC<TaskProps> = ({
             name="filesInTask"
             variant="outlined"
             label="Files in task"
-            defaultValue={filesCount || 0}
             control={control}
             as={
               <TextField
                 type="number"
-                inputProps={{ min: 0, max: filesCount || 0 }}
+                inputProps={{ min: 0, max: filesCount }}
               />
             }
           />
@@ -93,12 +95,11 @@ export const Task: React.FC<TaskProps> = ({
             name="countOfTasks"
             variant="outlined"
             label="Count of tasks"
-            defaultValue="0"
             control={control}
             as={
               <TextField
                 type="number"
-                inputProps={{ min: 0, max: filesCount || 10 }}
+                inputProps={{ min: 0, max: filesCount }}
               />
             }
           />

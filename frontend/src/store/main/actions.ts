@@ -4,40 +4,40 @@ import {
   SET_SELECTED_MENU_ITEM,
   GET_BUCKET_NAMES_START,
   GET_BUCKET_NAMES_SUCCESS,
-  GET_BUCKET_NAMES_ERROR
+  GET_BUCKET_NAMES_ERROR,
 } from "./types";
 import { getBucketNamesRequest } from "../../api";
 
 export function setSelectedMenuItem(menuItemIndex: number): MainActionTypes {
   return {
     type: SET_SELECTED_MENU_ITEM,
-    menuItemIndex
-  }
+    menuItemIndex,
+  };
 }
 
 export function getBucketNamesStart(): MainActionTypes {
   return {
-    type: GET_BUCKET_NAMES_START
-  }
+    type: GET_BUCKET_NAMES_START,
+  };
 }
 
 export function getBucketNamesSuccess(bucketNames: string[]): MainActionTypes {
   return {
     type: GET_BUCKET_NAMES_SUCCESS,
-    bucketNames
-  }
+    bucketNames,
+  };
 }
 
 export function getBucketNamesError(error: string): MainActionTypes {
   return {
     type: GET_BUCKET_NAMES_ERROR,
-    error
-  }
+    error,
+  };
 }
 
-export const getBucketNames = (): AppThunk => dispatch => {
+export const getBucketNames = (): AppThunk => (dispatch) => {
   dispatch(getBucketNamesStart());
   return getBucketNamesRequest()
-    .then((bucketNames: string[]) => dispatch(getBucketNamesSuccess(bucketNames)))
-    .catch(error => dispatch(getBucketNamesError(error)));
+    .then((response) => dispatch(getBucketNamesSuccess(response.data)))
+    .catch((error) => dispatch(getBucketNamesError(error.response.data.message)));
 };
