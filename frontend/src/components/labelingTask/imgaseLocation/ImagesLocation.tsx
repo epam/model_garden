@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   TextField,
@@ -10,57 +9,57 @@ import {
 } from "@material-ui/core";
 import "./ImagesLocation.css";
 import { useDispatch } from "react-redux";
-import { setCurrentBucketName, setCurrentPath } from '../../../store/labelingTask';
+import {
+  setCurrentBucketName,
+  setCurrentPath,
+} from "../../../store/labelingTask";
 
 interface ImagesLocationProps {
   bucketNames: string[];
   paths: string[];
+  currentBucketName: string;
   currentPath: string;
   handleFormSubmit: () => void;
 }
 
-type FormData = {
-  bucketName: string;
-  bucketPaths: string;
-  path: string;
-};
-
 export const ImagesLocation: React.FC<ImagesLocationProps> = ({
   bucketNames,
   paths,
+  currentBucketName,
   currentPath,
   handleFormSubmit,
 }: ImagesLocationProps) => {
+  const [selectedPaths, setSelectedPaths] = useState('');
   const dispatch = useDispatch();
-  const { handleSubmit, control, watch, getValues, setValue } = useForm<FormData>({
-    defaultValues: {
-      bucketName: '',
-      bucketPaths: '',
-      path: ''
+
+  useEffect(() => {
+    dispatch(setCurrentBucketName(""));
+    dispatch(setCurrentPath(""));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!currentBucketName) {
+      dispatch(setCurrentPath(""));
     }
-  });
+  }, [dispatch, currentBucketName]);
 
-  useEffect(() => {
-    watch();
-  }, [])
+  const handleBucketNameChange = (e: any) => {
+    dispatch(setCurrentBucketName(e.target.value));
+  };
 
-  useEffect(() => {
-    const values = getValues();
-    dispatch(setCurrentBucketName(values.bucketName));
-    if (!paths.length) {
-      dispatch(setCurrentPath(''));
-    } else {
-      dispatch(setCurrentPath(values.bucketPaths));
-    }
-  });
+  const handlePathsChange = (e: any) => {
+    setSelectedPaths(e.target.value);
+    dispatch(setCurrentPath(e.target.value));
+  };
 
-  useEffect(() => {
-    setValue('path', currentPath);
-  }, [currentPath]);
+  const handlePathChange = (e: any) => {
+    dispatch(setCurrentPath(e.target.value));
+  };
 
-  const onSubmit = handleSubmit(({ bucketName, bucketPaths, path }) => {
+  const onSubmit = (e: any) => {
+    e.preventDefault();
     handleFormSubmit();
-  });
+  };
 
   const bucketNamesSelectOptions = bucketNames.map((bucketName) => (
     <MenuItem key={bucketName} value={bucketName}>
@@ -85,32 +84,37 @@ export const ImagesLocation: React.FC<ImagesLocationProps> = ({
       </Typography>
       <form onSubmit={onSubmit} className="images-receiver__form">
         <InputLabel id="images-receiver-bucket-name">Bucket Name</InputLabel>
-        <Controller
+        <Select
           className="images-receiver__form-item"
           labelId="images-receiver-bucket-name"
           name="bucketName"
-          control={control}
           variant="outlined"
           label="Bucket Name"
-          as={<Select>{bucketNamesSelectOptions}</Select>}
-        />
+          value={currentBucketName}
+          onChange={handleBucketNameChange}
+        >
+          {bucketNamesSelectOptions}
+        </Select>
         <InputLabel id="images-receiver-paths">Paths</InputLabel>
-        <Controller
+        <Select
           className="images-receiver__form-item"
           labelId="images-receiver-paths"
           name="bucketPaths"
-          control={control}
           variant="outlined"
           label="Path"
-          as={<Select>{pathsSelectOptions}</Select>}
-        />
-        <Controller
+          value={selectedPaths}
+          onChange={handlePathsChange}
+        >
+          {pathsSelectOptions}
+        </Select>
+        <TextField
           className="images-receiver__form-item"
           name="path"
-          control={control}
           variant="outlined"
           label="Selected Path"
-          as={<TextField InputLabelProps={{ shrink: !!currentPath }} />}
+          value={currentPath}
+          onChange={handlePathChange}
+          InputLabelProps={{ shrink: !!currentPath }}
         />
         <Button
           className="images-receiver__form-item"

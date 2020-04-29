@@ -38,6 +38,6 @@ export function uploadMediaFilesError(error: string): MediaActionTypes {
 export const uploadMediaFiles = (files: File[], bucketName: string, path: string): AppThunk => dispatch => {
   dispatch(uploadMediaFilesStart());
   return uploadMediaFilesRequest(files, bucketName, path)
-    .then((butchName: any) => dispatch(uploadMediaFilesSuccess(butchName.data)))
+    .then((response) => dispatch(uploadMediaFilesSuccess(response.data)))
     .catch((error) => dispatch(uploadMediaFilesError(error.response.data.message)));
 };

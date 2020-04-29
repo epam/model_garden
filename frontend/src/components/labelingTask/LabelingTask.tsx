@@ -10,9 +10,7 @@ import {
   getUnsignedImagesCount,
 } from "../../store/labelingTask";
 
-interface LabelingTaskProps {}
-
-export const LabelingTask: React.FC = ({}: LabelingTaskProps) => {
+export const LabelingTask: React.FC = () => {
   const dispatch = useDispatch();
   const bucketNames = useSelector((state: AppState) => state.main.bucketNames);
   const currentBucketName = useSelector(
@@ -48,7 +46,7 @@ export const LabelingTask: React.FC = ({}: LabelingTaskProps) => {
       <ImagesLocation
         bucketNames={bucketNames}
         paths={paths}
-        // currentBucketName={currentBucketName}
+        currentBucketName={currentBucketName}
         currentPath={currentPath}
         handleFormSubmit={handleGetUnsignedImagesCount}
       />

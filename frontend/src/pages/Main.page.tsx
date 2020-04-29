@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AppBar, Tabs, Tab, Button } from "@material-ui/core";
+import { AppBar, Tabs, Tab } from "@material-ui/core";
 // import axios from "axios";
-import { createLabelingTask } from "../store/labelingTask";
-import { Task } from "../models";
+// import { createLabelingTask } from "../store/labelingTask";
+// import { Task } from "../models";
 import { login } from "../store/auth";
 import { UploadImages, LabelingTask } from "../components";
-import { setSelectedMenuItem, getBucketNames } from '../store/main/actions';
-import { AppState } from '../store';
+import { setSelectedMenuItem, getBucketNames } from "../store/main/actions";
+import { AppState } from "../store";
 import { uploadMediaFiles, setMediaFiles } from "../store/media";
 
 // TODO: Refactor this file. In fact, this is just a stub to work out some use cases.
@@ -42,11 +42,17 @@ import { uploadMediaFiles, setMediaFiles } from "../store/media";
 
 export const MainPage: React.FC = () => {
   const dispatch = useDispatch();
-  const selectedMenuItem = useSelector((state: AppState) => state.main.selectedMenuItemIndex);
+  const selectedMenuItem = useSelector(
+    (state: AppState) => state.main.selectedMenuItemIndex
+  );
   const bucketNames = useSelector((state: AppState) => state.main.bucketNames);
-  const isFilesUploading = useSelector((state: AppState) => state.media.isUploading);
+  const isFilesUploading = useSelector(
+    (state: AppState) => state.media.isUploading
+  );
   const mediaFiles = useSelector((state: AppState) => state.media.mediaFiles);
-  const errorMessage = useSelector((state: AppState) => state.media.uploadingErrorMessage);
+  const errorMessage = useSelector(
+    (state: AppState) => state.media.uploadingErrorMessage
+  );
 
   useEffect(() => {
     dispatch(getBucketNames());
@@ -87,6 +93,9 @@ export const MainPage: React.FC = () => {
   //     )
   //     .then((res) => console.log(res.data));
   // };
+  const handleLogin = () => {
+    dispatch(login("epam_labler", "epam_mlcv"));
+  };
 
   const handleUploadImagesSubmit = (bucketName: string, path: string) => {
     dispatch(uploadMediaFiles(mediaFiles, bucketName, path));
@@ -102,9 +111,10 @@ export const MainPage: React.FC = () => {
         <Tabs value={selectedMenuItem} onChange={handleSelectMenuItem}>
           <Tab label="Upload Images" />
           <Tab label="Create Labeling Task" />
+          <Tab label="Login" onClick={handleLogin}  />
         </Tabs>
       </AppBar>
-      {errorMessage && (<h1>{errorMessage}</h1>)}
+      {errorMessage && <h1>{errorMessage}</h1>}
       {selectedMenuItem === 0 && (
         <UploadImages
           bucketNames={bucketNames}
