@@ -25,7 +25,7 @@ SECRET_KEY = 'ba+3plvmjt*ewtn)8no-g%3c@ec!j-g3epc8pnhfz%m7l&+rqj'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -75,9 +75,14 @@ WSGI_APPLICATION = 'model_garden.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'garden',
+        'USER': 'postgres',
+        'PASSWORD': '',
+        'HOST': 'postgres',
+        'PORT': 5432,
+        'ATOMIC_REQUESTS': True,
+    },
 }
 
 
