@@ -32,7 +32,7 @@ const login = async (
     return response.data;
   } catch (error) {
     console.error(error);
-    return error.message;
+    throw new Error(error);
   }
 };
 
@@ -46,7 +46,7 @@ const getTask = async (taskId) => {
     return response.data;
   } catch (error) {
     console.error(error);
-    return error.message;
+    throw new Error(error);
   }
 };
 
@@ -60,7 +60,7 @@ const createTask = async (taskData) => {
     return response.data;
   } catch (error) {
     console.error(error);
-    return error.message;
+    throw new Error(error);
   }
 };
 
@@ -75,7 +75,7 @@ const setImagesToTask = async (taskId, imagesData) => {
     return response.data;
   } catch (error) {
     console.error(error);
-    return error.message;
+    throw new Error(error);
   }
 };
 
@@ -110,7 +110,7 @@ const getDumpAnnotations = async (taskId, dumpFormat) => {
     return response.data;
   } catch (error) {
     console.error(error);
-    return error.message;
+    throw new Error(error);
   }
 };
 
