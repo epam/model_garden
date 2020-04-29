@@ -2,9 +2,15 @@
 
 Run application:
 1. Install Node.js
-2. Run `npm install`
-3. Run `node app`
+2. Create `.env`
+3. Run `npm install`
+4. Run `npm start`
+```
+> node server.js
 
+Server started localhost:9000
+MongoDB connected...
+```
 
 ## Routes
 
