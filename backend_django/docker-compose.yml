@@ -23,7 +23,8 @@ services:
     restart: always
     command: bash -c "./manage.py migrate && ./manage.py runserver 0.0.0.0:9000"
     environment:
-      DJANGO_SETTINGS_MODULE: 'model_garden.settings'
+      DJANGO_DB_HOST: postgres
+      DJANGO_SETTINGS_MODULE: model_garden.settings
     depends_on:
       - postgres
     ports:

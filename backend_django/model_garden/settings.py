@@ -12,6 +12,13 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+import environ
+
+env = environ.Env()
+dot_env_file_path = '../.env'
+if os.path.exists(dot_env_file_path):
+    environ.Env.read_env(dot_env_file_path)
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -79,8 +86,8 @@ DATABASES = {
         'NAME': 'garden',
         'USER': 'postgres',
         'PASSWORD': '',
-        'HOST': 'postgres',
-        'PORT': 5432,
+        'HOST': env("DJANGO_DB_HOST", default="localhost"),
+        'PORT': env("DJANGO_DB_PORT", cast=int, default=5432),
         'ATOMIC_REQUESTS': True,
     },
 }
