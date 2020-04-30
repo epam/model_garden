@@ -1,0 +1,10 @@
+[run]
+omit =
+    model_garden/asgi.py
+    model_garden/migrations/*
+    model_garden/settings.py
+    model_garden/wsgi.py
+
+[report]
+exclude_lines =
+    pragma: no cover
