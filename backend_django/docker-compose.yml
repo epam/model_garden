@@ -24,6 +24,7 @@ services:
     command: bash -c "./manage.py migrate && ./manage.py runserver 0.0.0.0:9000"
     environment:
       DJANGO_DB_HOST: postgres
+      DJANGO_DB_PORT: 5432
       DJANGO_SETTINGS_MODULE: model_garden.settings
     depends_on:
       - postgres
