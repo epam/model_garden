@@ -16,7 +16,7 @@ import {
   CREATE_LABELING_TASK_SUCCESS,
   CREATE_LABELING_TASK_ERROR,
 } from "./types";
-import { Task } from "../../models";
+import { LabelingTask, LabelingTaskRequestData } from "../../models";
 import {
   createLabelingTaskRequest,
   getBucketPathsRequest,
@@ -131,7 +131,9 @@ export const getBucketPaths = (bucketName: string): AppThunk => (dispatch) => {
   dispatch(getBucketPathsStart());
   return getBucketPathsRequest(bucketName)
     .then((response) => dispatch(getBucketPathsSuccess(response.data)))
-    .catch((error) => dispatch(getBucketPathsError(error.response.data.message)));
+    .catch((error) =>
+      dispatch(getBucketPathsError(error.response.data.message))
+    );
 };
 
 export const getLabelingToolUsers = (): AppThunk => (dispatch) => {
@@ -157,7 +159,9 @@ export const getUnsignedImagesCount = (
     );
 };
 
-export const createLabelingTask = (taskData: Task): AppThunk => (dispatch) => {
+export const createLabelingTask = (
+  taskData: LabelingTaskRequestData
+): AppThunk => (dispatch) => {
   dispatch(createLabelingTaskStart());
   return createLabelingTaskRequest(taskData)
     .then((response) => dispatch(createLabelingTaskSuccess(response.data)))

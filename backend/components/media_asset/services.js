@@ -1,5 +1,5 @@
-const MediaAsset = require('./MediaAsset');
-const bucketDatasetServices = require('../bucket_dataset/services');
+const MediaAsset = require("./MediaAsset");
+const bucketDatasetServices = require("../bucket_dataset/services");
 
 const saveMediaAsset = async (bucketDatasetId, fileNames) => {
   try {
@@ -19,11 +19,14 @@ const saveMediaAsset = async (bucketDatasetId, fileNames) => {
   }
 };
 
-const getMediaAssets = async (bucketName, bucketPath) => {
+const getMediaAssets = async (bucketName, bucketPath, status) => {
   let bucketDatasetId = null;
 
   try {
-    const dbResult = await bucketDatasetServices.getPath(bucketName, bucketPath);
+    const dbResult = await bucketDatasetServices.getPath(
+      bucketName,
+      bucketPath
+    );
     bucketDatasetId = dbResult.id;
   } catch (error) {
     console.error(error);
@@ -31,7 +34,20 @@ const getMediaAssets = async (bucketName, bucketPath) => {
   }
   try {
     const mediaAssets = await MediaAsset.find({ bucketDatasetId });
-    return mediaAssets;
+    if (status) {
+      return mediaAssets.filter((mediaAsset) => mediaAsset.status === status);
+    } else {
+      return mediaAssets;
+    }
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+};
+
+const updateMediaAssetStatus = async (id, status) => {
+  try {
+    await MediaAsset.findByIdAndUpdate(id, { status });
   } catch (error) {
     console.error(error);
     throw new Error(error);
@@ -40,5 +56,6 @@ const getMediaAssets = async (bucketName, bucketPath) => {
 
 module.exports = {
   saveMediaAsset,
-  getMediaAssets
+  getMediaAssets,
+  updateMediaAssetStatus
 };

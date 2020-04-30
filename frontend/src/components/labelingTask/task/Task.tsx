@@ -15,11 +15,12 @@ interface TaskProps {
   users: LabelingToolUser[];
   taskName: string;
   filesCount: number;
+  handleTaskSubmit: (data: FormData) => void;
 }
 
-type FormData = {
+export type FormData = {
   taskName: string;
-  user: string;
+  user: string | number;
   filesInTask: number;
   countOfTasks: number;
 };
@@ -28,6 +29,7 @@ export const Task: React.FC<TaskProps> = ({
   users,
   taskName,
   filesCount,
+  handleTaskSubmit,
 }: TaskProps) => {
   const { handleSubmit, setValue, control } = useForm<FormData>({
     defaultValues: {
@@ -42,11 +44,13 @@ export const Task: React.FC<TaskProps> = ({
     setValue("taskName", taskName);
   }, [taskName, setValue]);
 
-  const onSubmit = handleSubmit(() => {});
+  const onSubmit = handleSubmit((data: FormData) => {
+    handleTaskSubmit(data);
+  });
 
   const usersSelectOptions = users.map((user) => (
-    <MenuItem key={user.name} value={user.name}>
-      {user.name}
+    <MenuItem key={user.id} value={user.id}>
+      {user.email}
     </MenuItem>
   ));
 
