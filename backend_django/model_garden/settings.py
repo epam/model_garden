@@ -15,7 +15,7 @@ import os
 import environ
 
 env = environ.Env()
-dot_env_file_path = '../.env'
+dot_env_file_path = '.env'
 if os.path.exists(dot_env_file_path):
     environ.Env.read_env(dot_env_file_path)
 
@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'model_garden',
 ]
 
 MIDDLEWARE = [
