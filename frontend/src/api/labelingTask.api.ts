@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Task } from "../models";
+import { LabelingTaskRequestData } from "../models";
 
 axios.defaults.headers = {
   'Content-Type': 'application/json'
@@ -24,6 +24,6 @@ export const getUnsignedImagesCountRequest = (
   );
 };
 
-export const createLabelingTaskRequest = (taskData: Task) => {
+export const createLabelingTaskRequest = (taskData: LabelingTaskRequestData) => {
   return axios.post("http://localhost:9000/api/labeling_task", taskData);
 };

@@ -2,13 +2,14 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppBar, Tabs, Tab } from "@material-ui/core";
 // import axios from "axios";
-// import { createLabelingTask } from "../store/labelingTask";
-// import { Task } from "../models";
-import { login } from "../store/auth";
 import { UploadImages, LabelingTask } from "../components";
+import { FormData } from "../components/labelingTask/task";
+import { createLabelingTask } from "../store/labelingTask";
+import { login } from "../store/auth";
 import { setSelectedMenuItem, getBucketNames } from "../store/main/actions";
 import { AppState } from "../store";
 import { uploadMediaFiles, setMediaFiles } from "../store/media";
+import { LabelingTaskRequestData } from "../models";
 
 // TODO: Refactor this file. In fact, this is just a stub to work out some use cases.
 // const taskData: Task = {
@@ -53,6 +54,10 @@ export const MainPage: React.FC = () => {
   const errorMessage = useSelector(
     (state: AppState) => state.media.uploadingErrorMessage
   );
+
+  useEffect(() => {
+    handleLogin();
+  }, []);
 
   useEffect(() => {
     dispatch(getBucketNames());
@@ -105,13 +110,17 @@ export const MainPage: React.FC = () => {
     dispatch(setMediaFiles(files));
   };
 
+  // const handleTaskSubmit = (data: FormData) => {
+  //   dispatch(createLabelingTask({ ...data, userId: data.user } as LabelingTaskRequestData));
+  // };
+
   return (
     <>
       <AppBar position="static">
         <Tabs value={selectedMenuItem} onChange={handleSelectMenuItem}>
           <Tab label="Upload Images" />
           <Tab label="Create Labeling Task" />
-          <Tab label="Login" onClick={handleLogin}  />
+          <Tab label="Login" onClick={handleLogin} />
         </Tabs>
       </AppBar>
       {errorMessage && <h1>{errorMessage}</h1>}
@@ -123,7 +132,9 @@ export const MainPage: React.FC = () => {
           handleDropFiles={handleDropFiles}
         />
       )}
-      {selectedMenuItem === 1 && <LabelingTask />}
+      {selectedMenuItem === 1 && (
+        <LabelingTask />
+      )}
     </>
   );
 };
