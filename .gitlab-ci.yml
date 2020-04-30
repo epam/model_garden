@@ -1,0 +1,10 @@
+default:
+  image: python:3.7-slim
+
+  before_script:
+    - cd backend_django
+    - pip install -r test-requirements.txt
+
+test:
+  script:
+    - flake8 .
