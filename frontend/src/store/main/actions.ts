@@ -1,5 +1,6 @@
 import { AppThunk } from "../index";
 import {
+  Bucket,
   MainActionTypes,
   SET_SELECTED_MENU_ITEM,
   GET_BUCKET_NAMES_START,
@@ -38,6 +39,6 @@ export function getBucketNamesError(error: string): MainActionTypes {
 export const getBucketNames = (): AppThunk => (dispatch) => {
   dispatch(getBucketNamesStart());
   return getBucketNamesRequest()
-    .then((response) => dispatch(getBucketNamesSuccess(response.data)))
+    .then((response) => dispatch(getBucketNamesSuccess(response.data.map((bucket: Bucket) => bucket.name))))
     .catch((error) => dispatch(getBucketNamesError(error.response.data.message)));
 };
