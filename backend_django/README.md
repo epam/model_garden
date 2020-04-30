@@ -17,9 +17,9 @@ $ virtualenv .venv
 $ . .venv/bin/activate
 ```
 
-### Install requirements
+### Install requirements and test requirements
 ```
-$ pip install -r requirements.txt
+$ pip install -r requirements.txt -r test-requirements.txt
 ```
 
 ### Run migrations
@@ -57,4 +57,11 @@ $ docker-compose ps
 --------------------------------------------------------------------------------------------
 backend_django_postgres_1    docker-entrypoint.sh postgres    Up      0.0.0.0:5444->5432/tcp
 backend_django_webserver_1   bash -c ./manage.py migrat ...   Up      0.0.0.0:9000->9000/tcp
+```
+
+## Linting
+
+### Run flake8
+```
+$ make lint
 ```
