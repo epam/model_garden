@@ -4,9 +4,11 @@ export const uploadMediaFilesRequest = (files: File[], bucketName: string, path?
   const formData = new FormData();
   files.forEach(file => formData.append("file", file));
   formData.append("bucketName", bucketName);
-  if (path) formData.append("path", path);
+  if (path) {
+      formData.append("path", path);
+  }
   return axios
-    .post("http://localhost:9000/api/media_asset/upload_images", formData, {
+    .post("http://localhost:9000/api/media-assets/upload/", formData, {
       headers: {
         "Content-Type": "application/zip",
       },
