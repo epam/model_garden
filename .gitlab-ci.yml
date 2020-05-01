@@ -3,7 +3,14 @@ default:
 
   before_script:
     - cd backend_django
-    - pip install -r test-requirements.txt
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install -r requirements.txt -r test-requirements.txt
+
+cache:
+  paths:
+    - backend_django/venv/
 
 lint:
   script:
@@ -11,5 +18,4 @@ lint:
 
 test:
   script:
-    - pip install -r requirements.txt
     - pytest -v --cov=model_garden --cov-report=term-missing --no-cov-on-fail tests
