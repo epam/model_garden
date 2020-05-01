@@ -22,3 +22,17 @@ class TestS3Client(TestCase):
         result = self.client.list_bucket()
 
         self.assertEqual(result, [object_mock])
+
+    def test_download_file(self):
+        self.client.download_file(key='key', filename='filename')
+
+        self.bucket_mock.meta.client.download_file.assert_called_once_with(
+            self.bucket_name, 'key', 'filename',
+        )
+
+    def test_upload_file(self):
+        self.client.upload_file(filename='filename', key='key')
+
+        self.bucket_mock.meta.client.upload_file.assert_called_once_with(
+            'filename', self.bucket_name, 'key',
+        )
