@@ -4,7 +4,7 @@ from model_garden.models import Bucket
 
 
 class BucketItem(models.Model):
-  path = models.CharField(max_length=1024)
+  path = models.CharField(max_length=512)
   bucket = models.ForeignKey(Bucket, on_delete=models.CASCADE)
 
   def __str__(self):
