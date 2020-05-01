@@ -20,12 +20,11 @@ from rest_framework import routers
 
 from model_garden.views import BucketViewSet
 
-
 router = routers.DefaultRouter()
 router.register(r'buckets', BucketViewSet)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+  path('admin/', admin.site.urls),
+  path('api/', include(router.urls)),
+  path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
