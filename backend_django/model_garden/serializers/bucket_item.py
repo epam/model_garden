@@ -14,6 +14,7 @@ class BucketItemSerializer(serializers.ModelSerializer):
       'path',
       'bucket',
     )
+    validators = []
 
   def validate(self, attrs):
     path = attrs.get('path')

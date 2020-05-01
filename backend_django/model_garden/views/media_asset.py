@@ -1,10 +1,11 @@
+from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework import status
 from rest_framework.response import Response
 
 from model_garden.models import Bucket, MediaAsset
 from model_garden.serializers import MediaAssetSerializer, BucketItemSerializer
+from model_garden.services.s3 import S3Client
 
 
 class MediaAssetViewSet(viewsets.ModelViewSet):
@@ -48,9 +49,10 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
     bucket_item_serializer.is_valid(raise_exception=True)
     bucket_item = bucket_item_serializer.save()
 
-    MediaAsset.objects.bulk_create([
-      MediaAsset(bucket_item=bucket_item, filename=file)
-      for file in files
-    ])
+    s3_client = S3Client(bucket_name=bucket.name)
+    for file in files:
+      media_asset = MediaAsset(bucket_item=bucket_item, filename=file.name)
+      s3_client.upload_file_obj(file_obj=file.file, bucket=bucket.name, key=media_asset.full_path)
+      media_asset.save()
 
     return Response()
