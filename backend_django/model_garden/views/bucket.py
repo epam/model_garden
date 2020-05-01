@@ -5,5 +5,5 @@ from model_garden.serializers import BucketSerializer
 
 
 class BucketViewSet(viewsets.ModelViewSet):
-    queryset = Bucket.objects.all()
-    serializer_class = BucketSerializer
+  queryset = Bucket.objects.all()
+  serializer_class = BucketSerializer
