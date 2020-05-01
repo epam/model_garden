@@ -36,3 +36,11 @@ class TestS3Client(TestCase):
     self.bucket_mock.meta.client.upload_file.assert_called_once_with(
       'filename', self.bucket_name, 'key',
     )
+
+  def test_upload_file_obj(self):
+    file_obj_mock = mock.Mock()
+    self.client.upload_file_obj(file_obj=file_obj_mock, bucket=self.bucket_name, key='key')
+
+    self.bucket_mock.meta.client.upload_fileobj.assert_called_once_with(
+      file_obj_mock, self.bucket_name, 'key',
+    )
