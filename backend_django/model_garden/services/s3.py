@@ -1,5 +1,7 @@
-from django.conf import settings
+from typing import IO
+
 from boto3 import resource
+from django.conf import settings
 
 
 class S3Client:
@@ -20,3 +22,6 @@ class S3Client:
 
   def upload_file(self, filename: str, key: str):
     self._bucket.meta.client.upload_file(filename, self._bucket_name, key)
+
+  def upload_file_obj(self, file_obj: IO, bucket: str, key: str):
+    self._bucket.meta.client.upload_fileobj(file_obj, bucket, key)
