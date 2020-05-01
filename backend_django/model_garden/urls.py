@@ -18,11 +18,12 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
 
-from model_garden.views import BucketViewSet, MediaAssetViewSet
+from model_garden.views import BucketViewSet, BucketItemViewSet, MediaAssetViewSet
 
 router = routers.DefaultRouter()
 router.register(r'buckets', BucketViewSet)
-router.register(r'media_assets', MediaAssetViewSet)
+router.register(r'bucket-items', BucketItemViewSet)
+router.register(r'media-assets', MediaAssetViewSet)
 
 urlpatterns = [
   path('admin/', admin.site.urls),
