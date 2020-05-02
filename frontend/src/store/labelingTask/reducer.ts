@@ -14,8 +14,12 @@ import {
   CREATE_LABELING_TASK_START,
   CREATE_LABELING_TASK_SUCCESS,
   CREATE_LABELING_TASK_ERROR,
+  GET_LABELING_TASKS_START,
+  GET_LABELING_TASKS_SUCCESS,
+  GET_LABELING_TASKS_ERROR,
 } from "./types";
 import { LabelingToolUser } from "../../models/labelingToolUser";
+import { LabelingTaskStatus } from "../../models";
 
 export interface LabelingTasksState {
   isPathsLoading: boolean;
@@ -29,6 +33,9 @@ export interface LabelingTasksState {
   isImagesCountLoading: boolean;
   unsignedImagesCount: number;
   unsignedImagesCountErrorMessage: string;
+  isLabelingTasksStatusesLoading: boolean;
+  labelingTasksStatuses: LabelingTaskStatus[];
+  labelingTasksStatusesLoadingErrorMessage: string;
 }
 
 const initialState: LabelingTasksState = {
@@ -43,6 +50,9 @@ const initialState: LabelingTasksState = {
   isImagesCountLoading: false,
   unsignedImagesCount: 0,
   unsignedImagesCountErrorMessage: "",
+  isLabelingTasksStatusesLoading: false,
+  labelingTasksStatuses: [],
+  labelingTasksStatusesLoadingErrorMessage: "",
 };
 
 export const labelingTaskReducer = (
@@ -93,14 +103,14 @@ export const labelingTaskReducer = (
       return {
         ...state,
         isImagesCountLoading: false,
-        unsignedImagesCount: action.imagesCount
-      }
+        unsignedImagesCount: action.imagesCount,
+      };
     case GET_UNSIGNED_IMAGES_COUNT_ERROR:
       return {
         ...state,
         isImagesCountLoading: false,
-        unsignedImagesCountErrorMessage: action.error
-      }
+        unsignedImagesCountErrorMessage: action.error,
+      };
     case SET_CURRENT_BUCKET_NAME:
       return {
         ...state,
@@ -117,6 +127,23 @@ export const labelingTaskReducer = (
       return state;
     case CREATE_LABELING_TASK_ERROR:
       return state;
+    case GET_LABELING_TASKS_START:
+      return {
+        ...state,
+        isLabelingTasksStatusesLoading: true,
+      };
+    case GET_LABELING_TASKS_SUCCESS:
+      return {
+        ...state,
+        isLabelingTasksStatusesLoading: false,
+        labelingTasksStatuses: action.tasks,
+      };
+    case GET_LABELING_TASKS_ERROR:
+      return {
+        ...state,
+        isLabelingTasksStatusesLoading: false,
+        labelingTasksStatusesLoadingErrorMessage: action.error.message,
+      };
     default:
       return state;
   }

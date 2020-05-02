@@ -35,3 +35,10 @@ export type LabelingTaskRequestData  = {
   filesInTask: number;
   countOfTasks: number;
 };
+
+export type LabelingTaskStatus = {
+  userName: string;
+  taskName: string;
+  cvatInstance: string;
+  status: string;
+};

@@ -39,5 +39,5 @@ export const uploadMediaFiles = (files: File[], bucketName: string, path: string
   dispatch(uploadMediaFilesStart());
   return uploadMediaFilesRequest(files, bucketName, path)
     .then((response) => dispatch(uploadMediaFilesSuccess(response.data)))
-    .catch((error) => dispatch(uploadMediaFilesError(error.response.data.message)));
+    .catch((error) => dispatch(uploadMediaFilesError(error.message)));
 };

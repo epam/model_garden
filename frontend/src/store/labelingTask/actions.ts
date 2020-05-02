@@ -15,13 +15,20 @@ import {
   CREATE_LABELING_TASK_START,
   CREATE_LABELING_TASK_SUCCESS,
   CREATE_LABELING_TASK_ERROR,
+  GET_LABELING_TASKS_START,
+  GET_LABELING_TASKS_SUCCESS,
+  GET_LABELING_TASKS_ERROR,
 } from "./types";
-import { LabelingTask, LabelingTaskRequestData } from "../../models";
+import {
+  LabelingTaskRequestData,
+  LabelingTaskStatus,
+} from "../../models";
 import {
   createLabelingTaskRequest,
   getBucketPathsRequest,
   getLabelingToolUsersRequest,
   getUnsignedImagesCountRequest,
+  getLabelingTasksRequest,
 } from "../../api";
 import { LabelingToolUser } from "../../models/labelingToolUser";
 
@@ -127,22 +134,38 @@ export function createLabelingTaskError(error: any): LabelingTaskActionTypes {
   };
 }
 
+export function getLabelingTasksStart(): LabelingTaskActionTypes {
+  return {
+    type: GET_LABELING_TASKS_START,
+  };
+}
+
+export function getLabelingTasksSuccess(tasks: LabelingTaskStatus[]) {
+  return {
+    type: GET_LABELING_TASKS_SUCCESS,
+    tasks,
+  };
+}
+
+export function getLabelingTasksError(error: Error) {
+  return {
+    type: GET_LABELING_TASKS_ERROR,
+    error,
+  };
+}
+
 export const getBucketPaths = (bucketName: string): AppThunk => (dispatch) => {
   dispatch(getBucketPathsStart());
   return getBucketPathsRequest(bucketName)
     .then((response) => dispatch(getBucketPathsSuccess(response.data)))
-    .catch((error) =>
-      dispatch(getBucketPathsError(error.response.data.message))
-    );
+    .catch((error) => dispatch(getBucketPathsError(error.message)));
 };
 
 export const getLabelingToolUsers = (): AppThunk => (dispatch) => {
   dispatch(getLabelingToolUsersStart());
   return getLabelingToolUsersRequest()
     .then((response) => dispatch(getLabelingToolUsersSuccess(response.data)))
-    .catch((error) =>
-      dispatch(getLabelingToolUsersError(error.response.data.message))
-    );
+    .catch((error) => dispatch(getLabelingToolUsersError(error.message)));
 };
 
 export const getUnsignedImagesCount = (
@@ -154,9 +177,7 @@ export const getUnsignedImagesCount = (
     .then((response) =>
       dispatch(getUnsignedImagesCountSuccess(response.data.count))
     )
-    .catch((error) =>
-      dispatch(getUnsignedImagesCountError(error.response.data.message))
-    );
+    .catch((error) => dispatch(getUnsignedImagesCountError(error.message)));
 };
 
 export const createLabelingTask = (
@@ -165,7 +186,15 @@ export const createLabelingTask = (
   dispatch(createLabelingTaskStart());
   return createLabelingTaskRequest(taskData)
     .then((response) => dispatch(createLabelingTaskSuccess(response.data)))
-    .catch((error) =>
-      dispatch(createLabelingTaskError(error.response.data.message))
-    );
+    .catch((error) => dispatch(createLabelingTaskError(error.message)));
+};
+
+export const getLabelingTasks = (
+  bucketName: string,
+  bucketPath: string
+): AppThunk => (dispatch) => {
+  dispatch(getLabelingTasksStart());
+  return getLabelingTasksRequest(bucketName, bucketPath)
+    .then((tasks) => dispatch(getLabelingTasksSuccess(tasks)))
+    .catch((error) => dispatch(getLabelingTasksError(error)));
 };
