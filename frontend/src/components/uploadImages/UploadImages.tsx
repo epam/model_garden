@@ -10,25 +10,17 @@ import {
 } from "@material-ui/core";
 import { DropZone } from "../index";
 import "./UploadImages.css";
+import { AppState } from "../../store";
+import { useSelector, useDispatch } from "react-redux";
+import { uploadMediaFiles, setMediaFiles } from "../../store/media";
 
 type FormData = {
   bucketName: string;
   path: string;
 };
 
-type UploadImagesProps = {
-  bucketNames: string[];
-  isFilesUploading: boolean;
-  handleUploadImagesSubmit: (bucketName: string, path: string) => void;
-  handleDropFiles: (files: File[]) => void;
-};
-
-export const UploadImages: React.FC<UploadImagesProps> = ({
-  bucketNames,
-  isFilesUploading,
-  handleUploadImagesSubmit,
-  handleDropFiles,
-}: UploadImagesProps) => {
+export const UploadImages: React.FC = () => {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState<FormData>({
     bucketName: "",
     path: "",
@@ -36,6 +28,19 @@ export const UploadImages: React.FC<UploadImagesProps> = ({
   const { handleSubmit, control } = useForm<FormData>({
     defaultValues: formData,
   });
+  const bucketNames = useSelector((state: AppState) => state.main.bucketNames);
+  const isFilesUploading = useSelector(
+    (state: AppState) => state.media.isUploading
+  );
+  const mediaFiles = useSelector((state: AppState) => state.media.mediaFiles);
+
+  const handleUploadImagesSubmit = (bucketName: string, path: string) => {
+    dispatch(uploadMediaFiles(mediaFiles, bucketName, path));
+  };
+
+  const handleDropFiles = (files: File[]) => {
+    dispatch(setMediaFiles(files));
+  };
 
   const onSubmit = handleSubmit(({ bucketName, path }) => {
     setFormData({ bucketName, path });

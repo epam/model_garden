@@ -49,7 +49,7 @@ export const LabelingTask: React.FC = () => {
         ...data,
         userId: data.user,
         bucketName: currentBucketName,
-        bucketPath: currentPath
+        bucketPath: currentPath,
       } as LabelingTaskRequestData)
     );
   };

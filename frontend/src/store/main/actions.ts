@@ -39,6 +39,6 @@ export function getBucketNamesError(error: string): MainActionTypes {
 export const getBucketNames = (): AppThunk => (dispatch) => {
   dispatch(getBucketNamesStart());
   return getBucketNamesRequest()
-    .then((response) => dispatch(getBucketNamesSuccess(response.data.map((bucket: Bucket) => bucket.name))))
-    .catch((error) => dispatch(getBucketNamesError(error.response.data.message)));
+    .then((response) => dispatch(getBucketNamesSuccess(response.data)))
+    .catch((error) => dispatch(getBucketNamesError(error.message)));
 };

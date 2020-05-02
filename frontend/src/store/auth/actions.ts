@@ -32,5 +32,5 @@ export const login = (username: string, password: string): AppThunk => (
   dispatch(loginStartAction());
   return loginRequest(username, password)
     .then((response) => dispatch(loginSuccessAction()))
-    .catch((error) => dispatch(loginErrorAction(error.response.data.message)));
+    .catch((error) => dispatch(loginErrorAction(error.message)));
 };

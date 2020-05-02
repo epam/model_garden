@@ -1,4 +1,5 @@
 import { LabelingToolUser } from "../../models/labelingToolUser";
+import { LabelingTaskStatus } from "../../models";
 
 export const GET_BUCKET_PATHS_START = "GET_BUCKET_PATHS_START";
 export const GET_BUCKET_PATHS_SUCCESS = "GET_BUCKET_PATHS_SUCCESS";
@@ -22,6 +23,10 @@ export const SET_CURRENT_PATH = "SET_CURRENT_PATH";
 export const CREATE_LABELING_TASK_START = "CREATE_LABELING_TASK_START";
 export const CREATE_LABELING_TASK_SUCCESS = "CREATE_LABELING_TASK_SUCCESS";
 export const CREATE_LABELING_TASK_ERROR = "CREATE_LABELING_TASK_ERROR";
+
+export const GET_LABELING_TASKS_START = 'GET_LABELING_TASKS_START';
+export const GET_LABELING_TASKS_SUCCESS = 'GET_LABELING_TASKS_SUCCESS';
+export const GET_LABELING_TASKS_ERROR = 'GET_LABELING_TASKS_ERROR';
 
 export interface getBucketPathsStart {
   type: typeof GET_BUCKET_PATHS_START;
@@ -89,6 +94,20 @@ export interface createLabelingTaskError {
   error: any;
 }
 
+export interface getLabelingTasksStart {
+  type: typeof GET_LABELING_TASKS_START
+}
+
+export interface getLabelingTasksSuccess {
+  type: typeof GET_LABELING_TASKS_SUCCESS;
+  tasks: LabelingTaskStatus[];
+}
+
+export interface getLabelingTasksError {
+  type: typeof GET_LABELING_TASKS_ERROR;
+  error: Error;
+}
+
 export type LabelingTaskActionTypes =
   | getBucketPathsStart
   | getBucketPathsSuccess
@@ -103,4 +122,7 @@ export type LabelingTaskActionTypes =
   | setCurrentPath
   | createLabelingTaskStart
   | createLabelingTaskSuccess
-  | createLabelingTaskError;
+  | createLabelingTaskError
+  | getLabelingTasksStart
+  | getLabelingTasksSuccess
+  | getLabelingTasksError;
