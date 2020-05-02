@@ -1,19 +1,5 @@
-.upload-images {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 600px;
-  margin: 0 auto;
-  margin-top: 20px;
-  padding: 20px;
-  border: 1px solid #3F51B5;
-  border-radius: 2px;
-}
-
 .upload-images__form {
   margin-top: 20px;
-  width: 80%;
 }
 
 .upload-images__title {

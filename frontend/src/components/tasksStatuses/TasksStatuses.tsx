@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './TasksStatuses.css';
-import { ImagesLocation } from '../labelingTask/imagesLocation';
+import { ImagesLocation } from '../shared/imagesLocation';
 import { AppState } from '../../store';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tasks } from './tasks';
@@ -34,6 +34,8 @@ export const TasksStatuses: React.FC = () => {
   return (
     <div className="tasks-statuses">
       <ImagesLocation
+        title="Select images location"
+        buttonName="Get tasks info"
         bucketNames={bucketNames}
         paths={paths}
         currentBucketName={currentBucketName}
