@@ -13,9 +13,18 @@
   align-items: center;
 }
 
-.upload-images__settings-item.MuiInputBase-root,
+.upload-images__settings-item.MuiFormControl-root,
 .upload-images__settings-item.MuiTextField-root,
 .upload-images__settings-item.MuiButton-root {
   margin-top: 20px;
   width: 100%;
+}
+
+#upload-images-bucket-name {
+  transform: translate(14px, 20px);
+}
+
+#upload-images-bucket-name[data-shrink="true"] {
+  transform: translate(14px, -6px);
+  font-size: 12px;
 }

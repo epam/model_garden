@@ -7,6 +7,7 @@ import {
   TextField,
   Button,
   MenuItem,
+  FormControl,
 } from "@material-ui/core";
 import { DropZone, FormContainer } from "../shared";
 import "./UploadImages.css";
@@ -71,22 +72,27 @@ export const UploadImages: React.FC = () => {
             />
           </div>
           <div className="upload-images__settings">
-            <InputLabel id="upload-images-bucket-name">Bucket Name</InputLabel>
-            <Controller
-              labelId="upload-images-bucket-name"
-              className="upload-images__settings-item"
-              name="bucketName"
-              control={control}
-              label="S3 Bucket name"
-              variant="outlined"
-              as={<Select>{selectOptions}</Select>}
-            />
+            <FormControl className="upload-images__settings-item">
+              <InputLabel id="upload-images-bucket-name">
+                S3 Bucket Name
+              </InputLabel>
+              <Controller
+                labelId="upload-images-bucket-name"
+                name="bucketName"
+                control={control}
+                label="S3 Bucket name"
+                variant="outlined"
+                helperText="bucket name on the AWS S3"
+                as={<Select>{selectOptions}</Select>}
+              />
+            </FormControl>
             <Controller
               className="upload-images__settings-item"
               name="path"
               control={control}
               label="Path"
               variant="outlined"
+              helperText="Path to images dataset"
               as={<TextField />}
             />
             <Button

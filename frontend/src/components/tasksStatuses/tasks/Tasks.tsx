@@ -18,6 +18,11 @@ export const Tasks: React.FC = () => {
     (state: AppState) => state.labelingTask.labelingTasksStatuses
   );
 
+  const taskStatus = (status: number) => {
+    if (status === 1) return 'in progress';
+    if (status === 2) return 'completed';
+  };
+
   return (
     <div className="tasks">
       <FormContainer>
@@ -32,14 +37,14 @@ export const Tasks: React.FC = () => {
           </TableHead>
           <TableBody>
             {tasks.map((task) => (
-              <TableRow key={task.taskName}>
+              <TableRow key={task.taskName} style={+task.status === 2 ? { backgroundColor: 'lightgreen', color: 'white' } : {}}>
                 <TableCell component="th" scope="row">
                   {task.userName}
                 </TableCell>
                 <TableCell align="right">{task.taskName}</TableCell>
                 <TableCell align="right">{task.cvatInstance}</TableCell>
-                <TableCell align="right">
-                  {task.status}
+                <TableCell align="right" >
+                  {taskStatus(+task.status)}
                 </TableCell>
               </TableRow>
             ))}

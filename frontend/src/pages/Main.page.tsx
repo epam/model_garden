@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppBar, Tabs, Tab } from "@material-ui/core";
-import { UploadImages, LabelingTask, TasksStatuses } from "../components";
+import { UploadImages, LabelingTask, TasksStatuses, ErrorAlert } from "../components";
 import { login } from "../store/auth";
 import { setSelectedMenuItem, getBucketNames } from "../store/main/actions";
 import { AppState } from "../store";
@@ -12,7 +12,7 @@ export const MainPage: React.FC = () => {
     (state: AppState) => state.main.selectedMenuItemIndex
   );
   const errorMessage = useSelector(
-    (state: AppState) => state.media.uploadingErrorMessage
+    (state: AppState) => state.error.errorMessage
   );
 
   // auto login to the CVAT
@@ -30,6 +30,7 @@ export const MainPage: React.FC = () => {
 
   return (
     <>
+      {errorMessage && <ErrorAlert />}
       <AppBar position="static">
         <Tabs value={selectedMenuItem} onChange={handleSelectMenuItem}>
           <Tab label="Upload Images" />
@@ -37,7 +38,6 @@ export const MainPage: React.FC = () => {
           <Tab label="Tasks statuses" />
         </Tabs>
       </AppBar>
-      {errorMessage && <h1>{errorMessage}</h1>}
       {selectedMenuItem === 0 && <UploadImages />}
       {selectedMenuItem === 1 && <LabelingTask />}
       {selectedMenuItem === 2 && <TasksStatuses />}
