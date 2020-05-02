@@ -27,9 +27,14 @@ $ pip install -r requirements.txt -r test-requirements.txt
 $ ./manage.py migrate
 ```
 
+### Create a superuser
+```
+$ ./manage.py createsuperuser
+```
+
 ### Run server
 ```
-$ ./manage.py runserver
+$ ./manage.py runserver 0:9000
 ...
 Django version 3.0.5, using settings 'model_garden.settings'
 Starting development server at http://127.0.0.1:8000/
