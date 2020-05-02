@@ -7,6 +7,8 @@ const {
   ANNOTATIONS_FOLDER_NAME_PASCAL,
 } = require("./constants");
 const mediaAssetsServices = require("../media_asset/services");
+// TODO: this is not finished code. Freezed while backend development on the python
+// Remove this code if needed
 // const { LabelingTaskData } = require('../../libs/cvat/models');
 
 const getTask = async (request, response, next) => {
@@ -27,6 +29,8 @@ const getTask = async (request, response, next) => {
   }
 };
 
+// TODO: this is not finished code. Freezed while backend development on the python
+// Remove this code if needed
 const createTask = async (request, response, next) => {
   const {
     taskName,
