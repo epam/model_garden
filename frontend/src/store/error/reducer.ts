@@ -1,6 +1,7 @@
 import {
   ErrorActionTypes,
-  SET_ERROR
+  SET_ERROR,
+  CLEAR_ERROR
 } from "./types";
 
 export interface ErrorState {
@@ -11,7 +12,7 @@ const initialState: ErrorState = {
   errorMessage: ''
 };
 
-export const authReducer = (
+export const errorReducer = (
   state: ErrorState = initialState,
   action: ErrorActionTypes
 ): ErrorState => {
@@ -20,6 +21,11 @@ export const authReducer = (
       return {
         ...state,
         errorMessage: action.error.message
+      }
+    case CLEAR_ERROR:
+      return {
+        ...state,
+        errorMessage: ''
       }
     default:
       return state;

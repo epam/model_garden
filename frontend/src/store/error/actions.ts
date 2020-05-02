@@ -1,6 +1,7 @@
 import {
   ErrorActionTypes,
-  SET_ERROR
+  SET_ERROR,
+  CLEAR_ERROR
 } from "./types";
 
 export function setErrorAction(error: Error): ErrorActionTypes {
@@ -8,4 +9,10 @@ export function setErrorAction(error: Error): ErrorActionTypes {
     type: SET_ERROR,
     error,
   };
+}
+
+export function clearError(): ErrorActionTypes {
+  return {
+    type: CLEAR_ERROR
+  }
 }

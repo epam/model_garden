@@ -6,6 +6,7 @@ import {
   Select,
   MenuItem,
   Typography,
+  FormControl,
 } from "@material-ui/core";
 import "./ImagesLocation.css";
 import { useDispatch } from "react-redux";
@@ -79,42 +80,46 @@ export const ImagesLocation: React.FC<ImagesLocationProps> = ({
   ));
 
   return (
-    <div className="images-receiver">
+    <div className="images-location">
       <FormContainer>
         <Typography
           variant="h5"
           component="h1"
-          className="images-receiver__title"
+          className="images-location__title"
         >
           {title.toUpperCase()}
         </Typography>
-        <form onSubmit={onSubmit} className="images-receiver__form">
-          <InputLabel id="images-receiver-bucket-name">Bucket Name</InputLabel>
-          <Select
-            className="images-receiver__form-item"
-            labelId="images-receiver-bucket-name"
-            name="bucketName"
-            variant="outlined"
-            label="Bucket Name"
-            value={currentBucketName}
-            onChange={handleBucketNameChange}
-          >
-            {bucketNamesSelectOptions}
-          </Select>
-          <InputLabel id="images-receiver-paths">Paths</InputLabel>
-          <Select
-            className="images-receiver__form-item"
-            labelId="images-receiver-paths"
-            name="bucketPaths"
-            variant="outlined"
-            label="Path"
-            value={selectedPaths}
-            onChange={handlePathsChange}
-          >
-            {pathsSelectOptions}
-          </Select>
+        <form onSubmit={onSubmit} className="images-location__form">
+          <FormControl className="images-location__form-item">
+            <InputLabel id="images-location-bucket-name">
+              S3 Bucket Name
+            </InputLabel>
+            <Select
+              labelId="images-location-bucket-name"
+              name="bucketName"
+              variant="outlined"
+              label="S3 Bucket Name"
+              value={currentBucketName}
+              onChange={handleBucketNameChange}
+            >
+              {bucketNamesSelectOptions}
+            </Select>
+          </FormControl>
+          <FormControl className="images-location__form-item">
+            <InputLabel id="images-location-paths">Paths</InputLabel>
+            <Select
+              labelId="images-location-paths"
+              name="bucketPaths"
+              variant="outlined"
+              label="Paths"
+              value={selectedPaths}
+              onChange={handlePathsChange}
+            >
+              {pathsSelectOptions}
+            </Select>
+          </FormControl>
           <TextField
-            className="images-receiver__form-item"
+            className="images-location__form-item"
             name="path"
             variant="outlined"
             label="Selected Path"
@@ -123,7 +128,7 @@ export const ImagesLocation: React.FC<ImagesLocationProps> = ({
             InputLabelProps={{ shrink: !!currentPath }}
           />
           <Button
-            className="images-receiver__form-item"
+            className="images-location__form-item"
             type="submit"
             color="primary"
             variant="contained"

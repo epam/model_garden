@@ -22,13 +22,9 @@ export const TasksStatuses: React.FC = () => {
       dispatch(getBucketPaths(currentBucketName));
     }
   }, [dispatch, currentBucketName]);
-
-  useEffect(() => {
-    dispatch(getLabelingTasks(currentBucketName, currentPath));
-  }, [dispatch]);
-
+  
   const handleImagesLocationSubmit = () => {
-    console.log('form');
+    dispatch(getLabelingTasks(currentBucketName, currentPath));
   };
 
   return (

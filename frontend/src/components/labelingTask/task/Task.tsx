@@ -6,6 +6,8 @@ import {
   Select,
   MenuItem,
   Button,
+  FormControl,
+  InputLabel,
 } from "@material-ui/core";
 import "./Task.css";
 import { FilesCounter } from "../filesCounter";
@@ -73,14 +75,19 @@ export const Task: React.FC<TaskProps> = ({
           />
           <div className="task__form-group">
             <FilesCounter filesCount={filesCount} className="task__form-item" />
-            <Controller
-              className="task__form-item"
-              name="user"
-              variant="outlined"
-              label="User"
-              control={control}
-              as={<Select>{usersSelectOptions}</Select>}
-            />
+            <FormControl className="task__form-item">
+              <InputLabel id="task-labeling-tool-user">
+                Labeling tool User
+              </InputLabel>
+              <Controller
+                labelId="task-labeling-tool-user"
+                name="user"
+                variant="outlined"
+                label="Labeling tool User"
+                control={control}
+                as={<Select>{usersSelectOptions}</Select>}
+              />
+            </FormControl>
           </div>
           <div className="task__form-group">
             <Controller
