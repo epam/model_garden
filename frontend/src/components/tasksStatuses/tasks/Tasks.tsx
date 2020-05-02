@@ -11,6 +11,7 @@ import {
 import "./Tasks.css";
 import { useSelector } from "react-redux";
 import { AppState } from "../../../store";
+import { FormContainer } from "../../shared";
 
 export const Tasks: React.FC = () => {
   const tasks = useSelector(
@@ -19,7 +20,7 @@ export const Tasks: React.FC = () => {
 
   return (
     <div className="tasks">
-      <TableContainer component={Paper}>
+      <FormContainer>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -44,7 +45,7 @@ export const Tasks: React.FC = () => {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </FormContainer>
     </div>
   );
 };

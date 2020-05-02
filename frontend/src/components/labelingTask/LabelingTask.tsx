@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import "./LabelingTask.css";
-import { ImagesLocation } from "./imagesLocation";
+import { ImagesLocation } from "../shared/imagesLocation";
 import { Task, FormData } from "./task";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../store";
@@ -57,6 +57,8 @@ export const LabelingTask: React.FC = () => {
   return (
     <>
       <ImagesLocation
+        title="Select images location"
+        buttonName="Get unassigned images count"
         bucketNames={bucketNames}
         paths={paths}
         currentBucketName={currentBucketName}
