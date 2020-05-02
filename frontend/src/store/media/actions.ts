@@ -4,9 +4,9 @@ import {
   SET_MEDIA_FILES,
   UPLOAD_MEDIA_FILES_START,
   UPLOAD_MEDIA_FILES_SUCCESS,
-  UPLOAD_MEDIA_FILES_ERROR
 } from "./types";
 import { uploadMediaFilesRequest } from "../../api";
+import { setErrorAction } from '../error';
 
 export function setMediaFiles(files: File[]): MediaActionTypes {
   return {
@@ -28,16 +28,9 @@ export function uploadMediaFilesSuccess(butchName: string): MediaActionTypes {
   }
 }
 
-export function uploadMediaFilesError(error: string): MediaActionTypes {
-  return {
-    type: UPLOAD_MEDIA_FILES_ERROR,
-    error
-  }
-}
-
 export const uploadMediaFiles = (files: File[], bucketName: string, path: string): AppThunk => dispatch => {
   dispatch(uploadMediaFilesStart());
   return uploadMediaFilesRequest(files, bucketName, path)
     .then((response) => dispatch(uploadMediaFilesSuccess(response.data)))
-    .catch((error) => dispatch(uploadMediaFilesError(error.response.data.message)));
+    .catch((error) => dispatch(setErrorAction(error)));
 };
