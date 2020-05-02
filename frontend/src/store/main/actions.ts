@@ -1,6 +1,5 @@
 import { AppThunk } from "../index";
 import {
-  Bucket,
   MainActionTypes,
   SET_SELECTED_MENU_ITEM,
   GET_BUCKET_NAMES_START,
