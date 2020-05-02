@@ -1,14 +1,16 @@
 import React, { useEffect } from "react";
 import "./LabelingTask.css";
-import { ImagesLocation } from "./imgaseLocation";
-import { Task } from "./task";
+import { ImagesLocation } from "../shared/imagesLocation";
+import { Task, FormData } from "./task";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../store";
 import {
   getBucketPaths,
   getLabelingToolUsers,
   getUnsignedImagesCount,
+  createLabelingTask,
 } from "../../store/labelingTask";
+import { LabelingTaskRequestData } from "../../models";
 
 export const LabelingTask: React.FC = () => {
   const dispatch = useDispatch();
@@ -41,9 +43,22 @@ export const LabelingTask: React.FC = () => {
     dispatch(getUnsignedImagesCount(currentBucketName, currentPath));
   };
 
+  const handleTaskSubmit = (data: FormData) => {
+    dispatch(
+      createLabelingTask({
+        ...data,
+        userId: data.user,
+        bucketName: currentBucketName,
+        bucketPath: currentPath,
+      } as LabelingTaskRequestData)
+    );
+  };
+
   return (
     <>
       <ImagesLocation
+        title="Select images location"
+        buttonName="Get unassigned images count"
         bucketNames={bucketNames}
         paths={paths}
         currentBucketName={currentBucketName}
@@ -54,6 +69,7 @@ export const LabelingTask: React.FC = () => {
         users={users}
         taskName={currentPath}
         filesCount={unsignedImagesCount}
+        handleTaskSubmit={handleTaskSubmit}
       />
     </>
   );

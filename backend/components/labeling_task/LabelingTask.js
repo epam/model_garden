@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const LabelingTaskSchema = new Schema({
+  taskName: {
+    type: String
+  },
   imagesPaths: {
     type: Array,
     required: true
