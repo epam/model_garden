@@ -2,47 +2,44 @@ import {
   LabelingTaskActionTypes,
   GET_BUCKET_PATHS_START,
   GET_BUCKET_PATHS_SUCCESS,
-  GET_BUCKET_PATHS_ERROR,
   GET_LABELING_TOOL_USERS_START,
   GET_LABELING_TOOL_USERS_SUCCESS,
-  GET_LABELING_TOOL_USERS_ERROR,
   GET_UNSIGNED_IMAGES_COUNT_START,
   GET_UNSIGNED_IMAGES_COUNT_SUCCESS,
-  GET_UNSIGNED_IMAGES_COUNT_ERROR,
   SET_CURRENT_BUCKET_NAME,
   SET_CURRENT_PATH,
   CREATE_LABELING_TASK_START,
   CREATE_LABELING_TASK_SUCCESS,
-  CREATE_LABELING_TASK_ERROR,
+  GET_LABELING_TASKS_START,
+  GET_LABELING_TASKS_SUCCESS,
 } from "./types";
 import { LabelingToolUser } from "../../models/labelingToolUser";
+import { LabelingTaskStatus } from "../../models";
 
 export interface LabelingTasksState {
   isPathsLoading: boolean;
   paths: string[];
-  pathsLoadingErrorMessage: string;
   isLabelingToolUsersLoading: boolean;
   labelingToolUsers: LabelingToolUser[];
-  labelingToolUsersLoadingErrorMessage: string;
   currentBucketName: string;
   currentPath: string;
   isImagesCountLoading: boolean;
   unsignedImagesCount: number;
-  unsignedImagesCountErrorMessage: string;
+  isLabelingTasksStatusesLoading: boolean;
+  labelingTasksStatuses: LabelingTaskStatus[];
 }
 
 const initialState: LabelingTasksState = {
   isPathsLoading: false,
   paths: [],
-  pathsLoadingErrorMessage: "",
   isLabelingToolUsersLoading: false,
   labelingToolUsers: [],
-  labelingToolUsersLoadingErrorMessage: "",
   currentBucketName: "",
   currentPath: "",
   isImagesCountLoading: false,
   unsignedImagesCount: 0,
-  unsignedImagesCountErrorMessage: "",
+  isLabelingTasksStatusesLoading: false,
+  labelingTasksStatuses: [],
 };
 
 export const labelingTaskReducer = (
@@ -61,12 +58,6 @@ export const labelingTaskReducer = (
         isPathsLoading: false,
         paths: action.paths,
       };
-    case GET_BUCKET_PATHS_ERROR:
-      return {
-        ...state,
-        isPathsLoading: false,
-        pathsLoadingErrorMessage: action.error,
-      };
     case GET_LABELING_TOOL_USERS_START:
       return {
         ...state,
@@ -78,12 +69,6 @@ export const labelingTaskReducer = (
         isLabelingToolUsersLoading: false,
         labelingToolUsers: action.users,
       };
-    case GET_LABELING_TOOL_USERS_ERROR:
-      return {
-        ...state,
-        isLabelingToolUsersLoading: false,
-        labelingToolUsersLoadingErrorMessage: action.error,
-      };
     case GET_UNSIGNED_IMAGES_COUNT_START:
       return {
         ...state,
@@ -93,14 +78,8 @@ export const labelingTaskReducer = (
       return {
         ...state,
         isImagesCountLoading: false,
-        unsignedImagesCount: action.imagesCount
-      }
-    case GET_UNSIGNED_IMAGES_COUNT_ERROR:
-      return {
-        ...state,
-        isImagesCountLoading: false,
-        unsignedImagesCountErrorMessage: action.error
-      }
+        unsignedImagesCount: action.imagesCount,
+      };
     case SET_CURRENT_BUCKET_NAME:
       return {
         ...state,
@@ -115,8 +94,17 @@ export const labelingTaskReducer = (
       return state;
     case CREATE_LABELING_TASK_SUCCESS:
       return state;
-    case CREATE_LABELING_TASK_ERROR:
-      return state;
+    case GET_LABELING_TASKS_START:
+      return {
+        ...state,
+        isLabelingTasksStatusesLoading: true,
+      };
+    case GET_LABELING_TASKS_SUCCESS:
+      return {
+        ...state,
+        isLabelingTasksStatusesLoading: false,
+        labelingTasksStatuses: action.tasks,
+      };
     default:
       return state;
   }
