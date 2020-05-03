@@ -1,0 +1,29 @@
+.images-location__title {
+  text-align: center;
+}
+
+.images-location__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.images-location__form-item.MuiFormControl-root,
+.images-location__form-item.MuiTextField-root,
+.images-location__form-item.MuiButton-root {
+  margin-top: 20px;
+  width: 100%;
+}
+
+#images-location-bucket-name,
+#images-location-paths {
+  transform: translate(14px, 20px);
+}
+
+#images-location-bucket-name[data-shrink="true"],
+#images-location-paths[data-shrink="true"] {
+  transform: translate(14px, -6px);
+  font-size: 12px;
+}
