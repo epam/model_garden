@@ -13,3 +13,6 @@ lint:
 
 test:
 	pytest -v --cov=model_garden --cov-report=term-missing --no-cov-on-fail tests
+
+cov:
+	pytest -v --cov=model_garden --cov-report=html --no-cov-on-fail tests && open htmlcov/index.html
