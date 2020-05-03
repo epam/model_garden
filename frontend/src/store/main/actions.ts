@@ -1,13 +1,12 @@
 import { AppThunk } from "../index";
 import {
-  Bucket,
   MainActionTypes,
   SET_SELECTED_MENU_ITEM,
   GET_BUCKET_NAMES_START,
   GET_BUCKET_NAMES_SUCCESS,
-  GET_BUCKET_NAMES_ERROR,
 } from "./types";
 import { getBucketNamesRequest } from "../../api";
+import { setErrorAction } from '../error';
 
 export function setSelectedMenuItem(menuItemIndex: number): MainActionTypes {
   return {
@@ -29,16 +28,9 @@ export function getBucketNamesSuccess(bucketNames: string[]): MainActionTypes {
   };
 }
 
-export function getBucketNamesError(error: string): MainActionTypes {
-  return {
-    type: GET_BUCKET_NAMES_ERROR,
-    error,
-  };
-}
-
 export const getBucketNames = (): AppThunk => (dispatch) => {
   dispatch(getBucketNamesStart());
   return getBucketNamesRequest()
-    .then((response) => dispatch(getBucketNamesSuccess(response.data.map((bucket: Bucket) => bucket.name))))
-    .catch((error) => dispatch(getBucketNamesError(error.response.data.message)));
+    .then((response) => dispatch(getBucketNamesSuccess(response.data)))
+    .catch((error) => dispatch(setErrorAction(error)));
 };
