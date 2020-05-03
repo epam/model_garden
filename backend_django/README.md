@@ -1,5 +1,9 @@
 # Django backend
 
+## DataBase
+www.postgresql.org/download
+See the recommended pass in www.kb.epam.com/display/EPMCMLCV/Databases+and+Storages
+
 ## Installation
 
 ### Install virtualenv
@@ -12,11 +16,15 @@ $ pip install virtualenv
 $ virtualenv .venv
 ```
 
-### Activate virtual environment
+### Activate virtual environment in Linux
 ```
 $ . .venv/bin/activate
 ```
-
+### Activate virtual environment in Windows
+```
+$ source ./.venv/Scripts/activate
+```
+ 
 ### Install requirements and test requirements
 ```
 $ pip install -r requirements.txt -r test-requirements.txt
@@ -40,6 +48,9 @@ Django version 3.0.5, using settings 'model_garden.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
+
+## PyCharm
+See www.stackoverflow.com/questions/33868806/configuring-pycharm-with-existing-virtualenv
 
 ## Docker
 
