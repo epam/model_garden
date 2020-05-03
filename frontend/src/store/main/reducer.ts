@@ -3,21 +3,18 @@ import {
   SET_SELECTED_MENU_ITEM,
   GET_BUCKET_NAMES_START,
   GET_BUCKET_NAMES_SUCCESS,
-  GET_BUCKET_NAMES_ERROR
 } from "./types";
 
 export interface MainState {
   selectedMenuItemIndex: number;
   isBucketNamesLoading: boolean;
   bucketNames: string[];
-  bucketNamesErrorMessage: string;
 }
 
 const initialState: MainState = {
   selectedMenuItemIndex: 0,
   isBucketNamesLoading: false,
   bucketNames: [],
-  bucketNamesErrorMessage: ''
 };
 
 export const mainReducer = (
@@ -41,12 +38,6 @@ export const mainReducer = (
         isBucketNamesLoading: false,
         bucketNames: action.bucketNames
       };
-    case GET_BUCKET_NAMES_ERROR:
-      return {
-        ...state,
-        isBucketNamesLoading: false,
-        bucketNamesErrorMessage: action.error
-      }
     default:
       return state;
   }

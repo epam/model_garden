@@ -1,19 +1,5 @@
-.upload-images {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 600px;
-  margin: 0 auto;
-  margin-top: 20px;
-  padding: 20px;
-  border: 1px solid #3F51B5;
-  border-radius: 2px;
-}
-
 .upload-images__form {
   margin-top: 20px;
-  width: 80%;
 }
 
 .upload-images__title {
@@ -27,9 +13,18 @@
   align-items: center;
 }
 
-.upload-images__settings-item.MuiInputBase-root,
+.upload-images__settings-item.MuiFormControl-root,
 .upload-images__settings-item.MuiTextField-root,
 .upload-images__settings-item.MuiButton-root {
   margin-top: 20px;
   width: 100%;
+}
+
+#upload-images-bucket-name {
+  transform: translate(14px, 20px);
+}
+
+#upload-images-bucket-name[data-shrink="true"] {
+  transform: translate(14px, -6px);
+  font-size: 12px;
 }

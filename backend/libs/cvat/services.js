@@ -114,10 +114,21 @@ const getDumpAnnotations = async (taskId, dumpFormat) => {
   }
 };
 
+const getUsers = async () => {
+  try {
+    const response = await axios.get(ROUTES.users.users);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+};
+
 module.exports = {
   login,
   getTask,
   createTask,
   setImagesToTask,
   getDumpAnnotations,
+  getUsers,
 };
