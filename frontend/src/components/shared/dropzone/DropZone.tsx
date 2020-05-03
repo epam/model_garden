@@ -27,6 +27,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
         let isCorrect = true;
         switch (file.type) {
           case "application/x-zip-compressed":
+          case "application/zip":
             preview = zipSvg;
             break;
           case String(file.type.match(/image\/.*/)):

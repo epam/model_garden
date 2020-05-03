@@ -11,7 +11,7 @@ export const uploadMediaFilesRequest = async (
     formData.append("bucketName", bucketName);
     if (path) formData.append("path", path);
     return await axios.post(
-      "http://localhost:9000/api/media_asset/upload_images",
+      "http://localhost:9000/api/media-assets/upload/",
       formData,
       {
         headers: {
