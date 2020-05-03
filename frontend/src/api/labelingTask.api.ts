@@ -8,7 +8,7 @@ axios.defaults.headers = {
 export const getBucketPathsRequest = async (bucketName: string) => {
   try {
     return await axios.get(
-      `http://localhost:9000/api/bucket-items/?bucket_name=${bucketName}`
+      `http://localhost:9000/api/datasets/?bucket_name=${bucketName}`
     );
   } catch (error) {
     if (error && error.response) {
