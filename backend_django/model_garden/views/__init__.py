@@ -1,9 +1,9 @@
 from .bucket import BucketViewSet
-from .bucket_item import BucketItemViewSet
+from .dataset import DatasetViewSet
 from .media_asset import MediaAssetViewSet
 
 __all__ = (
   "BucketViewSet",
-  "BucketItemViewSet",
+  "DatasetViewSet",
   "MediaAssetViewSet",
 )
