@@ -3,7 +3,7 @@ from django.db import models
 from model_garden.models import Bucket
 
 
-class BucketItem(models.Model):
+class Dataset(models.Model):
   path = models.CharField(max_length=512)
   bucket = models.ForeignKey(Bucket, on_delete=models.CASCADE)
 

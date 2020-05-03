@@ -2,14 +2,14 @@ from datetime import datetime
 
 from rest_framework import serializers
 
-from model_garden.models import BucketItem
+from model_garden.models import Dataset
 
 
-class BucketItemSerializer(serializers.ModelSerializer):
+class DatasetSerializer(serializers.ModelSerializer):
   path = serializers.CharField(allow_blank=True, allow_null=True)
 
   class Meta:
-    model = BucketItem
+    model = Dataset
     fields = (
       'path',
       'bucket',
@@ -17,21 +17,19 @@ class BucketItemSerializer(serializers.ModelSerializer):
     validators = []
 
   def validate(self, attrs):
-    path = attrs.get('path')
-    if path is None:
-      path = ''
-
-    path = path.strip()
+    path = (attrs.get('path') or '').strip()
     if not path:
-      attrs['path'] = f'batch_{datetime.utcnow().date()}'
+      path = 'batch'
+
+    attrs['path'] = f'{path}_{datetime.utcnow().date()}'
     return super().validate(attrs=attrs)
 
   def create(self, validated_data):
-    bucket_item = BucketItem.objects.filter(
+    dataset = Dataset.objects.filter(
       path=validated_data['path'],
       bucket=validated_data['bucket'],
     ).first()
-    if bucket_item is not None:
-      return bucket_item
+    if dataset is not None:
+      return dataset
 
     return super().create(validated_data=validated_data)
