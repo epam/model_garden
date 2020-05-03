@@ -5,6 +5,7 @@ import {
   GET_BUCKET_NAMES_START,
   GET_BUCKET_NAMES_SUCCESS,
 } from "./types";
+import { Bucket } from "../../models";
 import { getBucketNamesRequest } from "../../api";
 import { setErrorAction } from '../error';
 
@@ -31,6 +32,6 @@ export function getBucketNamesSuccess(bucketNames: string[]): MainActionTypes {
 export const getBucketNames = (): AppThunk => (dispatch) => {
   dispatch(getBucketNamesStart());
   return getBucketNamesRequest()
-    .then((response) => dispatch(getBucketNamesSuccess(response.data)))
+    .then((response) => dispatch(getBucketNamesSuccess(response.data.map((bucket: Bucket) => bucket.name))))
     .catch((error) => dispatch(setErrorAction(error)));
 };
