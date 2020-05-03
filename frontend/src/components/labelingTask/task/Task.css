@@ -1,14 +1,5 @@
-.task {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 600px;
-  margin: 0 auto;
-  margin-top: 20px;
-  padding: 20px;
-  border: 1px solid #3F51B5;
-  border-radius: 2px;
+.task__title {
+  text-align: center;
 }
 
 .task__form {
@@ -32,9 +23,18 @@
   margin: 20px;
 }
 
-.task__form-item.MuiInputBase-root,
+.task__form-item.MuiFormControl-root,
 .task__form-item.MuiTextField-root,
 .task__form-item.MuiButton-root {
   margin-top: 20px;
   width: 100%;
+}
+
+#task-labeling-tool-user {
+  transform: translate(14px, 20px);
+}
+
+#task-labeling-tool-user[data-shrink="true"] {
+  transform: translate(14px, -6px);
+  font-size: 12px;
 }
