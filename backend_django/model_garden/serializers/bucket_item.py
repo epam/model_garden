@@ -17,13 +17,11 @@ class BucketItemSerializer(serializers.ModelSerializer):
     validators = []
 
   def validate(self, attrs):
-    path = attrs.get('path')
-    if path is None:
-      path = ''
-
-    path = path.strip()
+    path = (attrs.get('path') or '').strip()
     if not path:
-      attrs['path'] = f'batch_{datetime.utcnow().date()}'
+      path = 'batch'
+
+    attrs['path'] = f'{path}_{datetime.utcnow().date()}'
     return super().validate(attrs=attrs)
 
   def create(self, validated_data):
