@@ -1,0 +1,30 @@
+default:
+  image: python:3.8
+
+  before_script:
+    - cd backend_django
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install -r requirements.txt -r test-requirements.txt
+
+cache:
+  paths:
+    - backend_django/venv/
+
+services:
+  - postgres:12.2-alpine
+
+variables:
+  POSTGRES_DB: garden
+  POSTGRES_HOST_AUTH_METHOD: trust
+  POSTGRES_PASSWORD: ""
+  POSTGRES_USER: postgres
+
+lint:
+  script:
+    - flake8 .
+
+test:
+  script:
+    - pytest -v --cov=model_garden --cov-report=term-missing --no-cov-on-fail tests

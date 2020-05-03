@@ -1,1 +1,11 @@
+# Editors
+.idea
 .vscode
+
+# python
+.venv
+__pycache__/
+*.py[cod]
+
+# OSX
+.DS_Store
