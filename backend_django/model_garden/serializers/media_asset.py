@@ -7,6 +7,6 @@ class MediaAssetSerializer(serializers.ModelSerializer):
   class Meta:
     model = MediaAsset
     fields = (
-      'bucket_item',
+      'dataset',
       'filename',
     )

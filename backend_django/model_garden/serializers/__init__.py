@@ -1,9 +1,9 @@
 from .bucket import BucketSerializer
-from .bucket_item import BucketItemSerializer
+from .dataset import DatasetSerializer
 from .media_asset import MediaAssetSerializer
 
 __all__ = (
   "BucketSerializer",
-  "BucketItemSerializer",
+  "DatasetSerializer",
   "MediaAssetSerializer",
 )
