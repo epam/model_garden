@@ -7,6 +7,9 @@ const ROUTES = {
     id: (taskId) => `/tasks/${taskId}`,
     images: (taskId) => `/tasks/${taskId}/data`,
     dumpAnnotations: (taskId, filename, format) => `/tasks/${taskId}/annotations/${filename}?format=${format}`
+  },
+  users: {
+    users: '/users',
   }
 };
 
