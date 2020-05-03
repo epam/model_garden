@@ -1,2 +1,6 @@
-.coverage
+# dotenv
 .env
+
+# coverage
+.coverage
+htmlcov
