@@ -3,21 +3,18 @@ import {
   SET_MEDIA_FILES,
   UPLOAD_MEDIA_FILES_START,
   UPLOAD_MEDIA_FILES_SUCCESS,
-  UPLOAD_MEDIA_FILES_ERROR,
 } from "./types";
 
 export interface MediaState {
   isUploading: boolean;
   mediaFiles: File[];
   butchName: string;
-  uploadingErrorMessage: string;
 }
 
 const initialState: MediaState = {
   isUploading: false,
   mediaFiles: [],
-  butchName: '',
-  uploadingErrorMessage: '',
+  butchName: ''
 };
 
 export const mediaReducer = (
@@ -40,12 +37,6 @@ export const mediaReducer = (
         ...state,
         isUploading: false,
         butchName: action.butchName
-      }
-    case UPLOAD_MEDIA_FILES_ERROR:
-      return {
-        ...state,
-        isUploading: false,
-        uploadingErrorMessage: action.error
       }
     default:
       return state;
