@@ -50,6 +50,7 @@ INSTALLED_APPS = [
   'django.contrib.messages',
   'django.contrib.staticfiles',
   'django_extensions',
+  'django_filters',
   'model_garden',
   'rest_framework',
 ]
@@ -140,3 +141,8 @@ STATIC_URL = '/static/'
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', default=None)
 AWS_SECRET_KEY = env('AWS_SECRET_KEY', default=None)
 AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME', default=None)
+
+# Rest framework
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
