@@ -3,6 +3,7 @@
 ## DataBase
 www.postgresql.org/download
 See the recommended pass in www.kb.epam.com/display/EPMCMLCV/Databases+and+Storages
+Also update the password in `DATABASES = {...}` dict in settings.py
 
 ## Installation
 
