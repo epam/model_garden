@@ -1,5 +1,6 @@
 import { AppThunk } from "../index";
 import {
+  BucketItem,
   LabelingTaskActionTypes,
   GET_BUCKET_PATHS_START,
   GET_BUCKET_PATHS_SUCCESS,
@@ -116,7 +117,7 @@ export function getLabelingTasksSuccess(tasks: LabelingTaskStatus[]) {
 export const getBucketPaths = (bucketName: string): AppThunk => (dispatch) => {
   dispatch(getBucketPathsStart());
   return getBucketPathsRequest(bucketName)
-    .then((response) => dispatch(getBucketPathsSuccess(response.data)))
+    .then((response) => dispatch(getBucketPathsSuccess(response.data.map((item: BucketItem) => item.path))))
     .catch((error) => dispatch(setErrorAction(error)));
 };
 

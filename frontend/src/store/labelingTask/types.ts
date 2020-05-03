@@ -22,6 +22,10 @@ export const CREATE_LABELING_TASK_SUCCESS = "CREATE_LABELING_TASK_SUCCESS";
 export const GET_LABELING_TASKS_START = 'GET_LABELING_TASKS_START';
 export const GET_LABELING_TASKS_SUCCESS = 'GET_LABELING_TASKS_SUCCESS';
 
+export interface BucketItem {
+  path: string;
+}
+
 export interface getBucketPathsStart {
   type: typeof GET_BUCKET_PATHS_START;
 }
