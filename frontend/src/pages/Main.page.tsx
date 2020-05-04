@@ -2,8 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppBar, Tabs, Tab } from "@material-ui/core";
 import { UploadImages, LabelingTask, TasksStatuses, ErrorAlert } from "../components";
-import { login } from "../store/auth";
-import { setSelectedMenuItem, getBucketNames } from "../store/main/actions";
+import { setSelectedMenuItem, getBucketNames } from "../store/main";
 import { AppState } from "../store";
 
 export const MainPage: React.FC = () => {
@@ -15,9 +14,8 @@ export const MainPage: React.FC = () => {
     (state: AppState) => state.error.errorMessage
   );
 
-  // auto login to the CVAT
+  // get bucket names
   useEffect(() => {
-    dispatch(login("", ""));
     dispatch(getBucketNames());
   }, [dispatch]);
 
