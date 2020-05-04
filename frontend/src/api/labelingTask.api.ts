@@ -22,7 +22,7 @@ export const getBucketPathsRequest = async (bucketName: string) => {
 export const getLabelingToolUsersRequest = async () => {
   try {
     return await axios.get(
-      "http://localhost:9000/api/users/labeling_tool_users"
+      "http://localhost:9000/api/cvat-users/"
     );
   } catch (error) {
     if (error && error.response) {

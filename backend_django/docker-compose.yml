@@ -8,7 +8,7 @@ services:
     image: postgres:12-alpine
     restart: always
     environment:
-      POSTGRES_DB: garden
+      POSTGRES_DB: model_garden
       POSTGRES_HOST_AUTH_METHOD: trust
       POSTGRES_PASSWORD: ""
       POSTGRES_USER: postgres
