@@ -1,14 +1,12 @@
 import { createStore, compose, applyMiddleware, Action, combineReducers } from 'redux';
 import thunk, { ThunkAction } from 'redux-thunk';
 import { errorReducer, ErrorState } from './error';
-import { authReducer, AuthState } from './auth';
 import { mainReducer, MainState } from './main';
 import { mediaReducer, MediaState } from './media';
 import { labelingTaskReducer, LabelingTasksState } from './labelingTask';
 
 export interface AppState {
   error: ErrorState;
-  auth: AuthState;
   main: MainState;
   media: MediaState;
   labelingTask: LabelingTasksState;
@@ -26,7 +24,6 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const reducers = combineReducers<AppState>({
   error: errorReducer,
-  auth: authReducer,
   main: mainReducer,
   media: mediaReducer,
   labelingTask: labelingTaskReducer,
