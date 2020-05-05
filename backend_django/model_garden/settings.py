@@ -92,9 +92,9 @@ WSGI_APPLICATION = 'model_garden.wsgi.application'
 DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.postgresql',
-    'NAME': 'garden',
-    'USER': 'postgres',
-    'PASSWORD': '',
+    'NAME': env('DJANGO_DB_NAME', default='model_garden'),
+    'USER': env('DJANGO_DB_USER', default='postgres'),
+    'PASSWORD': env('DJANGO_DB_PASSWORD', default=''),
     'HOST': env("DJANGO_DB_HOST", default="localhost"),
     'PORT': env("DJANGO_DB_PORT", cast=int, default=5432),
     'ATOMIC_REQUESTS': True,
@@ -141,6 +141,12 @@ STATIC_URL = '/static/'
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', default=None)
 AWS_SECRET_KEY = env('AWS_SECRET_KEY', default=None)
 AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME', default=None)
+
+# CVAT
+CVAT_HOST = env('CVAT_HOST', default='localhost')
+CVAT_PORT = env('CVAT_PORT', cast=int, default=8080)
+CVAT_ROOT_USER_NAME = env('CVAT_ROOT_USER_NAME', default='epam_labler')
+CVAT_ROOT_USER_PASSWORD = env('CVAT_ROOT_USER_PASSWORD', default='epam_mlcv')
 
 # Rest framework
 REST_FRAMEWORK = {

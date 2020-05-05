@@ -53,7 +53,7 @@ export const Task: React.FC<TaskProps> = ({
 
   const usersSelectOptions = users.map((user) => (
     <MenuItem key={user.id} value={user.id}>
-      {user.email}
+      {user.full_name} ({user.email})
     </MenuItem>
   ));
 
