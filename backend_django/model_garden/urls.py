@@ -18,10 +18,16 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
 
-from model_garden.views import BucketViewSet, DatasetViewSet, MediaAssetViewSet
+from model_garden.views import (
+  BucketViewSet,
+  CvatUserViewSet,
+  DatasetViewSet,
+  MediaAssetViewSet,
+)
 
 router = routers.DefaultRouter()
 router.register(r'buckets', BucketViewSet)
+router.register(r'cvat-users', CvatUserViewSet, basename='cvat_users')
 router.register(r'datasets', DatasetViewSet)
 router.register(r'media-assets', MediaAssetViewSet)
 
