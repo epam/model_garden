@@ -1,5 +1,6 @@
 from unittest import mock
 
+from django.test.utils import override_settings
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
@@ -20,6 +21,7 @@ class TestCvatUserViewSet(APITestCase):
   def tearDown(self):
     self.cvat_service_cls_patcher.stop()
 
+  @override_settings(CVAT_ROOT_USER_NAME='admin')
   def test_list(self):
     response = self.client.get(
       path=reverse('cvat_users-list'),
