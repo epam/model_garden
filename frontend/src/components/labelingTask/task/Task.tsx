@@ -77,13 +77,13 @@ export const Task: React.FC<TaskProps> = ({
             <FilesCounter filesCount={filesCount} className="task__form-item" />
             <FormControl className="task__form-item">
               <InputLabel id="task-labeling-tool-user">
-                Labeling tool User
+                Labeling tool user
               </InputLabel>
               <Controller
                 labelId="task-labeling-tool-user"
                 name="user"
                 variant="outlined"
-                label="Labeling tool User"
+                label="Labeling tool user"
                 control={control}
                 as={<Select>{usersSelectOptions}</Select>}
               />
