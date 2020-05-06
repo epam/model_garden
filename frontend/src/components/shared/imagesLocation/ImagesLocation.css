@@ -18,12 +18,12 @@
 }
 
 #images-location-bucket-name,
-#images-location-paths {
+#images-location-datasets {
   transform: translate(14px, 20px);
 }
 
 #images-location-bucket-name[data-shrink="true"],
-#images-location-paths[data-shrink="true"] {
+#images-location-datasets[data-shrink="true"] {
   transform: translate(14px, -6px);
   font-size: 12px;
 }
