@@ -1,9 +1,9 @@
 from django.db import models
 
-from model_garden.models import Bucket
+from model_garden.models import BaseModel, Bucket
 
 
-class Dataset(models.Model):
+class Dataset(BaseModel):
   path = models.CharField(max_length=512)
   bucket = models.ForeignKey(Bucket, on_delete=models.CASCADE)
 

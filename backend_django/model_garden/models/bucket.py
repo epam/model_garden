@@ -1,7 +1,9 @@
 from django.db import models
 
+from model_garden.models import BaseModel
 
-class Bucket(models.Model):
+
+class Bucket(BaseModel):
   name = models.CharField(max_length=63)
   url = models.URLField()
 

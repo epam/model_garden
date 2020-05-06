@@ -3,12 +3,10 @@ import os
 from django.db import models
 
 from model_garden.constants import MediaAssetStatus
-from model_garden.models import Dataset
+from model_garden.models import BaseModel, Dataset
 
 
-class MediaAsset(models.Model):
-  created_at = models.DateTimeField(auto_now_add=True)
-  updated_at = models.DateTimeField(auto_now=True)
+class MediaAsset(BaseModel):
   dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
   filename = models.CharField(max_length=512)
   status = models.CharField(
