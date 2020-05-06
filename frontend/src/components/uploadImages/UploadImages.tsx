@@ -33,7 +33,7 @@ export const UploadImages: React.FC = () => {
   const isFilesUploading = useSelector(
     (state: AppState) => state.media.isUploading
   );
-  const mediaFiles = useSelector((state: AppState) => state.media.mediaFiles);
+  const mediaFiles = useSelector((state: AppState): File[] => state.media.mediaFiles);
 
   const handleUploadImagesSubmit = (bucketId: string, path: string) => {
     dispatch(uploadMediaFiles(mediaFiles, bucketId, path));
@@ -100,6 +100,7 @@ export const UploadImages: React.FC = () => {
               color="primary"
               variant="contained"
               type="submit"
+              disabled={mediaFiles.length === 0}
             >
               Upload
             </Button>
