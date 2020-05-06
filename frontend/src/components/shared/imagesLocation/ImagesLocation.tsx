@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Button,
-  TextField,
   InputLabel,
   Select,
   MenuItem,
@@ -118,15 +117,6 @@ export const ImagesLocation: React.FC<ImagesLocationProps> = ({
               {pathsSelectOptions}
             </Select>
           </FormControl>
-          <TextField
-            className="images-location__form-item"
-            name="path"
-            variant="outlined"
-            label="Selected Path"
-            value={currentPath}
-            onChange={handlePathChange}
-            InputLabelProps={{ shrink: !!currentPath }}
-          />
           <Button
             className="images-location__form-item"
             type="submit"
