@@ -5,7 +5,7 @@ import { Task, FormData } from "./task";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../store";
 import {
-  getBucketPaths,
+  getDatasets,
   getLabelingToolUsers,
   getUnsignedImagesCount,
   createLabelingTask,
@@ -16,8 +16,8 @@ export const LabelingTask: React.FC = () => {
   const dispatch = useDispatch();
   const buckets = useSelector((state: AppState) => state.main.buckets);
   const currentBucketId = useSelector((state: AppState) => state.labelingTask.currentBucketId);
-  const paths = useSelector((state: AppState) => state.labelingTask.paths);
-  const currentPath = useSelector((state: AppState) => state.labelingTask.currentPath);
+  const datasets = useSelector((state: AppState) => state.labelingTask.datasets);
+  const currentDatasetId = useSelector((state: AppState) => state.labelingTask.currentDatasetId);
   const users = useSelector((state: AppState) => state.labelingTask.labelingToolUsers);
   const unsignedImagesCount = useSelector((state: AppState) => state.labelingTask.unsignedImagesCount);
 
@@ -27,21 +27,22 @@ export const LabelingTask: React.FC = () => {
 
   useEffect(() => {
     if (currentBucketId) {
-      dispatch(getBucketPaths(currentBucketId));
+      dispatch(getDatasets(currentBucketId));
     }
   }, [dispatch, currentBucketId]);
 
   const handleGetUnsignedImagesCount = () => {
-    dispatch(getUnsignedImagesCount(currentBucketId, currentPath));
+    if (currentDatasetId) {
+      dispatch(getUnsignedImagesCount(currentDatasetId));
+    }
   };
 
   const handleTaskSubmit = (data: FormData) => {
     dispatch(
       createLabelingTask({
         task_name: data.taskName,
+        dataset_id: currentDatasetId,
         assignee_id: data.user,
-        bucket_id: currentBucketId,
-        bucket_path: currentPath,
         files_in_task: data.filesInTask,
         count_of_tasks: data.countOfTasks,
       } as LabelingTaskRequestData)
@@ -54,14 +55,13 @@ export const LabelingTask: React.FC = () => {
         title="Select images location"
         buttonName="Get unassigned images count"
         buckets={buckets}
-        paths={paths}
+        datasets={Array.from(datasets.values())}
         currentBucketId={currentBucketId}
-        currentPath={currentPath}
         handleFormSubmit={handleGetUnsignedImagesCount}
       />
       <Task
         users={users}
-        taskName={currentPath}
+        taskName={(datasets.get(currentDatasetId) || {path: ""}).path}
         filesCount={unsignedImagesCount}
         handleTaskSubmit={handleTaskSubmit}
       />
