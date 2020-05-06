@@ -13,7 +13,7 @@ export interface uploadMediaStart {
 
 export interface uploadMediaSuccess {
   type: typeof UPLOAD_MEDIA_FILES_SUCCESS;
-  butchName: string;
+  batchName: string;
 }
 
 export type MediaActionTypes =

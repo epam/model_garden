@@ -8,23 +8,19 @@ import { getLabelingTasks, getBucketPaths } from '../../store/labelingTask';
 
 export const TasksStatuses: React.FC = () => {
   const dispatch = useDispatch();
-  const bucketNames = useSelector((state: AppState) => state.main.bucketNames);
-  const currentBucketName = useSelector(
-    (state: AppState) => state.labelingTask.currentBucketName
-  );
+  const buckets = useSelector((state: AppState) => state.main.buckets);
+  const currentBucketId = useSelector((state: AppState) => state.labelingTask.currentBucketId);
   const paths = useSelector((state: AppState) => state.labelingTask.paths);
-  const currentPath = useSelector(
-    (state: AppState) => state.labelingTask.currentPath
-  );
+  const currentPath = useSelector((state: AppState) => state.labelingTask.currentPath);
 
   useEffect(() => {
-    if (currentBucketName) {
-      dispatch(getBucketPaths(currentBucketName));
+    if (currentBucketId) {
+      dispatch(getBucketPaths(currentBucketId));
     }
-  }, [dispatch, currentBucketName]);
+  }, [dispatch, currentBucketId]);
   
   const handleImagesLocationSubmit = () => {
-    dispatch(getLabelingTasks(currentBucketName, currentPath));
+    dispatch(getLabelingTasks(currentBucketId, currentPath));
   };
 
   return (
@@ -32,9 +28,9 @@ export const TasksStatuses: React.FC = () => {
       <ImagesLocation
         title="Select images location"
         buttonName="Get tasks info"
-        bucketNames={bucketNames}
+        buckets={buckets}
         paths={paths}
-        currentBucketName={currentBucketName}
+        currentBucketId={currentBucketId}
         currentPath={currentPath}
         handleFormSubmit={handleImagesLocationSubmit}
       />

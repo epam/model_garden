@@ -7,5 +7,7 @@ class BucketSerializer(serializers.ModelSerializer):
   class Meta:
     model = Bucket
     fields = (
+      'id',
       'name',
+      'url',
     )

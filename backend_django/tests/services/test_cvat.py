@@ -1,13 +1,15 @@
 from unittest import TestCase, mock
 
+from requests import HTTPError
+
 from model_garden.services import CvatService, CVATServiceException
 
 
 class TestCvatService(TestCase):
   def setUp(self):
-    self.requests_patcher = mock.patch('model_garden.services.cvat.requests')
-    self.requests_mock = self.requests_patcher.start()
-    self.session_mock = self.requests_mock.Session.return_value
+    self.session_cls_patcher = mock.patch('model_garden.services.cvat.requests.Session')
+    self.session_cls_mock = self.session_cls_patcher.start()
+    self.session_mock = self.session_cls_mock.return_value
     self.session_mock.post.return_value = mock.Mock(status_code=200)
     self.session_mock.get.return_value = mock.Mock(
       status_code=200,
@@ -28,7 +30,7 @@ class TestCvatService(TestCase):
     )
 
   def tearDown(self):
-    self.requests_patcher.stop()
+    self.session_cls_patcher.stop()
 
   def test_get_users(self):
     users = CvatService().get_users()
@@ -47,7 +49,7 @@ class TestCvatService(TestCase):
     )
 
   def test_get_users_request_fails(self):
-    self.session_mock.post.return_value = mock.Mock(status_code=400)
+    self.session_mock.post.return_value.raise_for_status.side_effect = HTTPError
 
     with self.assertRaisesRegex(CVATServiceException, "Request to 'http://localhost:8080/api/v1/auth/login' failed"):
       CvatService().get_users()

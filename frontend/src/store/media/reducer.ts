@@ -8,13 +8,13 @@ import {
 export interface MediaState {
   isUploading: boolean;
   mediaFiles: File[];
-  butchName: string;
+  batchName: string;
 }
 
 const initialState: MediaState = {
   isUploading: false,
   mediaFiles: [],
-  butchName: ''
+  batchName: ''
 };
 
 export const mediaReducer = (
@@ -36,7 +36,7 @@ export const mediaReducer = (
       return {
         ...state,
         isUploading: false,
-        butchName: action.butchName
+        batchName: action.batchName
       }
     default:
       return state;

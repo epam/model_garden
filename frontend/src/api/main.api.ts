@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const getBucketNamesRequest = async () => {
+export const getBucketsRequest = async () => {
   try {
     return await axios.get(
       "http://localhost:9000/api/buckets/",

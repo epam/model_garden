@@ -28,12 +28,12 @@ export interface LabelingTask {
 }
 
 export type LabelingTaskRequestData  = {
-  bucketName: string;
-  bucketPath: string;
-  taskName: string;
-  userId: string;
-  filesInTask: number;
-  countOfTasks: number;
+  bucket_id: string;
+  bucket_path: string;
+  task_name: string;
+  assignee_id: string;
+  files_in_task: number;
+  count_of_tasks: number;
 };
 
 export type LabelingTaskStatus = {

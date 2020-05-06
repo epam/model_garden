@@ -14,42 +14,36 @@ import { LabelingTaskRequestData } from "../../models";
 
 export const LabelingTask: React.FC = () => {
   const dispatch = useDispatch();
-  const bucketNames = useSelector((state: AppState) => state.main.bucketNames);
-  const currentBucketName = useSelector(
-    (state: AppState) => state.labelingTask.currentBucketName
-  );
+  const buckets = useSelector((state: AppState) => state.main.buckets);
+  const currentBucketId = useSelector((state: AppState) => state.labelingTask.currentBucketId);
   const paths = useSelector((state: AppState) => state.labelingTask.paths);
-  const currentPath = useSelector(
-    (state: AppState) => state.labelingTask.currentPath
-  );
-  const users = useSelector(
-    (state: AppState) => state.labelingTask.labelingToolUsers
-  );
-  const unsignedImagesCount = useSelector(
-    (state: AppState) => state.labelingTask.unsignedImagesCount
-  );
+  const currentPath = useSelector((state: AppState) => state.labelingTask.currentPath);
+  const users = useSelector((state: AppState) => state.labelingTask.labelingToolUsers);
+  const unsignedImagesCount = useSelector((state: AppState) => state.labelingTask.unsignedImagesCount);
 
   useEffect(() => {
     dispatch(getLabelingToolUsers());
   }, [dispatch]);
 
   useEffect(() => {
-    if (currentBucketName) {
-      dispatch(getBucketPaths(currentBucketName));
+    if (currentBucketId) {
+      dispatch(getBucketPaths(currentBucketId));
     }
-  }, [dispatch, currentBucketName]);
+  }, [dispatch, currentBucketId]);
 
   const handleGetUnsignedImagesCount = () => {
-    dispatch(getUnsignedImagesCount(currentBucketName, currentPath));
+    dispatch(getUnsignedImagesCount(currentBucketId, currentPath));
   };
 
   const handleTaskSubmit = (data: FormData) => {
     dispatch(
       createLabelingTask({
-        ...data,
-        userId: data.user,
-        bucketName: currentBucketName,
-        bucketPath: currentPath,
+        task_name: data.taskName,
+        assignee_id: data.user,
+        bucket_id: currentBucketId,
+        bucket_path: currentPath,
+        files_in_task: data.filesInTask,
+        count_of_tasks: data.countOfTasks,
       } as LabelingTaskRequestData)
     );
   };
@@ -59,9 +53,9 @@ export const LabelingTask: React.FC = () => {
       <ImagesLocation
         title="Select images location"
         buttonName="Get unassigned images count"
-        bucketNames={bucketNames}
+        buckets={buckets}
         paths={paths}
-        currentBucketName={currentBucketName}
+        currentBucketId={currentBucketId}
         currentPath={currentPath}
         handleFormSubmit={handleGetUnsignedImagesCount}
       />

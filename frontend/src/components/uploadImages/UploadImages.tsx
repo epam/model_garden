@@ -16,41 +16,41 @@ import { useSelector, useDispatch } from "react-redux";
 import { uploadMediaFiles, setMediaFiles } from "../../store/media";
 
 type FormData = {
-  bucketName: string;
+  bucketId: string;
   path: string;
 };
 
 export const UploadImages: React.FC = () => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState<FormData>({
-    bucketName: "",
+    bucketId: "",
     path: "",
   });
   const { handleSubmit, control } = useForm<FormData>({
     defaultValues: formData,
   });
-  const bucketNames = useSelector((state: AppState) => state.main.bucketNames);
+  const buckets = useSelector((state: AppState) => state.main.buckets);
   const isFilesUploading = useSelector(
     (state: AppState) => state.media.isUploading
   );
   const mediaFiles = useSelector((state: AppState) => state.media.mediaFiles);
 
-  const handleUploadImagesSubmit = (bucketName: string, path: string) => {
-    dispatch(uploadMediaFiles(mediaFiles, bucketName, path));
+  const handleUploadImagesSubmit = (bucketId: string, path: string) => {
+    dispatch(uploadMediaFiles(mediaFiles, bucketId, path));
   };
 
   const handleDropFiles = (files: File[]) => {
     dispatch(setMediaFiles(files));
   };
 
-  const onSubmit = handleSubmit(({ bucketName, path }) => {
-    setFormData({ bucketName, path });
-    handleUploadImagesSubmit(bucketName, path);
+  const onSubmit = handleSubmit(({ bucketId, path }) => {
+    setFormData({ bucketId, path });
+    handleUploadImagesSubmit(bucketId, path);
   });
 
-  const selectOptions = bucketNames.map((bucketName) => (
-    <MenuItem key={bucketName} value={bucketName}>
-      {bucketName}
+  const selectOptions = buckets.map((bucket) => (
+    <MenuItem key={bucket.id} value={bucket.id}>
+      {bucket.name}
     </MenuItem>
   ));
 
@@ -78,7 +78,7 @@ export const UploadImages: React.FC = () => {
               </InputLabel>
               <Controller
                 labelId="upload-images-bucket-name"
-                name="bucketName"
+                name="bucketId"
                 control={control}
                 label="S3 Bucket name"
                 variant="outlined"

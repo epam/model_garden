@@ -66,6 +66,11 @@ MIDDLEWARE = [
   'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
+
+
 ROOT_URLCONF = 'model_garden.urls'
 
 TEMPLATES = [
@@ -147,8 +152,3 @@ CVAT_HOST = env('CVAT_HOST', default='localhost')
 CVAT_PORT = env('CVAT_PORT', cast=int, default=8080)
 CVAT_ROOT_USER_NAME = env('CVAT_ROOT_USER_NAME', default='')
 CVAT_ROOT_USER_PASSWORD = env('CVAT_ROOT_USER_PASSWORD', default='')
-
-# Rest framework
-REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
-}
