@@ -1,4 +1,3 @@
-from parameterized import parameterized
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
@@ -69,17 +68,24 @@ class TestMediaAssetViewSet(APITestCase):
     self.assertEqual(response.status_code, 200)
     self.assertEqual(len(response.json()['results']), 0)
 
-  @parameterized.expand([
-    ('test path', 2),
-    ('unexpected path', 0),
-  ])
-  def test_list_with_dataset_path_filter(self, dataset_path, expected_count):
+  def test_list_with_dataset_id_filter(self):
     response = self.client.get(
       path=reverse('mediaasset-list'),
       data={
-        'dataset_path': dataset_path,
+        'dataset_id': self.dataset.id,
       },
     )
 
     self.assertEqual(response.status_code, 200)
-    self.assertEqual(len(response.json()['results']), expected_count)
+    self.assertEqual(len(response.json()['results']), 2)
+
+  def test_list_with_dataset_id_filter_empty(self):
+    response = self.client.get(
+      path=reverse('mediaasset-list'),
+      data={
+        'dataset_id': 777,
+      },
+    )
+
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(len(response.json()['results']), 0)

@@ -1,28 +1,28 @@
 import {
   LabelingTaskActionTypes,
-  GET_BUCKET_PATHS_START,
-  GET_BUCKET_PATHS_SUCCESS,
+  GET_DATASETS_START,
+  GET_DATASETS_SUCCESS,
   GET_LABELING_TOOL_USERS_START,
   GET_LABELING_TOOL_USERS_SUCCESS,
   GET_UNSIGNED_IMAGES_COUNT_START,
   GET_UNSIGNED_IMAGES_COUNT_SUCCESS,
   SET_CURRENT_BUCKET_ID,
-  SET_CURRENT_PATH,
+  SET_CURRENT_DATASET_ID,
   CREATE_LABELING_TASK_START,
   CREATE_LABELING_TASK_SUCCESS,
   GET_LABELING_TASKS_START,
   GET_LABELING_TASKS_SUCCESS,
 } from "./types";
 import { LabelingToolUser } from "../../models/labelingToolUser";
-import { LabelingTaskStatus } from "../../models";
+import { Dataset, LabelingTaskStatus } from "../../models";
 
 export interface LabelingTasksState {
-  isPathsLoading: boolean;
-  paths: string[];
+  isDatasetsLoading: boolean;
+  datasets: Map<string, Dataset>;
   isLabelingToolUsersLoading: boolean;
   labelingToolUsers: LabelingToolUser[];
   currentBucketId: string;
-  currentPath: string;
+  currentDatasetId: string;
   isImagesCountLoading: boolean;
   unsignedImagesCount: number;
   isLabelingTasksStatusesLoading: boolean;
@@ -30,12 +30,12 @@ export interface LabelingTasksState {
 }
 
 const initialState: LabelingTasksState = {
-  isPathsLoading: false,
-  paths: [],
+  isDatasetsLoading: false,
+  datasets: new Map(),
   isLabelingToolUsersLoading: false,
   labelingToolUsers: [],
   currentBucketId: "",
-  currentPath: "",
+  currentDatasetId: "",
   isImagesCountLoading: false,
   unsignedImagesCount: 0,
   isLabelingTasksStatusesLoading: false,
@@ -47,16 +47,16 @@ export const labelingTaskReducer = (
   action: LabelingTaskActionTypes
 ): LabelingTasksState => {
   switch (action.type) {
-    case GET_BUCKET_PATHS_START:
+    case GET_DATASETS_START:
       return {
         ...state,
-        isPathsLoading: true,
+        isDatasetsLoading: true,
       };
-    case GET_BUCKET_PATHS_SUCCESS:
+    case GET_DATASETS_SUCCESS:
       return {
         ...state,
-        isPathsLoading: false,
-        paths: action.paths,
+        isDatasetsLoading: false,
+        datasets: action.datasets,
       };
     case GET_LABELING_TOOL_USERS_START:
       return {
@@ -85,10 +85,10 @@ export const labelingTaskReducer = (
         ...state,
         currentBucketId: action.bucketId,
       };
-    case SET_CURRENT_PATH:
+    case SET_CURRENT_DATASET_ID:
       return {
         ...state,
-        currentPath: action.path,
+        currentDatasetId: action.datasetId,
       };
     case CREATE_LABELING_TASK_START:
       return state;

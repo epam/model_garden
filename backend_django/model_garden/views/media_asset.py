@@ -16,11 +16,11 @@ from model_garden.services.s3 import S3Client
 
 class MediaAssetFilterSet(filters.FilterSet):
   bucket_id = filters.CharFilter('dataset__bucket__id')
-  dataset_path = filters.CharFilter('dataset__path')
+  dataset_id = filters.CharFilter('dataset__id')
 
   class Meta:
     model = MediaAsset
-    fields = ('bucket_id', 'dataset_path', 'status')
+    fields = ('bucket_id', 'dataset_id', 'status')
 
 
 class MediaAssetPagination(PageNumberPagination):

@@ -1,27 +1,27 @@
 import { AppThunk } from "../index";
 import {
-  BucketItem,
   LabelingTaskActionTypes,
-  GET_BUCKET_PATHS_START,
-  GET_BUCKET_PATHS_SUCCESS,
+  GET_DATASETS_START,
+  GET_DATASETS_SUCCESS,
   GET_LABELING_TOOL_USERS_START,
   GET_LABELING_TOOL_USERS_SUCCESS,
   GET_UNSIGNED_IMAGES_COUNT_START,
   GET_UNSIGNED_IMAGES_COUNT_SUCCESS,
   SET_CURRENT_BUCKET_ID,
-  SET_CURRENT_PATH,
+  SET_CURRENT_DATASET_ID,
   CREATE_LABELING_TASK_START,
   CREATE_LABELING_TASK_SUCCESS,
   GET_LABELING_TASKS_START,
   GET_LABELING_TASKS_SUCCESS,
 } from "./types";
 import {
+  Dataset,
   LabelingTaskRequestData,
   LabelingTaskStatus,
 } from "../../models";
 import {
   createLabelingTaskRequest,
-  getBucketPathsRequest,
+  getDatasetsRequest,
   getLabelingToolUsersRequest,
   getUnsignedImagesCountRequest,
   getLabelingTasksRequest,
@@ -31,16 +31,20 @@ import { setErrorAction } from '../error';
 
 export function getBucketPathsStart(): LabelingTaskActionTypes {
   return {
-    type: GET_BUCKET_PATHS_START,
+    type: GET_DATASETS_START,
   };
 }
 
-export function getBucketPathsSuccess(
-  paths: string[]
+export function getDatasetsSuccess(
+  datasets: Dataset[]
 ): LabelingTaskActionTypes {
+  let datasetsMap = new Map<string, Dataset>();
+  datasets.forEach((dataset) => {
+    datasetsMap.set(dataset.id, dataset);
+  })
   return {
-    type: GET_BUCKET_PATHS_SUCCESS,
-    paths,
+    type: GET_DATASETS_SUCCESS,
+    datasets: datasetsMap,
   };
 }
 
@@ -72,19 +76,17 @@ export function getUnsignedImagesCountSuccess(imagesCount: number) {
   };
 }
 
-export function setCurrentBucketId(
-  bucketId: string
-): LabelingTaskActionTypes {
+export function setCurrentBucketId(bucketId: string): LabelingTaskActionTypes {
   return {
     type: SET_CURRENT_BUCKET_ID,
-    bucketId: bucketId,
+    bucketId,
   };
 }
 
-export function setCurrentPath(path: string): LabelingTaskActionTypes {
+export function setCurrentDatasetId(datasetId: string): LabelingTaskActionTypes {
   return {
-    type: SET_CURRENT_PATH,
-    path,
+    type: SET_CURRENT_DATASET_ID,
+    datasetId,
   };
 }
 
@@ -114,10 +116,10 @@ export function getLabelingTasksSuccess(tasks: LabelingTaskStatus[]) {
   };
 }
 
-export const getBucketPaths = (bucketId: string): AppThunk => (dispatch) => {
+export const getDatasets = (bucketId: string): AppThunk => (dispatch) => {
   dispatch(getBucketPathsStart());
-  return getBucketPathsRequest(bucketId)
-    .then((response) => dispatch(getBucketPathsSuccess(response.data.map((item: BucketItem) => item.path))))
+  return getDatasetsRequest(bucketId)
+    .then((response) => dispatch(getDatasetsSuccess(response.data)))
     .catch((error) => dispatch(setErrorAction(error)));
 };
 
@@ -129,11 +131,10 @@ export const getLabelingToolUsers = (): AppThunk => (dispatch) => {
 };
 
 export const getUnsignedImagesCount = (
-  bucketId: string,
-  bucketPath: string
+  datasetId: string
 ): AppThunk => (dispatch) => {
   dispatch(getUnsignedImagesCountStart());
-  return getUnsignedImagesCountRequest(bucketId, bucketPath)
+  return getUnsignedImagesCountRequest(datasetId)
     .then((response) =>
       dispatch(getUnsignedImagesCountSuccess(response.data.count))
     )
@@ -151,10 +152,10 @@ export const createLabelingTask = (
 
 export const getLabelingTasks = (
   bucketId: string,
-  bucketPath: string
+  datasetId: string,
 ): AppThunk => (dispatch) => {
   dispatch(getLabelingTasksStart());
-  return getLabelingTasksRequest(bucketId, bucketPath)
+  return getLabelingTasksRequest(bucketId, datasetId)
     .then((tasks) => dispatch(getLabelingTasksSuccess(tasks)))
     .catch((error) => dispatch(setErrorAction(error)));
 };

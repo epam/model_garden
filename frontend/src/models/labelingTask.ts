@@ -28,9 +28,8 @@ export interface LabelingTask {
 }
 
 export type LabelingTaskRequestData  = {
-  bucket_id: string;
-  bucket_path: string;
   task_name: string;
+  dataset_id: string;
   assignee_id: string;
   files_in_task: number;
   count_of_tasks: number;
