@@ -24,7 +24,7 @@ class TestCvatUserViewSet(APITestCase):
   @override_settings(CVAT_ROOT_USER_NAME='admin')
   def test_list(self):
     response = self.client.get(
-      path=reverse('cvat_users-list'),
+      path=reverse('cvatusers-list'),
     )
 
     self.assertEqual(
