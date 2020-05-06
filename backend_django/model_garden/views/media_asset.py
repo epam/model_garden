@@ -6,15 +6,23 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 from model_garden.models import Bucket, MediaAsset
 from model_garden.serializers import DatasetSerializer, MediaAssetSerializer
 from model_garden.services.s3 import S3Client
 
 
+class Pagination(PageNumberPagination):
+    page_size = 100
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
+
 class MediaAssetViewSet(viewsets.ModelViewSet):
   queryset = MediaAsset.objects.all()
   serializer_class = MediaAssetSerializer
+  pagination_class = Pagination
 
   @action(methods=["POST"], detail=False)
   def upload(self, request):
