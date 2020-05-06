@@ -5,10 +5,15 @@ axios.defaults.headers = {
   "Content-Type": "application/json",
 };
 
-export const getBucketPathsRequest = async (bucketName: string) => {
+export const getBucketPathsRequest = async (bucketId: string) => {
   try {
     return await axios.get(
-      `http://localhost:9000/api/datasets/?bucket_name=${bucketName}`
+      "http://localhost:9000/api/datasets/",
+      {
+        params: {
+          bucket_id: bucketId,
+        }
+      }
     );
   } catch (error) {
     if (error && error.response) {
@@ -34,12 +39,12 @@ export const getLabelingToolUsersRequest = async () => {
 };
 
 export const getUnsignedImagesCountRequest = async (
-  bucketName: string,
+  bucketId: string,
   bucketPath: string
 ) => {
   try {
     return await axios.get(
-      `http://localhost:9000/api/labeling_task/unsigned_images_count/${bucketName}/${bucketPath}`
+      `http://localhost:9000/api/labeling_task/unsigned_images_count/${bucketId}/${bucketPath}`
     );
   } catch (error) {
     if (error && error.response) {
@@ -55,7 +60,7 @@ export const createLabelingTaskRequest = async (
 ) => {
   try {
     return await axios.post(
-      "http://localhost:9000/api/labeling_task",
+      "http://localhost:9000/api/tasks/",
       taskData
     );
   } catch (error) {
@@ -68,7 +73,7 @@ export const createLabelingTaskRequest = async (
 };
 
 export const getLabelingTasksRequest = async (
-  bucketName: string,
+  bucketId: string,
   bucketPath: string
 ): Promise<LabelingTaskStatus[]> => {
   try {

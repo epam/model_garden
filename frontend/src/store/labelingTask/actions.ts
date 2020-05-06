@@ -8,7 +8,7 @@ import {
   GET_LABELING_TOOL_USERS_SUCCESS,
   GET_UNSIGNED_IMAGES_COUNT_START,
   GET_UNSIGNED_IMAGES_COUNT_SUCCESS,
-  SET_CURRENT_BUCKET_NAME,
+  SET_CURRENT_BUCKET_ID,
   SET_CURRENT_PATH,
   CREATE_LABELING_TASK_START,
   CREATE_LABELING_TASK_SUCCESS,
@@ -72,12 +72,12 @@ export function getUnsignedImagesCountSuccess(imagesCount: number) {
   };
 }
 
-export function setCurrentBucketName(
-  bucketName: string
+export function setCurrentBucketId(
+  bucketId: string
 ): LabelingTaskActionTypes {
   return {
-    type: SET_CURRENT_BUCKET_NAME,
-    bucketName,
+    type: SET_CURRENT_BUCKET_ID,
+    bucketId: bucketId,
   };
 }
 
@@ -114,9 +114,9 @@ export function getLabelingTasksSuccess(tasks: LabelingTaskStatus[]) {
   };
 }
 
-export const getBucketPaths = (bucketName: string): AppThunk => (dispatch) => {
+export const getBucketPaths = (bucketId: string): AppThunk => (dispatch) => {
   dispatch(getBucketPathsStart());
-  return getBucketPathsRequest(bucketName)
+  return getBucketPathsRequest(bucketId)
     .then((response) => dispatch(getBucketPathsSuccess(response.data.map((item: BucketItem) => item.path))))
     .catch((error) => dispatch(setErrorAction(error)));
 };
@@ -129,11 +129,11 @@ export const getLabelingToolUsers = (): AppThunk => (dispatch) => {
 };
 
 export const getUnsignedImagesCount = (
-  bucketName: string,
+  bucketId: string,
   bucketPath: string
 ): AppThunk => (dispatch) => {
   dispatch(getUnsignedImagesCountStart());
-  return getUnsignedImagesCountRequest(bucketName, bucketPath)
+  return getUnsignedImagesCountRequest(bucketId, bucketPath)
     .then((response) =>
       dispatch(getUnsignedImagesCountSuccess(response.data.count))
     )
@@ -150,11 +150,11 @@ export const createLabelingTask = (
 };
 
 export const getLabelingTasks = (
-  bucketName: string,
+  bucketId: string,
   bucketPath: string
 ): AppThunk => (dispatch) => {
   dispatch(getLabelingTasksStart());
-  return getLabelingTasksRequest(bucketName, bucketPath)
+  return getLabelingTasksRequest(bucketId, bucketPath)
     .then((tasks) => dispatch(getLabelingTasksSuccess(tasks)))
     .catch((error) => dispatch(setErrorAction(error)));
 };

@@ -13,7 +13,7 @@ export const GET_UNSIGNED_IMAGES_COUNT_START =
 export const GET_UNSIGNED_IMAGES_COUNT_SUCCESS =
   "GET_UNSIGNED_IMAGES_COUNT_SUCCESS";
 
-export const SET_CURRENT_BUCKET_NAME = "SET_CURRENT_BUCKET_NAME";
+export const SET_CURRENT_BUCKET_ID = "SET_CURRENT_BUCKET_ID";
 export const SET_CURRENT_PATH = "SET_CURRENT_PATH";
 
 export const CREATE_LABELING_TASK_START = "CREATE_LABELING_TASK_START";
@@ -53,9 +53,9 @@ export interface getUnsignedImagesCountSuccess {
   imagesCount: number;
 }
 
-export interface setCurrentBucketName {
-  type: typeof SET_CURRENT_BUCKET_NAME;
-  bucketName: string;
+export interface setCurrentBucketId {
+  type: typeof SET_CURRENT_BUCKET_ID;
+  bucketId: string;
 }
 
 export interface setCurrentPath {
@@ -88,7 +88,7 @@ export type LabelingTaskActionTypes =
   | getLabelingToolUsersSuccess
   | getUnsignedImagesCountStart
   | getUnsignedImagesCountSuccess
-  | setCurrentBucketName
+  | setCurrentBucketId
   | setCurrentPath
   | createLabelingTaskStart
   | createLabelingTaskSuccess

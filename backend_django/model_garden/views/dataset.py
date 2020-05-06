@@ -6,11 +6,11 @@ from model_garden.serializers import DatasetSerializer
 
 
 class DatasetFilterSet(filters.FilterSet):
-  bucket_name = filters.CharFilter(field_name='bucket__name')
+  bucket_id = filters.CharFilter(field_name='bucket__id')
 
   class Meta:
     model = Dataset
-    fields = ('bucket_name', 'path')
+    fields = ('bucket_id', 'path')
 
 
 class DatasetViewSet(viewsets.ModelViewSet):

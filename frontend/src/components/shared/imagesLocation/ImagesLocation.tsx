@@ -11,17 +11,18 @@ import {
 import "./ImagesLocation.css";
 import { useDispatch } from "react-redux";
 import {
-  setCurrentBucketName,
+  setCurrentBucketId,
   setCurrentPath,
 } from "../../../store/labelingTask";
+import { Bucket } from "../../../models";
 import { FormContainer } from "../formContainer";
 
 interface ImagesLocationProps {
   title: string;
   buttonName: string;
-  bucketNames: string[];
+  buckets: Bucket[];
   paths: string[];
-  currentBucketName: string;
+  currentBucketId: string;
   currentPath: string;
   handleFormSubmit: () => void;
 }
@@ -29,9 +30,9 @@ interface ImagesLocationProps {
 export const ImagesLocation: React.FC<ImagesLocationProps> = ({
   title,
   buttonName,
-  bucketNames,
+  buckets,
   paths,
-  currentBucketName,
+  currentBucketId,
   currentPath,
   handleFormSubmit,
 }: ImagesLocationProps) => {
@@ -39,18 +40,18 @@ export const ImagesLocation: React.FC<ImagesLocationProps> = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setCurrentBucketName(""));
+    dispatch(setCurrentBucketId(""));
     dispatch(setCurrentPath(""));
   }, [dispatch]);
 
   useEffect(() => {
-    if (!currentBucketName) {
+    if (!currentBucketId) {
       dispatch(setCurrentPath(""));
     }
-  }, [dispatch, currentBucketName]);
+  }, [dispatch, currentBucketId]);
 
-  const handleBucketNameChange = (e: any) => {
-    dispatch(setCurrentBucketName(e.target.value));
+  const handleBucketChange = (e: any) => {
+    dispatch(setCurrentBucketId(e.target.value));
   };
 
   const handlePathsChange = (e: any) => {
@@ -67,9 +68,9 @@ export const ImagesLocation: React.FC<ImagesLocationProps> = ({
     handleFormSubmit();
   };
 
-  const bucketNamesSelectOptions = bucketNames.map((bucketName) => (
-    <MenuItem key={bucketName} value={bucketName}>
-      {bucketName}
+  const bucketsSelectOptions = buckets.map((bucket: Bucket) => (
+    <MenuItem key={bucket.id} value={bucket.id}>
+      {bucket.name}
     </MenuItem>
   ));
 
@@ -96,13 +97,13 @@ export const ImagesLocation: React.FC<ImagesLocationProps> = ({
             </InputLabel>
             <Select
               labelId="images-location-bucket-name"
-              name="bucketName"
+              name="bucketId"
               variant="outlined"
               label="S3 Bucket Name"
-              value={currentBucketName}
-              onChange={handleBucketNameChange}
+              value={currentBucketId}
+              onChange={handleBucketChange}
             >
-              {bucketNamesSelectOptions}
+              {bucketsSelectOptions}
             </Select>
           </FormControl>
           <FormControl className="images-location__form-item">

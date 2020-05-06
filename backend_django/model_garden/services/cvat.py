@@ -1,10 +1,9 @@
+from typing import Optional, List
+
 import requests
 from django.conf import settings
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-
-import logging
-logging.basicConfig()
 
 
 class CVATServiceException(Exception):
@@ -32,9 +31,11 @@ class CvatService:
 
   def _request(self, method: str, path: str, data: dict = None) -> requests.Response:
     url = self._get_url(path)
-    response = getattr(self._session, method)(url=url, data=data)
-    if response.status_code != 200:
-      raise CVATServiceException(f"Request to '{url}' failed: {response.content}")
+    response = getattr(self._session, method)(url=url, json=data)
+    try:
+      response.raise_for_status()
+    except requests.HTTPError as e:
+      raise CVATServiceException(f"Request to '{url}' failed ({e}): {response.content}")
 
     return response
 
@@ -45,14 +46,56 @@ class CvatService:
     return self._request(method='post', path=path, data=data)
 
   def _authenticate(self):
-    return self._post(
+    response = self._post(
       path='auth/login',
       data={
         'username': settings.CVAT_ROOT_USER_NAME,
         'password': settings.CVAT_ROOT_USER_PASSWORD,
       },
     )
+    self._session.headers.update({'X-CSRFToken': self._session.cookies['csrftoken']})
+    return response
+
+  def get_root_user(self):
+    for user in self.get_users():
+      if user['username'] == settings.CVAT_ROOT_USER_NAME:
+        return user
+
+    raise RuntimeError(f"Failed to find root CVAT user: {settings.CVAT_ROOT_USER_NAME}")
 
   def get_users(self):
     response = self._get('users')
     return response.json()['results']
+
+  def create_task(
+    self,
+    name: str,
+    assignee_id: int,
+    owner_id: int,
+    labels: Optional[List] = None,
+    image_quality: Optional[int] = 70,
+  ) -> requests.Response:
+    if labels is None:
+      labels = [
+        {
+          "name": "newLabel",
+          "attributes": [],
+        }
+      ]
+
+    response = self._post('tasks', data={
+        "name": name,
+        "owner": owner_id,
+        "assignee": assignee_id,
+        "bug_tracker": "",
+        "overlap": None,
+        "segment_size": "10",
+        "z_order": False,
+        "labels": labels,
+        "image_quality": image_quality,
+        "start_frame": 0,
+        "stop_frame": 0,
+        "frame_filter": "step=1",
+        "project": None
+    })
+    return response.json()

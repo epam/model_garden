@@ -1,4 +1,4 @@
 [flake8]
-ignore = E111,E121
+ignore = E111,E114,E121
 max-line-length = 120
 exclude = *migrations*,settings.py,*venv

@@ -27,21 +27,21 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
         status=status.HTTP_400_BAD_REQUEST,
       )
 
-    bucket_name = request.data.get('bucketName')
-    if not bucket_name:
+    bucket_id = request.data.get('bucketId')
+    if not bucket_id:
       return Response(
         data={
-          "message": f"Missing 'bucketName' in request",
+          "message": f"Missing 'bucketId' in request",
         },
         status=status.HTTP_400_BAD_REQUEST,
       )
 
     try:
-      bucket = Bucket.objects.get(name=bucket_name)
+      bucket = Bucket.objects.get(id=bucket_id)
     except Bucket.DoesNotExist:
       return Response(
         data={
-          "message": f"Bucket with name='{bucket_name}' not found",
+          "message": f"Bucket with id='{bucket_id}' not found",
         },
         status=status.HTTP_404_NOT_FOUND,
       )

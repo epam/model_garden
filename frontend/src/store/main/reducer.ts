@@ -1,20 +1,21 @@
 import {
   MainActionTypes,
   SET_SELECTED_MENU_ITEM,
-  GET_BUCKET_NAMES_START,
-  GET_BUCKET_NAMES_SUCCESS,
+  GET_BUCKETS_START,
+  GET_BUCKETS_SUCCESS,
 } from "./types";
+import {Bucket} from "../../models";
 
 export interface MainState {
   selectedMenuItemIndex: number;
-  isBucketNamesLoading: boolean;
-  bucketNames: string[];
+  isBucketsLoading: boolean;
+  buckets: Bucket[];
 }
 
 const initialState: MainState = {
   selectedMenuItemIndex: 0,
-  isBucketNamesLoading: false,
-  bucketNames: [],
+  isBucketsLoading: false,
+  buckets: [],
 };
 
 export const mainReducer = (
@@ -27,16 +28,16 @@ export const mainReducer = (
         ...state,
         selectedMenuItemIndex: action.menuItemIndex
       }
-    case GET_BUCKET_NAMES_START:
+    case GET_BUCKETS_START:
       return {
         ...state,
-        isBucketNamesLoading: true
+        isBucketsLoading: true
       };
-    case GET_BUCKET_NAMES_SUCCESS:
+    case GET_BUCKETS_SUCCESS:
       return {
         ...state,
-        isBucketNamesLoading: false,
-        bucketNames: action.bucketNames
+        isBucketsLoading: false,
+        buckets: action.buckets,
       };
     default:
       return state;

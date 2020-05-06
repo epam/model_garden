@@ -6,7 +6,7 @@ import {
   GET_LABELING_TOOL_USERS_SUCCESS,
   GET_UNSIGNED_IMAGES_COUNT_START,
   GET_UNSIGNED_IMAGES_COUNT_SUCCESS,
-  SET_CURRENT_BUCKET_NAME,
+  SET_CURRENT_BUCKET_ID,
   SET_CURRENT_PATH,
   CREATE_LABELING_TASK_START,
   CREATE_LABELING_TASK_SUCCESS,
@@ -21,7 +21,7 @@ export interface LabelingTasksState {
   paths: string[];
   isLabelingToolUsersLoading: boolean;
   labelingToolUsers: LabelingToolUser[];
-  currentBucketName: string;
+  currentBucketId: string;
   currentPath: string;
   isImagesCountLoading: boolean;
   unsignedImagesCount: number;
@@ -34,7 +34,7 @@ const initialState: LabelingTasksState = {
   paths: [],
   isLabelingToolUsersLoading: false,
   labelingToolUsers: [],
-  currentBucketName: "",
+  currentBucketId: "",
   currentPath: "",
   isImagesCountLoading: false,
   unsignedImagesCount: 0,
@@ -80,10 +80,10 @@ export const labelingTaskReducer = (
         isImagesCountLoading: false,
         unsignedImagesCount: action.imagesCount,
       };
-    case SET_CURRENT_BUCKET_NAME:
+    case SET_CURRENT_BUCKET_ID:
       return {
         ...state,
-        currentBucketName: action.bucketName,
+        currentBucketId: action.bucketId,
       };
     case SET_CURRENT_PATH:
       return {

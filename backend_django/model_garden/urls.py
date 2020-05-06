@@ -23,6 +23,7 @@ from model_garden.views import (
   CvatUserViewSet,
   DatasetViewSet,
   MediaAssetViewSet,
+  TaskViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -30,6 +31,7 @@ router.register(r'buckets', BucketViewSet)
 router.register(r'cvat-users', CvatUserViewSet, basename='cvat_users')
 router.register(r'datasets', DatasetViewSet)
 router.register(r'media-assets', MediaAssetViewSet)
+router.register(r'tasks', TaskViewSet, basename='tasks')
 
 urlpatterns = [
   path('admin/', admin.site.urls),

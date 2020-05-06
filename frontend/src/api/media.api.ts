@@ -2,13 +2,13 @@ import axios from "axios";
 
 export const uploadMediaFilesRequest = async (
   files: File[],
-  bucketName: string,
+  bucketId: string,
   path?: string
 ) => {
   try {
     const formData = new FormData();
     files.forEach((file) => formData.append("file", file));
-    formData.append("bucketName", bucketName);
+    formData.append("bucketId", bucketId);
     if (path) formData.append("path", path);
     return await axios.post(
       "http://localhost:9000/api/media-assets/upload/",
