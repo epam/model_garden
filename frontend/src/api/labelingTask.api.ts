@@ -44,7 +44,14 @@ export const getUnsignedImagesCountRequest = async (
 ) => {
   try {
     return await axios.get(
-      `http://localhost:9000/api/labeling_task/unsigned_images_count/${bucketId}/${bucketPath}`
+      `http://localhost:9000/api/media-assets/`,
+        {
+          params: {
+            bucket_id: bucketId,
+            dataset_path: bucketPath,
+            status: "PENDING",
+          }
+        }
     );
   } catch (error) {
     if (error && error.response) {
