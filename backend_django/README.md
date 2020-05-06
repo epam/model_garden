@@ -46,7 +46,7 @@ $ ./manage.py createsuperuser
 $ ./manage.py runserver 0:9000
 ...
 Django version 3.0.5, using settings 'model_garden.settings'
-Starting development server at http://127.0.0.1:8000/
+Starting development server at http://127.0.0.1:9000/
 Quit the server with CONTROL-C.
 ```
 
@@ -82,3 +82,36 @@ backend_django_webserver_1   bash -c ./manage.py migrat ...   Up      0.0.0.0:90
 ```
 $ make lint
 ```
+
+## Deployment
+
+### Image build pipeline on Gitlab
+
+Gitlab pipeline uses `.gitlab-ci.yml` file for pipeline configuration. In order to launch 
+the docker image build a new git tag needs to be created:
+
+#### Check existing tags
+```
+$ git tag
+v0.0.1
+```
+
+#### Create new tag
+```
+$ git tag -a v0.0.2 -m "v0.0.2"
+```
+
+#### Push new tag
+```
+$ git push origin v0.0.2
+```
+
+#### Check Gitlab pipelines:
+
+A new pipeline run should be created here:
+
+https://git.epam.com/epmc-mlcv/model_garden/pipelines
+
+Once the run is completed successfully a new docker image will be available in Amazon ECR repository:
+
+https://eu-central-1.console.aws.amazon.com/ecr/repositories/model_garden_backend/?region=eu-central-1
