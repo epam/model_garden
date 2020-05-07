@@ -1,13 +1,33 @@
-from typing import Optional, List
+import dataclasses
+import logging
+from typing import Optional, List, Dict, NamedTuple
+from urllib.parse import urlencode, urlunsplit
 
 import requests
 from django.conf import settings
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
+logger = logging.getLogger(__name__)
+
 
 class CVATServiceException(Exception):
   pass
+
+
+@dataclasses.dataclass
+class ListRequest:
+  page: int = 1
+  page_size: int = 100
+  ordering: str = ''
+  filters: Dict[str, str] = dataclasses.field(default_factory=dict)
+
+
+class ListResponse(NamedTuple):
+  count: int
+  next_url: Optional[str]
+  prev_url: Optional[str]
+  results: List[dict]
 
 
 class CvatService:
@@ -31,6 +51,9 @@ class CvatService:
 
   def _request(self, method: str, path: str, data: dict = None) -> requests.Response:
     url = self._get_url(path)
+
+    logger.info('Cvat request: %s, data=%s', url, data)
+
     response = getattr(self._session, method)(url=url, json=data)
     try:
       response.raise_for_status()
@@ -99,3 +122,29 @@ class CvatService:
         "project": None
     })
     return response.json()
+
+  def tasks(self, req: ListRequest) -> ListResponse:
+    """Fetch tasks from the service that are created by
+    `settings.CVAT_ROOT_USER_NAME`.
+    """
+    req.filters['owner'] = settings.CVAT_ROOT_USER_NAME
+
+    resp = self._get(_join_query('tasks', req))
+    data = resp.json()
+
+    return ListResponse(
+      count=data.get('count', 0),
+      next_url=data.get('next'),
+      prev_url=data.get('previous'),
+      results=data.get('results', []),
+    )
+
+
+def _join_query(path: str, req: ListRequest) -> str:
+  """Add query arguments from `req` to the `path`.
+  """
+  req_query = dict(page=req.page, page_size=req.page_size, **req.filters)
+  if req.ordering:
+    req_query.update(ordering=req.ordering)
+
+  return urlunsplit(('', '', path, urlencode(req_query), ''))
