@@ -14,6 +14,7 @@ import "./UploadImages.css";
 import { AppState } from "../../store";
 import { useSelector, useDispatch } from "react-redux";
 import { uploadMediaFiles, setMediaFiles } from "../../store/media";
+import {DEFAULT_FORM_DATA} from "./constants";
 
 type FormData = {
   bucketId: string;
@@ -23,12 +24,13 @@ type FormData = {
 export const UploadImages: React.FC = () => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState<FormData>({
-    bucketId: "",
-    path: "",
+    bucketId: DEFAULT_FORM_DATA.BUCKET_ID,
+    path: DEFAULT_FORM_DATA.PATH,
   });
-  const { handleSubmit, control } = useForm<FormData>({
+  const { handleSubmit, control, watch } = useForm<FormData>({
     defaultValues: formData,
   });
+  const bucketIdValue = watch('bucketId');
   const buckets = useSelector((state: AppState) => state.main.buckets);
   const isFilesUploading = useSelector(
     (state: AppState) => state.media.isUploading
@@ -98,7 +100,7 @@ export const UploadImages: React.FC = () => {
               color="primary"
               variant="contained"
               type="submit"
-              disabled={mediaFiles.length === 0}
+              disabled={mediaFiles.length === 0 || bucketIdValue === DEFAULT_FORM_DATA.BUCKET_ID}
             >
               Upload
             </Button>
