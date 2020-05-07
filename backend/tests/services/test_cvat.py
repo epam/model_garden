@@ -2,6 +2,7 @@ from unittest import TestCase, mock
 
 from requests import HTTPError
 
+from django.test.utils import override_settings
 from model_garden.services import CvatService, CVATServiceException
 
 
@@ -24,6 +25,14 @@ class TestCvatService(TestCase):
               "last_name": "Labler",
               "email": "epam@labler.com"
             },
+            {
+              "url": "http://localhost:8080/api/v1/users/2",
+              "id": 2,
+              "username": "admin",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+            },
           ],
         },
       ),
@@ -32,10 +41,33 @@ class TestCvatService(TestCase):
   def tearDown(self):
     self.session_cls_patcher.stop()
 
+  @override_settings(CVAT_ROOT_USER_NAME='admin')
+  def test_get_root_user(self):
+    user = CvatService().get_root_user()
+
+    self.assertEqual(
+      user,
+      {
+        "url": "http://localhost:8080/api/v1/users/2",
+        "id": 2,
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+      },
+    )
+
+  @override_settings(CVAT_ROOT_USER_NAME='admin')
+  def test_get_root_user_not_found(self):
+    self.session_mock.get.return_value.json.return_value = {'results': []}
+
+    with self.assertRaisesRegex(RuntimeError, "Failed to find root CVAT user: admin"):
+      CvatService().get_root_user()
+
   def test_get_users(self):
     users = CvatService().get_users()
 
-    self.assertEqual(len(users), 1)
+    self.assertEqual(len(users), 2)
     self.assertEqual(
       users[0],
       {
@@ -53,3 +85,51 @@ class TestCvatService(TestCase):
 
     with self.assertRaisesRegex(CVATServiceException, "Request to 'http://localhost:8080/api/v1/auth/login' failed"):
       CvatService().get_users()
+
+  def test_create_task(self):
+    service = CvatService()
+    self.session_mock.post.return_value = mock.Mock(
+      status_code=201,
+      json=mock.Mock(
+        return_value={
+          'url': 'http://localhost:8080/api/v1/tasks/1',
+          'id': 1,
+          'name': 'test',
+          'size': 0,
+          'mode': '',
+          'owner': 1,
+          'assignee': 2,
+          'bug_tracker': '',
+          'created_date': '2020-05-07T18:17:39.484093Z',
+          'updated_date': '2020-05-07T18:17:39.484127Z',
+          'overlap': None,
+          'segment_size': 10,
+          'z_order': False,
+          'status': 'annotation',
+          'labels': [
+            {
+              'id': 1,
+              'name': 'newLabel',
+              'attributes': [],
+            },
+          ],
+          'segments': [],
+          'image_quality': 70,
+          'start_frame': 0,
+          'stop_frame': 0,
+          'frame_filter': 'step=1',
+          'project': None,
+        },
+      ),
+    )
+
+    task = service.create_task(
+      name='test',
+      assignee_id=2,
+      owner_id=1,
+    )
+
+    self.assertEqual(task['id'], 1)
+    self.assertEqual(task['name'], 'test')
+    self.assertEqual(task['assignee'], 2)
+    self.assertEqual(task['owner'], 1)
