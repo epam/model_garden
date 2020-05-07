@@ -1,9 +1,11 @@
 import axios from "axios";
+import { backendUrl } from "./const"
+
 
 export const getBucketsRequest = async () => {
   try {
     return await axios.get(
-      "http://localhost:9000/api/buckets/",
+      `http://${backendUrl}/api/buckets/`,
     );
   } catch (error) {
     if (error && error.response) {

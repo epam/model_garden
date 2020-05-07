@@ -16,10 +16,10 @@ services:
       - postgres:/var/lib/postgresql/data
     ports:
       - 5444:5432
-  webserver:
+  backend:
     image: model_garden:latest
     build:
-      context: .
+      context: backend
     restart: always
     command: bash -c "./manage.py migrate && ./manage.py runserver 0.0.0.0:9000"
     environment:
@@ -31,4 +31,13 @@ services:
     ports:
       - 9000:9000
     volumes:
-      - .:/src:rw,cached
+      - ./backend:/src:rw,cached
+  frontend:
+    image: model_garden_frontend:latest
+    build:
+      context: frontend
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - backend

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { LabelingTaskRequestData, LabelingTaskStatus } from "../models";
+import { backendUrl } from "./const";
 
 axios.defaults.headers = {
   "Content-Type": "application/json",
@@ -8,7 +9,7 @@ axios.defaults.headers = {
 export const getDatasetsRequest = async (bucketId: string) => {
   try {
     return await axios.get(
-      "http://localhost:9000/api/datasets/",
+      `http://${backendUrl}/api/datasets/`,
       {
         params: {
           bucket_id: bucketId,
@@ -27,7 +28,7 @@ export const getDatasetsRequest = async (bucketId: string) => {
 export const getLabelingToolUsersRequest = async () => {
   try {
     return await axios.get(
-      "http://localhost:9000/api/cvat-users/"
+      `http://${backendUrl}/api/cvat-users/`
     );
   } catch (error) {
     if (error && error.response) {
@@ -43,7 +44,7 @@ export const getUnsignedImagesCountRequest = async (
 ) => {
   try {
     return await axios.get(
-      `http://localhost:9000/api/media-assets/`,
+      `http://${backendUrl}/api/media-assets/`,
         {
           params: {
             dataset_id: datasetId,
@@ -65,7 +66,7 @@ export const createLabelingTaskRequest = async (
 ) => {
   try {
     return await axios.post(
-      "http://localhost:9000/api/cvat-tasks/",
+      `http://${backendUrl}/api/cvat-tasks/`,
       taskData
     );
   } catch (error) {
@@ -83,7 +84,7 @@ export const getLabelingTasksRequest = async (
 ): Promise<LabelingTaskStatus[]> => {
   try {
     let resp = await axios.get(
-      `http://localhost:9000/api/cvat-tasks/`,
+      `http://${backendUrl}/api/cvat-tasks/`,
       {
         params: {
           page: 1,
