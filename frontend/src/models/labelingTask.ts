@@ -36,8 +36,24 @@ export type LabelingTaskRequestData  = {
 };
 
 export type LabelingTaskStatus = {
-  userName: string;
-  taskName: string;
-  cvatInstance: string;
+  id: number;
+  url: string;
+  name: string;
+  mode: string;
+  size?: number;
+  owner?: number;
+  assignee?: number;
+  created_date: string;
+  updated_date: string;
+  overlap?: number;
+  segment_size?: number;
+  z_order?: boolean;
   status: string;
+  labels?: object;
+  segments?: object;
+  image_quality?: number;
+  start_frame?: number;
+  stop_frame?: number;
+  frame_filter?: string;
+  project?: number;
 };
