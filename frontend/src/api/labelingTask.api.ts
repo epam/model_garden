@@ -65,7 +65,7 @@ export const createLabelingTaskRequest = async (
 ) => {
   try {
     return await axios.post(
-      "http://localhost:9000/api/tasks/",
+      "http://localhost:9000/api/cvat-tasks/",
       taskData
     );
   } catch (error) {
@@ -82,27 +82,17 @@ export const getLabelingTasksRequest = async (
   datasetId: string,
 ): Promise<LabelingTaskStatus[]> => {
   try {
-    // return await axios.get(`http://localhost:9000/api/labeling_tasks/${bucketName}/${bucketPath}`);
-    return [
+    let resp = await axios.get(
+      `http://localhost:9000/api/cvat-tasks/`,
       {
-        userName: "ivan_labelerovich@epam.com",
-        taskName: "Task1",
-        cvatInstance: "localhost:8080",
-        status: "1",
-      },
-      {
-        userName: "ivan_labelerovich@epam.com",
-        taskName: "Task2",
-        cvatInstance: "localhost:8080",
-        status: "2",
-      },
-      {
-        userName: "ivan_labelerovich@epam.com",
-        taskName: "Task3",
-        cvatInstance: "localhost:8080",
-        status: "1",
-      },
-    ];
+        params: {
+          page: 1,
+          page_size: 50,
+          // TODO: filter and paginate the result
+        }
+      }
+    );
+    return resp.data.results;
   } catch (error) {
     if (error && error.response) {
       throw new Error(error.response.data.message);
