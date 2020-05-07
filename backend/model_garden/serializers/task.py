@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 
-class TaskSerializer(serializers.Serializer):
+class CvatTaskCreateSerializer(serializers.Serializer):
   task_name = serializers.CharField()
   dataset_id = serializers.CharField()
   assignee_id = serializers.IntegerField()

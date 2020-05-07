@@ -124,7 +124,7 @@ class CvatService:
     return response.json()
 
   def tasks(self, req: ListRequest) -> ListResponse:
-    """Fetche tasks from the service that are created by
+    """Fetch tasks from the service that are created by
     `settings.CVAT_ROOT_USER_NAME`.
     """
     req.filters['owner'] = settings.CVAT_ROOT_USER_NAME
