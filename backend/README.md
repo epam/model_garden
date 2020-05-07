@@ -72,8 +72,8 @@ $ docker-compose ps
 
            Name                         Command               State           Ports         
 --------------------------------------------------------------------------------------------
-backend_django_postgres_1    docker-entrypoint.sh postgres    Up      0.0.0.0:5444->5432/tcp
-backend_django_webserver_1   bash -c ./manage.py migrat ...   Up      0.0.0.0:9000->9000/tcp
+backend_postgres_1    docker-entrypoint.sh postgres    Up      0.0.0.0:5444->5432/tcp
+backend_webserver_1   bash -c ./manage.py migrat ...   Up      0.0.0.0:9000->9000/tcp
 ```
 
 ## Linting
