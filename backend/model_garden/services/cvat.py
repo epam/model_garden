@@ -74,7 +74,7 @@ class CvatService:
     owner_id: int,
     labels: Optional[List] = None,
     image_quality: Optional[int] = 70,
-  ) -> requests.Response:
+  ) -> dict:
     if labels is None:
       labels = [
         {
