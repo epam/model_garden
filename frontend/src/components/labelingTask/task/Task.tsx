@@ -13,6 +13,7 @@ import "./Task.css";
 import { FilesCounter } from "../filesCounter";
 import { LabelingToolUser } from "../../../models/labelingToolUser";
 import { FormContainer } from "../../shared";
+import { DEFAULT_FORM_DATA } from "./constants";
 
 interface TaskProps {
   users: LabelingToolUser[];
@@ -34,7 +35,7 @@ export const Task: React.FC<TaskProps> = ({
   filesCount,
   handleTaskSubmit,
 }: TaskProps) => {
-  const { handleSubmit, setValue, control } = useForm<FormData>({
+  const { handleSubmit, setValue, control, watch } = useForm<FormData>({
     defaultValues: {
       taskName: "",
       user: "",
@@ -42,6 +43,8 @@ export const Task: React.FC<TaskProps> = ({
       countOfTasks: 0,
     },
   });
+
+  const {taskName: taskNameValue, user: userValue} = watch(['taskName', 'user']);
 
   useEffect(() => {
     setValue("taskName", taskName);
@@ -122,6 +125,7 @@ export const Task: React.FC<TaskProps> = ({
             type="submit"
             color="primary"
             variant="contained"
+            disabled={taskNameValue === DEFAULT_FORM_DATA.TASK_NAME || userValue === DEFAULT_FORM_DATA.USER}
           >
             Assign
           </Button>
