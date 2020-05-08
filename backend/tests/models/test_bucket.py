@@ -17,4 +17,4 @@ class TestBucket(TestCase):
     bucket = Bucket(name=self.name, url=self.url)
     bucket.save()
 
-    self.assertEqual(Bucket.objects.count(), 1)
+    self.assertEqual(Bucket.objects.filter(pk=bucket.pk).count(), 1)
