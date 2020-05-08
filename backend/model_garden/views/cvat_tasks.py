@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import logging
 from typing import Iterable, Iterator
 
 from django import forms
@@ -8,12 +11,13 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.exceptions import ValidationError
 
-from model_garden.serializers import (
-  CvatTaskSerializer, CvatTaskCreateSerializer
-)
-from model_garden.services.cvat import (
-  CvatService, CVATServiceException, ListRequest
-)
+from model_garden.constants import MediaAssetStatus
+from model_garden.models import Dataset
+from model_garden.serializers import CvatTaskSerializer, CvatTaskCreateSerializer
+from model_garden.services.cvat import CvatService, CVATServiceException, ListRequest
+from model_garden.utils import chunkify
+
+logger = logging.getLogger(__name__)
 
 
 class CvatTaskViewSet(ViewSet):
@@ -24,16 +28,36 @@ class CvatTaskViewSet(ViewSet):
     serializer = self.serializer_class(data=request.data)
     serializer.is_valid(raise_exception=True)
     data = serializer.data
-    try:
-      cvat_service.create_task(
-        name=data['task_name'],
-        assignee_id=data['assignee_id'],
-        owner_id=cvat_service.get_root_user()['id'],
-      )
-    except CVATServiceException as e:
-      return Response(data={'message': str(e)}, status=400)
+    assignee_id = data['assignee_id']
+    dataset_id = data['dataset_id']
+    files_in_task = data['files_in_task']
+    count_of_tasks = data['count_of_tasks']
+    task_name = data['task_name']
 
-    return Response()
+    try:
+      dataset = Dataset.objects.get(id=dataset_id)
+    except Dataset.DoesNotExist:
+      return Response(
+        data={
+          "message": f"Dataset with id='{dataset_id}' not found",
+        },
+        status=status.HTTP_400_BAD_REQUEST,
+      )
+
+    media_assets = dataset.media_assets.filter(status=MediaAssetStatus.PENDING).all()
+    try:
+      for chunk_id, chunk in zip(range(count_of_tasks), chunkify(media_assets, files_in_task)):
+        logger.info(f"Creating task '{task_name}' with {len(chunk)} files")
+        cvat_service.create_task(
+          name=task_name,
+          assignee_id=assignee_id,
+          owner_id=cvat_service.get_root_user()['id'],
+          remote_files=[media_asset.remote_path for media_asset in chunk],
+        )
+    except CVATServiceException as e:
+      return Response(data={'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response(status=status.HTTP_201_CREATED)
 
   def list(self, request: Request):
     queryset = CvatTasksQuerySet(CvatService())
@@ -89,7 +113,7 @@ class CvatTasksQuerySet:
     self.service_request = ListRequest()
     self._tasks = []
 
-  def filter(self, **kwargs) -> 'CvatTasksQuerySet':
+  def filter(self, **kwargs) -> CvatTasksQuerySet:
     filter_form = CvatTaskFilter(kwargs)
     if not filter_form.is_valid():
       raise ValidationError(
@@ -101,7 +125,7 @@ class CvatTasksQuerySet:
     )
     return self
 
-  def order_by(self, field_name: str) -> 'CvatTasksQuerySet':
+  def order_by(self, field_name: str) -> CvatTasksQuerySet:
     self.service_request.ordering = field_name
     return self
 
@@ -132,7 +156,7 @@ class CvatTasksQuerySet:
     return self._tasks
 
   def __iter__(self) -> Iterator[dict]:
-    """Django instatiate iterator only after slicing,
-    so iterator doesn't have to make request
+    """Django instantiate iterator only after slicing,
+    so iterator doesn't have to make request.
     """
     return iter(self._tasks)

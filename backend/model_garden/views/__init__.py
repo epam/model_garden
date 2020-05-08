@@ -1,4 +1,5 @@
 from .bucket import BucketViewSet
+
 from .cvat_tasks import CvatTaskViewSet
 from .cvat_user import CvatUserViewSet
 from .dataset import DatasetViewSet

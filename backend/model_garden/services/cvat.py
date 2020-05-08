@@ -95,6 +95,7 @@ class CvatService:
     name: str,
     assignee_id: int,
     owner_id: int,
+    remote_files: List,
     labels: Optional[List] = None,
     image_quality: Optional[int] = 70,
   ) -> dict:
@@ -106,7 +107,9 @@ class CvatService:
         }
       ]
 
-    response = self._post('tasks', data={
+    response = self._post(
+      path='tasks',
+      data={
         "name": name,
         "owner": owner_id,
         "assignee": assignee_id,
@@ -120,13 +123,21 @@ class CvatService:
         "stop_frame": 0,
         "frame_filter": "step=1",
         "project": None
-    })
-    return response.json()
+      },
+    )
+    task = response.json()
+
+    response = self._post(
+      path=f"tasks/{task['id']}/data",
+      data={
+        'remote_files': remote_files,
+      },
+    )
+    task['data'] = response.json()
+    return task
 
   def tasks(self, req: ListRequest) -> ListResponse:
-    """Fetch tasks from the service that are created by
-    `settings.CVAT_ROOT_USER_NAME`.
-    """
+    """Fetch tasks from the service that are created by `settings.CVAT_ROOT_USER_NAME`."""
     req.filters['owner'] = settings.CVAT_ROOT_USER_NAME
 
     resp = self._get(_join_query('tasks', req))
@@ -141,8 +152,7 @@ class CvatService:
 
 
 def _join_query(path: str, req: ListRequest) -> str:
-  """Add query arguments from `req` to the `path`.
-  """
+  """Add query arguments from `req` to the `path`."""
   req_query = dict(page=req.page, page_size=req.page_size, **req.filters)
   if req.ordering:
     req_query.update(ordering=req.ordering)

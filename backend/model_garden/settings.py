@@ -127,17 +127,31 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
+  'version': 1,
+  'disable_existing_loggers': False,
+  'formatters': {
+    'simple': {
+      'format': '[{asctime}] {name}: {message}',
+      'style': '{',
     },
-    'root': {
-        'handlers': ['console'],
-        'level': 'WARNING' if not DEBUG else 'INFO',
+  },
+  'handlers': {
+    'console': {
+      'class': 'logging.StreamHandler',
+      'formatter': 'simple',
     },
+  },
+  'loggers': {
+    'django': {
+      'handlers': ['console'],
+      'propagate': True,
+    },
+    'model_garden': {
+      'handlers': ['console'],
+      'level': 'INFO',
+      'propagate': True,
+    },
+  },
 }
 
 # Internationalization
@@ -161,7 +175,6 @@ STATIC_URL = '/static/'
 # AWS
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', default=None)
 AWS_SECRET_KEY = env('AWS_SECRET_KEY', default=None)
-AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME', default=None)
 
 # CVAT
 CVAT_HOST = env('CVAT_HOST', default='localhost')
