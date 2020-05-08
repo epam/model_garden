@@ -13,6 +13,11 @@ class TestBucket(TestCase):
 
     self.assertEqual(str(bucket), f"Bucket(name='{self.name}', url='{self.url}')")
 
+  def test_repr(self):
+    bucket = Bucket(name=self.name, url=self.url)
+
+    self.assertEqual(repr(bucket), f"<Bucket(name='{self.name}', url='{self.url}')>")
+
   def test_create(self):
     bucket = Bucket(name=self.name, url=self.url)
     bucket.save()
