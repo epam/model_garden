@@ -1,15 +1,16 @@
 from typing import Optional
 
-from django.test import TestCase
 from freezegun import freeze_time
 
-from model_garden.models import Bucket, Dataset
+from model_garden.models import Dataset
 from model_garden.serializers import DatasetSerializer
+from tests import BaseTestCase
 
 
-class TestDatasetSerializer(TestCase):
+class TestDatasetSerializer(BaseTestCase):
   def setUp(self):
-    self.bucket = Bucket.objects.create(name='test bucket')
+    super().setUp()
+    self.bucket = self.test_factory.create_bucket()
 
   def _save_dataset(self, path: Optional[str] = 'test') -> Dataset:
     serializer = DatasetSerializer(data={
@@ -26,6 +27,7 @@ class TestDatasetSerializer(TestCase):
     dataset = Dataset.objects.get(pk=saved_dataset.pk)
 
     self.assertEqual(dataset.path, 'test_2020-05-01')
+    self.assertEqual(dataset.bucket, self.bucket)
 
   @freeze_time('2020-05-01')
   def test_create_path_param_is_missing(self):
@@ -34,6 +36,7 @@ class TestDatasetSerializer(TestCase):
     dataset = Dataset.objects.get(pk=saved_dataset.pk)
 
     self.assertEqual(dataset.path, 'batch_2020-05-01')
+    self.assertEqual(dataset.bucket, self.bucket)
 
   def test_create_already_exists(self):
     saved_dataset_1 = self._save_dataset()
