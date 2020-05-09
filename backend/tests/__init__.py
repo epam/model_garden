@@ -1,5 +1,9 @@
+from typing import Optional
+
+from django.test import TestCase
 from rest_framework.test import APITestCase
 
+from model_garden.constants import MediaAssetStatus
 from model_garden.models import Bucket, Dataset, MediaAsset
 
 
@@ -16,14 +20,25 @@ class Factory:
       bucket=self.create_bucket(),
     )
 
-  def create_media_asset(self, dataset=None) -> MediaAsset:
+  def create_media_asset(
+    self,
+    dataset: Optional[Dataset] = None,
+    status: str = MediaAssetStatus.PENDING,
+  ) -> MediaAsset:
     if dataset is None:
       dataset = self.create_dataset()
 
     return MediaAsset.objects.create(
       dataset=dataset,
       filename='image.jpg',
+      status=status,
     )
+
+
+class BaseTestCase(TestCase):
+  def setUp(self):
+    super().setUp()
+    self.test_factory = Factory()
 
 
 class BaseAPITestCase(APITestCase):

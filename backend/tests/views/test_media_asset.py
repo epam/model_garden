@@ -1,31 +1,15 @@
 from rest_framework.reverse import reverse
-from rest_framework.test import APITestCase
 
 from model_garden.constants import MediaAssetStatus
-from model_garden.models import Bucket, Dataset, MediaAsset
+from tests import BaseAPITestCase
 
 
-class TestMediaAssetViewSet(APITestCase):
+class TestMediaAssetViewSet(BaseAPITestCase):
   def setUp(self):
-    self.bucket_name = 'test_bucket'
-    self.bucket_url = 'https://d3o54g14k1n39o.cloudfront.net/'
-    self.bucket = Bucket.objects.create(
-      name=self.bucket_name,
-      url=self.bucket_url,
-    )
-    self.dataset = Dataset.objects.create(
-      path='test path',
-      bucket=self.bucket
-    )
-    self._create_media_asset(status=MediaAssetStatus.PENDING)
-    self._create_media_asset(status=MediaAssetStatus.ASSIGNED)
-
-  def _create_media_asset(self, status=MediaAssetStatus.PENDING):
-    return MediaAsset.objects.create(
-      dataset=self.dataset,
-      filename='image.jpg',
-      status=status,
-    )
+    super().setUp()
+    self.dataset = self.test_factory.create_dataset()
+    self.test_factory.create_media_asset(dataset=self.dataset, status=MediaAssetStatus.PENDING)
+    self.test_factory.create_media_asset(dataset=self.dataset, status=MediaAssetStatus.ASSIGNED)
 
   def test_list(self):
     response = self.client.get(
@@ -50,7 +34,7 @@ class TestMediaAssetViewSet(APITestCase):
     response = self.client.get(
       path=reverse('mediaasset-list'),
       data={
-        'bucket_id': self.bucket.id,
+        'bucket_id': self.dataset.bucket.id,
       },
     )
 

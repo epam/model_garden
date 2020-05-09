@@ -2,11 +2,12 @@ from unittest import mock
 
 from django.test.utils import override_settings
 from rest_framework.reverse import reverse
-from rest_framework.test import APITestCase
+from tests import BaseAPITestCase
 
 
-class TestCvatUserViewSet(APITestCase):
+class TestCvatUserViewSet(BaseAPITestCase):
   def setUp(self):
+    super().setUp()
     self.cvat_service_cls_patcher = mock.patch('model_garden.views.cvat_user.CvatService')
     self.cvat_service_cls_mock = self.cvat_service_cls_patcher.start()
     self.cvat_service_mock = self.cvat_service_cls_mock.return_value

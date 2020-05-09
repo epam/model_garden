@@ -1,25 +1,18 @@
-from django.test import TestCase
-
 from model_garden.models import Bucket
+from tests import BaseTestCase
 
 
-class TestBucket(TestCase):
+class TestBucket(BaseTestCase):
   def setUp(self):
-    self.name = 'test bucket'
-    self.url = 'https://d3o54g14k1n39o.cloudfront.net/'
+    super().setUp()
+    self.bucket = self.test_factory.create_bucket()
 
   def test_str(self):
-    bucket = Bucket(name=self.name, url=self.url)
 
-    self.assertEqual(str(bucket), f"Bucket(name='{self.name}', url='{self.url}')")
+    self.assertEqual(str(self.bucket), f"Bucket(name='{self.bucket.name}', url='{self.bucket.url}')")
 
   def test_repr(self):
-    bucket = Bucket(name=self.name, url=self.url)
-
-    self.assertEqual(repr(bucket), f"<Bucket(name='{self.name}', url='{self.url}')>")
+    self.assertEqual(repr(self.bucket), f"<Bucket(name='{self.bucket.name}', url='{self.bucket.url}')>")
 
   def test_create(self):
-    bucket = Bucket(name=self.name, url=self.url)
-    bucket.save()
-
-    self.assertEqual(Bucket.objects.filter(pk=bucket.pk).count(), 1)
+    self.assertEqual(Bucket.objects.filter(pk=self.bucket.pk).count(), 1)

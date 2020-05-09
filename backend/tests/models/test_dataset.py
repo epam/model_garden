@@ -1,22 +1,15 @@
-from django.test import TestCase
+from model_garden.models import Dataset
+from tests import BaseTestCase
 
-from model_garden.models import Bucket, Dataset
 
-
-class TestDataset(TestCase):
-  def setUp(self):
-    self.bucket_name = 'test bucket'
-    self.bucket = Bucket(name=self.bucket_name)
-    self.bucket.save()
-    self.dataset_path = 'path'
+class TestDataset(BaseTestCase):
 
   def test_str(self):
-    dataset = Dataset(path=self.dataset_path, bucket=self.bucket)
+    dataset = self.test_factory.create_dataset()
 
-    self.assertEqual(str(dataset), f"Dataset(path='{self.dataset_path}', bucket='{self.bucket.name}')")
+    self.assertEqual(str(dataset), f"Dataset(path='{dataset.path}', bucket='{dataset.bucket.name}')")
 
   def test_create(self):
-    dataset = Dataset(path=self.dataset_path, bucket=self.bucket)
-    dataset.save()
+    self.test_factory.create_dataset()
 
     self.assertEqual(Dataset.objects.count(), 1)
