@@ -37,14 +37,20 @@ export const Task: React.FC<TaskProps> = ({
 }: TaskProps) => {
   const { handleSubmit, setValue, control, watch } = useForm<FormData>({
     defaultValues: {
-      taskName: "",
-      user: "",
-      filesInTask: 0,
-      countOfTasks: 0,
+      taskName: DEFAULT_FORM_DATA.TASK_NAME,
+      user: DEFAULT_FORM_DATA.USER,
+      filesInTask: DEFAULT_FORM_DATA.FILES_IN_TASK_VALUE,
+      countOfTasks: DEFAULT_FORM_DATA.COUNT_OF_TASKS,
     },
   });
 
-  const {taskName: taskNameValue, user: userValue} = watch(['taskName', 'user']);
+  const {
+    taskName: taskNameValue,
+    user: userValue,
+    filesInTask: filesInTaskValue,
+    countOfTasks: countOfTasksValue
+  } = watch([
+      'taskName', 'user', 'filesInTask', 'countOfTasks']);
 
   useEffect(() => {
     setValue("taskName", taskName);
@@ -125,7 +131,12 @@ export const Task: React.FC<TaskProps> = ({
             type="submit"
             color="primary"
             variant="contained"
-            disabled={taskNameValue === DEFAULT_FORM_DATA.TASK_NAME || userValue === DEFAULT_FORM_DATA.USER}
+            disabled={
+              taskNameValue === DEFAULT_FORM_DATA.TASK_NAME
+            || userValue === DEFAULT_FORM_DATA.USER
+            || countOfTasksValue === DEFAULT_FORM_DATA.COUNT_OF_TASKS
+            || filesInTaskValue === DEFAULT_FORM_DATA.FILES_IN_TASK_VALUE
+            }
           >
             Assign
           </Button>
