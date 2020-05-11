@@ -13,7 +13,8 @@ WORKDIR /src
 
 COPY ./requirements.txt /src/
 RUN pip install --no-cache-dir -U pip && pip install --no-cache-dir -r requirements.txt
-COPY ./model_garden /src/
+COPY ./manage.py /src/
+COPY ./model_garden/ /src/model_garden/
 
 RUN apt-get purge -y --auto-remove \
     build-essential \
