@@ -45,6 +45,7 @@ backend:
   services:
     - docker:dind
   variables:
+    AWS_DEFAULT_REGION: eu-central-1
     DOCKER_HOST: tcp://localhost:2375/
     REPOSITORY_URL: local/model_garden_backend
   before_script:
@@ -70,6 +71,7 @@ frontend:
   services:
     - docker:dind
   variables:
+    AWS_DEFAULT_REGION: eu-central-1
     DOCKER_HOST: tcp://localhost:2375/
     REPOSITORY_URL: local/model_garden_frontend
   before_script:
