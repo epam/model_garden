@@ -25,7 +25,7 @@ interface TaskProps {
   buckets: Bucket[];
   datasets: Dataset[];
   currentBucketId: string;
-  onDataSetChange: () => void;
+  onDataSetChange: (datasetId: string) => void;
 }
 
 export type FormData = {
@@ -97,10 +97,10 @@ export const Task: React.FC<TaskProps> = ({
   };
 
   const handleDatasetChange = (e: React.ChangeEvent<{ name?: string; value: unknown }>) => {
-    setSelectedDataset(e.target.value as string);
-    dispatch(setCurrentDatasetId(e.target.value as string));
-
-    onDataSetChange();
+    let datasetId: string = e.target.value as string;
+    setSelectedDataset(datasetId);
+    dispatch(setCurrentDatasetId(datasetId));
+    onDataSetChange(datasetId);
   };
 
   const bucketsSelectOptions = buckets.map((bucket: Bucket, index) => (
