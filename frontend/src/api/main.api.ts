@@ -1,11 +1,11 @@
 import axios from "axios";
-import { backendUrl } from "./const"
+import { backendHostPort } from "./environment"
 
 
 export const getBucketsRequest = async () => {
   try {
     return await axios.get(
-      `http://${backendUrl}/api/buckets/`,
+      `http://${backendHostPort}/api/buckets/`,
     );
   } catch (error) {
     if (error && error.response) {
