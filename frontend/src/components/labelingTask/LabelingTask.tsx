@@ -30,10 +30,8 @@ export const LabelingTask: React.FC = () => {
     }
   }, [dispatch, currentBucketId]);
 
-  const handleGetUnsignedImagesCount = () => {
-    if (currentDatasetId) {
-      dispatch(getUnsignedImagesCount(currentDatasetId));
-    }
+  const handleGetUnsignedImagesCount = (datasetId: string) => {
+    dispatch(getUnsignedImagesCount(datasetId));
   };
 
   const handleTaskSubmit = (data: FormData) => {
