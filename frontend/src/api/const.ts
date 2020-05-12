@@ -1,1 +1,1 @@
-export const backendUrl = `${process.env.REACT_APP_BACKEND_HOST}:${process.env.REACT_APP_BACKEND_PORT}`;
+export const backendUrl = `${window.location.hostname}:${process.env.REACT_APP_BACKEND_PORT}`;
