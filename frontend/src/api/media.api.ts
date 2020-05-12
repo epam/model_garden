@@ -1,4 +1,5 @@
 import axios from "axios";
+import { backendHostPort } from "./environment";
 
 export const uploadMediaFilesRequest = async (
   files: File[],
@@ -11,7 +12,7 @@ export const uploadMediaFilesRequest = async (
     formData.append("bucketId", bucketId);
     if (path) formData.append("path", path);
     return await axios.post(
-      "http://localhost:9000/api/media-assets/upload/",
+      `http://${backendHostPort}/api/media-assets/upload/`,
       formData,
       {
         headers: {
