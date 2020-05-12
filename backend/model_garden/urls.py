@@ -20,9 +20,10 @@ from rest_framework import routers
 
 from model_garden.views import (
   BucketViewSet,
-  CvatUserViewSet,
   CvatTaskViewSet,
+  CvatUserViewSet,
   DatasetViewSet,
+  HealthCheckView,
   MediaAssetViewSet,
 )
 
@@ -37,4 +38,5 @@ urlpatterns = [
   path('admin/', admin.site.urls),
   path('api/', include(router.urls)),
   path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+  path('health_check/', HealthCheckView.as_view()),
 ]
