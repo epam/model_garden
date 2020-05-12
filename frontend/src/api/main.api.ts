@@ -1,5 +1,5 @@
 import axios from "axios";
-import { backendHostPort } from "./environment"
+import { backendHostPort } from "./environment";
 
 
 export const getBucketsRequest = async () => {
