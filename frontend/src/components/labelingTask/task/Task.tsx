@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import {
   Typography,
   TextField,
@@ -11,15 +12,20 @@ import {
 } from "@material-ui/core";
 import "./Task.css";
 import { FilesCounter } from "../filesCounter";
-import { LabelingToolUser } from "../../../models/labelingToolUser";
+import { Bucket, Dataset, LabelingToolUser } from "../../../models";
 import { FormContainer } from "../../shared";
 import { DEFAULT_FORM_DATA } from "./constants";
+import { setCurrentBucketId, setCurrentDatasetId } from "../../../store/labelingTask";
 
 interface TaskProps {
   users: LabelingToolUser[];
   taskName: string;
   filesCount: number;
   handleTaskSubmit: (data: FormData) => void;
+  buckets: Bucket[];
+  datasets: Dataset[];
+  currentBucketId: string;
+  onDataSetChange: () => void;
 }
 
 export type FormData = {
@@ -34,7 +40,14 @@ export const Task: React.FC<TaskProps> = ({
   taskName,
   filesCount,
   handleTaskSubmit,
+  buckets,
+  datasets,
+  currentBucketId,
+  onDataSetChange,
 }: TaskProps) => {
+  const [selectedDataset, setSelectedDataset] = useState("");
+  const dispatch = useDispatch();
+
   const { handleSubmit, setValue, control, watch } = useForm<FormData>({
     defaultValues: {
       taskName: DEFAULT_FORM_DATA.TASK_NAME,
@@ -56,6 +69,17 @@ export const Task: React.FC<TaskProps> = ({
     setValue("taskName", taskName);
   }, [taskName, setValue]);
 
+  useEffect(() => {
+    dispatch(setCurrentBucketId(""));
+    dispatch(setCurrentDatasetId(""));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!currentBucketId) {
+      dispatch(setCurrentDatasetId(""));
+    }
+  }, [dispatch, currentBucketId]);
+
   const onSubmit = handleSubmit((data: FormData) => {
     handleTaskSubmit(data);
   });
@@ -66,6 +90,31 @@ export const Task: React.FC<TaskProps> = ({
     </MenuItem>
   ));
 
+  const handleBucketChange = (e: React.ChangeEvent<{ name?: string; value: unknown }>) => {
+    if (e.target.value) {
+      dispatch(setCurrentBucketId(e.target.value as string));
+    }
+  };
+
+  const handleDatasetChange = (e: React.ChangeEvent<{ name?: string; value: unknown }>) => {
+    setSelectedDataset(e.target.value as string);
+    dispatch(setCurrentDatasetId(e.target.value as string));
+
+    onDataSetChange();
+  };
+
+  const bucketsSelectOptions = buckets.map((bucket: Bucket, index) => (
+      <MenuItem key={index} value={bucket.id}>
+        {bucket.name}
+      </MenuItem>
+  ));
+
+  const datasetsSelectOptions = datasets.map((dataset: Dataset, index) => (
+      <MenuItem key={index} value={dataset.id}>
+        {dataset.path}
+      </MenuItem>
+  ));
+
   return (
     <div className="task">
       <FormContainer>
@@ -73,6 +122,34 @@ export const Task: React.FC<TaskProps> = ({
           Create Task
         </Typography>
         <form onSubmit={onSubmit} className="task__form">
+          <FormControl className="images-location__form-item">
+            <InputLabel id="images-location-bucket-name">
+              Bucket
+            </InputLabel>
+            <Select
+                labelId="images-location-bucket-name"
+                name="bucketId"
+                variant="outlined"
+                label="Bucket"
+                value={currentBucketId}
+                onChange={handleBucketChange}
+            >
+              {bucketsSelectOptions}
+            </Select>
+          </FormControl>
+          <FormControl className="images-location__form-item">
+            <InputLabel id="images-location-datasets">Dataset</InputLabel>
+            <Select
+                labelId="images-location-datasets"
+                name="dataset"
+                variant="outlined"
+                label="Dataset"
+                value={selectedDataset}
+                onChange={handleDatasetChange}
+            >
+              {datasetsSelectOptions}
+            </Select>
+          </FormControl>
           <Controller
             className="task__form-item"
             name="taskName"
@@ -83,8 +160,8 @@ export const Task: React.FC<TaskProps> = ({
             as={<TextField />}
           />
           <div className="task__form-group">
-            <FilesCounter filesCount={filesCount} className="task__form-item" />
-            <FormControl className="task__form-item">
+            <FilesCounter filesCount={filesCount} className="task__form-left-item" />
+            <FormControl className="task__form-right-item">
               <InputLabel id="task-labeling-tool-user">
                 Labeling tool user
               </InputLabel>
@@ -100,7 +177,7 @@ export const Task: React.FC<TaskProps> = ({
           </div>
           <div className="task__form-group">
             <Controller
-              className="task__form-item"
+              className="task__form-left-item"
               name="filesInTask"
               variant="outlined"
               label="Files in task"
@@ -113,7 +190,7 @@ export const Task: React.FC<TaskProps> = ({
               }
             />
             <Controller
-              className="task__form-item"
+              className="task__form-right-item"
               name="countOfTasks"
               variant="outlined"
               label="Count of tasks"

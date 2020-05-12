@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import "./LabelingTask.css";
-import { ImagesLocation } from "../shared/imagesLocation";
 import { Task, FormData } from "./task";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../store";
@@ -50,21 +49,15 @@ export const LabelingTask: React.FC = () => {
   };
 
   return (
-    <>
-      <ImagesLocation
-        title="Select images location"
-        buttonName="Get unassigned images count"
-        buckets={buckets}
-        datasets={Array.from(datasets.values())}
-        currentBucketId={currentBucketId}
-        handleFormSubmit={handleGetUnsignedImagesCount}
-      />
-      <Task
-        users={users}
-        taskName={(datasets.get(currentDatasetId) || {path: ""}).path}
-        filesCount={unsignedImagesCount}
-        handleTaskSubmit={handleTaskSubmit}
-      />
-    </>
+    <Task
+      users={users}
+      taskName={(datasets.get(currentDatasetId) || {path: ""}).path}
+      filesCount={unsignedImagesCount}
+      handleTaskSubmit={handleTaskSubmit}
+      buckets={buckets}
+      datasets={Array.from(datasets.values())}
+      currentBucketId={currentBucketId}
+      onDataSetChange={handleGetUnsignedImagesCount}
+    />
   );
 };
