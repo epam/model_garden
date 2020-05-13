@@ -1,10 +1,17 @@
 import React, { useEffect } from 'react';
+import MUIDataTable from "mui-datatables";
 import './TasksStatuses.css';
-import { ImagesLocation } from '../shared/imagesLocation';
 import { AppState } from '../../store';
 import { useDispatch, useSelector } from 'react-redux';
-import { Tasks } from './tasks';
 import { getLabelingTasks, getDatasets } from '../../store/labelingTask';
+import { TABLE_TITLE, TASK_STATUSES_COLUMNS, TASK_STATUSES } from './constants';
+
+const options = {
+  filterType: 'textField' as "checkbox" | "dropdown" | "multiselect" | "textField" | "custom" | undefined,
+  download: false,
+  print: false,
+  selectableRows: 'none' as "none" | "multiple" | "single" | undefined
+};
 
 export const TasksStatuses: React.FC = () => {
   const dispatch = useDispatch();
@@ -24,16 +31,13 @@ export const TasksStatuses: React.FC = () => {
   };
 
   return (
-    <div className="tasks-statuses">
-      <ImagesLocation
-        title="Select images location"
-        buttonName="Get tasks info"
-        buckets={buckets}
-        datasets={Array.from(datasets.values())}
-        currentBucketId={currentBucketId}
-        handleFormSubmit={handleImagesLocationSubmit}
-      />
-      <Tasks />
-    </div>
+      <div className={'task-statuses'}>
+          <MUIDataTable
+              title={TABLE_TITLE}
+              data={TASK_STATUSES}
+              columns={TASK_STATUSES_COLUMNS}
+              options={options}
+          />
+      </div>
   );
 };
