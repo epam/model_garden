@@ -33,13 +33,16 @@ DEBUG = True
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS', cast=list, default=['*'])
 
-CORS_ORIGIN_WHITELIST = [
-  # frontend
-  "http://localhost",
-  "http://127.0.0.1",
-  "http://localhost:4200",
-  "http://127.0.0.1:4200",
-] + [f"http://{allowed_host}" for allowed_host in ALLOWED_HOSTS if allowed_host != '*']
+CORS_ORIGIN_WHITELIST = env(
+  var='CORS_ORIGIN_WHITELIST',
+  cast=list,
+  default=[
+    'http://localhost',
+    'http://127.0.0.1',
+    'http://localhost:4200',
+    'http://127.0.0.1:4200',
+  ],
+)
 
 # Application definition
 
