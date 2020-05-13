@@ -211,8 +211,8 @@ export const Task: React.FC<TaskProps> = ({
             disabled={
               taskNameValue === DEFAULT_FORM_DATA.TASK_NAME
             || userValue === DEFAULT_FORM_DATA.USER
-            || countOfTasksValue === DEFAULT_FORM_DATA.COUNT_OF_TASKS
-            || filesInTaskValue === DEFAULT_FORM_DATA.FILES_IN_TASK_VALUE
+            || Number(countOfTasksValue) === DEFAULT_FORM_DATA.COUNT_OF_TASKS
+            || Number(filesInTaskValue) === DEFAULT_FORM_DATA.FILES_IN_TASK_VALUE
             }
           >
             Assign
