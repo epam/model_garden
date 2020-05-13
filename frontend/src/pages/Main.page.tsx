@@ -36,9 +36,9 @@ export const MainPage: React.FC = () => {
           <Tab label="Tasks statuses" />
         </Tabs>
       </AppBar>
-      {selectedMenuItem === 0 && <UploadImages />}
+      {selectedMenuItem === 2 && <UploadImages />}
       {selectedMenuItem === 1 && <LabelingTask />}
-      {selectedMenuItem === 2 && <TasksStatuses />}
+      {selectedMenuItem === 0 && <TasksStatuses />}
     </>
   );
 };
