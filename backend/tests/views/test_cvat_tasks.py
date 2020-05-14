@@ -37,7 +37,7 @@ class TestCvatTaskViewSet(BaseAPITestCase):
 
   def test_create(self):
     dataset = self.test_factory.create_dataset()
-    self.test_factory.create_media_asset(dataset=dataset)
+    asset = self.test_factory.create_media_asset(dataset=dataset)
 
     response = self.client.post(
       path=reverse('cvattasks-list'),
@@ -56,7 +56,7 @@ class TestCvatTaskViewSet(BaseAPITestCase):
       assignee_id=3,
       owner_id=1,
       remote_files=[
-        'https://d3o54g14k1n39o.cloudfront.net/test_path/image.jpg',
+        f'https://d3o54g14k1n39o.cloudfront.net/test_path/{asset.filename}',
       ],
     )
 

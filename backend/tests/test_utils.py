@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from model_garden.utils import chunkify
+from model_garden.utils import chunkify, strip_s3_key_prefix
 
 
 class TestChunkify(TestCase):
@@ -16,3 +16,18 @@ class TestChunkify(TestCase):
   def test_zero_chunk(self):
     with self.assertRaises(ValueError):
       list(chunkify([1, 2], 0))
+
+
+class TestStripS3KeyPrefix(TestCase):
+  TEST_CASES = [
+    [('', ''), ''],
+    [('foo', 'foo/bar/baz'), 'bar/baz'],
+    [('foo', 'foo/bar/baz', '-'), '/bar/baz'],
+    [('foo', 'foo//bar'), '/bar'],
+    [('foo', 'foo'), ''],
+    [('foo', 'bar/foo'), 'bar/foo'],
+  ]
+
+  def test_strip_cases(self):
+    for args, expected in self.TEST_CASES:
+      self.assertEqual(strip_s3_key_prefix(*args), expected)

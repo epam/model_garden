@@ -1,6 +1,8 @@
+from typing import Iterable
+from collections import namedtuple
 from unittest import TestCase, mock
 
-from model_garden.services.s3 import S3Client
+from model_garden.services.s3 import S3Client, image_ext_filter
 
 
 class TestS3Client(TestCase):
@@ -44,3 +46,41 @@ class TestS3Client(TestCase):
     self.bucket_mock.meta.client.upload_fileobj.assert_called_once_with(
       file_obj_mock, self.bucket_name, 'key',
     )
+
+  def test_list_keys_without_filter(self):
+    object_mock = mock.Mock()
+    self.bucket_mock.objects.filter.return_value = [object_mock]
+
+    result = self.client.list_keys('foo')
+
+    self.assertIsInstance(result, Iterable)
+    self.assertEqual(list(result), [object_mock])
+
+  def test_list_keys_with_filter(self):
+    object_mock = mock.Mock()
+    self.bucket_mock.objects.filter.return_value = [object_mock, mock.Mock()]
+
+    result = self.client.list_keys('foo', filter_by=lambda o: o is object_mock)
+
+    self.assertIsInstance(result, Iterable)
+    self.assertEqual(list(result), [object_mock])
+
+
+class TestImageExtFilter(TestCase):
+  TEST_CASES = [
+    ('', False),
+    ('foo', False),
+    ('foo/bar', False),
+    ('.png', False),
+    ('foo.bar', False),
+    ('foo/bar/baz.bmp', True),
+    ('foo.jpg', True),
+  ]
+
+  def test_image_ext_filter(self):
+    ObjectSummary = namedtuple('ObjectSummary', 'key')
+    for key, expected in self.TEST_CASES:
+      self.assertIs(image_ext_filter(ObjectSummary(key=key)), expected)
+
+  def test_when_empty_input(self):
+    self.assertFalse(image_ext_filter(None))

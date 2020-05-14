@@ -8,6 +8,8 @@ from model_garden.models import Bucket, Dataset, MediaAsset
 
 
 class Factory:
+  _FILENAME_ID = 1
+
   def create_bucket(self) -> Bucket:
     return Bucket.objects.create(
       name='test_bucket',
@@ -28,9 +30,11 @@ class Factory:
     if dataset is None:
       dataset = self.create_dataset()
 
+    Factory._FILENAME_ID += 1
+
     return MediaAsset.objects.create(
       dataset=dataset,
-      filename='image.jpg',
+      filename=f'image{Factory._FILENAME_ID}.jpg',
       status=status,
     )
 

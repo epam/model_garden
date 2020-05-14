@@ -10,8 +10,11 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from model_garden.models import Bucket, MediaAsset
-from model_garden.serializers import DatasetSerializer, MediaAssetSerializer
-from model_garden.services.s3 import S3Client
+from model_garden.serializers import (
+  DatasetSerializer, DatasetRawPathSerializer, MediaAssetSerializer
+)
+from model_garden.services.s3 import S3Client, image_ext_filter
+from model_garden.utils import strip_s3_key_prefix
 
 
 class MediaAssetFilterSet(filters.FilterSet):
@@ -103,3 +106,27 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
   def _upload_file_to_s3(self, s3_client, dataset, file_name, file_obj):
     media_asset = MediaAsset.objects.create(dataset=dataset, filename=file_name)
     s3_client.upload_file_obj(file_obj=file_obj, bucket=dataset.bucket.name, key=media_asset.full_path)
+
+  @action(methods=["POST"], detail=False, url_path='import-s3')
+  def import_s3(self, request):
+    dataset_serializer = DatasetRawPathSerializer(data={
+      'bucket': request.data.get('bucketId'),
+      'path': request.data.get('path'),
+    })
+    dataset_serializer.is_valid(raise_exception=True)
+    dataset = dataset_serializer.save()
+
+    s3_client = S3Client(bucket_name=dataset.bucket.name)
+
+    assets = [
+      MediaAsset(
+        dataset=dataset,
+        filename=strip_s3_key_prefix(dataset.path, asset.key),
+      )
+      for asset in s3_client.list_keys(dataset.path, filter_by=image_ext_filter)
+    ]
+    MediaAsset.objects.bulk_create(
+      assets, batch_size=100, ignore_conflicts=True
+    )
+
+    return Response(data={'imported': len(assets)}, status=status.HTTP_200_OK)

@@ -1,9 +1,12 @@
 from typing import Optional
 
 from freezegun import freeze_time
+from rest_framework import serializers
 
 from model_garden.models import Dataset
-from model_garden.serializers import DatasetSerializer
+from model_garden.serializers import (
+  DatasetSerializer, DatasetRawPathSerializer
+)
 from tests import BaseTestCase
 
 
@@ -44,3 +47,47 @@ class TestDatasetSerializer(BaseTestCase):
 
     self.assertEqual(saved_dataset_1, saved_dataset_2)
     self.assertEqual(Dataset.objects.count(), 1)
+
+  def test_validate_when_bucket_not_provided(self):
+    serializer = DatasetSerializer(data={
+      'path': 'foo',
+    })
+    self.assertFalse(serializer.is_valid())
+
+  def test_validate_when_bucket_is_not_exist(self):
+    serializer = DatasetSerializer(data={
+      'path': 'foo',
+      'bucket': 0,
+    })
+    self.assertFalse(serializer.is_valid())
+
+
+class TestDatasetRawPathSerializer(BaseTestCase):
+  def setUp(self):
+    super().setUp()
+    self.bucket = self.test_factory.create_bucket()
+
+  def test_path_was_not_changed(self):
+    serializer = DatasetRawPathSerializer(data={
+      'path': 'foo',
+      'bucket': self.bucket.pk,
+    })
+    serializer.is_valid(raise_exception=True)
+    self.assertEqual(serializer.validated_data['path'], 'foo')
+
+  def test_when_path_is_not_passed(self):
+    serializer = DatasetRawPathSerializer(data={
+      'bucket': self.bucket.pk,
+    })
+
+    with self.assertRaises(serializers.ValidationError):
+      serializer.is_valid(raise_exception=True)
+
+  def test_when_path_is_empty(self):
+    serializer = DatasetRawPathSerializer(data={
+      'path': '',
+      'bucket': self.bucket.pk,
+    })
+
+    with self.assertRaises(serializers.ValidationError):
+      serializer.is_valid(raise_exception=True)

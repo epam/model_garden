@@ -6,7 +6,9 @@ from model_garden.models import Dataset
 
 
 class DatasetSerializer(serializers.ModelSerializer):
-  path = serializers.CharField(allow_blank=True, allow_null=True)
+  path = serializers.CharField(
+    allow_blank=True, allow_null=True, trim_whitespace=True
+  )
 
   class Meta:
     model = Dataset
@@ -18,12 +20,16 @@ class DatasetSerializer(serializers.ModelSerializer):
     validators = []
 
   def validate(self, attrs):
-    path = (attrs.get('path') or '').strip()
+    self._validate_path(attrs)
+
+    return super().validate(attrs=attrs)
+
+  def _validate_path(self, attrs):
+    path = attrs.get('path') or ''
     if not path:
       path = 'batch'
 
     attrs['path'] = f'{path}_{datetime.utcnow().date()}'
-    return super().validate(attrs=attrs)
 
   def create(self, validated_data):
     dataset = Dataset.objects.filter(
@@ -34,3 +40,10 @@ class DatasetSerializer(serializers.ModelSerializer):
       return dataset
 
     return super().create(validated_data=validated_data)
+
+
+class DatasetRawPathSerializer(DatasetSerializer):
+  def _validate_path(self, attrs):
+    path = attrs.get('path')
+    if not path:
+      raise serializers.ValidationError('Field "path" can not be empty.')
