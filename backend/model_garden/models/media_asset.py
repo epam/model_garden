@@ -19,6 +19,7 @@ class MediaAsset(BaseModel):
 
   class Meta:
     ordering = ['-created_at']
+    unique_together = [['filename', 'dataset']]
 
   @property
   def full_path(self):
