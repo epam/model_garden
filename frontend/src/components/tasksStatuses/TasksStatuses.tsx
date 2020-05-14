@@ -29,12 +29,8 @@ export const TasksStatuses: React.FC = () => {
   }, [dispatch, currentBucketId]);
 
   useEffect(() => {
-    getTasks();
-  });
-
-  const getTasks = () => {
     dispatch(getLabelingTasks(currentBucketId, currentDatasetId));
-  };
+  }, []);
 
   return (
       <div className={'task-statuses'}>
