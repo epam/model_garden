@@ -103,19 +103,19 @@ class TestCvatTaskViewSet(BaseAPITestCase):
     self.assertEqual(
       response.json(),
       {
-          "count": 1,
-          "next": None,
-          "previous": None,
-          "results": [{
-            "id": 4,
-            "name": "assignment",
-            "mode": "annotation",
-            "assignee": None,
-            "status": "annotation",
-            "url": "http://localhost:8080/api/v1/tasks/4",
-            "project": None
-          }]
-      }
+        "count": 1,
+        "next": None,
+        "previous": None,
+        "results": [{
+          "id": 4,
+          "name": "assignment",
+          "mode": "annotation",
+          "assignee": None,
+          "status": "annotation",
+          "url": "http://localhost:8080/api/v1/tasks/4",
+          "project": None
+        }],
+      },
     )
 
   def test_response_not_found(self):
@@ -129,7 +129,17 @@ class TestCvatTaskViewSet(BaseAPITestCase):
     response = self.client.get(
       path=reverse('cvattasks-list'),
     )
-    self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertEqual(
+      response.json(),
+      {
+        "count": 0,
+        "next": None,
+        "previous": None,
+        "results": [],
+      },
+    )
 
 
 class TestCvatTasksQuerySet(APITestCase):
