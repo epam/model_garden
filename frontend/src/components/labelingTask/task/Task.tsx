@@ -122,12 +122,12 @@ export const Task: React.FC<TaskProps> = ({
           Create Task
         </Typography>
         <form onSubmit={onSubmit} className="task__form">
-          <FormControl className="images-location__form-item">
-            <InputLabel id="images-location-bucket-name">
+          <FormControl className="task__form-item">
+            <InputLabel id="task-bucket-name">
               Bucket
             </InputLabel>
             <Select
-                labelId="images-location-bucket-name"
+                labelId="task-bucket-name"
                 name="bucketId"
                 variant="outlined"
                 label="Bucket"
@@ -137,10 +137,10 @@ export const Task: React.FC<TaskProps> = ({
               {bucketsSelectOptions}
             </Select>
           </FormControl>
-          <FormControl className="images-location__form-item">
-            <InputLabel id="images-location-datasets">Dataset</InputLabel>
+          <FormControl className="task__form-item">
+            <InputLabel id="task-datasets">Dataset</InputLabel>
             <Select
-                labelId="images-location-datasets"
+                labelId="task-datasets"
                 name="dataset"
                 variant="outlined"
                 label="Dataset"
