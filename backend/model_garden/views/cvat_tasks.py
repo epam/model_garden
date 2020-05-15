@@ -67,12 +67,6 @@ class CvatTaskViewSet(ViewSet):
 
     paginator = CvatTaskPagination()
     page = paginator.paginate_queryset(queryset, request)
-    if not page:
-      return Response(
-        data={'message': 'Tasks was not found'},
-        status=status.HTTP_404_NOT_FOUND,
-      )
-
     serializer = CvatTaskSerializer(page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
