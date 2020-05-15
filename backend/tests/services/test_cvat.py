@@ -1,8 +1,10 @@
+from json import dumps
 from unittest import TestCase, mock
 
+from django.test.utils import override_settings
+from parameterized import parameterized
 from requests import HTTPError
 
-from django.test.utils import override_settings
 from model_garden.services import CvatService, CVATServiceException
 from model_garden.services.cvat import ListRequest, ListResponse, _join_query
 
@@ -12,31 +14,34 @@ class TestCvatService(TestCase):
     self.session_cls_patcher = mock.patch('model_garden.services.cvat.requests.Session')
     self.session_cls_mock = self.session_cls_patcher.start()
     self.session_mock = self.session_cls_mock.return_value
-    self.session_mock.post.return_value = mock.Mock(status_code=200)
+    self.session_mock.post.return_value = mock.Mock(
+      status_code=200,
+      content="ok",
+    )
+    self.data = {
+      'results': [
+        {
+          "url": "http://localhost:8080/api/v1/users/1",
+          "id": 1,
+          "username": "",
+          "first_name": "Epam",
+          "last_name": "Labler",
+          "email": "epam@labler.com"
+        },
+        {
+          "url": "http://localhost:8080/api/v1/users/2",
+          "id": 2,
+          "username": "admin",
+          "first_name": "",
+          "last_name": "",
+          "email": "",
+        },
+      ],
+    }
     self.session_mock.get.return_value = mock.Mock(
       status_code=200,
-      json=mock.Mock(
-        return_value={
-          'results': [
-            {
-              "url": "http://localhost:8080/api/v1/users/1",
-              "id": 1,
-              "username": "",
-              "first_name": "Epam",
-              "last_name": "Labler",
-              "email": "epam@labler.com"
-            },
-            {
-              "url": "http://localhost:8080/api/v1/users/2",
-              "id": 2,
-              "username": "admin",
-              "first_name": "",
-              "last_name": "",
-              "email": "",
-            },
-          ],
-        },
-      ),
+      content=dumps(self.data),
+      json=mock.Mock(return_value=self.data),
     )
 
   def tearDown(self):
@@ -88,43 +93,44 @@ class TestCvatService(TestCase):
       CvatService().get_users()
 
   def test_create_task(self):
-    service = CvatService()
+    data = {
+      'url': 'http://localhost:8080/api/v1/tasks/1',
+      'id': 1,
+      'name': 'test',
+      'size': 0,
+      'mode': '',
+      'owner': 1,
+      'assignee': 2,
+      'bug_tracker': '',
+      'created_date': '2020-05-07T18:17:39.484093Z',
+      'updated_date': '2020-05-07T18:17:39.484127Z',
+      'overlap': None,
+      'segment_size': 10,
+      'z_order': False,
+      'status': 'annotation',
+      'labels': [
+        {
+          'id': 1,
+          'name': 'newLabel',
+          'attributes': [],
+        },
+      ],
+      'segments': [],
+      'image_quality': 70,
+      'start_frame': 0,
+      'stop_frame': 0,
+      'frame_filter': 'step=1',
+      'project': None,
+    }
     self.session_mock.post.return_value = mock.Mock(
       status_code=201,
+      content=dumps(data),
       json=mock.Mock(
-        return_value={
-          'url': 'http://localhost:8080/api/v1/tasks/1',
-          'id': 1,
-          'name': 'test',
-          'size': 0,
-          'mode': '',
-          'owner': 1,
-          'assignee': 2,
-          'bug_tracker': '',
-          'created_date': '2020-05-07T18:17:39.484093Z',
-          'updated_date': '2020-05-07T18:17:39.484127Z',
-          'overlap': None,
-          'segment_size': 10,
-          'z_order': False,
-          'status': 'annotation',
-          'labels': [
-            {
-              'id': 1,
-              'name': 'newLabel',
-              'attributes': [],
-            },
-          ],
-          'segments': [],
-          'image_quality': 70,
-          'start_frame': 0,
-          'stop_frame': 0,
-          'frame_filter': 'step=1',
-          'project': None,
-        }
-      )
+        return_value=data,
+      ),
     )
 
-    task = service.create_task(
+    task = CvatService().create_task(
       name='test',
       assignee_id=2,
       owner_id=1,
@@ -144,21 +150,26 @@ class TestCvatServiceTasks(TestCase):
     self.session_cls_patcher = mock.patch('model_garden.services.cvat.requests.Session')
     self.session_cls_mock = self.session_cls_patcher.start()
     self.session_mock = self.session_cls_mock.return_value
-    self.session_mock.post.return_value = mock.Mock(status_code=200)
+    self.session_mock.post.return_value = mock.Mock(
+      status_code=200,
+      content="ok",
+    )
+    self.data = {
+      'count': 1,
+      'next': 'next_link',
+      'previous': 'prev_link',
+      'results': [
+        {
+          'id': 1,
+          'name': 'foo'
+        },
+      ],
+    }
     self.session_mock.get.return_value = mock.Mock(
       status_code=200,
+      content=dumps(self.data),
       json=mock.Mock(
-        return_value={
-          'count': 1,
-          'next': 'next_link',
-          'previous': 'prev_link',
-          'results': [
-            {
-              'id': 1,
-              'name': 'foo'
-            },
-          ],
-        },
+        return_value=self.data,
       ),
     )
 
@@ -184,44 +195,45 @@ class TestCvatServiceTasks(TestCase):
     self.session_mock.post.return_value.raise_for_status.side_effect = HTTPError
 
     with self.assertRaisesRegex(CVATServiceException, "Request to .* failed"):
-      CvatService().tasks()
+      CvatService().tasks(ListRequest())
 
 
 class TestJoinQuery(TestCase):
   TEST_CASES = [
-    {
-      'request': ListRequest(
+    (
+      ListRequest(
         page=1,
         page_size=2,
         ordering='name',
         filters={'foo': 'bar', 'baz': 2}
       ),
-      'path': 'path',
-      'expected': 'path?page=1&page_size=2&foo=bar&baz=2&ordering=name'
-    },
-    {
-      'request': ListRequest(
+      'path',
+      'path?page=1&page_size=2&foo=bar&baz=2&ordering=name'
+    ),
+    (
+      ListRequest(
         page=1,
         page_size=2,
         filters={'foo': 'bar'}
       ),
-      'path': 'path',
-      'expected': 'path?page=1&page_size=2&foo=bar'
-    },
-    {
-      'request': ListRequest(
+      'path',
+      'path?page=1&page_size=2&foo=bar'
+    ),
+    (
+      ListRequest(
         page=1,
         page_size=2,
       ),
-      'path': 'path',
-      'expected': 'path?page=1&page_size=2'
-    },
+      'path',
+      'path?page=1&page_size=2'
+    ),
   ]
 
-  def test_join_queries(self):
-    for tc in self.TEST_CASES:
-      self.assertEqual(_join_query(tc['path'], tc['request']), tc['expected'])
+  @parameterized.expand(TEST_CASES)
+  def test_join_queries(self, request, path, expected):
+    self.assertEqual(_join_query(path, request), expected)
 
   def test_path_joined_with_empty_list_request(self):
     req = ListRequest()
+
     self.assertEqual(_join_query('path', req), 'path?page=1&page_size=100')
