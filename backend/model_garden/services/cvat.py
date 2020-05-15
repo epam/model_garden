@@ -52,13 +52,22 @@ class CvatService:
   def _request(self, method: str, path: str, data: dict = None) -> requests.Response:
     url = self._get_url(path)
 
-    logger.info('Cvat request: %s, data=%s', url, data)
-
-    response = getattr(self._session, method)(url=url, json=data)
+    response = None
     try:
-      response.raise_for_status()
-    except requests.HTTPError as e:
-      raise CVATServiceException(f"Request to '{url}' failed ({e}): {response.content}")
+      response = getattr(self._session, method)(url=url, json=data)
+      try:
+        response.raise_for_status()
+      except requests.HTTPError as e:
+        raise CVATServiceException(f"Request to '{url}' failed ({e}): {response.content}")
+    finally:
+      msg = f'"{method.upper()} {url}"'
+      if response is not None:
+        msg += f' {response.status_code} {len(response.content)}'
+
+      if method == 'post':
+        msg += f' {data}'
+
+      logger.info(msg)
 
     return response
 
