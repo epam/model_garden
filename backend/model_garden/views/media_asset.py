@@ -1,11 +1,13 @@
 import io
+import logging
 import zipfile
-from concurrent.futures import ThreadPoolExecutor
 
+from django.db.utils import IntegrityError
 from django_filters import rest_framework as filters
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.exceptions import APIException, ParseError, ValidationError
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
@@ -15,6 +17,8 @@ from model_garden.serializers import (
 )
 from model_garden.services.s3 import S3Client, image_ext_filter
 from model_garden.utils import strip_s3_key_prefix
+
+logger = logging.getLogger(__name__)
 
 
 class MediaAssetFilterSet(filters.FilterSet):
@@ -38,35 +42,31 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
   filterset_class = MediaAssetFilterSet
   pagination_class = MediaAssetPagination
 
-  @action(methods=["POST"], detail=False)
-  def upload(self, request):
+  @staticmethod
+  def _validate_request_params(request):
     files = request.FILES.getlist('file', [])
     if not files:
-      return Response(
-        data={
-          "message": "Missing files in request",
-        },
-        status=status.HTTP_400_BAD_REQUEST,
-      )
+      raise ValidationError(detail={"message": "Missing files in request"})
 
     bucket_id = request.data.get('bucketId')
     if not bucket_id:
-      return Response(
-        data={
-          "message": f"Missing 'bucketId' in request",
-        },
-        status=status.HTTP_400_BAD_REQUEST,
-      )
+      raise ValidationError(detail={"message": f"Missing 'bucketId' in request"})
 
     try:
       bucket = Bucket.objects.get(id=bucket_id)
     except Bucket.DoesNotExist:
-      return Response(
-        data={
-          "message": f"Bucket with id='{bucket_id}' not found",
-        },
-        status=status.HTTP_404_NOT_FOUND,
-      )
+      raise ValidationError(detail={"message": f"Bucket with id='{bucket_id}' not found"})
+
+    return {
+      'bucket': bucket,
+      'files': files,
+    }
+
+  @action(methods=["POST"], detail=False)
+  def upload(self, request):
+    validated_attrs = self._validate_request_params(request=request)
+    bucket = validated_attrs['bucket']
+    files = validated_attrs['files']
 
     dataset_serializer = DatasetSerializer(data={
       'path': request.data.get('path'),
@@ -75,37 +75,56 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
     dataset_serializer.is_valid(raise_exception=True)
     dataset = dataset_serializer.save()
 
-    s3_client = S3Client(bucket_name=bucket.name)
-    files_to_upload = []
+    media_assets_to_upload = []
     for file in files:
+      filename = None
+      file_obj = None
       if file.content_type == 'application/zip':
         if not zipfile.is_zipfile(file.file):
-          return Response(
-            data={
-              "message": f"File '{file.name}' is not a zip file",
-            },
-            status=status.HTTP_400_BAD_REQUEST,
-          )
+          raise ParseError(detail={"message": f"File '{file.name}' is not a zip file"})
 
         zip_file = zipfile.ZipFile(file.file)
         for zip_filename in zip_file.filelist:
           with zip_file.open(zip_filename) as fp:
-            zip_file_obj = io.BytesIO(fp.read())
-            files_to_upload.append((zip_filename.filename, zip_file_obj))
+            filename = zip_filename.filename
+            file_obj = io.BytesIO(fp.read())
       elif 'image' in file.content_type:
-        files_to_upload.append((file.name, file.file))
+        filename = file.name
+        file_obj = file.file
       else:
+        logger.warning(f"Got unexpected file content type: {file.content_type}")
         continue
 
-    with ThreadPoolExecutor(max_workers=8) as executor:
-      for file_name, file_obj in files_to_upload:
-        executor.submit(self._upload_file_to_s3, s3_client, dataset, file_name, file_obj)
+      try:
+        media_asset = MediaAsset.objects.create(dataset=dataset, filename=filename)
+      except IntegrityError as e:
+        logger.error(f"Failed to create media asset: {e}")
+        raise ParseError(
+          detail={'message': f"Media asset for dataset='{dataset.path}' and filename='{filename}' already exists"},
+        )
+      else:
+        media_assets_to_upload.append((media_asset, file_obj))
 
-    return Response()
+    self._upload_media_assets_to_s3(
+      bucket_name=bucket.name,
+      media_assets_to_upload=media_assets_to_upload,
+    )
 
-  def _upload_file_to_s3(self, s3_client, dataset, file_name, file_obj):
-    media_asset = MediaAsset.objects.create(dataset=dataset, filename=file_name)
-    s3_client.upload_file_obj(file_obj=file_obj, bucket=dataset.bucket.name, key=media_asset.full_path)
+    return Response(data={'message': f"{len(media_assets_to_upload)} media asset(s) uploaded"})
+
+  def _upload_media_assets_to_s3(self, bucket_name: str, media_assets_to_upload) -> None:
+    try:
+      S3Client(bucket_name=bucket_name).upload_files(
+        files_to_upload=((file_obj, media_asset.full_path) for media_asset, file_obj in media_assets_to_upload),
+        bucket=bucket_name,
+      )
+    except Exception as e:
+      logger.error(f"Failed to upload file to s3: {e}")
+      raise APIException(
+        detail={
+          'message': str(e),
+        },
+      )
 
   @action(methods=["POST"], detail=False, url_path='import-s3')
   def import_s3(self, request):

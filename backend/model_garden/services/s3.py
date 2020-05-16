@@ -1,10 +1,14 @@
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import os.path
-from typing import IO, Iterator, Callable
+import logging
+from typing import Callable, IO, Iterator, Tuple
 
 from boto3 import resource
 from django.conf import settings
 
 from model_garden.constants import IMAGE_EXTENSIONS
+
+logger = logging.getLogger(__name__)
 
 
 class S3Client:
@@ -23,7 +27,7 @@ class S3Client:
   def list_keys(
     self,
     prefix: str,
-    filter_by: Callable[['s3.ObjectSummary'], bool] = None
+    filter_by: Callable[['s3.ObjectSummary'], bool] = None,
   ) -> Iterator['s3.ObjectSummary']:
     summaries = self._bucket.objects.filter(Prefix=prefix)
     return (s for s in summaries if not callable(filter_by) or filter_by(s))
@@ -36,6 +40,13 @@ class S3Client:
 
   def upload_file_obj(self, file_obj: IO, bucket: str, key: str):
     self._bucket.meta.client.upload_fileobj(file_obj, bucket, key)
+    logger.info(f"File {key} uploaded")
+
+  def upload_files(self, files_to_upload: Iterator[Tuple[IO, str]], bucket: str):
+    with ThreadPoolExecutor() as executor:
+      for future in as_completed([executor.submit(self.upload_file_obj, file_obj=file_obj, bucket=bucket, key=full_path)
+                                  for file_obj, full_path in files_to_upload]):
+        future.result()
 
 
 def image_ext_filter(obj: 's3.ObjectSummary') -> bool:  # noqa: F821
