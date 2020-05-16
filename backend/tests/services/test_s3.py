@@ -2,6 +2,8 @@ from typing import Iterable
 from collections import namedtuple
 from unittest import TestCase, mock
 
+from parameterized import parameterized
+
 from model_garden.services.s3 import S3Client, image_ext_filter
 
 
@@ -25,28 +27,6 @@ class TestS3Client(TestCase):
 
     self.assertEqual(result, [object_mock])
 
-  def test_download_file(self):
-    self.client.download_file(key='key', filename='filename')
-
-    self.bucket_mock.meta.client.download_file.assert_called_once_with(
-      self.bucket_name, 'key', 'filename',
-    )
-
-  def test_upload_file(self):
-    self.client.upload_file(filename='filename', key='key')
-
-    self.bucket_mock.meta.client.upload_file.assert_called_once_with(
-      'filename', self.bucket_name, 'key',
-    )
-
-  def test_upload_file_obj(self):
-    file_obj_mock = mock.Mock()
-    self.client.upload_file_obj(file_obj=file_obj_mock, bucket=self.bucket_name, key='key')
-
-    self.bucket_mock.meta.client.upload_fileobj.assert_called_once_with(
-      file_obj_mock, self.bucket_name, 'key',
-    )
-
   def test_list_keys_without_filter(self):
     object_mock = mock.Mock()
     self.bucket_mock.objects.filter.return_value = [object_mock]
@@ -65,9 +45,49 @@ class TestS3Client(TestCase):
     self.assertIsInstance(result, Iterable)
     self.assertEqual(list(result), [object_mock])
 
+  def test_download_file(self):
+    self.client.download_file(key='key', filename='filename')
+
+    self.bucket_mock.meta.client.download_file.assert_called_once_with(
+      self.bucket_name, 'key', 'filename',
+    )
+
+  def test_upload_file(self):
+    self.client.upload_file(filename='filename', key='key')
+
+    self.bucket_mock.meta.client.upload_file.assert_called_once_with(
+      'filename', self.bucket_name, 'key',
+    )
+
+  def test_upload_file_obj(self):
+    file_obj_mock = mock.Mock()
+
+    self.client.upload_file_obj(file_obj=file_obj_mock, bucket=self.bucket_name, key='key')
+
+    self.bucket_mock.meta.client.upload_fileobj.assert_called_once_with(
+      file_obj_mock, self.bucket_name, 'key',
+    )
+
+  def test_upload_files(self):
+    file_obj_mock = mock.Mock()
+
+    self.client.upload_files(
+      files_to_upload=[
+        (file_obj_mock, 'test1.txt'),
+        (file_obj_mock, 'test2.txt'),
+      ],
+      bucket=self.bucket_name,
+    )
+
+    self.bucket_mock.meta.client.upload_fileobj.assert_has_calls([
+      mock.call(file_obj_mock, self.bucket_name, 'test1.txt'),
+      mock.call(file_obj_mock, self.bucket_name, 'test2.txt'),
+    ])
+
 
 class TestImageExtFilter(TestCase):
-  TEST_CASES = [
+
+  @parameterized.expand([
     ('', False),
     ('foo', False),
     ('foo/bar', False),
@@ -75,12 +95,11 @@ class TestImageExtFilter(TestCase):
     ('foo.bar', False),
     ('foo/bar/baz.bmp', True),
     ('foo.jpg', True),
-  ]
-
-  def test_image_ext_filter(self):
+  ])
+  def test_image_ext_filter(self, key, expected):
     ObjectSummary = namedtuple('ObjectSummary', 'key')
-    for key, expected in self.TEST_CASES:
-      self.assertIs(image_ext_filter(ObjectSummary(key=key)), expected)
+
+    self.assertIs(image_ext_filter(ObjectSummary(key=key)), expected)
 
   def test_when_empty_input(self):
     self.assertFalse(image_ext_filter(None))
