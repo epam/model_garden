@@ -174,6 +174,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
   def test_upload_zip_file(self):
     file = BytesIO()
     zip_file = ZipFile(file=file, mode='w')
+    zip_file.writestr('folder/', '')
     zip_file.writestr('test.txt', 'test')
     zip_file.close()
     uploaded_file = SimpleUploadedFile('test.txt', content=file.getvalue(), content_type='application/zip')

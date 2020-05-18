@@ -1,5 +1,5 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import os.path
+import os
 import logging
 from typing import Callable, IO, Iterator, Tuple
 
@@ -32,20 +32,19 @@ class S3Client:
     summaries = self._bucket.objects.filter(Prefix=prefix)
     return (s for s in summaries if not callable(filter_by) or filter_by(s))
 
-  def download_file(self, key: str, filename: str):
+  def download_file(self, key: str, filename: str) -> None:
     self._bucket.meta.client.download_file(self._bucket_name, key, filename)
 
-  def upload_file(self, filename: str, key: str):
+  def upload_file(self, filename: str, key: str) -> None:
     self._bucket.meta.client.upload_file(filename, self._bucket_name, key)
 
-  def upload_file_obj(self, file_obj: IO, bucket: str, key: str):
+  def upload_file_obj(self, file_obj: IO, bucket: str, key: str) -> None:
     self._bucket.meta.client.upload_fileobj(file_obj, bucket, key)
-    logger.info(f"File {key} uploaded")
 
-  def upload_files(self, files_to_upload: Iterator[Tuple[IO, str]], bucket: str):
+  def upload_files(self, files_to_upload: Iterator[Tuple[IO, str]], bucket: str) -> None:
     with ThreadPoolExecutor() as executor:
-      for future in as_completed([executor.submit(self.upload_file_obj, file_obj=file_obj, bucket=bucket, key=full_path)
-                                  for file_obj, full_path in files_to_upload]):
+      for future in as_completed((executor.submit(self.upload_file_obj, file_obj=file_obj, bucket=bucket, key=full_path)
+                                  for file_obj, full_path in files_to_upload)):
         future.result()
 
 
