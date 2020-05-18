@@ -27,8 +27,8 @@ class S3Client:
   def list_keys(
     self,
     prefix: str,
-    filter_by: Callable[['s3.ObjectSummary'], bool] = None,
-  ) -> Iterator['s3.ObjectSummary']:
+    filter_by: Callable[['s3.ObjectSummary'], bool] = None,  # noqa: F821
+  ) -> Iterator['s3.ObjectSummary']:  # noqa: F821
     summaries = self._bucket.objects.filter(Prefix=prefix)
     return (s for s in summaries if not callable(filter_by) or filter_by(s))
 

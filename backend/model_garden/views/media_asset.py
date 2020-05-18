@@ -52,7 +52,7 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
 
     bucket_id = request.data.get('bucketId')
     if not bucket_id:
-      raise ValidationError(detail={"message": f"Missing 'bucketId' in request"})
+      raise ValidationError(detail={"message": "Missing 'bucketId' in request"})
 
     try:
       bucket = Bucket.objects.get(id=bucket_id)
