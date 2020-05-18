@@ -150,17 +150,17 @@ class TestCvatTasksQuerySet(APITestCase):
   def test_filter(self):
     self.queryset.filter(id=1, name='foo').filter(status='completed')
 
-    self.assertDictEqual(
+    self.assertEqual(
       self.queryset.service_request.filters,
-      {'id': 1, 'name': 'foo', 'status': 'completed'}
+      {'id': 1, 'name': 'foo', 'status': 'completed'},
     )
 
   def test_filter_strips_empty_values(self):
     self.queryset.filter(id=None, name='foo')
 
-    self.assertDictEqual(
+    self.assertEqual(
       self.queryset.service_request.filters,
-      {'name': 'foo'}
+      {'name': 'foo'},
     )
 
   def test_filter_wrong_value(self):
@@ -177,7 +177,7 @@ class TestCvatTasksQuerySet(APITestCase):
       count=123,
       next_url=None,
       prev_url=None,
-      results=[]
+      results=[],
     )
 
     self.assertEqual(len(self.queryset), 123)
@@ -190,18 +190,18 @@ class TestCvatTasksQuerySet(APITestCase):
       count=1,
       next_url=None,
       prev_url=None,
-      results=results
+      results=results,
     )
 
-    self.assertSequenceEqual(self.queryset[1:1], [])
-    self.assertSequenceEqual(self.queryset[1:2], results)
+    self.assertEqual(self.queryset[1:1], [])
+    self.assertEqual(self.queryset[1:2], results)
 
   def test_slice_indices(self):
-    self.queryset[0:10]
+    _ = self.queryset[0:10]
     self.assertEqual(self.cvat.tasks.call_args[0][0].page, 1)
     self.assertEqual(self.cvat.tasks.call_args[0][0].page_size, 10)
 
-    self.queryset[10:20]
+    _ = self.queryset[10:20]
     self.assertEqual(self.cvat.tasks.call_args[0][0].page, 2)
     self.assertEqual(self.cvat.tasks.call_args[0][0].page_size, 10)
 
@@ -212,8 +212,12 @@ class TestCvatTasksQuerySet(APITestCase):
       count=1,
       next_url=None,
       prev_url=None,
-      results=results
+      results=results,
     )
 
-    self.queryset[1:2]
+    _ = self.queryset[1:2]
     self.assertSequenceEqual(list(self.queryset), results)
+
+  def test_slice_type_error(self):
+    with self.assertRaises(TypeError):
+      _ = self.queryset['some']
