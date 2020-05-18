@@ -29,9 +29,9 @@ class DatasetSerializer(serializers.ModelSerializer):
   def _validate_path(self, attrs):
     path = attrs.get('path') or ''
     if not path:
-      path = 'batch'
+      path = f'batch_{datetime.utcnow().date()}'
 
-    attrs['path'] = f'{path}_{datetime.utcnow().date()}'
+    attrs['path'] = path
 
   def create(self, validated_data):
     dataset = Dataset.objects.filter(

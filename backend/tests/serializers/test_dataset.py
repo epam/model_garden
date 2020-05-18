@@ -30,7 +30,7 @@ class TestDatasetSerializer(BaseTestCase):
 
     dataset = Dataset.objects.get(pk=saved_dataset.pk)
 
-    self.assertEqual(dataset.path, 'test_2020-05-01')
+    self.assertEqual(dataset.path, 'test')
     self.assertEqual(dataset.bucket, self.bucket)
 
   @freeze_time('2020-05-01')
