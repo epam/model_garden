@@ -84,7 +84,7 @@ class CvatTaskFilter(forms.Form):
   mode = forms.ChoiceField(
     choices=(
       ('annotation', 'annotation'),
-      ('interpolation', 'interpolation')
+      ('interpolation', 'interpolation'),
     ),
     required=False
   )
@@ -100,7 +100,12 @@ class CvatTaskFilter(forms.Form):
 
 
 class CvatTasksQuerySet:
-  ORDERING_FIELDS = ("id", "name", "status", "assignee",)
+  ORDERING_FIELDS = (
+    "id",
+    "name",
+    "status",
+    "assignee",
+  )
 
   def __init__(self, cvat_service: CvatService):
     self.service = cvat_service
@@ -111,7 +116,8 @@ class CvatTasksQuerySet:
     filter_form = CvatTaskFilter(kwargs)
     if not filter_form.is_valid():
       raise ValidationError(
-        filter_form.errors, code=status.HTTP_400_BAD_REQUEST,
+        filter_form.errors,
+        code=status.HTTP_400_BAD_REQUEST,
       )
 
     self.service_request.filters.update(
