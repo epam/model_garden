@@ -1,7 +1,7 @@
 flake8-commas==2.0.0
-flake8==3.7.9
+flake8==3.8.1
 freezegun==0.3.15
 parameterized==0.7.4
 pytest-cov==2.8.1
 pytest-django==3.9.0
-pytest==5.4.1
+pytest==5.4.2
