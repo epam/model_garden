@@ -75,26 +75,26 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
     dataset_serializer.is_valid(raise_exception=True)
     dataset = dataset_serializer.save()
 
-    media_assets_to_upload = []
+    files_to_upload = []
     for file in files:
-      filename = None
-      file_obj = None
       if file.content_type == 'application/zip':
         if not zipfile.is_zipfile(file.file):
           raise ParseError(detail={"message": f"File '{file.name}' is not a zip file"})
 
         zip_file = zipfile.ZipFile(file.file)
         for zip_filename in zip_file.filelist:
+          if zip_filename.filename.endswith('/'):
+            continue
           with zip_file.open(zip_filename) as fp:
-            filename = zip_filename.filename
-            file_obj = io.BytesIO(fp.read())
+            files_to_upload.append((zip_filename.filename, io.BytesIO(fp.read())))
       elif 'image' in file.content_type:
-        filename = file.name
-        file_obj = file.file
+        files_to_upload.append((file.name, file.file))
       else:
         logger.warning(f"Got unexpected file content type: {file.content_type}")
         continue
 
+    media_assets_to_upload = []
+    for filename, file_obj in files_to_upload:
       try:
         media_asset = MediaAsset.objects.create(dataset=dataset, filename=filename)
       except IntegrityError as e:
@@ -145,7 +145,9 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
       for asset in s3_client.list_keys(dataset.path, filter_by=image_ext_filter)
     ]
     MediaAsset.objects.bulk_create(
-      assets, batch_size=100, ignore_conflicts=True
+      assets,
+      batch_size=100,
+      ignore_conflicts=True,
     )
 
     return Response(data={'imported': len(assets)}, status=status.HTTP_200_OK)
