@@ -13,7 +13,9 @@ from rest_framework.response import Response
 
 from model_garden.models import Bucket, MediaAsset
 from model_garden.serializers import (
-  DatasetSerializer, DatasetRawPathSerializer, MediaAssetSerializer
+  DatasetRawPathSerializer,
+  DatasetSerializer,
+  MediaAssetSerializer,
 )
 from model_garden.services.s3 import S3Client, image_ext_filter
 from model_garden.utils import strip_s3_key_prefix

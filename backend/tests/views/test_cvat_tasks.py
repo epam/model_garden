@@ -28,8 +28,8 @@ class TestCvatTaskViewSet(BaseAPITestCase):
         "assignee": None,
         "status": "annotation",
         "url": "http://localhost:8080/api/v1/tasks/4",
-        "project": None
-      }]
+        "project": None,
+      }],
     )
 
   def tearDown(self):
@@ -113,7 +113,7 @@ class TestCvatTaskViewSet(BaseAPITestCase):
           "assignee": None,
           "status": "annotation",
           "url": "http://localhost:8080/api/v1/tasks/4",
-          "project": None
+          "project": None,
         }],
       },
     )
@@ -123,7 +123,7 @@ class TestCvatTaskViewSet(BaseAPITestCase):
       count=0,
       next_url=None,
       prev_url=None,
-      results=[]
+      results=[],
     )
 
     response = self.client.get(

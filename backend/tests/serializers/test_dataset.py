@@ -5,7 +5,8 @@ from rest_framework import serializers
 
 from model_garden.models import Dataset
 from model_garden.serializers import (
-  DatasetSerializer, DatasetRawPathSerializer
+  DatasetRawPathSerializer,
+  DatasetSerializer,
 )
 from tests import BaseTestCase
 

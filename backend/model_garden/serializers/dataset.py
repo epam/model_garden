@@ -7,7 +7,9 @@ from model_garden.models import Dataset
 
 class DatasetSerializer(serializers.ModelSerializer):
   path = serializers.CharField(
-    allow_blank=True, allow_null=True, trim_whitespace=True
+    allow_blank=True,
+    allow_null=True,
+    trim_whitespace=True,
   )
 
   class Meta:

@@ -26,7 +26,7 @@ class TestCvatService(TestCase):
           "username": "",
           "first_name": "Epam",
           "last_name": "Labler",
-          "email": "epam@labler.com"
+          "email": "epam@labler.com",
         },
         {
           "url": "http://localhost:8080/api/v1/users/2",
@@ -82,7 +82,7 @@ class TestCvatService(TestCase):
         "username": "",
         "first_name": "Epam",
         "last_name": "Labler",
-        "email": "epam@labler.com"
+        "email": "epam@labler.com",
       },
     )
 
@@ -161,7 +161,7 @@ class TestCvatServiceTasks(TestCase):
       'results': [
         {
           'id': 1,
-          'name': 'foo'
+          'name': 'foo',
         },
       ],
     }
@@ -205,19 +205,19 @@ class TestJoinQuery(TestCase):
         page=1,
         page_size=2,
         ordering='name',
-        filters={'foo': 'bar', 'baz': 2}
+        filters={'foo': 'bar', 'baz': 2},
       ),
       'path',
-      'path?page=1&page_size=2&foo=bar&baz=2&ordering=name'
+      'path?page=1&page_size=2&foo=bar&baz=2&ordering=name',
     ),
     (
       ListRequest(
         page=1,
         page_size=2,
-        filters={'foo': 'bar'}
+        filters={'foo': 'bar'},
       ),
       'path',
-      'path?page=1&page_size=2&foo=bar'
+      'path?page=1&page_size=2&foo=bar',
     ),
     (
       ListRequest(
@@ -225,7 +225,7 @@ class TestJoinQuery(TestCase):
         page_size=2,
       ),
       'path',
-      'path?page=1&page_size=2'
+      'path?page=1&page_size=2',
     ),
   ]
 
