@@ -86,7 +86,7 @@ class CvatTaskFilter(forms.Form):
       ('annotation', 'annotation'),
       ('interpolation', 'interpolation'),
     ),
-    required=False
+    required=False,
   )
   status = forms.ChoiceField(
     choices=(
@@ -94,7 +94,7 @@ class CvatTaskFilter(forms.Form):
       ('validation', 'validation'),
       ('completed', 'completed'),
     ),
-    required=False
+    required=False,
   )
   assignee = forms.CharField(required=False, max_length=256)
 
@@ -121,7 +121,7 @@ class CvatTasksQuerySet:
       )
 
     self.service_request.filters.update(
-      {k: v for k, v in filter_form.cleaned_data.items() if v}
+      {k: v for k, v in filter_form.cleaned_data.items() if v},
     )
     return self
 

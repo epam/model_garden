@@ -16,7 +16,7 @@ class TestCvatUserViewSet(BaseAPITestCase):
       "username": "test_labler",
       "first_name": "Epam",
       "last_name": "Labler",
-      "email": "epam@labler.com"
+      "email": "epam@labler.com",
     }]
 
   def tearDown(self):

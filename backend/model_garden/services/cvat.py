@@ -113,7 +113,7 @@ class CvatService:
         {
           "name": "newLabel",
           "attributes": [],
-        }
+        },
       ]
 
     response = self._post(
@@ -131,7 +131,7 @@ class CvatService:
         "start_frame": 0,
         "stop_frame": 0,
         "frame_filter": "step=1",
-        "project": None
+        "project": None,
       },
     )
     task = response.json()
