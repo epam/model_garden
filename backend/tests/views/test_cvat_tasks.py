@@ -52,7 +52,7 @@ class TestCvatTaskViewSet(BaseAPITestCase):
 
     self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
     self.cvat_service_mock.create_task.assert_called_once_with(
-      name='test',
+      name='test01',
       assignee_id=3,
       owner_id=1,
       remote_files=[
