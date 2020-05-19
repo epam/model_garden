@@ -119,7 +119,7 @@ export function getLabelingTasksSuccess(tasks: LabelingTaskStatus[]) {
 export const getDatasets = (bucketId: string): AppThunk => (dispatch) => {
   dispatch(getBucketPathsStart());
   return getDatasetsRequest(bucketId)
-    .then((response) => dispatch(getDatasetsSuccess(response.data)))
+    .then((response) => dispatch(getDatasetsSuccess(response.data.results)))
     .catch((error) => dispatch(setErrorAction(error)));
 };
 

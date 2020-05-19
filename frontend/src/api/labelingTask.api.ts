@@ -66,7 +66,7 @@ export const createLabelingTaskRequest = async (
 ) => {
   try {
     return await axios.post(
-      `http://${backendHostPort}/api/cvat-tasks/`,
+      `http://${backendHostPort}/api/labeling-tasks/`,
       taskData
     );
   } catch (error) {
@@ -84,7 +84,7 @@ export const getLabelingTasksRequest = async (
 ): Promise<LabelingTaskStatus[]> => {
   try {
     let resp = await axios.get(
-      `http://${backendHostPort}/api/cvat-tasks/`,
+      `http://${backendHostPort}/api/labeling-tasks/`,
       {
         params: {
           page: 1,
