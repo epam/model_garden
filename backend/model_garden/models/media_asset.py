@@ -1,5 +1,6 @@
-from django.db import models
 from urllib.parse import urljoin
+
+from django.db import models
 
 from model_garden.constants import MediaAssetStatus
 from model_garden.models import BaseModel, Dataset
