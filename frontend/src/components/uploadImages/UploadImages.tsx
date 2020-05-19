@@ -93,6 +93,7 @@ export const UploadImages: React.FC = () => {
               control={control}
               label="Dataset"
               variant="outlined"
+              helperText='Dataset path starting with "/"'
               as={<TextField />}
             />
             <Button
