@@ -8,7 +8,7 @@ import {
 } from "./types";
 
 export interface MediaState {
-  addedDataSets?: number;
+  addedMediaAssets?: number;
   addingExistingDataSet: boolean;
   isUploading: boolean;
   mediaFiles: File[];
@@ -16,7 +16,7 @@ export interface MediaState {
 }
 
 const initialState: MediaState = {
-  addedDataSets: undefined,
+  addedMediaAssets: undefined,
   addingExistingDataSet: false,
   isUploading: false,
   mediaFiles: [],
@@ -53,7 +53,7 @@ export const mediaReducer = (
       return {
         ...state,
         addingExistingDataSet: false,
-        addedDataSets: action.addedDataSets
+        addedMediaAssets: action.addedDataSets
       }
     default:
       return state;
