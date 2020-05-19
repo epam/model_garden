@@ -35,7 +35,7 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
 
   def test_create(self):
     dataset = self.test_factory.create_dataset()
-    asset = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset = self.test_factory.create_media_asset(dataset=dataset)
     labeler = self.test_factory.create_labeler(labeler_id=3)
 
     response = self.client.post(
@@ -55,12 +55,12 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
       assignee_id=3,
       owner_id=1,
       remote_files=[
-        f'https://d3o54g14k1n39o.cloudfront.net/test_path/{asset.filename}',
+        f'https://d3o54g14k1n39o.cloudfront.net/test_path/{media_asset.filename}',
       ],
     )
-    asset.refresh_from_db()
-    self.assertIsNotNone(asset.labeling_task)
-    self.assertEqual(asset.labeling_task.labeler.labeler_id, labeler.labeler_id)
+    media_asset.refresh_from_db()
+    self.assertIsNotNone(media_asset.labeling_task)
+    self.assertEqual(media_asset.labeling_task.labeler.labeler_id, labeler.labeler_id)
 
   def test_create_dataset_not_found(self):
     response = self.client.post(
@@ -79,7 +79,7 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
 
   def test_create_labeler_not_found(self):
     dataset = self.test_factory.create_dataset()
-    asset = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset = self.test_factory.create_media_asset(dataset=dataset)
 
     response = self.client.post(
       path=reverse('labelingtask-list'),
@@ -98,17 +98,17 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
       assignee_id=3,
       owner_id=1,
       remote_files=[
-        f'https://d3o54g14k1n39o.cloudfront.net/test_path/{asset.filename}',
+        f'https://d3o54g14k1n39o.cloudfront.net/test_path/{media_asset.filename}',
       ],
     )
-    asset.refresh_from_db()
-    self.assertIsNotNone(asset.labeling_task)
-    self.assertEqual(asset.labeling_task.labeler.labeler_id, 3)
+    media_asset.refresh_from_db()
+    self.assertIsNotNone(media_asset.labeling_task)
+    self.assertEqual(media_asset.labeling_task.labeler.labeler_id, 3)
 
   def test_create_cvat_user_not_found(self):
     self.cvat_service_mock.get_user.side_effect = CVATServiceException("not found")
     dataset = self.test_factory.create_dataset()
-    asset = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset = self.test_factory.create_media_asset(dataset=dataset)
 
     response = self.client.post(
       path=reverse('labelingtask-list'),
@@ -124,8 +124,8 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
     self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
     self.assertEqual(response.json(), {'message': 'not found'})
     self.cvat_service_mock.create_task.assert_not_called()
-    asset.refresh_from_db()
-    self.assertIsNone(asset.labeling_task)
+    media_asset.refresh_from_db()
+    self.assertIsNone(media_asset.labeling_task)
 
   def test_create_cvat_request_fails(self):
     self.cvat_service_mock.create_task.side_effect = CVATServiceException("request failed")
@@ -148,7 +148,11 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
     self.assertEqual(response.json(), {'message': 'request failed'})
 
   def test_list(self):
+    dataset = self.test_factory.create_dataset()
     labeling_task = self.test_factory.create_labeling_task(name='Test labeling task')
+    media_asset = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset.labeling_task = labeling_task
+    media_asset.save()
 
     response = self.client.get(
       path=reverse('labelingtask-list'),
@@ -164,6 +168,7 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
         "results": [
           {
             "name": labeling_task.name,
+            "dataset": f"/{dataset.path}",
             "labeler": labeling_task.labeler.username,
             "status": labeling_task.status,
           },

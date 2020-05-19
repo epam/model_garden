@@ -4,6 +4,10 @@ export const TASK_STATUSES_COLUMNS = [
         label: 'Task Name'
     },
     {
+        name: 'dataset',
+        label: 'Dataset'
+    },
+    {
         name: 'labeler',
         label: 'Labeler'
     },

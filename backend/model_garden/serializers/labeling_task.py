@@ -12,15 +12,22 @@ class LabelingTaskCreateSerializer(serializers.Serializer):
 
 
 class LabelingTaskSerializer(serializers.ModelSerializer):
-  labeler = serializers.SerializerMethodField()
+  dataset = serializers.SerializerMethodField(read_only=True)
+  labeler = serializers.SerializerMethodField(read_only=True)
 
   class Meta:
     model = LabelingTask
     fields = (
+      'dataset',
       'labeler',
       'name',
       'status',
     )
+
+  def get_dataset(self, obj: Labeler) -> str:
+    media_asset = obj.media_assets.first()
+    if media_asset is not None:
+      return f"/{media_asset.dataset.path}"
 
   def get_labeler(self, obj: Labeler) -> str:
     return obj.labeler.username
