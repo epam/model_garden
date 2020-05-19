@@ -45,17 +45,22 @@ class CvatTaskViewSet(ViewSet):
       )
 
     media_assets = dataset.media_assets.filter(status=MediaAssetStatus.PENDING).all()
-    try:
-      for chunk_id, chunk in zip(range(count_of_tasks), chunkify(media_assets, files_in_task)):
-        logger.info(f"Creating task '{task_name}' with {len(chunk)} files")
+
+    for chunk_id, chunk in zip(range(count_of_tasks), chunkify(media_assets, files_in_task)):
+      logger.info(f"Creating task '{task_name}' with {len(chunk)} files")
+      try:
         cvat_service.create_task(
-          name=f"{task_name}{(chunk_id + 1):02d}",
+          name=f"{task_name}.{(chunk_id + 1):02d}",
           assignee_id=assignee_id,
           owner_id=cvat_service.get_root_user()['id'],
           remote_files=[media_asset.remote_path for media_asset in chunk],
         )
-    except CVATServiceException as e:
-      return Response(data={'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+      except CVATServiceException as e:
+        return Response(data={'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+      else:
+        dataset.media_assets.filter(
+          id__in=[media_asset.id for media_asset in chunk],
+        ).update(status=MediaAssetStatus.ASSIGNED)
 
     return Response(status=status.HTTP_201_CREATED)
 
