@@ -1,6 +1,6 @@
-from concurrent.futures import ThreadPoolExecutor, as_completed
-import os
 import logging
+import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Callable, IO, Iterator, Tuple
 
 from boto3 import resource
