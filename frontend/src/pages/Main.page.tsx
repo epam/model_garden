@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppBar, Tabs, Tab } from "@material-ui/core";
-import { UploadImages, LabelingTask, TasksStatuses, ErrorAlert } from "../components";
+import { AddExistingDataset, UploadImages, LabelingTask, TasksStatuses, ErrorAlert } from "../components";
 import { setSelectedMenuItem, getBuckets } from "../store/main";
 import { AppState } from "../store";
 
@@ -32,13 +32,15 @@ export const MainPage: React.FC = () => {
       <AppBar position="static">
         <Tabs value={selectedMenuItem} onChange={handleSelectMenuItem}>
           <Tab label="Upload Images" />
-          <Tab label="Create Labeling Task" />
+          <Tab label="Add Existing Dataset" />
+          <Tab label="Create Labeling Tasks" />
           <Tab label="Tasks statuses" />
         </Tabs>
       </AppBar>
       {selectedMenuItem === 0 && <UploadImages />}
-      {selectedMenuItem === 1 && <LabelingTask />}
-      {selectedMenuItem === 2 && <TasksStatuses />}
+      {selectedMenuItem === 1 && <AddExistingDataset />}
+      {selectedMenuItem === 2 && <LabelingTask />}
+      {selectedMenuItem === 3 && <TasksStatuses />}
     </>
   );
 };
