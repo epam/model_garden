@@ -10,7 +10,8 @@ const options = {
   filterType: 'textField' as "checkbox" | "dropdown" | "multiselect" | "textField" | "custom" | undefined,
   download: false,
   print: false,
-  selectableRows: 'none' as "none" | "multiple" | "single" | undefined
+  selectableRows: 'none' as "none" | "multiple" | "single" | undefined,
+  rowsPerPageOptions: [10, 25, 50]
 };
 
 export const TasksStatuses: React.FC = () => {

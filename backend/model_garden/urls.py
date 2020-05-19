@@ -20,18 +20,18 @@ from rest_framework import routers
 
 from model_garden.views import (
   BucketViewSet,
-  CvatTaskViewSet,
   CvatUserViewSet,
   DatasetViewSet,
   HealthCheckView,
+  LabelingTaskViewSet,
   MediaAssetViewSet,
 )
 
 router = routers.DefaultRouter()
 router.register(r'buckets', BucketViewSet)
 router.register(r'cvat-users', CvatUserViewSet, basename='cvatusers')
-router.register(r'cvat-tasks', CvatTaskViewSet, basename='cvattasks')
 router.register(r'datasets', DatasetViewSet)
+router.register(r'labeling-tasks', LabelingTaskViewSet)
 router.register(r'media-assets', MediaAssetViewSet)
 
 urlpatterns = [

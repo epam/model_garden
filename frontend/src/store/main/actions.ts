@@ -32,6 +32,6 @@ export function getBucketsSuccess(buckets: Bucket[]): MainActionTypes {
 export const getBuckets = (): AppThunk => (dispatch) => {
   dispatch(getBucketsStart());
   return getBucketsRequest()
-    .then((response) => dispatch(getBucketsSuccess(response.data)))
+    .then((response) => dispatch(getBucketsSuccess(response.data.results)))
     .catch((error) => dispatch(setErrorAction(error)));
 };

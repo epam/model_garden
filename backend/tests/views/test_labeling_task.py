@@ -1,19 +1,16 @@
 from unittest import mock
 
 from rest_framework import status
-from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
-from rest_framework.test import APITestCase
 
 from model_garden.services.cvat import CVATServiceException, ListResponse
-from model_garden.views.cvat_tasks import CvatTasksQuerySet
 from tests import BaseAPITestCase
 
 
-class TestCvatTaskViewSet(BaseAPITestCase):
+class TestLabelingTaskViewSet(BaseAPITestCase):
   def setUp(self):
     super().setUp()
-    self.cvat_service_cls_patcher = mock.patch('model_garden.views.cvat_tasks.CvatService')
+    self.cvat_service_cls_patcher = mock.patch('model_garden.views.labeling_task.CvatService')
     self.cvat_service_cls_mock = self.cvat_service_cls_patcher.start()
     self.cvat_service_mock = self.cvat_service_cls_mock.return_value
     self.cvat_service_mock.get_root_user.return_value = {'id': 1}
@@ -42,7 +39,7 @@ class TestCvatTaskViewSet(BaseAPITestCase):
     labeler = self.test_factory.create_labeler(labeler_id=3)
 
     response = self.client.post(
-      path=reverse('cvattasks-list'),
+      path=reverse('labelingtask-list'),
       data={
         'task_name': 'test',
         'dataset_id': dataset.id,
@@ -67,7 +64,7 @@ class TestCvatTaskViewSet(BaseAPITestCase):
 
   def test_create_dataset_not_found(self):
     response = self.client.post(
-      path=reverse('cvattasks-list'),
+      path=reverse('labelingtask-list'),
       data={
         'task_name': 'test',
         'dataset_id': 1,
@@ -85,7 +82,7 @@ class TestCvatTaskViewSet(BaseAPITestCase):
     asset = self.test_factory.create_media_asset(dataset=dataset)
 
     response = self.client.post(
-      path=reverse('cvattasks-list'),
+      path=reverse('labelingtask-list'),
       data={
         'task_name': 'test',
         'dataset_id': dataset.id,
@@ -114,7 +111,7 @@ class TestCvatTaskViewSet(BaseAPITestCase):
     asset = self.test_factory.create_media_asset(dataset=dataset)
 
     response = self.client.post(
-      path=reverse('cvattasks-list'),
+      path=reverse('labelingtask-list'),
       data={
         'task_name': 'test',
         'dataset_id': dataset.id,
@@ -137,7 +134,7 @@ class TestCvatTaskViewSet(BaseAPITestCase):
     labeler = self.test_factory.create_labeler(labeler_id=3)
 
     response = self.client.post(
-      path=reverse('cvattasks-list'),
+      path=reverse('labelingtask-list'),
       data={
         'task_name': 'test',
         'dataset_id': dataset.id,
@@ -151,8 +148,10 @@ class TestCvatTaskViewSet(BaseAPITestCase):
     self.assertEqual(response.json(), {'message': 'request failed'})
 
   def test_list(self):
+    labeling_task = self.test_factory.create_labeling_task(name='Test labeling task')
+
     response = self.client.get(
-      path=reverse('cvattasks-list'),
+      path=reverse('labelingtask-list'),
     )
 
     self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -162,15 +161,13 @@ class TestCvatTaskViewSet(BaseAPITestCase):
         "count": 1,
         "next": None,
         "previous": None,
-        "results": [{
-          "id": 4,
-          "name": "assignment",
-          "mode": "annotation",
-          "assignee": None,
-          "status": "annotation",
-          "url": "http://localhost:8080/api/v1/tasks/4",
-          "project": None,
-        }],
+        "results": [
+          {
+            "name": labeling_task.name,
+            "labeler": labeling_task.labeler.username,
+            "status": labeling_task.status,
+          },
+        ],
       },
     )
 
@@ -183,7 +180,7 @@ class TestCvatTaskViewSet(BaseAPITestCase):
     )
 
     response = self.client.get(
-      path=reverse('cvattasks-list'),
+      path=reverse('labelingtask-list'),
     )
 
     self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -196,84 +193,3 @@ class TestCvatTaskViewSet(BaseAPITestCase):
         "results": [],
       },
     )
-
-
-class TestCvatTasksQuerySet(APITestCase):
-  def setUp(self):
-    self.cvat = mock.MagicMock()
-    self.queryset = CvatTasksQuerySet(self.cvat)
-
-  def test_filter(self):
-    self.queryset.filter(id=1, name='foo').filter(status='completed')
-
-    self.assertEqual(
-      self.queryset.service_request.filters,
-      {'id': 1, 'name': 'foo', 'status': 'completed'},
-    )
-
-  def test_filter_strips_empty_values(self):
-    self.queryset.filter(id=None, name='foo')
-
-    self.assertEqual(
-      self.queryset.service_request.filters,
-      {'name': 'foo'},
-    )
-
-  def test_filter_wrong_value(self):
-    with self.assertRaises(ValidationError):
-      self.queryset.filter(status='???')
-
-  def test_order_by(self):
-    self.queryset.order_by('-name')
-
-    self.assertEqual(self.queryset.service_request.ordering, '-name')
-
-  def test_len(self):
-    self.cvat.tasks.return_value = ListResponse(
-      count=123,
-      next_url=None,
-      prev_url=None,
-      results=[],
-    )
-
-    self.assertEqual(len(self.queryset), 123)
-    self.assertEqual(self.queryset.count(), 123)
-
-  def test_slice_return_value(self):
-    results = [{'id': 1}]
-
-    self.cvat.tasks.return_value = ListResponse(
-      count=1,
-      next_url=None,
-      prev_url=None,
-      results=results,
-    )
-
-    self.assertEqual(self.queryset[1:1], [])
-    self.assertEqual(self.queryset[1:2], results)
-
-  def test_slice_indices(self):
-    _ = self.queryset[0:10]
-    self.assertEqual(self.cvat.tasks.call_args[0][0].page, 1)
-    self.assertEqual(self.cvat.tasks.call_args[0][0].page_size, 10)
-
-    _ = self.queryset[10:20]
-    self.assertEqual(self.cvat.tasks.call_args[0][0].page, 2)
-    self.assertEqual(self.cvat.tasks.call_args[0][0].page_size, 10)
-
-  def test_slice_iteration(self):
-    results = [{'id': 1}]
-
-    self.cvat.tasks.return_value = ListResponse(
-      count=1,
-      next_url=None,
-      prev_url=None,
-      results=results,
-    )
-
-    _ = self.queryset[1:2]
-    self.assertSequenceEqual(list(self.queryset), results)
-
-  def test_slice_type_error(self):
-    with self.assertRaises(TypeError):
-      _ = self.queryset['some']
