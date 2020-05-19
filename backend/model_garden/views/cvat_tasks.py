@@ -49,7 +49,7 @@ class CvatTaskViewSet(ViewSet):
       for chunk_id, chunk in zip(range(count_of_tasks), chunkify(media_assets, files_in_task)):
         logger.info(f"Creating task '{task_name}' with {len(chunk)} files")
         cvat_service.create_task(
-          name=task_name,
+          name=f"{task_name}{(chunk_id + 1):02d}",
           assignee_id=assignee_id,
           owner_id=cvat_service.get_root_user()['id'],
           remote_files=[media_asset.remote_path for media_asset in chunk],
