@@ -28,3 +28,29 @@ export const uploadMediaFilesRequest = async (
     }
   }
 };
+
+export const addExistingDatasetRequest = async (
+  bucketId: string,
+  path: string
+) => {
+  try {
+    const formData = new FormData();
+    formData.append("bucketId", bucketId);
+    if (path) formData.append("path", path);
+    return await axios.post(
+      `http://${backendHostPort}/api/media-assets/import-s3/`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "application/zip",
+        },
+      }
+    );
+  } catch (error) {
+    if (error && error.response) {
+      throw new Error(error.response.data.message);
+    } else {
+      throw error;
+    }
+  }
+};
