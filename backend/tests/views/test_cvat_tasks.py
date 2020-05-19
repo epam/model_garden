@@ -1,12 +1,13 @@
 from unittest import mock
 
-from rest_framework.reverse import reverse
-from rest_framework.test import APITestCase
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
+from rest_framework.reverse import reverse
+from rest_framework.test import APITestCase
 
-from model_garden.views.cvat_tasks import CvatTasksQuerySet
+from model_garden.constants import MediaAssetStatus
 from model_garden.services.cvat import CVATServiceException, ListResponse
+from model_garden.views.cvat_tasks import CvatTasksQuerySet
 from tests import BaseAPITestCase
 
 
@@ -52,13 +53,15 @@ class TestCvatTaskViewSet(BaseAPITestCase):
 
     self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
     self.cvat_service_mock.create_task.assert_called_once_with(
-      name='test01',
+      name='test.01',
       assignee_id=3,
       owner_id=1,
       remote_files=[
         f'https://d3o54g14k1n39o.cloudfront.net/test_path/{asset.filename}',
       ],
     )
+    asset.refresh_from_db()
+    self.assertEqual(asset.status, MediaAssetStatus.ASSIGNED)
 
   def test_create_dataset_not_found(self):
     response = self.client.post(
