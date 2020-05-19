@@ -119,7 +119,7 @@ export const Task: React.FC<TaskProps> = ({
     <div className="task">
       <FormContainer>
         <Typography variant="h5" component="h1" className="task__title">
-          Create Task
+          Create Tasks
         </Typography>
         <form onSubmit={onSubmit} className="task__form">
           <FormControl className="task__form-item">
