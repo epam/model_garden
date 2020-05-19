@@ -2,20 +2,22 @@ from urllib.parse import urljoin
 
 from django.db import models
 
-from model_garden.constants import MediaAssetStatus
-from model_garden.models import BaseModel, Dataset
+from model_garden.models import BaseModel
 
 
 class MediaAsset(BaseModel):
-  dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE, related_name='media_assets')
+  dataset = models.ForeignKey(
+    'Dataset',
+    on_delete=models.CASCADE,
+    related_name='media_assets',
+  )
   filename = models.CharField(max_length=512)
-  status = models.CharField(
-    max_length=32,
-    choices=[
-      (MediaAssetStatus.PENDING, "Pending"),
-      (MediaAssetStatus.ASSIGNED, "Assigned"),
-    ],
-    default=MediaAssetStatus.PENDING,
+  labeling_task = models.ForeignKey(
+    'LabelingTask',
+    null=True,
+    blank=True,
+    on_delete=models.SET_NULL,
+    related_name='media_assets',
   )
 
   class Meta:

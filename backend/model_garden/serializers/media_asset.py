@@ -9,5 +9,4 @@ class MediaAssetSerializer(serializers.ModelSerializer):
     fields = (
       'dataset',
       'filename',
-      'status',
     )
