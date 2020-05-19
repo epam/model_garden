@@ -51,7 +51,7 @@ export const AddExistingDataset: React.FC = () => {
   const buckets = useSelector((state: AppState) => state.main.buckets);
 
   const addedDataSets = useSelector(
-    (state: AppState) => state.media.addedDataSets
+    (state: AppState) => state.media.addedMediaAssets
   );
 
 
@@ -119,7 +119,7 @@ export const AddExistingDataset: React.FC = () => {
             </Button>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
               <Alert onClose={handleClose} severity="success">
-                Dataset has been added successfully with {addedDataSets} tasks
+                Dataset with {addedDataSets} media assets has been added
               </Alert>
             </Snackbar>
           </div>
