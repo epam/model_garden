@@ -137,7 +137,9 @@ export const Task: React.FC<TaskProps> = ({
               {bucketsSelectOptions}
             </Select>
           </FormControl>
-          <FormControl className="task__form-item">
+          <FormControl
+              className="task__form-item"
+          >
             <InputLabel id="task-datasets">Dataset</InputLabel>
             <Select
                 labelId="task-datasets"
@@ -146,6 +148,9 @@ export const Task: React.FC<TaskProps> = ({
                 label="Dataset"
                 value={selectedDataset}
                 onChange={handleDatasetChange}
+                disabled={
+                  currentBucketId === DEFAULT_FORM_DATA.BUCKET_ID
+                }
             >
               {datasetsSelectOptions}
             </Select>
@@ -209,7 +214,9 @@ export const Task: React.FC<TaskProps> = ({
             color="primary"
             variant="contained"
             disabled={
-              taskNameValue === DEFAULT_FORM_DATA.TASK_NAME
+              currentBucketId === DEFAULT_FORM_DATA.BUCKET_ID
+            || selectedDataset === DEFAULT_FORM_DATA.DATASET
+            || taskNameValue === DEFAULT_FORM_DATA.TASK_NAME
             || userValue === DEFAULT_FORM_DATA.USER
             || Number(countOfTasksValue) === DEFAULT_FORM_DATA.COUNT_OF_TASKS
             || Number(filesInTaskValue) === DEFAULT_FORM_DATA.FILES_IN_TASK_VALUE
