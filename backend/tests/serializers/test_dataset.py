@@ -24,9 +24,16 @@ class TestDatasetSerializer(BaseTestCase):
     serializer.is_valid()
     return serializer.save()
 
-  @freeze_time('2020-05-01')
   def test_create(self):
     saved_dataset = self._save_dataset()
+
+    dataset = Dataset.objects.get(pk=saved_dataset.pk)
+
+    self.assertEqual(dataset.path, 'test')
+    self.assertEqual(dataset.bucket, self.bucket)
+
+  def test_create_path_with_slashes(self):
+    saved_dataset = self._save_dataset(path='///test//')
 
     dataset = Dataset.objects.get(pk=saved_dataset.pk)
 
