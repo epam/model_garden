@@ -48,7 +48,7 @@ export const getUnsignedImagesCountRequest = async (
         {
           params: {
             dataset_id: datasetId,
-            status: "PENDING",
+            is_pending: true,
           }
         }
     );

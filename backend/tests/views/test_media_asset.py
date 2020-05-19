@@ -8,7 +8,6 @@ from freezegun import freeze_time
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-from model_garden.constants import MediaAssetStatus
 from model_garden.models import MediaAsset
 from tests import BaseAPITestCase
 
@@ -25,8 +24,8 @@ class TestMediaAssetViewSet(BaseAPITestCase):
     super().tearDown()
 
   def test_list(self):
-    self.test_factory.create_media_asset(dataset=self.dataset, status=MediaAssetStatus.PENDING)
-    self.test_factory.create_media_asset(dataset=self.dataset, status=MediaAssetStatus.ASSIGNED)
+    self.test_factory.create_media_asset(dataset=self.dataset)
+    self.test_factory.create_media_asset(dataset=self.dataset, assigned=True)
 
     response = self.client.get(
       path=reverse('mediaasset-list'),
@@ -35,14 +34,14 @@ class TestMediaAssetViewSet(BaseAPITestCase):
     self.assertEqual(response.status_code, 200)
     self.assertEqual(len(response.json()['results']), 2)
 
-  def test_list_with_status_filter(self):
-    self.test_factory.create_media_asset(dataset=self.dataset, status=MediaAssetStatus.PENDING)
-    self.test_factory.create_media_asset(dataset=self.dataset, status=MediaAssetStatus.ASSIGNED)
+  def test_list_with_is_pending_filter(self):
+    self.test_factory.create_media_asset(dataset=self.dataset)
+    self.test_factory.create_media_asset(dataset=self.dataset, assigned=True)
 
     response = self.client.get(
       path=reverse('mediaasset-list'),
       data={
-        'status': MediaAssetStatus.PENDING,
+        'is_pending': True,
       },
     )
 
@@ -50,8 +49,8 @@ class TestMediaAssetViewSet(BaseAPITestCase):
     self.assertEqual(len(response.json()['results']), 1)
 
   def test_list_with_bucket_id_filter(self):
-    self.test_factory.create_media_asset(dataset=self.dataset, status=MediaAssetStatus.PENDING)
-    self.test_factory.create_media_asset(dataset=self.dataset, status=MediaAssetStatus.ASSIGNED)
+    self.test_factory.create_media_asset(dataset=self.dataset)
+    self.test_factory.create_media_asset(dataset=self.dataset, assigned=True)
 
     response = self.client.get(
       path=reverse('mediaasset-list'),
@@ -64,8 +63,8 @@ class TestMediaAssetViewSet(BaseAPITestCase):
     self.assertEqual(len(response.json()['results']), 2)
 
   def test_list_with_bucket_id_filter_empty(self):
-    self.test_factory.create_media_asset(dataset=self.dataset, status=MediaAssetStatus.PENDING)
-    self.test_factory.create_media_asset(dataset=self.dataset, status=MediaAssetStatus.ASSIGNED)
+    self.test_factory.create_media_asset(dataset=self.dataset)
+    self.test_factory.create_media_asset(dataset=self.dataset, assigned=True)
 
     response = self.client.get(
       path=reverse('mediaasset-list'),
@@ -78,8 +77,8 @@ class TestMediaAssetViewSet(BaseAPITestCase):
     self.assertEqual(len(response.json()['results']), 0)
 
   def test_list_with_dataset_id_filter(self):
-    self.test_factory.create_media_asset(dataset=self.dataset, status=MediaAssetStatus.PENDING)
-    self.test_factory.create_media_asset(dataset=self.dataset, status=MediaAssetStatus.ASSIGNED)
+    self.test_factory.create_media_asset(dataset=self.dataset)
+    self.test_factory.create_media_asset(dataset=self.dataset, assigned=True)
 
     response = self.client.get(
       path=reverse('mediaasset-list'),

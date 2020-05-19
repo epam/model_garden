@@ -26,10 +26,11 @@ logger = logging.getLogger(__name__)
 class MediaAssetFilterSet(filters.FilterSet):
   bucket_id = filters.CharFilter('dataset__bucket__id')
   dataset_id = filters.CharFilter('dataset__id')
+  is_pending = filters.BooleanFilter('labeling_task', lookup_expr='isnull')
 
   class Meta:
     model = MediaAsset
-    fields = ('bucket_id', 'dataset_id', 'status')
+    fields = ('bucket_id', 'dataset_id', 'is_pending')
 
 
 class MediaAssetPagination(PageNumberPagination):

@@ -92,6 +92,27 @@ class TestCvatService(TestCase):
     with self.assertRaisesRegex(CVATServiceException, "Request to 'http://localhost:8080/api/v1/auth/login' failed"):
       CvatService().get_users()
 
+  def test_get_user(self):
+    self.session_mock.get.return_value.json.return_value = {
+      'url': 'http://localhost:8080/api/v1/users/1',
+      'id': 1,
+      'username': 'test_labler',
+      'first_name': 'Epam',
+      'last_name': 'Labler',
+      'email': 'epam@labler.com',
+      'groups': [
+          'annotator',
+      ],
+      'is_staff': False,
+      'is_superuser': False,
+      'is_active': True,
+      'last_login': '2020-05-05T00:32:08.616028Z',
+      'date_joined': '2020-05-04T17:03:01Z',
+    }
+    user = CvatService().get_user(user_id=1)
+
+    self.assertEqual(user['username'], 'test_labler')
+
   def test_create_task(self):
     data = {
       'url': 'http://localhost:8080/api/v1/tasks/1',

@@ -8,7 +8,6 @@ class TestBucket(BaseTestCase):
     self.bucket = self.test_factory.create_bucket()
 
   def test_str(self):
-
     self.assertEqual(str(self.bucket), f"Bucket(name='{self.bucket.name}', url='{self.bucket.url}')")
 
   def test_repr(self):

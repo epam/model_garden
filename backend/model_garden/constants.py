@@ -1,6 +1,7 @@
-class MediaAssetStatus:
-  PENDING = "PENDING"
-  ASSIGNED = "ASSIGNED"
+class LabelingTaskStatus:
+  ANNOTATION = "annotation"
+  VALIDATION = "validation"
+  COMPLETED = "completed"
 
 
 IMAGE_EXTENSIONS = set([

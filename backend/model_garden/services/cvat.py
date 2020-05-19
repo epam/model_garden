@@ -99,6 +99,10 @@ class CvatService:
     response = self._get('users')
     return response.json()['results']
 
+  def get_user(self, user_id):
+    response = self._get(f'users/{user_id}')
+    return response.json()
+
   def create_task(
     self,
     name: str,
