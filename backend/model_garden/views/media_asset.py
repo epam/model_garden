@@ -147,10 +147,18 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
       )
       for asset in s3_client.list_keys(dataset.path, filter_by=image_ext_filter)
     ]
+
+    assets_before = MediaAsset.objects.filter(dataset=dataset).count()
+
     MediaAsset.objects.bulk_create(
       assets,
       batch_size=100,
       ignore_conflicts=True,
     )
 
-    return Response(data={'imported': len(assets)}, status=status.HTTP_200_OK)
+    assets_after = MediaAsset.objects.filter(dataset=dataset).count()
+
+    return Response(
+      data={'imported': assets_after - assets_before},
+      status=status.HTTP_200_OK,
+    )
