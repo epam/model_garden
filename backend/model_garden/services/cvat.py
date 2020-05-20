@@ -1,7 +1,5 @@
-import dataclasses
 import logging
-from typing import Optional, List, Dict, NamedTuple
-from urllib.parse import urlencode, urlunsplit
+from typing import Optional, List
 
 import requests
 from django.conf import settings
@@ -13,21 +11,6 @@ logger = logging.getLogger(__name__)
 
 class CVATServiceException(Exception):
   pass
-
-
-@dataclasses.dataclass
-class ListRequest:
-  page: int = 1
-  page_size: int = 100
-  ordering: str = ''
-  filters: Dict[str, str] = dataclasses.field(default_factory=dict)
-
-
-class ListResponse(NamedTuple):
-  count: int
-  next_url: Optional[str]
-  prev_url: Optional[str]
-  results: List[dict]
 
 
 class CvatService:
@@ -99,7 +82,7 @@ class CvatService:
     response = self._get('users')
     return response.json()['results']
 
-  def get_user(self, user_id):
+  def get_user(self, user_id: int):
     response = self._get(f'users/{user_id}')
     return response.json()
 
@@ -149,25 +132,6 @@ class CvatService:
     task['data'] = response.json()
     return task
 
-  def tasks(self, req: ListRequest) -> ListResponse:
-    """Fetch tasks from the service that are created by `settings.CVAT_ROOT_USER_NAME`."""
-    req.filters['owner'] = settings.CVAT_ROOT_USER_NAME
-
-    resp = self._get(_join_query('tasks', req))
-    data = resp.json()
-
-    return ListResponse(
-      count=data.get('count', 0),
-      next_url=data.get('next'),
-      prev_url=data.get('previous'),
-      results=data.get('results', []),
-    )
-
-
-def _join_query(path: str, req: ListRequest) -> str:
-  """Add query arguments from `req` to the `path`."""
-  req_query = dict(page=req.page, page_size=req.page_size, **req.filters)
-  if req.ordering:
-    req_query.update(ordering=req.ordering)
-
-  return urlunsplit(('', '', path, urlencode(req_query), ''))
+  def get_task(self, task_id: int) -> dict:
+    response = self._get(f'tasks/{task_id}')
+    return response.json()
