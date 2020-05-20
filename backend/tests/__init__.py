@@ -17,9 +17,9 @@ class Factory:
       url='https://d3o54g14k1n39o.cloudfront.net/',
     )
 
-  def create_dataset(self) -> Dataset:
+  def create_dataset(self, path: Optional[str] = 'test_path') -> Dataset:
     return Dataset.objects.create(
-      path='test_path',
+      path=path,
       bucket=self.create_bucket(),
     )
 
@@ -51,7 +51,7 @@ class Factory:
 
     return Labeler.objects.create(
       labeler_id=labeler_id,
-      username='test_labeler',
+      username=f'test_labeler_{labeler_id}',
     )
 
   def create_labeling_task(

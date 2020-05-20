@@ -3,6 +3,7 @@ from unittest import mock
 from rest_framework import status
 from rest_framework.reverse import reverse
 
+from model_garden.constants import LabelingTaskStatus
 from model_garden.services.cvat import CVATServiceException, ListResponse
 from tests import BaseAPITestCase
 
@@ -32,6 +33,7 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
 
   def tearDown(self):
     self.cvat_service_cls_patcher.stop()
+    super().tearDown()
 
   def test_create(self):
     dataset = self.test_factory.create_dataset()
@@ -176,6 +178,127 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
         ],
       },
     )
+
+  def test_list_with_name_filter(self):
+    t1 = self.test_factory.create_labeling_task(name='Test labeling task 1')
+    self.test_factory.create_labeling_task(name='Test labeling task 2')
+
+    response = self.client.get(
+      path=reverse('labelingtask-list'),
+      data={
+        'name': 'Test labeling task 1',
+      },
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertEqual(response.json()['count'], 1)
+    self.assertEqual(response.json()['results'][0]['name'], t1.name)
+
+  def test_list_with_name_filter_empty_result(self):
+    self.test_factory.create_labeling_task(name='Test labeling task 1')
+    self.test_factory.create_labeling_task(name='Test labeling task 2')
+
+    response = self.client.get(
+      path=reverse('labelingtask-list'),
+      data={
+        'name': 'Test labeling task 3',
+      },
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertEqual(response.json()['count'], 0)
+
+  def test_list_with_dataset_filter(self):
+    dataset1 = self.test_factory.create_dataset(path='test_path1')
+    dataset2 = self.test_factory.create_dataset(path='test_path2')
+    self.test_factory.create_media_asset(dataset=dataset1, assigned=True)
+    media_asset2 = self.test_factory.create_media_asset(dataset=dataset2, assigned=True)
+
+    response = self.client.get(
+      path=reverse('labelingtask-list'),
+      data={
+        'dataset': dataset2.path,
+      },
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertEqual(response.json()['count'], 1)
+    self.assertEqual(response.json()['results'][0]['name'], media_asset2.labeling_task.name)
+
+  def test_list_with_dataset_filter_empty_result(self):
+    dataset1 = self.test_factory.create_dataset(path='test_path1')
+    dataset2 = self.test_factory.create_dataset(path='test_path2')
+    self.test_factory.create_media_asset(dataset=dataset1, assigned=True)
+    self.test_factory.create_media_asset(dataset=dataset2, assigned=True)
+
+    response = self.client.get(
+      path=reverse('labelingtask-list'),
+      data={
+        'dataset': 'test_path3',
+      },
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertEqual(response.json()['count'], 0)
+
+  def test_list_with_labeler_filter(self):
+    self.test_factory.create_labeling_task(name='Test labeling task 1')
+    labeling_task2 = self.test_factory.create_labeling_task(name='Test labeling task 2')
+
+    response = self.client.get(
+      path=reverse('labelingtask-list'),
+      data={
+        'labeler': labeling_task2.labeler.username,
+      },
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertEqual(response.json()['count'], 1)
+    self.assertEqual(response.json()['results'][0]['name'], labeling_task2.name)
+
+  def test_list_with_labeler_filter_empty_result(self):
+    self.test_factory.create_labeling_task(name='Test labeling task 1')
+    self.test_factory.create_labeling_task(name='Test labeling task 2')
+
+    response = self.client.get(
+      path=reverse('labelingtask-list'),
+      data={
+        'labeler': 'unknown labeler',
+      },
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertEqual(response.json()['count'], 0)
+
+  def test_list_with_status_filter(self):
+    self.test_factory.create_labeling_task(name='Test labeling task 1', status=LabelingTaskStatus.ANNOTATION)
+    t2 = self.test_factory.create_labeling_task(name='Test labeling task 2', status=LabelingTaskStatus.VALIDATION)
+    self.test_factory.create_labeling_task(name='Test labeling task 3', status=LabelingTaskStatus.COMPLETED)
+
+    response = self.client.get(
+      path=reverse('labelingtask-list'),
+      data={
+        'status': LabelingTaskStatus.VALIDATION,
+      },
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertEqual(response.json()['count'], 1)
+    self.assertEqual(response.json()['results'][0]['name'], t2.name)
+
+  def test_list_with_status_filter_empty_result(self):
+    self.test_factory.create_labeling_task(name='Test labeling task 1', status=LabelingTaskStatus.ANNOTATION)
+    self.test_factory.create_labeling_task(name='Test labeling task 3', status=LabelingTaskStatus.COMPLETED)
+
+    response = self.client.get(
+      path=reverse('labelingtask-list'),
+      data={
+        'status': LabelingTaskStatus.VALIDATION,
+      },
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertEqual(response.json()['count'], 0)
 
   def test_response_not_found(self):
     self.cvat_service_mock.tasks.return_value = ListResponse(

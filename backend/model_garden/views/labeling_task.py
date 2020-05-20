@@ -1,5 +1,6 @@
 import logging
 
+from django_filters import rest_framework as filters
 from django.conf import settings
 from rest_framework import status
 from rest_framework.exceptions import NotFound, ValidationError
@@ -15,9 +16,19 @@ from model_garden.utils import chunkify
 logger = logging.getLogger(__name__)
 
 
+class LabelingTaskFilterSet(filters.FilterSet):
+  labeler = filters.CharFilter(field_name='labeler__username')
+  dataset = filters.CharFilter(field_name='media_assets__dataset__path')
+
+  class Meta:
+    model = LabelingTask
+    fields = ('name', 'dataset', 'labeler', 'status')
+
+
 class LabelingTaskViewSet(ModelViewSet):
   queryset = LabelingTask.objects.all()
   serializer_class = LabelingTaskSerializer
+  filterset_class = LabelingTaskFilterSet
 
   def create(self, request: Request, *args, **kwargs) -> Response:
     cvat_service = CvatService()
