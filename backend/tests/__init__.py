@@ -10,6 +10,7 @@ from model_garden.models import Bucket, Dataset, MediaAsset, Labeler, LabelingTa
 class Factory:
   _FILENAME_ID = 1
   _LABELER_ID = 0
+  _LABELING_TASK_ID = 0
 
   def create_bucket(self) -> Bucket:
     return Bucket.objects.create(
@@ -59,7 +60,9 @@ class Factory:
       name: Optional[str] = 'Test labeling task',
       status: Optional[str] = LabelingTaskStatus.ANNOTATION,
   ):
+    self._LABELING_TASK_ID += 1
     labeling_task = LabelingTask.objects.create(
+      task_id=self._LABELING_TASK_ID,
       name=name,
       status=status,
       labeler=self.create_labeler(),

@@ -2,11 +2,9 @@ from json import dumps
 from unittest import TestCase, mock
 
 from django.test.utils import override_settings
-from parameterized import parameterized
 from requests import HTTPError
 
 from model_garden.services import CvatService, CVATServiceException
-from model_garden.services.cvat import ListRequest, ListResponse, _join_query
 
 
 class TestCvatService(TestCase):
@@ -165,96 +163,18 @@ class TestCvatService(TestCase):
     self.assertEqual(task['assignee'], 2)
     self.assertEqual(task['owner'], 1)
 
-
-class TestCvatServiceTasks(TestCase):
-  def setUp(self):
-    self.session_cls_patcher = mock.patch('model_garden.services.cvat.requests.Session')
-    self.session_cls_mock = self.session_cls_patcher.start()
-    self.session_mock = self.session_cls_mock.return_value
-    self.session_mock.post.return_value = mock.Mock(
-      status_code=200,
-      content="ok",
-    )
-    self.data = {
-      'count': 1,
-      'next': 'next_link',
-      'previous': 'prev_link',
-      'results': [
-        {
-          'id': 1,
-          'name': 'foo',
-        },
-      ],
+  def test_get_task(self):
+    self.session_mock.get.return_value.json.return_value = {
+        'id': 1,
+        'name': 'foo',
     }
-    self.session_mock.get.return_value = mock.Mock(
-      status_code=200,
-      content=dumps(self.data),
-      json=mock.Mock(
-        return_value=self.data,
-      ),
-    )
 
-  def tearDown(self):
-    self.session_cls_patcher.stop()
+    response = CvatService().get_task(task_id=1)
 
-  def test_tasks(self):
-    res = CvatService().tasks(ListRequest())
-
-    self.assertIsInstance(res, ListResponse)
-    self.assertEqual(res.count, 1)
-    self.assertEqual(res.next_url, 'next_link')
-    self.assertEqual(res.prev_url, 'prev_link')
     self.assertEqual(
-      res.results[0],
+      response,
       {
-        "id": 1,
-        "name": "foo",
+        'id': 1,
+        'name': 'foo',
       },
     )
-
-  def test_tasks_fails(self):
-    self.session_mock.post.return_value.raise_for_status.side_effect = HTTPError
-
-    with self.assertRaisesRegex(CVATServiceException, "Request to .* failed"):
-      CvatService().tasks(ListRequest())
-
-
-class TestJoinQuery(TestCase):
-  TEST_CASES = [
-    (
-      ListRequest(
-        page=1,
-        page_size=2,
-        ordering='name',
-        filters={'foo': 'bar', 'baz': 2},
-      ),
-      'path',
-      'path?page=1&page_size=2&foo=bar&baz=2&ordering=name',
-    ),
-    (
-      ListRequest(
-        page=1,
-        page_size=2,
-        filters={'foo': 'bar'},
-      ),
-      'path',
-      'path?page=1&page_size=2&foo=bar',
-    ),
-    (
-      ListRequest(
-        page=1,
-        page_size=2,
-      ),
-      'path',
-      'path?page=1&page_size=2',
-    ),
-  ]
-
-  @parameterized.expand(TEST_CASES)
-  def test_join_queries(self, request, path, expected):
-    self.assertEqual(_join_query(path, request), expected)
-
-  def test_path_joined_with_empty_list_request(self):
-    req = ListRequest()
-
-    self.assertEqual(_join_query('path', req), 'path?page=1&page_size=100')

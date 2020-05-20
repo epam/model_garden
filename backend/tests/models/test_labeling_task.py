@@ -14,5 +14,5 @@ class TestLabelingTask(BaseTestCase):
 
     self.assertEqual(
       str(labeling_task),
-      "LabelingTask(name='Test labeling task', status='annotation', labeler='test_labeler_1')",
+      "LabelingTask(task_id=1, name='Test labeling task', status='annotation', labeler='test_labeler_1')",
     )

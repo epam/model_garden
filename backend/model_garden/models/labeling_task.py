@@ -5,6 +5,7 @@ from model_garden.models import BaseModel
 
 
 class LabelingTask(BaseModel):
+  task_id = models.IntegerField()
   name = models.CharField(max_length=256)
   status = models.CharField(
     max_length=16,
@@ -26,4 +27,7 @@ class LabelingTask(BaseModel):
     ordering = ['-created_at']
 
   def __str__(self):
-    return f"{self.__class__.__name__}(name='{self.name}', status='{self.status}', labeler='{self.labeler.username}')"
+    return (
+      f"{self.__class__.__name__}(task_id={self.task_id}, name='{self.name}', status='{self.status}', "
+      f"labeler='{self.labeler.username}')"
+    )

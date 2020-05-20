@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 
 from model_garden.constants import LabelingTaskStatus
-from model_garden.services.cvat import CVATServiceException, ListResponse
+from model_garden.services.cvat import CVATServiceException
 from tests import BaseAPITestCase
 
 
@@ -16,20 +16,11 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
     self.cvat_service_mock = self.cvat_service_cls_mock.return_value
     self.cvat_service_mock.get_root_user.return_value = {'id': 1}
     self.cvat_service_mock.get_user.return_value = {'id': 3, 'username': 'test_labeler'}
-    self.cvat_service_mock.tasks.return_value = ListResponse(
-      count=1,
-      next_url=None,
-      prev_url=None,
-      results=[{
-        "id": 4,
-        "name": "assignment",
-        "mode": "annotation",
-        "assignee": None,
-        "status": "annotation",
-        "url": "http://localhost:8080/api/v1/tasks/4",
-        "project": None,
-      }],
-    )
+    self.cvat_service_mock.create_task.return_value = {'id': 1}
+    self.cvat_service_mock.get_task.return_value = {
+      'id': 1,
+      'status': LabelingTaskStatus.ANNOTATION,
+    }
 
   def tearDown(self):
     self.cvat_service_cls_patcher.stop()
@@ -299,29 +290,6 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
 
     self.assertEqual(response.status_code, status.HTTP_200_OK)
     self.assertEqual(response.json()['count'], 0)
-
-  def test_response_not_found(self):
-    self.cvat_service_mock.tasks.return_value = ListResponse(
-      count=0,
-      next_url=None,
-      prev_url=None,
-      results=[],
-    )
-
-    response = self.client.get(
-      path=reverse('labelingtask-list'),
-    )
-
-    self.assertEqual(response.status_code, status.HTTP_200_OK)
-    self.assertEqual(
-      response.json(),
-      {
-        "count": 0,
-        "next": None,
-        "previous": None,
-        "results": [],
-      },
-    )
 
   def test_ordering_by_labeler_name(self):
     task = self.test_factory.create_labeling_task(name='task 1')
