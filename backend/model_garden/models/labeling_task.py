@@ -20,6 +20,7 @@ class LabelingTask(BaseModel):
     on_delete=models.CASCADE,
     related_name='labeling_tasks',
   )
+  url = models.CharField(max_length=128)
 
   class Meta:
     ordering = ['-created_at']

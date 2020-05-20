@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from rest_framework import status
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.request import Request
@@ -52,13 +53,10 @@ class LabelingTaskViewSet(ModelViewSet):
     for chunk_id, chunk in zip(range(count_of_tasks),
                                chunkify(media_assets, files_in_task)):
       logger.info(f"Creating task '{task_name}' with {len(chunk)} files")
-      labeling_task = LabelingTask.objects.create(
-        name=f"{task_name}.{(chunk_id + 1):02d}",
-        labeler=labeler,
-      )
+      chunk_task_name = f"{task_name}.{(chunk_id + 1):02d}"
       try:
-        cvat_service.create_task(
-          name=labeling_task.name,
+        task_data = cvat_service.create_task(
+          name=chunk_task_name,
           assignee_id=assignee_id,
           owner_id=cvat_service.get_root_user()['id'],
           remote_files=[media_asset.remote_path for media_asset in chunk],
@@ -66,6 +64,11 @@ class LabelingTaskViewSet(ModelViewSet):
       except CVATServiceException as e:
         return Response(data={'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
       else:
+        labeling_task = LabelingTask.objects.create(
+          name=chunk_task_name,
+          labeler=labeler,
+          url=f"http://{settings.CVAT_HOST}:{settings.CVAT_PORT}/tasks/{task_data['id']}",
+        )
         for media_asset in chunk:
           media_asset.labeling_task = labeling_task
           media_asset.save()

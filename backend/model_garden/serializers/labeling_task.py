@@ -12,8 +12,8 @@ class LabelingTaskCreateSerializer(serializers.Serializer):
 
 
 class LabelingTaskSerializer(serializers.ModelSerializer):
-  dataset = serializers.SerializerMethodField(read_only=True)
-  labeler = serializers.SerializerMethodField(read_only=True)
+  dataset = serializers.SerializerMethodField()
+  labeler = serializers.SerializerMethodField()
 
   class Meta:
     model = LabelingTask
@@ -22,7 +22,9 @@ class LabelingTaskSerializer(serializers.ModelSerializer):
       'labeler',
       'name',
       'status',
+      'url',
     )
+    read_only_fields = fields
 
   def get_dataset(self, obj: Labeler) -> str:
     media_asset = obj.media_assets.first()
