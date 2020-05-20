@@ -1,12 +1,15 @@
 import logging
 
 from django_filters import rest_framework as filters
+from django_filters.rest_framework import DjangoFilterBackend
 from django.conf import settings
 from rest_framework import status
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from django.db.models import F
 
 from model_garden.models import Dataset, LabelingTask, Labeler
 from model_garden.serializers import LabelingTaskCreateSerializer, LabelingTaskSerializer
@@ -25,10 +28,41 @@ class LabelingTaskFilterSet(filters.FilterSet):
     fields = ('name', 'dataset', 'labeler', 'status')
 
 
+class LabelingTaskOrderingFilter(OrderingFilter):
+  """To keep the API query names consistent with the `LabelingTaskFilterSet`,
+  the ordering must be applied to the different field that is requested.
+  """
+  REPLACE_REQUEST_FIELDS = {
+    'labeler': 'labeler_name',
+  }
+
+  def get_ordering(self, request, queryset, view):
+    ordering = super().get_ordering(request, queryset, view)
+    return [self._replace_request_field(field) for field in ordering or []]
+
+  @classmethod
+  def _replace_request_field(cls, field: str) -> str:
+    for searched, needed in cls.REPLACE_REQUEST_FIELDS.items():
+      if searched in field:
+        return field.replace(searched, needed)
+
+    return field
+
+
 class LabelingTaskViewSet(ModelViewSet):
-  queryset = LabelingTask.objects.all()
+  queryset = (
+    LabelingTask.objects
+    .annotate(labeler_name=F('labeler__username'))
+    .annotate(dataset=F('media_assets__dataset__path'))
+    .all()
+  )
   serializer_class = LabelingTaskSerializer
   filterset_class = LabelingTaskFilterSet
+  filter_backends = [
+    DjangoFilterBackend, SearchFilter, LabelingTaskOrderingFilter,
+  ]
+  ordering_fields = ('name', 'dataset', 'labeler', 'status', 'url')
+  search_fields = ('name', 'dataset', 'labeler_name', 'status', 'url')
 
   def create(self, request: Request, *args, **kwargs) -> Response:
     cvat_service = CvatService()

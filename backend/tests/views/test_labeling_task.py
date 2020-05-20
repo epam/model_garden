@@ -322,3 +322,38 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
         "results": [],
       },
     )
+
+  def test_ordering_by_labeler_name(self):
+    task = self.test_factory.create_labeling_task(name='task 1')
+    task.labeler.username = 'zyx'
+    task.labeler.save()
+
+    task = self.test_factory.create_labeling_task(name='task 2')
+    task.labeler.username = 'abc'
+    task.labeler.save()
+
+    response = self.client.get(
+      path=reverse('labelingtask-list'),
+      data={
+        'ordering': '-labeler',
+      },
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertEqual(response.json()['results'][0]['labeler'], 'zyx')
+    self.assertEqual(response.json()['results'][1]['labeler'], 'abc')
+
+  def test_ordering_by_name(self):
+    self.test_factory.create_labeling_task(name='task 1')
+    self.test_factory.create_labeling_task(name='task 2')
+
+    response = self.client.get(
+      path=reverse('labelingtask-list'),
+      data={
+        'ordering': '-name',
+      },
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertEqual(response.json()['results'][0]['name'], 'task 2')
+    self.assertEqual(response.json()['results'][1]['name'], 'task 1')
