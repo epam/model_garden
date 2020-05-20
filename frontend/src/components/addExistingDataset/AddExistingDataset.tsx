@@ -117,7 +117,7 @@ export const AddExistingDataset: React.FC = () => {
             >
               ADD
             </Button>
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={ { vertical: 'top', horizontal: 'right' } } >
               <Alert onClose={handleClose} severity="success">
                 Dataset with {addedDataSets} media assets has been added
               </Alert>
