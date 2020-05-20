@@ -35,12 +35,12 @@ export const TasksStatuses: React.FC = () => {
 
   return (
       <div className={'task-statuses'}>
-          <MUIDataTable
-              title={TABLE_TITLE}
-              data={tasks}
-              columns={TASK_STATUSES_COLUMNS}
-              options={options}
-          />
+        <MUIDataTable
+            title={TABLE_TITLE}
+            data={tasks}
+            columns={TASK_STATUSES_COLUMNS}
+            options={options}
+        />
       </div>
   );
 };

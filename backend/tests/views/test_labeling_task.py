@@ -170,6 +170,7 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
             "name": labeling_task.name,
             "dataset": f"/{dataset.path}",
             "labeler": labeling_task.labeler.username,
+            "url": 'http://localhost:8080/task/1',
             "status": labeling_task.status,
           },
         ],
