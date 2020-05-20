@@ -63,6 +63,7 @@ class Factory:
       name=name,
       status=status,
       labeler=self.create_labeler(),
+      url="http://localhost:8080/task/1",
     )
     return labeling_task
 
