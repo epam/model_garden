@@ -81,19 +81,30 @@ export const createLabelingTaskRequest = async (
 export const getLabelingTasksRequest = async (
   bucketId: string,
   datasetId: string,
-): Promise<LabelingTaskStatus[]> => {
+  page: number,
+  rowsPerPage: number,
+  filterMap?: Map<string, string>
+): Promise<{count: number, tasks: LabelingTaskStatus[]}> => {
   try {
+    const params: any = {
+      page,
+      page_size: rowsPerPage,
+    }
+
+    if (filterMap) {
+      filterMap.forEach((value: string, key: string) => {
+        params[key] = value[0];
+      });
+    }
+
     let resp = await axios.get(
       `http://${backendHostPort}/api/labeling-tasks/`,
-      {
-        params: {
-          page: 1,
-          page_size: 50,
-          // TODO: filter and paginate the result
-        }
-      }
+      {params : params}
     );
-    return resp.data.results;
+    return {
+      tasks: resp.data.results,
+      count: resp.data.count
+    }
   } catch (error) {
     if (error && error.response) {
       throw new Error(error.response.data.message);

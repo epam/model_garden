@@ -71,7 +71,10 @@ export interface getLabelingTasksStart {
 
 export interface getLabelingTasksSuccess {
   type: typeof GET_LABELING_TASKS_SUCCESS;
-  tasks: LabelingTaskStatus[];
+  tasksData: {
+    tasks: LabelingTaskStatus[];
+    count: number
+  }
 }
 
 export type LabelingTaskActionTypes =

@@ -26,7 +26,7 @@ export interface LabelingTasksState {
   isImagesCountLoading: boolean;
   unsignedImagesCount: number;
   isLabelingTasksStatusesLoading: boolean;
-  labelingTasksStatuses: LabelingTaskStatus[];
+  labelingTasksStatuses: {count: number, tasks: LabelingTaskStatus[]};
 }
 
 const initialState: LabelingTasksState = {
@@ -39,7 +39,7 @@ const initialState: LabelingTasksState = {
   isImagesCountLoading: false,
   unsignedImagesCount: 0,
   isLabelingTasksStatusesLoading: false,
-  labelingTasksStatuses: [],
+  labelingTasksStatuses: {count: 0, tasks: []},
 };
 
 export const labelingTaskReducer = (
@@ -103,7 +103,10 @@ export const labelingTaskReducer = (
       return {
         ...state,
         isLabelingTasksStatusesLoading: false,
-        labelingTasksStatuses: action.tasks,
+        labelingTasksStatuses: {
+          tasks: action.tasksData.tasks,
+          count: action.tasksData.count
+        },
       };
     default:
       return state;
