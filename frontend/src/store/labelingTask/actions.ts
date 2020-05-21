@@ -109,10 +109,10 @@ export function getLabelingTasksStart(): LabelingTaskActionTypes {
   };
 }
 
-export function getLabelingTasksSuccess(tasks: LabelingTaskStatus[]) {
+export function getLabelingTasksSuccess(tasksData: {count: number, tasks: LabelingTaskStatus[]}) {
   return {
     type: GET_LABELING_TASKS_SUCCESS,
-    tasks,
+    tasksData,
   };
 }
 
@@ -153,9 +153,12 @@ export const createLabelingTask = (
 export const getLabelingTasks = (
   bucketId: string,
   datasetId: string,
+  page: number,
+  rowsPerPage: number,
+  filterMap?: Map<string, string>
 ): AppThunk => (dispatch) => {
   dispatch(getLabelingTasksStart());
-  return getLabelingTasksRequest(bucketId, datasetId)
-    .then((tasks) => dispatch(getLabelingTasksSuccess(tasks)))
+  return getLabelingTasksRequest(bucketId, datasetId, page, rowsPerPage, filterMap)
+    .then((tasksData) => dispatch(getLabelingTasksSuccess(tasksData)))
     .catch((error) => dispatch(setErrorAction(error)));
 };
