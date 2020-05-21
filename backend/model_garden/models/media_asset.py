@@ -1,4 +1,4 @@
-from urllib.parse import urljoin
+from urllib.parse import urljoin, quote
 
 from django.db import models
 
@@ -30,4 +30,4 @@ class MediaAsset(BaseModel):
 
   @property
   def remote_path(self):
-    return urljoin(self.dataset.bucket.url, self.full_path)
+    return urljoin(self.dataset.bucket.url, quote(self.full_path))

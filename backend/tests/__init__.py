@@ -27,16 +27,19 @@ class Factory:
   def create_media_asset(
     self,
     dataset: Optional[Dataset] = None,
+    filename: Optional[str] = None,
     assigned: Optional[bool] = False,
   ) -> MediaAsset:
     if dataset is None:
       dataset = self.create_dataset()
 
-    Factory._FILENAME_ID += 1
+    if filename is None:
+      Factory._FILENAME_ID += 1
+      filename = f'image{Factory._FILENAME_ID}.jpg'
 
     media_asset = MediaAsset.objects.create(
       dataset=dataset,
-      filename=f'image{Factory._FILENAME_ID}.jpg',
+      filename=filename,
     )
     if assigned:
       labeling_task = self.create_labeling_task()
