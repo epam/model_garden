@@ -9,7 +9,6 @@ from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from django.db.models import F
 
 from model_garden.constants import LabelingTaskStatus
 from model_garden.models import Dataset, LabelingTask, Labeler
