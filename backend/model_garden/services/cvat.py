@@ -14,10 +14,8 @@ class CVATServiceException(Exception):
 
 
 class CvatService:
-  API_VERSION = 'v1'
 
   def __init__(self):
-    self._api_url = f"http://{settings.CVAT_HOST}:{settings.CVAT_PORT}/api/{self.API_VERSION}"
     self._adapter = HTTPAdapter(
       max_retries=Retry(
         total=3,
@@ -30,7 +28,7 @@ class CvatService:
     self._authenticate()
 
   def _get_url(self, path: str) -> str:
-    return f"{self._api_url}/{path}"
+    return f"{settings.CVAT_API_URL}/{path}"
 
   def _request(self, method: str, path: str, data: dict = None) -> requests.Response:
     url = self._get_url(path)

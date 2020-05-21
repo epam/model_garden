@@ -110,11 +110,12 @@ class LabelingTaskViewSet(ModelViewSet):
       except CVATServiceException as e:
         return Response(data={'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
       else:
+        task_id = task_data['id']
         labeling_task = LabelingTask.objects.create(
-          task_id=task_data['id'],
+          task_id=task_id,
           name=chunk_task_name,
           labeler=labeler,
-          url=f"http://{settings.CVAT_HOST}:{settings.CVAT_PORT}/tasks/{task_data['id']}",
+          url=f"{settings.CVAT_PUBLIC_URL}/tasks/{task_id}",
         )
         for media_asset in chunk:
           media_asset.labeling_task = labeling_task
