@@ -170,6 +170,23 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
       },
     )
 
+  def test_list_same_labeling_task_multiple_media_assets(self):
+    dataset = self.test_factory.create_dataset()
+    labeling_task = self.test_factory.create_labeling_task(name='Test labeling task')
+    media_asset1 = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset1.labeling_task = labeling_task
+    media_asset1.save()
+    media_asset2 = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset2.labeling_task = labeling_task
+    media_asset2.save()
+
+    response = self.client.get(
+      path=reverse('labelingtask-list'),
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertEqual(response.json()['count'], 1)
+
   def test_list_with_name_filter(self):
     t1 = self.test_factory.create_labeling_task(name='Test labeling task 1')
     self.test_factory.create_labeling_task(name='Test labeling task 2')

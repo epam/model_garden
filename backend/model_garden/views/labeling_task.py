@@ -34,7 +34,8 @@ class LabelingTaskOrderingFilter(OrderingFilter):
   the ordering must be applied to the different field that is requested.
   """
   REPLACE_REQUEST_FIELDS = {
-    'labeler': 'labeler_name',
+    'labeler': 'labeler__username',
+    'dataset': 'media_assets__dataset__path',
   }
 
   def get_ordering(self, request, queryset, view):
@@ -51,19 +52,16 @@ class LabelingTaskOrderingFilter(OrderingFilter):
 
 
 class LabelingTaskViewSet(ModelViewSet):
-  queryset = (
-    LabelingTask.objects
-    .annotate(labeler_name=F('labeler__username'))
-    .annotate(dataset=F('media_assets__dataset__path'))
-    .all()
-  )
+  queryset = LabelingTask.objects.all()
   serializer_class = LabelingTaskSerializer
   filterset_class = LabelingTaskFilterSet
   filter_backends = [
-    DjangoFilterBackend, SearchFilter, LabelingTaskOrderingFilter,
+    DjangoFilterBackend,
+    LabelingTaskOrderingFilter,
+    SearchFilter,
   ]
   ordering_fields = ('name', 'dataset', 'labeler', 'status', 'url')
-  search_fields = ('name', 'dataset', 'labeler_name', 'status', 'url')
+  search_fields = ('name', 'dataset', 'labeler', 'status', 'url')
 
   def create(self, request: Request, *args, **kwargs) -> Response:
     cvat_service = CvatService()
