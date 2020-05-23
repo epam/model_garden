@@ -12,10 +12,16 @@ import {
 } from "@material-ui/core";
 import "./Task.css";
 import { FilesCounter } from "../filesCounter";
+import { Notification } from "../notification";
 import { Bucket, Dataset, LabelingToolUser } from "../../../models";
 import { FormContainer } from "../../shared";
 import { DEFAULT_FORM_DATA } from "./constants";
-import { setCurrentBucketId, setCurrentDatasetId } from "../../../store/labelingTask";
+import {
+  setCurrentBucketId,
+  setCurrentDatasetId,
+  clearNewTaskData,
+  getUnsignedImagesCountSuccess,
+} from "../../../store/labelingTask";
 
 interface TaskProps {
   users: LabelingToolUser[];
@@ -26,6 +32,7 @@ interface TaskProps {
   datasets: Dataset[];
   currentBucketId: string;
   onDataSetChange: (datasetId: string) => void;
+  newTask: {location: string};
 }
 
 export type FormData = {
@@ -44,6 +51,7 @@ export const Task: React.FC<TaskProps> = ({
   datasets,
   currentBucketId,
   onDataSetChange,
+  newTask,
 }: TaskProps) => {
   const [selectedDataset, setSelectedDataset] = useState("");
   const dispatch = useDispatch();
@@ -83,6 +91,22 @@ export const Task: React.FC<TaskProps> = ({
   const onSubmit = handleSubmit((data: FormData) => {
     handleTaskSubmit(data);
   });
+
+  // clear form on a new task is created
+  useEffect(
+    () => {
+      setSelectedDataset("");
+      dispatch(setCurrentDatasetId(""));
+      dispatch(getUnsignedImagesCountSuccess(0));
+      setValue("filesInTask", 0);
+      setValue("countOfTasks", 0);
+    },
+    [newTask]
+  );
+
+  const clearTaskData = () => {
+    dispatch(clearNewTaskData());
+  }
 
   const usersSelectOptions = users.map((user) => (
     <MenuItem key={user.id} value={user.id}>
@@ -237,6 +261,11 @@ export const Task: React.FC<TaskProps> = ({
           </Button>
         </form>
       </FormContainer>
+
+      <Notification
+        newTask={newTask}
+        onClose={clearTaskData}
+      />
     </div>
   );
 };

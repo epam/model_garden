@@ -16,6 +16,8 @@ export const SET_CURRENT_DATASET_ID = "SET_CURRENT_DATASET_ID";
 export const CREATE_LABELING_TASK_START = "CREATE_LABELING_TASK_START";
 export const CREATE_LABELING_TASK_SUCCESS = "CREATE_LABELING_TASK_SUCCESS";
 
+export const CLEAR_NEW_LABELING_TASK = "CLEAR_NEW_LABELING_TASK";
+
 export const GET_LABELING_TASKS_START = 'GET_LABELING_TASKS_START';
 export const GET_LABELING_TASKS_SUCCESS = 'GET_LABELING_TASKS_SUCCESS';
 
@@ -62,7 +64,11 @@ export interface createLabelingTaskStart {
 
 export interface createLabelingTaskSuccess {
   type: typeof CREATE_LABELING_TASK_SUCCESS;
-  data: any;
+  newTask: {location: string};
+}
+
+export interface clearNewTaskData {
+  type: typeof CLEAR_NEW_LABELING_TASK
 }
 
 export interface getLabelingTasksStart {
@@ -88,5 +94,6 @@ export type LabelingTaskActionTypes =
   | setCurrentDataset
   | createLabelingTaskStart
   | createLabelingTaskSuccess
+  | clearNewTaskData
   | getLabelingTasksStart
   | getLabelingTasksSuccess;
