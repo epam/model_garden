@@ -1,20 +1,13 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Server
-Server part for the development process is running locally for now.
+## Set-up for UI Development
+* Build and run database and backedn docker from [<model_garden_root>/backend/README.md#docker](../backend/README.md#docker).
+* Set-up local backed ports:
 
-Install Python3, pip, virtualenv:
-https://phoenixnap.com/kb/how-to-install-python-3-windows
-
-virtualenv .env
-..env\Scripts\activate
-pip3 install -r requirements.txt
-
-Install Docker:
-https://docs.docker.com/docker-for-windows/install/
 
 ## Run Commands
-To work with the server you need running Global Protect
+To work with the PROD server you need running Global Protect
+
 ### Environment activation (on Windows):
 ".venv/Scripts/activate.bat"
 
@@ -26,10 +19,11 @@ Now the server is running.
 ## Maintenance Commands
 ### Migration:
 python manage.py migrate
+
 ### reset_db:
 python ./manage.py reset_db
 
-## Available Scripts
+## UI Set-up and Running Commands
 
 In the project directory, you can run:
 
