@@ -3,10 +3,12 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Set-up for UI Development
 1. Build and run database and backedn docker from
 [<model_garden_root>/backend/README.md#docker](../backend/README.md#docker).
-2. Set-up local backed ports:
+2.Add [<model_garden_root>/frontend/.env](.env) if absent.
+3. Set-up local backed host/port in [<model_garden_root>/frontend/.env](.env):
 
-    BACKEND_PORT=
-    
+    BACKEND_HOST=localhost
+    REACT_APP_BACKEND_PORT=9000
+
 
 ## Run Commands
 To work with the PROD server you need running Global Protect
