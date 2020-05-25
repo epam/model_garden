@@ -10,11 +10,13 @@
     * REACT_APP_BACKEND_PORT=9000
 
 ## Set-up Backend Locally.
-1. Activate Python environment from [<model_garden_root>/backend/](backend) dir:
+1. Install and create Python environment and dependencies according to
+[<model_garden_root>/backend#installation](../backend#installation).
+2. Activate Python environment from [<model_garden_root>/backend/](backend) dir:
 ```
 ".venv/Scripts/activate.bat"
 ```
-2. Run the backend server:
+3. Run the backend server:
 ```
 python manage.py runserver localhost:9000
 ```
