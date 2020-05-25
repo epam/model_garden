@@ -1,14 +1,19 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Set-up for UI Development
-1. Build and run database and backedn docker from
+# Set-up for UI Development
+## Set-up Database and UI locally.
+1. Ask colleagues and copy [<model_garden_root>/backend/.env](.env).
+2. Build and run database and backedn docker from
 [<model_garden_root>/backend/README.md#docker](../backend/README.md#docker).
 2. Add [<model_garden_root>/frontend/.env](.env) if absent.
 3. Set-up local backed host/port in [<model_garden_root>/frontend/.env](.env):
 
-    * BACKEND_HOST=localhost
+    * PORT=4200
     * REACT_APP_BACKEND_PORT=9000
 
+## Set-up backend loacally.
+1. Activate Python environment.
+2. Run the backend server.
 
 ## Run Commands
 To work with the PROD server you need running Global Protect
