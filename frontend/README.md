@@ -13,7 +13,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Set-up backend loacally.
 1. Activate Python environment.
-2. Run the backend server.
+From [<model_garden_root>/backend/](backend dir: `".venv/Scripts/activate.bat"`
+2. Run the backend server:
 
 ## Run Commands
 To work with the PROD server you need running Global Protect
