@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import {
@@ -48,7 +48,7 @@ export const Task: React.FC<TaskProps> = ({
   const [selectedDataset, setSelectedDataset] = useState("");
   const dispatch = useDispatch();
 
-  const { handleSubmit, setValue, control, watch } = useForm<FormData>({
+  const { handleSubmit, getValues, setValue, control, watch } = useForm<FormData>({
     defaultValues: {
       taskName: DEFAULT_FORM_DATA.TASK_NAME,
       user: DEFAULT_FORM_DATA.USER,
@@ -114,6 +114,15 @@ export const Task: React.FC<TaskProps> = ({
         /{dataset.path}
       </MenuItem>
   ));
+
+  const validateNumber = (propName: string) => {
+    setTimeout(() => {
+      const value: string = getValues(propName);
+      if (value !== undefined && (value === '' || Number.parseFloat(value) < 0)) {
+        setValue(propName, 0);
+      }
+    });
+  }
 
   return (
     <div className="task">
@@ -191,6 +200,7 @@ export const Task: React.FC<TaskProps> = ({
                 <TextField
                   type="number"
                   inputProps={{ min: 0, max: filesCount }}
+                  onChange={validateNumber('filesInTask') as ((event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void) | undefined}
                 />
               }
             />
@@ -204,6 +214,7 @@ export const Task: React.FC<TaskProps> = ({
                 <TextField
                   type="number"
                   inputProps={{ min: 0, max: filesCount }}
+                  onChange={validateNumber('countOfTasks') as ((event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void) | undefined}
                 />
               }
             />
