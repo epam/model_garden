@@ -1,5 +1,34 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Server
+Server part for the development process is running locally for now.
+
+Install Python3, pip, virtualenv:
+https://phoenixnap.com/kb/how-to-install-python-3-windows
+
+virtualenv .env
+..env\Scripts\activate
+pip3 install -r requirements.txt
+
+Install Docker:
+https://docs.docker.com/docker-for-windows/install/
+
+## Run Commands
+To work with the server you need running Global Protect
+### Environment activation (on Windows):
+".venv/Scripts/activate.bat"
+
+### Run server:
+python manage.py runserver localhost:9000
+
+Now the server is running.
+
+## Maintenance Commands
+### Migration:
+python manage.py migrate
+### reset_db:
+python ./manage.py reset_db
+
 ## Available Scripts
 
 In the project directory, you can run:
