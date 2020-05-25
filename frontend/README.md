@@ -1,12 +1,10 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Set-up for UI Development
-1. Build and run database and backedn docker from 
-[<model_garden_root>/backend/README.md#docker](../backend/README.md#docker).
-2 Set-up local backed ports:
-
-* BACKEND_PORT:
-*
+1. Build and run database and backedn docker from [<model_garden_root>/backend/README.md#docker](../backend/README.md#docker).
+2. Set-up local backed ports:
+  * BACKEND_PORT:
+  *
 
 
 ## Run Commands
