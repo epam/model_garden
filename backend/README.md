@@ -59,6 +59,7 @@ See www.stackoverflow.com/questions/33868806/configuring-pycharm-with-existing-v
 ## Docker
 
 ### Build Docker Image
+From repository root:
 ```
 docker-compose build
 ```
