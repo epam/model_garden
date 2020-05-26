@@ -21,7 +21,7 @@ services:
     build:
       context: backend
     restart: always
-    command: bash -c "./manage.py migrate && ./manage.py loaddata default_bucket && ./manage.py runserver 0.0.0.0:9000"
+    command: bash -c "python3 manage.py migrate && python3 manage.py loaddata default_bucket && python3 manage.py runserver 0.0.0.0:9000"
     environment:
       DJANGO_DB_HOST: postgres
       DJANGO_DB_PORT: 5432
