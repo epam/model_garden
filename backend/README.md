@@ -72,8 +72,11 @@ model_garden                                    latest              bd6bc2eadb1d
 
 ### Run Backend with Docker Compose
 ```
-$ docker-compose up -d
-$ docker-compose ps   
+docker-compose up -d
+```
+To check the results:
+```
+docker-compose ps   
 
            Name                         Command               State           Ports         
 --------------------------------------------------------------------------------------------
