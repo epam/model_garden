@@ -61,11 +61,11 @@ See www.stackoverflow.com/questions/33868806/configuring-pycharm-with-existing-v
 ### Build Docker Image
 From repository root:
 ```
-docker-compose build
+$ docker-compose build
 ```
 To check the results:
 ```
-docker images        
+$ docker images        
                                          
 REPOSITORY                                      TAG                 IMAGE ID            CREATED             SIZE
 model_garden                                    latest              bd6bc2eadb1d        58 seconds ago      464MB
@@ -73,11 +73,11 @@ model_garden                                    latest              bd6bc2eadb1d
 
 ### Run Backend with Docker Compose
 ```
-docker-compose up -d
+$ docker-compose up -d
 ```
 To check the results:
 ```
-docker-compose ps   
+$ docker-compose ps   
 
            Name                         Command               State           Ports         
 --------------------------------------------------------------------------------------------
