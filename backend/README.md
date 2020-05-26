@@ -82,8 +82,9 @@ $ docker-compose ps
 
            Name                         Command               State           Ports         
 --------------------------------------------------------------------------------------------
-backend_postgres_1    docker-entrypoint.sh postgres    Up      0.0.0.0:5444->5432/tcp
-backend_webserver_1   bash -c ./manage.py migrat ...   Up      0.0.0.0:9000->9000/tcp
+model_garden_backend_1    bash -c ./manage.py migrat ...   Up      0.0.0.0:9000->9000/tcp
+model_garden_frontend_1   /bin/sh -c nginx -g 'daemo ...   Up      0.0.0.0:80->80/tcp
+model_garden_postgres_1   docker-entrypoint.sh postgres    Up      0.0.0.0:5444->5432/tcp
 ```
 
 ## Linting
