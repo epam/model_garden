@@ -1,7 +1,7 @@
-# Development environment setup
+# Development Environment Setup
 
-## Setup database and frontend locally
-1. Сreate [<model_garden_root>/backend/.env](.env). Ask colleagues to share this
+## Setup Database and Frontend Locally
+1. Create [<model_garden_root>/backend/.env](.env). Ask colleagues to share this
 file content.
 2. Build and run database and backend docker containers:
 [<model_garden_root>/backend/README.md#docker](../backend/README.md#docker).
@@ -16,7 +16,7 @@ PORT=4200
 REACT_APP_BACKEND_PORT=9000
 ```
 
-## Setup backend locally
+## Setup Backend Locally
 1. Install and create Python environment and dependencies according to
 [<model_garden_root>/backend#installation](../backend#installation).
 2. Activate Python environment from [<model_garden_root>/backend/](backend) dir.
@@ -28,7 +28,7 @@ REACT_APP_BACKEND_PORT=9000
 python manage.py runserver localhost:9000
 ```
 
-## Migrate and reset the database if needed
+## Migrate and Reset the Database (if needed)
 1. Migrate the database from [<model_garden_root>/backend/](backend) dir:
 ```
 python manage.py migrate
@@ -38,6 +38,6 @@ python manage.py migrate
 python manage.py reset_db
 ```
 
-# Learn more
+# Learn More
 This project was bootstrapped with
 [Create React App](https://github.com/facebook/create-react-app).
