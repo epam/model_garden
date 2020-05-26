@@ -13,6 +13,7 @@ import {
   CREATE_LABELING_TASK_SUCCESS,
   GET_LABELING_TASKS_START,
   GET_LABELING_TASKS_SUCCESS,
+  CLEAR_NEW_LABELING_TASK,
 } from "./types";
 import {
   Dataset,
@@ -96,10 +97,16 @@ export function createLabelingTaskStart(): LabelingTaskActionTypes {
   };
 }
 
-export function createLabelingTaskSuccess(data: any): LabelingTaskActionTypes {
+export function createLabelingTaskSuccess(newTask: {location: string}): LabelingTaskActionTypes {
   return {
     type: CREATE_LABELING_TASK_SUCCESS,
-    data,
+    newTask,
+  };
+}
+
+export function clearNewTaskData(): LabelingTaskActionTypes {
+  return {
+    type: CLEAR_NEW_LABELING_TASK,
   };
 }
 
@@ -146,7 +153,11 @@ export const createLabelingTask = (
 ): AppThunk => (dispatch) => {
   dispatch(createLabelingTaskStart());
   return createLabelingTaskRequest(taskData)
-    .then((response) => dispatch(createLabelingTaskSuccess(response.data)))
+    .then((response) => {
+      dispatch(createLabelingTaskSuccess({
+        location: response.headers['location']
+      }))
+    })
     .catch((error) => dispatch(setErrorAction(error)));
 };
 

@@ -12,6 +12,7 @@ import {
   CREATE_LABELING_TASK_SUCCESS,
   GET_LABELING_TASKS_START,
   GET_LABELING_TASKS_SUCCESS,
+  CLEAR_NEW_LABELING_TASK,
 } from "./types";
 import { LabelingToolUser } from "../../models/labelingToolUser";
 import { Dataset, LabelingTaskStatus } from "../../models";
@@ -27,6 +28,7 @@ export interface LabelingTasksState {
   unsignedImagesCount: number;
   isLabelingTasksStatusesLoading: boolean;
   labelingTasksStatuses: {count: number, tasks: LabelingTaskStatus[]};
+  newTask: {location: string};
 }
 
 const initialState: LabelingTasksState = {
@@ -40,6 +42,7 @@ const initialState: LabelingTasksState = {
   unsignedImagesCount: 0,
   isLabelingTasksStatusesLoading: false,
   labelingTasksStatuses: {count: 0, tasks: []},
+  newTask: {location: ""},
 };
 
 export const labelingTaskReducer = (
@@ -93,7 +96,15 @@ export const labelingTaskReducer = (
     case CREATE_LABELING_TASK_START:
       return state;
     case CREATE_LABELING_TASK_SUCCESS:
-      return state;
+      return {
+        ...state,
+        newTask: action.newTask,
+      }
+    case CLEAR_NEW_LABELING_TASK:
+      return {
+        ...state,
+        newTask: {location: ""},
+      }
     case GET_LABELING_TASKS_START:
       return {
         ...state,
