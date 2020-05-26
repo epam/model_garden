@@ -1,7 +1,8 @@
 # Development environment setup
 
 ## Setup database and frontend locally
-1. Ask colleagues and create [<model_garden_root>/backend/.env](.env).
+1. Сreate [<model_garden_root>/backend/.env](.env). Ask colleagues to share this
+file content.
 2. Build and run database and backend docker containers:
 [<model_garden_root>/backend/README.md#docker](../backend/README.md#docker).
 3. Run the database container:
