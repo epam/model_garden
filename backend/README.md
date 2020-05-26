@@ -9,6 +9,12 @@ Also update the password in `DATABASES = {...}` dict in settings.py
 
 ## Installation
 
+### Make sure you have Python 3.8 installed
+```
+$ python -V
+Python 3.8.2
+```
+
 ### Install Virtualenv
 ```
 $ pip install virtualenv
