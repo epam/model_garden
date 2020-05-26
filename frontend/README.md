@@ -28,6 +28,16 @@ REACT_APP_BACKEND_PORT=9000
 python manage.py runserver localhost:9000
 ```
 
+## Setup Front-end Locally
+1. Install packages in [<model_garden_root>/frontend/](frontend) dir
+```
+npm install
+```
+2. Run front-end in [<model_garden_root>/frontend/](frontend) dir
+```
+npm start
+```
+
 ## Migrate and Reset the Database (if needed)
 1. Migrate the database from [<model_garden_root>/backend/](backend) dir:
 ```
