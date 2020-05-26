@@ -60,8 +60,11 @@ See www.stackoverflow.com/questions/33868806/configuring-pycharm-with-existing-v
 
 ### Build Docker Image
 ```
-$ make build
-$ docker images        
+docker-compose build
+```
+To check the results:
+```
+docker images        
                                          
 REPOSITORY                                      TAG                 IMAGE ID            CREATED             SIZE
 model_garden                                    latest              bd6bc2eadb1d        58 seconds ago      464MB
