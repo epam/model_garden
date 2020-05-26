@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@media (min-width: 1280px) {
+  .MuiContainer-root.error-alert-container.MuiContainer-maxWidthLg{
+    max-width: 100vw;
+  }
+}
