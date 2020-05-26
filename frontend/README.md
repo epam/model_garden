@@ -1,6 +1,6 @@
 # Development Environment Setup
 
-## Setup Database and Frontend Locally
+## Setup Database and Backend Containers
 1. Create [<model_garden_root>/backend/.env](.env). Ask colleagues to share this
 file content.
 2. Build and run database and backend docker containers:
@@ -8,12 +8,6 @@ file content.
 3. Run the database container:
 ```
 docker-compose up -d postgres
-```
-4. Add [<model_garden_root>/frontend/.env](.env) if absent.
-5. Setup local backend port in [<model_garden_root>/frontend/.env](.env):
-```
-PORT=4200
-REACT_APP_BACKEND_PORT=9000
 ```
 
 ## Setup Backend Locally
@@ -29,11 +23,17 @@ python manage.py runserver localhost:9000
 ```
 
 ## Setup Front-end Locally
-1. Install packages in [<model_garden_root>/frontend/](frontend) dir
+1. Add [<model_garden_root>/frontend/.env](.env) if absent.
+2. Setup local backend port in [<model_garden_root>/frontend/.env](.env):
+```
+PORT=4200
+REACT_APP_BACKEND_PORT=9000
+```
+3. Install packages in [<model_garden_root>/frontend/](frontend) dir
 ```
 npm install
 ```
-2. Run front-end in [<model_garden_root>/frontend/](frontend) dir
+4. Run front-end in [<model_garden_root>/frontend/](frontend) dir
 ```
 npm start
 ```
