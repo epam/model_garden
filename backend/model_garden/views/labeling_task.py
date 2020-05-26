@@ -118,7 +118,13 @@ class LabelingTaskViewSet(ModelViewSet):
           media_asset.labeling_task = labeling_task
           media_asset.save()
 
-    return Response(status=status.HTTP_201_CREATED)
+    return Response(
+      headers={
+        'Access-Control-Expose-Headers': 'Location',
+        'Location': labeling_task.url,
+      },
+      status=status.HTTP_201_CREATED,
+    )
 
   def list(self, request: Request, *args, **kwargs) -> Response:
     queryset = self.filter_queryset(self.get_queryset())

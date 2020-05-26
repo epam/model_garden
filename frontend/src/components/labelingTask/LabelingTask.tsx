@@ -19,6 +19,7 @@ export const LabelingTask: React.FC = () => {
   const currentDatasetId = useSelector((state: AppState) => state.labelingTask.currentDatasetId);
   const users = useSelector((state: AppState) => state.labelingTask.labelingToolUsers);
   const unsignedImagesCount = useSelector((state: AppState) => state.labelingTask.unsignedImagesCount);
+  const newTask = useSelector((state: AppState) => state.labelingTask.newTask);
 
   useEffect(() => {
     dispatch(getLabelingToolUsers());
@@ -56,6 +57,7 @@ export const LabelingTask: React.FC = () => {
       datasets={Array.from(datasets.values())}
       currentBucketId={currentBucketId}
       onDataSetChange={handleGetUnsignedImagesCount}
+      newTask={newTask}
     />
   );
 };
