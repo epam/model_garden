@@ -1,47 +1,44 @@
-# Django backend
+# Django Backend
 
-## DataBase
+## Database (not recommended - use docker)
 www.postgresql.org/download
+
 See the recommended pass in www.kb.epam.com/display/EPMCMLCV/Databases+and+Storages
+
 Also update the password in `DATABASES = {...}` dict in settings.py
 
 ## Installation
 
-### Install virtualenv
+### Install Virtualenv
 ```
 $ pip install virtualenv
 ```
 
-### Create virtual environment
+### Create Virtual Environment
 ```
 $ virtualenv .venv
 ```
 
-### Activate virtual environment in Linux
+### Activate Virtual Environment in Linux
 ```
 $ . .venv/bin/activate
 ```
-### Activate virtual environment in Windows
+### Activate Virtual Environment in Windows
 ```
 $ source ./.venv/Scripts/activate
 ```
  
-### Install requirements and test requirements
+### Install Requirements and Test Requirements
 ```
 $ pip install -r requirements.txt -r test-requirements.txt
 ```
 
-### Run migrations
+### Run Migrations
 ```
 $ ./manage.py migrate
 ```
 
-### Create a superuser
-```
-$ ./manage.py createsuperuser
-```
-
-### Run server
+### Run Server
 ```
 $ ./manage.py runserver 0:9000
 ...
@@ -55,17 +52,16 @@ See www.stackoverflow.com/questions/33868806/configuring-pycharm-with-existing-v
 
 ## Docker
 
-### Build image
+### Build Docker Image
 ```
 $ make build
 $ docker images        
                                          
 REPOSITORY                                      TAG                 IMAGE ID            CREATED             SIZE
 model_garden                                    latest              bd6bc2eadb1d        58 seconds ago      464MB
-
 ```
 
-### Run docker compose
+### Run Backend with Docker Compose
 ```
 $ docker-compose up -d
 $ docker-compose ps   
@@ -78,40 +74,7 @@ backend_webserver_1   bash -c ./manage.py migrat ...   Up      0.0.0.0:9000->900
 
 ## Linting
 
-### Run flake8
+### Run Flake8
 ```
 $ make lint
 ```
-
-## Deployment
-
-### Image build pipeline on Gitlab
-
-Gitlab pipeline uses `.gitlab-ci.yml` file for pipeline configuration. In order to launch 
-the docker image build a new git tag needs to be created:
-
-#### Check existing tags
-```
-$ git tag
-v0.0.1
-```
-
-#### Create new tag
-```
-$ git tag -a v0.0.2 -m "v0.0.2"
-```
-
-#### Push new tag
-```
-$ git push origin v0.0.2
-```
-
-#### Check Gitlab pipelines:
-
-A new pipeline run should be created here:
-
-https://git.epam.com/epmc-mlcv/model_garden/pipelines
-
-Once the run is completed successfully a new docker image will be available in Amazon ECR repository:
-
-https://eu-central-1.console.aws.amazon.com/ecr/repositories/model_garden_backend/?region=eu-central-1

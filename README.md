@@ -1,39 +1,61 @@
 # EPAM Model Garden
 
 ## Installation
-Install Python3, pip, virtualenv:
-https://phoenixnap.com/kb/how-to-install-python-3-windows
 
-- virtualenv .env
-- .\.env\Scripts\activate
-- pip3 install -r requirements.txt
+- [Backend installation guide](backend/README.md)
+- [Frontend installation guide](frontend/README.md)
 
-## Debug
-See https://automationpanda.com/2017/09/14/django-projects-in-pycharm-community-edition/
+### Run Application with Docker Compose
+```
+$ docker-compose up -d
 
-## Installation and running backend
+Creating network "model_garden_default" with the default driver
+...
+Creating model_garden_postgres_1 ... done
+Creating model_garden_backend_1  ... done
+Creating model_garden_frontend_1 ... done
+```
 
-Set up environment variables:
+### Check Running Docker Containers
+```
+$ docker-compose ps
 
-BACKEND_HOST
-BACKEND_PORT
+         Name                        Command               State           Ports         
+-----------------------------------------------------------------------------------------
+model_garden_backend_1    bash -c ./manage.py migrat ...   Up      0.0.0.0:9000->9000/tcp
+model_garden_frontend_1   /bin/sh -c nginx -g 'daemo ...   Up      0.0.0.0:80->80/tcp    
+model_garden_postgres_1   docker-entrypoint.sh postgres    Up      0.0.0.0:5444->5432/tcp
+```
 
-CVAT_HOST
-CVAT_PORT
-CVAT_ROOT_USER_NAME
-CVAT_ROOT_USER_PASSWORD
+## Deployment
 
-MONGO_URI
+### Image Build Pipeline on Gitlab
 
-AWS_ACCESS_KEY_ID
-AWS_SECRET_KEY
+Gitlab pipeline uses `.gitlab-ci.yml` file for pipeline configuration. In order to launch 
+the docker image build a new git tag needs to be created:
 
-- cd ./backend
-- npm install
-- npm start
+#### Check Existing Tags
+```
+$ git tag
+v0.0.1
+```
 
-## Installation and running frontend
+#### Create New Tag
+```
+$ git tag -a v0.0.2 -m "v0.0.2"
+```
 
-- cd ./frontend
-- npm install
-- npm start
+#### Push New Tag
+```
+$ git push origin v0.0.2
+```
+
+#### Check Gitlab Pipelines:
+
+A new pipeline run should be created here:
+
+https://git.epam.com/epmc-mlcv/model_garden/pipelines
+
+Once the run is completed successfully a new docker image will be available in Amazon ECR repository:
+
+https://eu-central-1.console.aws.amazon.com/ecr/repositories/model_garden_backend/?region=eu-central-1
