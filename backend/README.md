@@ -72,6 +72,7 @@ model_garden                                    latest              bd6bc2eadb1d
 ```
 
 ### Run Backend with Docker Compose
+From repository root:
 ```
 $ docker-compose up -d
 ```
