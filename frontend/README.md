@@ -1,6 +1,6 @@
 # Development Environment Setup
 
-## Setup Database and Backend Containers
+## Run Database and Backend from Docker
 1. Create [<model_garden_root>/backend/.env](.env). Ask colleagues to share this
 file content.
 2. Build and run database and backend docker containers:
@@ -8,6 +8,10 @@ file content.
 3. Run the database container:
 ```
 docker-compose up -d postgres
+```
+4. Run the backend container:
+```
+docker-compose up -d backend
 ```
 
 ## Setup Backend Locally
