@@ -3,8 +3,12 @@
 1. Ask colleagues and copy [<model_garden_root>/backend/.env](.env).
 2. Build and run database and backedn docker from
 [<model_garden_root>/backend/README.md#docker](../backend/README.md#docker).
-2. Add [<model_garden_root>/frontend/.env](.env) if absent.
-3. Set-up local backed host/port in [<model_garden_root>/frontend/.env](.env):
+3. Run the database container.
+```
+docker-compose up -d postgres
+```
+4. Add [<model_garden_root>/frontend/.env](.env) if absent.
+5. Set-up local backed host/port in [<model_garden_root>/frontend/.env](.env):
 
     * PORT=4200
     * REACT_APP_BACKEND_PORT=9000
@@ -12,11 +16,11 @@
 ## Set-up Backend Locally.
 1. Install and create Python environment and dependencies according to
 [<model_garden_root>/backend#installation](../backend#installation).
-2. Activate Python environment from [<model_garden_root>/backend/](backend) dir:
+2. Activate Python environment from [<model_garden_root>/backend/](backend) dir.
 ```
 ".venv/Scripts/activate.bat"
 ```
-3. Run the backend server:
+3. Run the backend server.
 ```
 python manage.py runserver localhost:9000
 ```
