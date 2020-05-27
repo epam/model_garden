@@ -18,7 +18,7 @@ export const ErrorAlert: React.FC = () => {
   };
 
   return (
-    <Container className="error-alert-container">
+    <div className="error-alert-container" >
       <Container
         className="error-alert"
         component={Paper}
@@ -42,6 +42,6 @@ export const ErrorAlert: React.FC = () => {
           {errorMessage}
         </Alert>
       </Container>
-    </Container>
+    </div>
   );
 };
