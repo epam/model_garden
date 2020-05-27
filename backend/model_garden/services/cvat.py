@@ -1,10 +1,13 @@
 import logging
 from typing import Optional, List
+from time import sleep
 
 import requests
 from django.conf import settings
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+
+from model_garden.constants import AnnotationsFormat
 
 logger = logging.getLogger(__name__)
 
@@ -30,12 +33,12 @@ class CvatService:
   def _get_url(self, path: str) -> str:
     return f"{settings.CVAT_API_URL}/{path}"
 
-  def _request(self, method: str, path: str, data: dict = None) -> requests.Response:
+  def _request(self, method: str, path: str, params: dict = None, data: dict = None) -> requests.Response:
     url = self._get_url(path)
 
     response = None
     try:
-      response = getattr(self._session, method)(url=url, json=data)
+      response = getattr(self._session, method)(url=url, params=params, json=data)
       try:
         response.raise_for_status()
       except requests.HTTPError as e:
@@ -52,8 +55,8 @@ class CvatService:
 
     return response
 
-  def _get(self, path: str) -> requests.Response:
-    return self._request(method='get', path=path)
+  def _get(self, path: str, params: Optional[dict] = None) -> requests.Response:
+    return self._request(method='get', path=path, params=params)
 
   def _post(self, path: str, data: dict) -> requests.Response:
     return self._request(method='post', path=path, data=data)
@@ -133,3 +136,26 @@ class CvatService:
   def get_task(self, task_id: int) -> dict:
     response = self._get(f'tasks/{task_id}')
     return response.json()
+
+  def get_annotations(
+    self,
+    task_id: int,
+    task_name: str,
+    annotation_format: Optional[str] = AnnotationsFormat.PASCAL_VOB_ZIP_1_1,
+  ) -> bytes:
+    tries = 10
+    while tries:
+      response = self._get(
+        path=f'tasks/{task_id}/annotations/{task_name}',
+        params={
+          'format': annotation_format,
+          'action': 'download',
+        },
+      )
+      if response.status_code == 200:
+        return response.content
+
+      sleep(0.5)
+      tries -= 1
+
+    raise CVATServiceException(f"Failed to get annotations [{response.status_code}]: {response.content}")

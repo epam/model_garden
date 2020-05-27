@@ -1,6 +1,8 @@
+from io import BytesIO
 from typing import Optional
+from zipfile import ZipFile
 
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from rest_framework.test import APITestCase
 
 from model_garden.constants import LabelingTaskStatus
@@ -73,6 +75,16 @@ class Factory:
     )
     return labeling_task
 
+  @staticmethod
+  def get_zip_file(*files):
+    file = BytesIO()
+    zip_file = ZipFile(file=file, mode='w')
+    for file_path, file_content in files:
+      zip_file.writestr(file_path, file_content)
+
+    zip_file.close()
+    return file.getvalue()
+
 
 class BaseTestCase(TestCase):
   def setUp(self):
@@ -81,6 +93,12 @@ class BaseTestCase(TestCase):
 
 
 class BaseAPITestCase(APITestCase):
+  def setUp(self):
+    super().setUp()
+    self.test_factory = Factory()
+
+
+class BaseTransactionTestCase(TransactionTestCase):
   def setUp(self):
     super().setUp()
     self.test_factory = Factory()
