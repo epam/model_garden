@@ -8,6 +8,7 @@ class Dataset(BaseModel):
   bucket = models.ForeignKey(Bucket, on_delete=models.CASCADE)
 
   class Meta:
+    ordering = ('-created_at',)
     unique_together = [['path', 'bucket']]
 
   def __str__(self):
