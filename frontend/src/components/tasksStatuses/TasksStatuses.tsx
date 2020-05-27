@@ -64,16 +64,6 @@ export const TasksStatuses: React.FC = () => {
     onTableChange: (action: string, tableState: any) => {
       switch (action) {
 
-        case 'changePage':
-          setPage(tableState.page + 1);
-          dispatch(getLabelingTasks(
-            currentBucketId,
-            currentDatasetId,
-            tableState.page + 1,
-            rowsPerPageValue
-          ));
-          break;
-
         case 'changeRowsPerPage': {
           setRowsPerPage(tableState.rowsPerPage);
           dispatch(getLabelingTasks(

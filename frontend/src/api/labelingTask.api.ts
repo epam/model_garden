@@ -83,7 +83,7 @@ export const getLabelingTasksRequest = async (
   datasetId: string,
   page: number,
   rowsPerPage: number,
-  filterMap?: Map<string, string>
+  filterMap: any
 ): Promise<{count: number, tasks: LabelingTaskStatus[]}> => {
   try {
     const params: any = {
@@ -91,11 +91,13 @@ export const getLabelingTasksRequest = async (
       page_size: rowsPerPage,
     }
 
-    if (filterMap) {
-      filterMap.forEach((value: string, key: string) => {
+    for (const [key, value] of Object.entries(filterMap)) {
+      params[key] = Array(value)[0];
+    }
+      /*filterMap.forEach((value: string, key: string) => {
         params[key] = value[0];
       });
-    }
+    }*/
 
     let resp = await axios.get(
       `http://${backendHostPort}/api/labeling-tasks/`,
