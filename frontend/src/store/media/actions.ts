@@ -6,6 +6,7 @@ import {
   SET_MEDIA_FILES,
   UPLOAD_MEDIA_FILES_START,
   UPLOAD_MEDIA_FILES_SUCCESS,
+  UPLOAD_MEDIA_FILES_ERROR
 } from "./types";
 import { addExistingDatasetRequest, uploadMediaFilesRequest } from "../../api";
 import { setErrorAction } from '../error';
@@ -30,11 +31,20 @@ export function uploadMediaFilesSuccess(butchName: string): MediaActionTypes {
   }
 }
 
+export function uploadMediaFilesError(): MediaActionTypes {
+  return {
+    type: UPLOAD_MEDIA_FILES_ERROR
+  }
+}
+
 export const uploadMediaFiles = (files: File[], bucketId: string, path: string): AppThunk => dispatch => {
   dispatch(uploadMediaFilesStart());
   return uploadMediaFilesRequest(files, bucketId, path)
     .then((response) => dispatch(uploadMediaFilesSuccess(response.data)))
-    .catch((error) => dispatch(setErrorAction(error)));
+    .catch((error) => {
+      dispatch(uploadMediaFilesError());
+      dispatch(setErrorAction(error));
+    });
 };
 
 export function addExistingDatasetStart(): MediaActionTypes {

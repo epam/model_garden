@@ -5,6 +5,7 @@ import {
   SET_MEDIA_FILES,
   UPLOAD_MEDIA_FILES_START,
   UPLOAD_MEDIA_FILES_SUCCESS,
+  UPLOAD_MEDIA_FILES_ERROR
 } from "./types";
 
 export interface MediaState {
@@ -43,6 +44,11 @@ export const mediaReducer = (
         ...state,
         isUploading: false,
         batchName: action.batchName
+      }
+    case UPLOAD_MEDIA_FILES_ERROR:
+      return {
+        ...state,
+        isUploading: false
       }
     case ADD_EXISTING_DATASET_START:
       return {
