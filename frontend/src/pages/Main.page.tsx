@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppBar, Tabs, Tab } from "@material-ui/core";
-import { AddExistingDataset, UploadImages, LabelingTask, TasksStatuses, ErrorAlert } from "../components";
+import { AddExistingDataset, UploadImages, LabelingTask, ErrorAlert } from "../components";
 import { setSelectedMenuItem, getBuckets } from "../store/main";
 import { AppState } from "../store";
+import { TasksStatusesAntDesign } from "../components/tasksStatusesAntDesign";
 
 export const MainPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ export const MainPage: React.FC = () => {
       {selectedMenuItem === 0 && <UploadImages />}
       {selectedMenuItem === 1 && <AddExistingDataset />}
       {selectedMenuItem === 2 && <LabelingTask />}
-      {selectedMenuItem === 3 && <TasksStatuses />}
+      {selectedMenuItem === 3 && <TasksStatusesAntDesign />}
     </>
   );
 };
