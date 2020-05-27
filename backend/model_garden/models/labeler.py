@@ -10,5 +10,8 @@ class Labeler(BaseModel):
     unique=True,
   )
 
+  class Meta:
+    ordering = ('-created_at',)
+
   def __str__(self):
     return f"{self.__class__.__name__}(labeler_id={self.labeler_id}, username='{self.username}')"

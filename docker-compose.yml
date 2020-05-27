@@ -28,8 +28,23 @@ services:
       DJANGO_SETTINGS_MODULE: model_garden.settings
     depends_on:
       - postgres
+      - worker
     ports:
       - 9000:9000
+    volumes:
+      - ./backend:/src:rw,cached
+  worker:
+    image: model_garden:latest
+    build:
+      context: backend
+    restart: always
+    command: python3 worker.py
+    environment:
+      DJANGO_DB_HOST: postgres
+      DJANGO_DB_PORT: 5432
+      DJANGO_SETTINGS_MODULE: model_garden.settings
+    depends_on:
+      - postgres
     volumes:
       - ./backend:/src:rw,cached
   frontend:
