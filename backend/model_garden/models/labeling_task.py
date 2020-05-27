@@ -13,6 +13,8 @@ class LabelingTask(BaseModel):
       (LabelingTaskStatus.ANNOTATION, "Annotation"),
       (LabelingTaskStatus.VALIDATION, "Validation"),
       (LabelingTaskStatus.COMPLETED, "Completed"),
+      (LabelingTaskStatus.SAVED, "Saved"),
+      (LabelingTaskStatus.ARCHIVED, "Archived"),
     ],
     default=LabelingTaskStatus.ANNOTATION,
   )
@@ -24,7 +26,7 @@ class LabelingTask(BaseModel):
   url = models.CharField(max_length=128)
 
   class Meta:
-    ordering = ['-created_at']
+    ordering = ('-created_at',)
 
   def __str__(self):
     return (

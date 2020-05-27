@@ -1,16 +1,15 @@
 import logging
 
+from django.conf import settings
 from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
-from django.conf import settings
 from rest_framework import status
-from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from model_garden.constants import LabelingTaskStatus
 from model_garden.models import Dataset, LabelingTask, Labeler
 from model_garden.serializers import LabelingTaskCreateSerializer, LabelingTaskSerializer
 from model_garden.services.cvat import CvatService, CVATServiceException
@@ -125,23 +124,3 @@ class LabelingTaskViewSet(ModelViewSet):
       },
       status=status.HTTP_201_CREATED,
     )
-
-  def list(self, request: Request, *args, **kwargs) -> Response:
-    queryset = self.filter_queryset(self.get_queryset())
-    page = self.paginate_queryset(queryset)
-
-    # NOTE: The following code is not optimal, but cvat does not provide
-    # API to get list of tasks by list of ids, so we have to get tasks
-    # one by one for all tasks with non-completed status.
-    items_to_check = [item for item in page if item.status != LabelingTaskStatus.COMPLETED]
-    if items_to_check:
-      cvat_service = CvatService()
-      for item in items_to_check:
-        task = cvat_service.get_task(item.task_id)
-        task_status = task.get('status')
-        if status is not None and item.status != task_status:
-          item.status = task_status
-          item.save(update_fields=('status',))
-
-    serializer = self.get_serializer(page, many=True)
-    return self.get_paginated_response(serializer.data)

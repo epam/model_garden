@@ -178,3 +178,43 @@ class TestCvatService(TestCase):
         'name': 'foo',
       },
     )
+
+  @mock.patch('model_garden.services.cvat.sleep')
+  def test_get_annotations(self, sleep_mock):
+    self.session_mock.get.side_effect = [
+      mock.Mock(
+        status_code=202,
+        content=b'',
+      ),
+      mock.Mock(
+        status_code=201,
+        content=b'',
+      ),
+      mock.Mock(
+        status_code=200,
+        content=b'content',
+      ),
+    ]
+
+    response = CvatService().get_annotations(
+      task_id=1,
+      task_name='test',
+    )
+
+    self.assertEqual(response, b'content')
+    self.assertEqual(sleep_mock.call_count, 2)
+
+  @mock.patch('model_garden.services.cvat.sleep')
+  def test_get_annotations_not_created(self, sleep_mock):
+    self.session_mock.get.return_value = mock.Mock(
+      status_code=202,
+      content=b'',
+    )
+
+    with self.assertRaisesRegex(CVATServiceException, r"Failed to get annotations \[202\]: b''"):
+      CvatService().get_annotations(
+        task_id=1,
+        task_name='test',
+      )
+
+    self.assertEqual(sleep_mock.call_count, 10)
