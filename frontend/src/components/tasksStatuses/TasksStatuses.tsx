@@ -117,8 +117,7 @@ export const TasksStatuses: React.FC = () => {
         return (
           <a href={value} target="_blank" rel="noopener noreferrer">{hostname}</a>
         );
-      },
-      ...getColumnSearchProps('url')
+      }
     },
     {
       title: 'Status',
