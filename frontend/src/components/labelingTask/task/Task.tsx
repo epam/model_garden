@@ -53,7 +53,7 @@ export const Task: React.FC<TaskProps> = ({
   onDataSetChange,
   newTask,
 }: TaskProps) => {
-  const [selectedDataset, setSelectedDataset] = useState("");
+  const [selectedDataset, setSelectedDataset] = useState('');
   const dispatch = useDispatch();
 
   const { handleSubmit, getValues, setValue, control, watch } = useForm<FormData>({
@@ -140,12 +140,12 @@ export const Task: React.FC<TaskProps> = ({
   ));
 
   const validateNumber = (propName: string) => {
-    setTimeout(() => {
+
       const value: string = getValues(propName);
       if (value !== undefined && (value === '' || Number.parseFloat(value) < 0)) {
         setValue(propName, 0);
       }
-    });
+
   }
 
   return (
