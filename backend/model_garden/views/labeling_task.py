@@ -4,14 +4,20 @@ from django.conf import settings
 from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from model_garden.models import Dataset, LabelingTask, Labeler
-from model_garden.serializers import LabelingTaskCreateSerializer, LabelingTaskSerializer
+from model_garden.constants import LabelingTaskStatus
+from model_garden.models import Dataset, Labeler, LabelingTask
+from model_garden.serializers import (
+  LabelingTaskCreateSerializer,
+  LabelingTaskIDSerializer,
+  LabelingTaskSerializer,
+)
 from model_garden.services.cvat import CvatService, CVATServiceException
 from model_garden.utils import chunkify
 
@@ -134,4 +140,56 @@ class LabelingTaskViewSet(ModelViewSet):
         'Location': labeling_task.url,
       },
       status=status.HTTP_201_CREATED,
+    )
+
+  @action(methods=["PATCH"], detail=False)
+  def archive(self, request: Request) -> Response:
+    """Change status of specified tasks and delete them in CVAT.
+    Tasks that have been archived will be skipped as well as task IDs that
+    are not exist.
+
+    Request::
+      {"id": [task_id]}
+
+    Response::
+      {
+        "archived": [task_id],
+        "errors": [
+          {
+            "id": task_id,
+            "error": string
+          }
+        ]
+      }
+    """
+    ids_serializer = LabelingTaskIDSerializer(data=request.data)
+    ids_serializer.is_valid(raise_exception=True)
+
+    labeling_tasks = LabelingTask.fetch_for_archiving(
+      pk__in=ids_serializer.data['id'],
+    )
+
+    cvat_service = CvatService()
+    deleted = []
+    errors = []
+
+    for lt in labeling_tasks:
+      try:
+        cvat_service.delete_task(lt.task_id)
+      except CVATServiceException as err:
+        logger.error(
+          'Unable to delete cvat task %d. Reason: %s', lt.task_id, err,
+        )
+        errors.append({'id': lt.id, 'error': str(err)})
+      else:
+        deleted.append(lt)
+
+    LabelingTask.update_statuses(deleted, LabelingTaskStatus.ARCHIVED)
+
+    return Response(
+      data={
+        'archived': [each.id for each in deleted],
+        'errors': errors,
+      },
+      status=status.HTTP_200_OK,
     )
