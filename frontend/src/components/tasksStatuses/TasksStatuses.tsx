@@ -1,52 +1,23 @@
 import React, {useEffect, useState} from 'react';
-import MUIDataTable from "mui-datatables";
+import {useDispatch, useSelector} from 'react-redux';
+import Highlighter from 'react-highlight-words';
+import {Table, Input, Button, Space} from 'antd';
+import {SearchOutlined} from '@ant-design/icons';
+import 'antd/dist/antd.css';
 import './TasksStatuses.css';
-import { TABLE_TITLE } from './constants';
-import {useDispatch, useSelector} from "react-redux";
-import {AppState} from "../../store";
-import {getDatasets, getLabelingTasks} from "../../store/labelingTask";
+import {AppState} from '../../store';
+import {getDatasets, getLabelingTasks} from '../../store/labelingTask';
+import {ROWS_PER_PAGE} from './constants';
 
 export const TasksStatuses: React.FC = () => {
-  const TASK_STATUSES_COLUMNS = [
-    {
-      name: 'name',
-      label: 'Task Name'
-    },
-    {
-      name: 'dataset',
-      label: 'Dataset'
-    },
-    {
-      name: 'labeler',
-      label: 'Labeler'
-    },
-    {
-      name: 'url',
-      label: 'Url',
-      options: {
-        filter: false,
-        customBodyRender: (value: string) => {
-          let hostname = value;
-          let res = /https?:\/\/(.+?)\/.*/.exec(value);
-          if (res && res.length === 2) {
-            hostname = res[1];
-          }
-          return (
-            <a href={value} target="_blank" rel="noopener noreferrer">{hostname}</a>
-          );
-        }
-      }
-    },
-    {
-      name: 'status',
-      label: 'Status'
-    },
-  ];
+  const [pageValue, setPage] = useState(1);
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const [filterMap, setFilterMap] = useState({});
 
-
-  const dispatch = useDispatch();
   const currentBucketId = useSelector((state: AppState) => state.labelingTask.currentBucketId);
   const currentDatasetId = useSelector((state: AppState) => state.labelingTask.currentDatasetId);
+  const areTasksLoading = useSelector((state: AppState) => state.labelingTask.isLabelingTasksStatusesLoading);
   const tasks = useSelector(
     (state: AppState) => state.labelingTask.labelingTasksStatuses.tasks
   );
@@ -54,45 +25,7 @@ export const TasksStatuses: React.FC = () => {
     (state: AppState) => state.labelingTask.labelingTasksStatuses.count
   );
 
-  const [pageValue, setPage] = useState(1);
-  const [rowsPerPageValue, setRowsPerPage] = useState(10);
-
-  const options = {
-    page: pageValue - 1,
-    count: tasksCount,
-    serverSide: true,
-    onTableChange: (action: string, tableState: any) => {
-      switch (action) {
-
-        case 'changePage':
-          setPage(tableState.page + 1);
-          dispatch(getLabelingTasks(
-            currentBucketId,
-            currentDatasetId,
-            tableState.page + 1,
-            rowsPerPageValue
-          ));
-          break;
-
-        case 'changeRowsPerPage': {
-          setRowsPerPage(tableState.rowsPerPage);
-          dispatch(getLabelingTasks(
-            currentBucketId,
-            currentDatasetId,
-            pageValue,
-            tableState.rowsPerPage,
-            undefined
-          ));
-        }
-      }
-    },
-    filterType: 'textField' as "checkbox" | "dropdown" | "multiselect" | "textField" | "custom" | undefined,
-    download: false,
-    print: false,
-    selectableRows: 'none' as "none" | "multiple" | "single" | undefined,
-    rowsPerPageOptions: [10, 25, 50]
-  }
-
+  const dispatch = useDispatch();
   useEffect(() => {
     if (currentBucketId) {
       dispatch(getDatasets(currentBucketId));
@@ -100,16 +33,143 @@ export const TasksStatuses: React.FC = () => {
   }, [dispatch, currentBucketId]);
 
   useEffect(() => {
-    dispatch(getLabelingTasks(currentBucketId, currentDatasetId, pageValue, rowsPerPageValue, undefined));
+    dispatch(getLabelingTasks(currentBucketId, currentDatasetId, pageValue, ROWS_PER_PAGE, filterMap));
   }, []);
+
+  let searchInput: Input | null;
+  const getColumnSearchProps = (dataIndex: string) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={node => {
+            searchInput = node;
+          }}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+    onFilter: (value: string, record: any) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: (visible: boolean) => {
+      if (visible) {
+        setTimeout(() => searchInput && searchInput.select());
+      }
+    },
+    render: (text: string) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text.toString()}
+        />
+      ) : (
+        text
+      ),
+  });
+
+  const TASK_STATUSES_COLUMNS = [
+    {
+      title: 'Task Name',
+      dataIndex: 'name',
+      width: '20%',
+    ...getColumnSearchProps('name')
+    },
+    {
+      title: 'Dataset',
+      dataIndex: 'dataset',
+      width: '20%',
+      ...getColumnSearchProps('dataset')
+    },
+    {
+      title: 'Labeler',
+      dataIndex: 'labeler',
+      ...getColumnSearchProps('labeler')
+    },
+    {
+      title: 'Url',
+      dataIndex: 'url',
+      render: (value: string) => {
+        let hostname = value;
+        let res = /https?:\/\/(.+?)\/.*/.exec(value);
+        if (res && res.length === 2) {
+          hostname = res[1];
+        }
+        return (
+          <a href={value} target="_blank" rel="noopener noreferrer">{hostname}</a>
+        );
+      }
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      ...getColumnSearchProps('status')
+    }
+  ];
+
+  const handleTableChange = (pagination: {pageSize: number, current: number, total: number}) => {
+    setPage((prevState: any) => {
+      if (prevState !== pagination.current) {
+        dispatch(getLabelingTasks(currentBucketId, currentDatasetId, pagination.current, pagination.pageSize, filterMap));
+        return pagination.current;
+      }
+      return prevState;
+    });
+  };
+
+  const handleSearch = (selectedKeys: Array<string>, confirm: any, dataIndex: string) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+    setPage(1);
+
+    setFilterMap((prevState: any) => ({
+      ...prevState, [dataIndex]: selectedKeys[0]
+    }));
+    dispatch(getLabelingTasks(currentBucketId, currentDatasetId, 1, ROWS_PER_PAGE,
+      {...filterMap, [dataIndex]: selectedKeys[0]}));
+  };
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setPage(1);
+    setSearchText('');
+    setFilterMap({});
+    dispatch(getLabelingTasks(currentBucketId, currentDatasetId, 1, ROWS_PER_PAGE, {}));
+  };
 
   return (
       <div className={'task-statuses'}>
-        <MUIDataTable
-            title={TABLE_TITLE}
-            data={tasks}
-            columns={TASK_STATUSES_COLUMNS}
-            options={options}
+        <Table
+          columns={TASK_STATUSES_COLUMNS as any}
+          rowKey={record => record.id}
+          dataSource={tasks}
+          pagination={{
+            pageSize: ROWS_PER_PAGE,
+            current: pageValue,
+            total: tasksCount
+          }}
+          loading={areTasksLoading}
+          onChange={handleTableChange as any}
         />
       </div>
   );
