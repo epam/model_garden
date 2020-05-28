@@ -1,8 +1,8 @@
 export const SET_MEDIA_FILES = 'SET_MEDIA_FILES';
 
-export const UPLOAD_MEDIA_FILES_START = 'UPLOAD_MEDIA_FILES_START';
-export const UPLOAD_MEDIA_FILES_SUCCESS = 'UPLOAD_MEDIA_FILES_SUCCESS';
-export const UPLOAD_MEDIA_FILES_ERROR = 'UPLOAD_MEDIA_FILES_ERROR';
+export const UPLOAD_MEDIA_FILES_TO_S3_START = 'UPLOAD_MEDIA_FILES_TO_S3_START';
+export const UPLOAD_MEDIA_FILES_TO_S3_SUCCESS = 'UPLOAD_MEDIA_FILES_TO_S3_SUCCESS';
+export const UPLOAD_MEDIA_FILES_TO_S3_ERROR = 'UPLOAD_MEDIA_FILES_TO_S3_ERROR';
 export const ADD_EXISTING_DATASET_START = 'ADD_EXISTING_DATASET_START';
 export const ADD_EXISTING_DATASET_SUCCESS = 'ADD_EXISTING_DATASET_SUCCESS';
 
@@ -12,16 +12,16 @@ export interface setMediaFiles {
 }
 
 export interface uploadMediaStart {
-  type: typeof UPLOAD_MEDIA_FILES_START;
+  type: typeof UPLOAD_MEDIA_FILES_TO_S3_START;
 }
 
 export interface uploadMediaSuccess {
-  type: typeof UPLOAD_MEDIA_FILES_SUCCESS;
+  type: typeof UPLOAD_MEDIA_FILES_TO_S3_SUCCESS;
   batchName: string;
 }
 
 export interface uploadMediaError {
-  type: typeof UPLOAD_MEDIA_FILES_ERROR;
+  type: typeof UPLOAD_MEDIA_FILES_TO_S3_ERROR;
 }
 
 export interface addExistingDatasetStart {
