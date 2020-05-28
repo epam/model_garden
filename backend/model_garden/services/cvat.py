@@ -46,7 +46,7 @@ class CvatService:
     finally:
       msg = f'"{method.upper()} {url}"'
       if response is not None:
-        msg += f' {response.status_code} {len(response.content)}'
+        msg += f' {response.status_code} {len(response.content or [])}'
 
       if method == 'post':
         msg += f' {data}'
@@ -54,6 +54,9 @@ class CvatService:
       logger.info(msg)
 
     return response
+
+  def _delete(self, path: str) -> requests.Response:
+    return self._request(method='delete', path=path)
 
   def _get(self, path: str, params: Optional[dict] = None) -> requests.Response:
     return self._request(method='get', path=path, params=params)
@@ -159,3 +162,7 @@ class CvatService:
       tries -= 1
 
     raise CVATServiceException(f"Failed to get annotations [{response.status_code}]: {response.content}")
+
+  def delete_task(self, task_id: int) -> None:
+    self._delete(f"tasks/{task_id}")
+    logger.info('Deleted cvat task %d', task_id)
