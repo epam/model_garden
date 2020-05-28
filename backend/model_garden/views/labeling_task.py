@@ -49,6 +49,17 @@ class LabelingTaskOrderingFilter(OrderingFilter):
     return field
 
 
+class LabelingTaskSearchFilter(SearchFilter):
+  SEARCH_FIELDS_REPLACEMENT = {
+    'labeler': 'labeler__username',
+    'dataset': 'media_assets__dataset__path',
+  }
+
+  def get_search_fields(self, view, request):
+    search_fields = super().get_search_fields(view, request)
+    return [self.SEARCH_FIELDS_REPLACEMENT.get(field, field) for field in search_fields or []]
+
+
 class LabelingTaskViewSet(ModelViewSet):
   queryset = LabelingTask.objects.all()
   serializer_class = LabelingTaskSerializer
@@ -56,7 +67,7 @@ class LabelingTaskViewSet(ModelViewSet):
   filter_backends = [
     DjangoFilterBackend,
     LabelingTaskOrderingFilter,
-    SearchFilter,
+    LabelingTaskSearchFilter,
   ]
   ordering_fields = ('name', 'dataset', 'labeler', 'status', 'url')
   search_fields = ('name', 'dataset', 'labeler', 'status', 'url')
