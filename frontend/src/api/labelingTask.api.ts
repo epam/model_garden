@@ -94,10 +94,6 @@ export const getLabelingTasksRequest = async (
     for (const [key, value] of Object.entries(filterMap)) {
       params[key] = Array(value)[0];
     }
-      /*filterMap.forEach((value: string, key: string) => {
-        params[key] = value[0];
-      });
-    }*/
 
     let resp = await axios.get(
       `http://${backendHostPort}/api/labeling-tasks/`,
