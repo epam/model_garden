@@ -4,9 +4,9 @@ import {
   ADD_EXISTING_DATASET_SUCCESS,
   MediaActionTypes,
   SET_MEDIA_FILES,
-  UPLOAD_MEDIA_FILES_START,
-  UPLOAD_MEDIA_FILES_SUCCESS,
-  UPLOAD_MEDIA_FILES_ERROR
+  UPLOAD_MEDIA_FILES_TO_S3_START,
+  UPLOAD_MEDIA_FILES_TO_S3_SUCCESS,
+  UPLOAD_MEDIA_FILES_TO_S3_ERROR
 } from "./types";
 import { addExistingDatasetRequest, uploadMediaFilesRequest } from "../../api";
 import { setErrorAction } from '../error';
@@ -20,20 +20,20 @@ export function setMediaFiles(files: File[]): MediaActionTypes {
 
 export function uploadMediaFilesStart(): MediaActionTypes {
   return {
-    type: UPLOAD_MEDIA_FILES_START,
+    type: UPLOAD_MEDIA_FILES_TO_S3_START,
   };
 }
 
 export function uploadMediaFilesSuccess(butchName: string): MediaActionTypes {
   return {
-    type: UPLOAD_MEDIA_FILES_SUCCESS,
+    type: UPLOAD_MEDIA_FILES_TO_S3_SUCCESS,
     batchName: butchName
   }
 }
 
 export function uploadMediaFilesError(): MediaActionTypes {
   return {
-    type: UPLOAD_MEDIA_FILES_ERROR
+    type: UPLOAD_MEDIA_FILES_TO_S3_ERROR
   }
 }
 
