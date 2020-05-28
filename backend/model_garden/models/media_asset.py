@@ -31,3 +31,7 @@ class MediaAsset(BaseModel):
   @property
   def remote_path(self):
     return urljoin(self.dataset.bucket.url, quote(self.full_path))
+
+  @property
+  def remote_xml_path(self):
+    return f"{self.remote_path}.xml"
