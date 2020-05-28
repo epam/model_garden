@@ -166,7 +166,7 @@ export const getLabelingTasks = (
   datasetId: string,
   page: number,
   rowsPerPage: number,
-  filterMap?: Map<string, string>
+  filterMap: any
 ): AppThunk => (dispatch) => {
   dispatch(getLabelingTasksStart());
   return getLabelingTasksRequest(bucketId, datasetId, page, rowsPerPage, filterMap)

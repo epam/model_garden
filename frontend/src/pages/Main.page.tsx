@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppBar, Tabs, Tab } from "@material-ui/core";
-import { AddExistingDataset, UploadImages, LabelingTask, TasksStatuses, ErrorAlert } from "../components";
+import { AddExistingDataset, UploadImages, LabelingTask, ErrorAlert } from "../components";
 import { setSelectedMenuItem, getBuckets } from "../store/main";
 import { AppState } from "../store";
+import { TasksStatuses } from "../components/tasksStatuses";
 
 export const MainPage: React.FC = () => {
   const dispatch = useDispatch();
