@@ -33,7 +33,7 @@ export const TasksStatuses: React.FC = () => {
   }, [dispatch, currentBucketId]);
 
   useEffect(() => {
-    dispatch(getLabelingTasks(currentBucketId, currentDatasetId, pageValue, 7, filterMap));
+    dispatch(getLabelingTasks(currentBucketId, currentDatasetId, pageValue, ROWS_PER_PAGE, filterMap));
   }, []);
 
   let searchInput: Input | null;
