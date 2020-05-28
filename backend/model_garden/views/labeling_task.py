@@ -25,8 +25,10 @@ logger = logging.getLogger(__name__)
 
 
 class LabelingTaskFilterSet(filters.FilterSet):
-  labeler = filters.CharFilter(field_name='labeler__username')
-  dataset = filters.CharFilter(field_name='media_assets__dataset__path')
+  name = filters.CharFilter(field_name='name', lookup_expr='icontains')
+  labeler = filters.CharFilter(field_name='labeler__username', lookup_expr='icontains')
+  dataset = filters.CharFilter(field_name='media_assets__dataset__path', lookup_expr='icontains')
+  status = filters.CharFilter(field_name='status', lookup_expr='icontains')
 
   class Meta:
     model = LabelingTask
