@@ -2,7 +2,7 @@ from json import dumps
 from unittest import TestCase, mock
 
 from django.test.utils import override_settings
-from requests import HTTPError
+from requests import HTTPError, Response
 
 from model_garden.services import CvatService, CVATServiceException
 
@@ -218,3 +218,20 @@ class TestCvatService(TestCase):
       )
 
     self.assertEqual(sleep_mock.call_count, 10)
+
+  def test_delete_task(self):
+    resp = Response()
+    resp.status_code = 204
+    self.session_mock.delete.return_value = resp
+
+    CvatService().delete_task(task_id=1)
+
+    self.session_mock.delete.assert_called_once()
+
+  def test_delete_task_failed(self):
+    resp = Response()
+    resp.status_code = 404
+    self.session_mock.delete.return_value = resp
+
+    with self.assertRaises(CVATServiceException):
+      CvatService().delete_task(task_id=1)

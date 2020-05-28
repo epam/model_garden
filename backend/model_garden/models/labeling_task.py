@@ -1,3 +1,4 @@
+from typing import List
 from django.db import models
 
 from model_garden.constants import LabelingTaskStatus
@@ -33,3 +34,20 @@ class LabelingTask(BaseModel):
       f"{self.__class__.__name__}(task_id={self.task_id}, name='{self.name}', status='{self.status}', "
       f"labeler='{self.labeler.username}')"
     )
+
+  @classmethod
+  def fetch_for_archiving(cls, **filters) -> List['LabelingTask']:
+    return list(
+      cls.objects
+      .select_for_update()
+      .exclude(status=LabelingTaskStatus.ARCHIVED)
+      .filter(**filters),
+    )
+
+  @classmethod
+  def update_statuses(
+    cls, tasks: List['LabelingTask'], status: str, *, batch_size=100,
+  ) -> None:
+    for task in tasks:
+      task.status = status
+    cls.objects.bulk_update(tasks, ['status'], batch_size=batch_size)

@@ -160,6 +160,7 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
         "previous": None,
         "results": [
           {
+            "id": labeling_task.id,
             "name": labeling_task.name,
             "dataset": f"/{dataset.path}",
             "labeler": labeling_task.labeler.username,
@@ -342,3 +343,83 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
     self.assertEqual(response.status_code, status.HTTP_200_OK)
     self.assertEqual(response.json()['results'][0]['name'], 'task 2')
     self.assertEqual(response.json()['results'][1]['name'], 'task 1')
+
+  def test_archive_without_task_id(self):
+    response = self.client.patch(
+      path=reverse('labelingtask-archive'),
+      data={},
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    self.assertEqual(response.json(), {'id': ['This field is required.']})
+
+  def test_archive_several_tasks(self):
+    self.cvat_service_mock.delete_task.return_value = None
+
+    tasks = [
+      self.test_factory.create_labeling_task(status=LabelingTaskStatus.ANNOTATION),
+      self.test_factory.create_labeling_task(status=LabelingTaskStatus.COMPLETED),
+    ]
+    archived_ids = [t.id for t in tasks]
+
+    response = self.client.patch(
+      path=reverse('labelingtask-archive'),
+      data={'id': archived_ids},
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertSetEqual(set(response.json()['archived']), set(archived_ids))
+    self.assertListEqual(response.json()['errors'], [])
+
+    self.assertEqual(self.cvat_service_mock.delete_task.call_count, 2)
+
+  def test_archive_skips_already_archived_tasks(self):
+    self.cvat_service_mock.delete_task.return_value = None
+
+    tasks = [
+      self.test_factory.create_labeling_task(status=LabelingTaskStatus.ARCHIVED),
+      self.test_factory.create_labeling_task(status=LabelingTaskStatus.COMPLETED),
+    ]
+    archived_ids = [t.id for t in tasks]
+
+    response = self.client.patch(
+      path=reverse('labelingtask-archive'),
+      data={'id': archived_ids},
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertSetEqual(set(response.json()['archived']), set([archived_ids[1]]))
+    self.assertListEqual(response.json()['errors'], [])
+
+    self.assertEqual(self.cvat_service_mock.delete_task.call_count, 1)
+
+  def test_archive_sends_error_on_failed_cvat_calls(self):
+    self.cvat_service_mock.delete_task.side_effect = [
+      None,
+      CVATServiceException(),
+    ]
+
+    tasks = [
+      self.test_factory.create_labeling_task(status=LabelingTaskStatus.ANNOTATION),
+      self.test_factory.create_labeling_task(status=LabelingTaskStatus.COMPLETED),
+    ]
+    archived_ids = [t.id for t in tasks]
+    expected = archived_ids[:]
+
+    response = self.client.patch(
+      path=reverse('labelingtask-archive'),
+      data={'id': archived_ids},
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    got_archived = response.json()['archived']
+    self.assertEqual(len(got_archived), 1)
+    self.assertIn(got_archived[0], expected)
+    expected.remove(got_archived[0])
+
+    got_errors = response.json()['errors']
+    self.assertEqual(len(got_errors), 1)
+    self.assertIn(got_errors[0]['id'], expected)
+
+    self.assertEqual(self.cvat_service_mock.delete_task.call_count, 2)

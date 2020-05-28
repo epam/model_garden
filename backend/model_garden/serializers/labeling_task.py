@@ -18,6 +18,7 @@ class LabelingTaskSerializer(serializers.ModelSerializer):
   class Meta:
     model = LabelingTask
     fields = (
+      'id',
       'dataset',
       'labeler',
       'name',
@@ -33,3 +34,10 @@ class LabelingTaskSerializer(serializers.ModelSerializer):
 
   def get_labeler(self, obj: Labeler) -> str:
     return obj.labeler.username
+
+
+class LabelingTaskIDSerializer(serializers.Serializer):
+  id = serializers.ListField(
+    child=serializers.IntegerField(),
+    required=True, allow_empty=False, min_length=1,
+  )
