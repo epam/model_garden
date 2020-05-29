@@ -162,6 +162,7 @@ export const TasksStatuses: React.FC = () => {
         <Table
           columns={TASK_STATUSES_COLUMNS as any}
           rowKey={record => record.id}
+          rowClassName={(record) => `task-status-${record.status}`}
           dataSource={tasks}
           pagination={{
             pageSize: ROWS_PER_PAGE,
