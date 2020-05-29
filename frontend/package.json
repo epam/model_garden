@@ -30,7 +30,8 @@
     "@types/node": "^12.12.37",
     "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.7",
-    "@types/react-redux": "^7.1.7"
+    "@types/react-redux": "^7.1.7",
+    "@types/react-router-dom": "^5.1.5"
   },
   "scripts": {
     "start": "react-scripts start",
