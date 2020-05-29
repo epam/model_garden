@@ -439,3 +439,30 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
     self.assertIn(got_errors[0]['id'], expected)
 
     self.assertEqual(self.cvat_service_mock.delete_task.call_count, 2)
+
+  def test_retry(self):
+    labeling_task1 = self.test_factory.create_labeling_task(error='error 1')
+    labeling_task2 = self.test_factory.create_labeling_task(error='error 2')
+
+    response = self.client.patch(
+      path=reverse('labelingtask-retry'),
+      data={'id': [labeling_task2.pk]},
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    labeling_task1.refresh_from_db()
+    labeling_task2.refresh_from_db()
+    self.assertEqual(labeling_task1.error, 'error 1')
+    self.assertIsNone(labeling_task2.error)
+
+  def test_retry_not_found(self):
+    labeling_task = self.test_factory.create_labeling_task(error='some error')
+
+    response = self.client.patch(
+      path=reverse('labelingtask-retry'),
+      data={'id': [777]},
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    labeling_task.refresh_from_db()
+    self.assertEqual(labeling_task.error, 'some error')
