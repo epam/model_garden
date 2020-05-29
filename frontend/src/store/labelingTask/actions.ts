@@ -134,7 +134,10 @@ export const getLabelingToolUsers = (): AppThunk => (dispatch) => {
   dispatch(getLabelingToolUsersStart());
   return getLabelingToolUsersRequest()
     .then((response) => dispatch(getLabelingToolUsersSuccess(response.data)))
-    .catch((error) => dispatch(setErrorAction(error)));
+    .catch((error) => {
+      let errorMessage = error.message ? error: {message:'Error Getting Users'}
+      dispatch(setErrorAction(errorMessage))
+    });
 };
 
 export const getUnsignedImagesCount = (
