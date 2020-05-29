@@ -20,7 +20,7 @@ export const errorReducer = (
     case SET_ERROR:
       return {
         ...state,
-        errorMessage: action.error.message
+        errorMessage: action.error.message || "Network Error"
       }
     case CLEAR_ERROR:
       return {
