@@ -45,6 +45,36 @@ class TestCommand(BaseTransactionTestCase):
     labeling_task.refresh_from_db()
     self.assertEqual(labeling_task.status, LabelingTaskStatus.SAVED)
 
+  def test_handle_get_task_error(self):
+    self.cvat_service_mock.get_task.side_effect = Exception('CVAT error')
+    media_asset = self.test_factory.create_media_asset(assigned=True)
+    labeling_task = media_asset.labeling_task
+
+    management.call_command('process_task_statuses')
+
+    labeling_task.refresh_from_db()
+    self.assertEqual(labeling_task.error, "Failed to get task status: CVAT error")
+
+  def test_handle_get_annotations_error(self):
+    self.cvat_service_mock.get_annotations.side_effect = Exception('CVAT error')
+    media_asset = self.test_factory.create_media_asset(assigned=True)
+    labeling_task = media_asset.labeling_task
+
+    management.call_command('process_task_statuses')
+
+    labeling_task.refresh_from_db()
+    self.assertEqual(labeling_task.error, "Failed to get task annotations: CVAT error")
+
+  def test_handle_s3_upload_error(self):
+    self.s3_client_mock.upload_file_obj.side_effect = Exception('S3 error')
+    media_asset = self.test_factory.create_media_asset(filename='test.jpg', assigned=True)
+    labeling_task = media_asset.labeling_task
+
+    management.call_command('process_task_statuses')
+
+    labeling_task.refresh_from_db()
+    self.assertEqual(labeling_task.error, "Failed to upload task annotations: S3 error")
+
   @mock.patch('model_garden.management.commands.process_task_statuses.logger')
   def test_handle_no_pending_labeling_tasks(self, logger_mock):
     management.call_command('process_task_statuses')
