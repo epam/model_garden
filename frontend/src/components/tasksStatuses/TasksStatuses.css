@@ -5,6 +5,14 @@
     width: 80vw;
 }
 
+.ant-table {
+    color: #000;
+}
+
+.ant-table-tbody > tr > td {
+    border-bottom-color: rgba(0,0,0,0.09);
+}
+
 .task-status-saved > td {
     background-color: #e8f5e9;
 }
