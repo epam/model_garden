@@ -1,20 +1,12 @@
 import { AppThunk } from "../index";
 import {
   MainActionTypes,
-  SET_SELECTED_MENU_ITEM,
   GET_BUCKETS_START,
   GET_BUCKETS_SUCCESS,
 } from "./types";
 import { Bucket } from "../../models";
 import { getBucketsRequest } from "../../api";
 import { setErrorAction } from '../error';
-
-export function setSelectedMenuItem(menuItemIndex: number): MainActionTypes {
-  return {
-    type: SET_SELECTED_MENU_ITEM,
-    menuItemIndex,
-  };
-}
 
 export function getBucketsStart(): MainActionTypes {
   return {
