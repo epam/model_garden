@@ -237,14 +237,14 @@ export const Task: React.FC<TaskProps> = ({
             onChange={validateNumber}
            />
            <TextField 
-            className="task__form-right-item"
-            name="countOfTasks"
-            variant="outlined"
-            label="Count of tasks"
-            type="tel"
-            value={counter.countOfTasks}
-            disabled={!filesCount}
-            onChange={validateNumber}
+              className="task__form-right-item"
+              name="countOfTasks"
+              variant="outlined"
+              label="Count of tasks"
+              type="tel"
+              value={counter.countOfTasks}
+              disabled={!filesCount}
+              onChange={validateNumber}
            />
           </div>
           <Button
