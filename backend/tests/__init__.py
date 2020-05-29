@@ -64,16 +64,17 @@ class Factory:
       self,
       name: Optional[str] = 'Test labeling task',
       status: Optional[str] = LabelingTaskStatus.ANNOTATION,
+      error: Optional[str] = None,
   ):
     self._LABELING_TASK_ID += 1
-    labeling_task = LabelingTask.objects.create(
+    return LabelingTask.objects.create(
       task_id=self._LABELING_TASK_ID,
       name=name,
       status=status,
       labeler=self.create_labeler(),
       url="http://localhost:8080/task/1",
+      error=error,
     )
-    return labeling_task
 
   @staticmethod
   def get_zip_file(*files):

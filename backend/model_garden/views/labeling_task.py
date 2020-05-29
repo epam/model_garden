@@ -147,6 +147,7 @@ class LabelingTaskViewSet(ModelViewSet):
   @action(methods=["PATCH"], detail=False)
   def archive(self, request: Request) -> Response:
     """Change status of specified tasks and delete them in CVAT.
+
     Tasks that have been archived will be skipped as well as task IDs that
     are not exist.
 
@@ -195,3 +196,22 @@ class LabelingTaskViewSet(ModelViewSet):
       },
       status=status.HTTP_200_OK,
     )
+
+  @action(methods=["PATCH"], detail=False)
+  def retry(self, request: Request) -> Response:
+    """Retry specified tasks.
+
+    Request::
+    {"id": [<task_id>]}
+
+    Response::
+    {}
+    """
+    ids_serializer = LabelingTaskIDSerializer(data=request.data)
+    ids_serializer.is_valid(raise_exception=True)
+    labeling_tasks_ids = ids_serializer.data['id']
+
+    LabelingTask.objects.filter(pk__in=labeling_tasks_ids).exclude(error__isnull=True).update(error=None)
+    logger.info(f"Retrying labeling tasks: {labeling_tasks_ids}")
+
+    return Response()
