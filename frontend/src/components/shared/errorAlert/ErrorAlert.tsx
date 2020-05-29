@@ -17,6 +17,10 @@ export const ErrorAlert: React.FC = () => {
     dispatch(clearError());
   };
 
+  if(!errorMessage){
+    return null;
+  }
+
   return (
     <div className="error-alert-container" >
       <Container
