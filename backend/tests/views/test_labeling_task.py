@@ -166,6 +166,7 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
             "labeler": labeling_task.labeler.username,
             "url": 'http://localhost:8080/task/1',
             "status": labeling_task.status,
+            "error": None,
           },
         ],
       },

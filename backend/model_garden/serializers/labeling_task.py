@@ -24,6 +24,7 @@ class LabelingTaskSerializer(serializers.ModelSerializer):
       'name',
       'status',
       'url',
+      'error',
     )
     read_only_fields = fields
 
@@ -39,5 +40,7 @@ class LabelingTaskSerializer(serializers.ModelSerializer):
 class LabelingTaskIDSerializer(serializers.Serializer):
   id = serializers.ListField(
     child=serializers.IntegerField(),
-    required=True, allow_empty=False, min_length=1,
+    required=True,
+    allow_empty=False,
+    min_length=1,
   )

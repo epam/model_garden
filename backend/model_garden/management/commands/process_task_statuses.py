@@ -2,8 +2,8 @@ import logging
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from io import BytesIO
-from zipfile import ZipFile
 from typing import List
+from zipfile import ZipFile
 
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
@@ -32,7 +32,9 @@ class Command(BaseCommand):
             LabelingTaskStatus.ANNOTATION,
             LabelingTaskStatus.VALIDATION,
             LabelingTaskStatus.COMPLETED,
-          ))
+          ),
+          error__isnull=True,
+        )
         .order_by("updated_at")
         [:settings.TASK_STATUSES_WORKER_CHUNK_SIZE],
       )
@@ -45,7 +47,7 @@ class Command(BaseCommand):
     except Exception as e:
       raise CommandError(f"Failed to process labeling tasks: {e}")
 
-  def _process_labeling_tasks(self, labeling_tasks: List[LabelingTask]):
+  def _process_labeling_tasks(self, labeling_tasks: List[LabelingTask]) -> None:
     logger.info(f"Processing {len(labeling_tasks)} labeling tasks")
 
     # NOTE: Make sure we get the "oldest" tasks every time, so we need to update
@@ -54,34 +56,43 @@ class Command(BaseCommand):
 
     # update labeling tasks statuses
     labeling_tasks_to_upload = []
-    for labeling_task, cvat_task in self._get_cvat_statuses(labeling_tasks=labeling_tasks):
-      if labeling_task.status in (LabelingTaskStatus.ANNOTATION, LabelingTaskStatus.VALIDATION):
-        cvat_task_status = cvat_task.get('status')
-        if cvat_task_status is not None and labeling_task.status != cvat_task_status:
-          labeling_task.status = cvat_task_status
-          labeling_task.save(update_fields=('status', 'updated_at'))
+    for labeling_task, result_future in self._get_cvat_statuses(labeling_tasks=labeling_tasks):
+      try:
+        cvat_task = result_future.result()
+      except Exception as e:
+        labeling_task.set_error(error=f"Failed to get task status: {e}")
+      else:
+        if labeling_task.status in (LabelingTaskStatus.ANNOTATION, LabelingTaskStatus.VALIDATION):
+          cvat_task_status = cvat_task.get('status')
+          if cvat_task_status is not None and labeling_task.status != cvat_task_status:
+            labeling_task.update_status(status=cvat_task_status)
 
-      if labeling_task.status == LabelingTaskStatus.COMPLETED:
-        labeling_tasks_to_upload.append(labeling_task)
+        if labeling_task.status == LabelingTaskStatus.COMPLETED:
+          labeling_tasks_to_upload.append(labeling_task)
 
     # upload annotations
-    logger.info(f"Uploading annotations for {len(labeling_tasks_to_upload)} labeling tasks")
-    with ThreadPoolExecutor() as executor:
-      for labeling_task in executor.map(self._upload_labeling_task_annotations, labeling_tasks_to_upload):
-        labeling_task.status = LabelingTaskStatus.SAVED
-        labeling_task.save(update_fields=('status', 'updated_at'))
+    for labeling_task, result_future in self._upload_annotations(labeling_tasks=labeling_tasks_to_upload):
+      try:
+        result_future.result()
+      except Exception as e:
+        labeling_task.set_error(error=f"{e}")
+      else:
+        labeling_task.update_status(status=LabelingTaskStatus.SAVED)
 
-  def _get_cvat_statuses(self, labeling_tasks):
+  def _get_cvat_statuses(self, labeling_tasks: List[LabelingTask]):
     with ThreadPoolExecutor() as executor:
       future_to_labeling_task = {executor.submit(self._cvat_service.get_task, t.task_id): t for t in labeling_tasks}
       for future in as_completed(future_to_labeling_task):
         labeling_task = future_to_labeling_task[future]
-        try:
-          cvat_task = future.result()
-        except Exception as e:
-          raise Exception(f"Failed to process {labeling_task}: {e}")
-        else:
-          yield labeling_task, cvat_task
+        yield labeling_task, future
+
+  def _upload_annotations(self, labeling_tasks: List[LabelingTask]):
+    logger.info(f"Uploading annotations for {len(labeling_tasks)} labeling tasks")
+    with ThreadPoolExecutor() as executor:
+      future_to_labeling_task = {executor.submit(self._upload_labeling_task_annotations, t): t for t in labeling_tasks}
+      for future in as_completed(future_to_labeling_task):
+        labeling_task = future_to_labeling_task[future]
+        yield labeling_task, future
 
   def _upload_labeling_task_annotations(self, labeling_task: LabelingTask):
     try:
@@ -90,7 +101,7 @@ class Command(BaseCommand):
         task_name=labeling_task.name,
       )
     except Exception as e:
-      raise Exception(f"Failed to get annotations for task with pk={labeling_task.pk}: {e}")
+      raise Exception(f"Failed to get task annotations: {e}")
 
     zip_fp = BytesIO(annotations_content_zip)
     zf = ZipFile(file=zip_fp)
@@ -114,8 +125,8 @@ class Command(BaseCommand):
           )
           logger.info(f"Uploaded annotation '{annotation_full_path}'")
         else:
-          raise Exception(f"Annotation file not found: '{asset_filename}'")
+          raise Exception(f"Media asset annotation file not found: '{asset_filename}'")
       except Exception as e:
-        logger.error(f"Failed to process annotation: {e}")
+        raise Exception(f"Failed to upload task annotations: {e}")
 
     return labeling_task

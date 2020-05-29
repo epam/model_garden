@@ -25,6 +25,7 @@ class LabelingTask(BaseModel):
     related_name='labeling_tasks',
   )
   url = models.CharField(max_length=128)
+  error = models.TextField(null=True, blank=True)
 
   class Meta:
     ordering = ('-created_at',)
@@ -44,6 +45,10 @@ class LabelingTask(BaseModel):
       .filter(**filters),
     )
 
+  def update_status(self, status: str) -> None:
+    self.status = status
+    self.save(update_fields=('status', 'updated_at'))
+
   @classmethod
   def update_statuses(
     cls, tasks: List['LabelingTask'], status: str, *, batch_size=100,
@@ -51,3 +56,11 @@ class LabelingTask(BaseModel):
     for task in tasks:
       task.status = status
     cls.objects.bulk_update(tasks, ['status'], batch_size=batch_size)
+
+  def set_error(self, error: str) -> None:
+    self.error = error
+    self.save(update_fields=('error', 'updated_at'))
+
+  def reset_error(self) -> None:
+    self.error = None
+    self.save(update_fields=('error', 'updated_at'))
