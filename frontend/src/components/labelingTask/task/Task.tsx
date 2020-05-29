@@ -54,24 +54,24 @@ export const Task: React.FC<TaskProps> = ({
   newTask,
 }: TaskProps) => {
   const [selectedDataset, setSelectedDataset] = useState('');
+  const [counter, setCounter] = useState({
+    filesInTask: DEFAULT_FORM_DATA.FILES_IN_TASK_VALUE.toString(),
+    countOfTasks: DEFAULT_FORM_DATA.COUNT_OF_TASKS.toString()
+  })
   const dispatch = useDispatch();
 
-  const { handleSubmit, getValues, setValue, control, watch } = useForm<FormData>({
+  const { handleSubmit, setValue, control, watch } = useForm<FormData>({
     defaultValues: {
       taskName: DEFAULT_FORM_DATA.TASK_NAME,
       user: DEFAULT_FORM_DATA.USER,
-      filesInTask: DEFAULT_FORM_DATA.FILES_IN_TASK_VALUE,
-      countOfTasks: DEFAULT_FORM_DATA.COUNT_OF_TASKS,
     },
   });
 
   const {
     taskName: taskNameValue,
     user: userValue,
-    filesInTask: filesInTaskValue,
-    countOfTasks: countOfTasksValue
   } = watch([
-      'taskName', 'user', 'filesInTask', 'countOfTasks']);
+      'taskName', 'user']);
 
   useEffect(() => {
     setValue("taskName", taskName);
@@ -89,6 +89,8 @@ export const Task: React.FC<TaskProps> = ({
   }, [dispatch, currentBucketId]);
 
   const onSubmit = handleSubmit((data: FormData) => {
+    data.filesInTask = Number(counter.filesInTask);
+    data.countOfTasks = Number(counter.countOfTasks);
     handleTaskSubmit(data);
   });
 
@@ -98,8 +100,7 @@ export const Task: React.FC<TaskProps> = ({
       setSelectedDataset("");
       dispatch(setCurrentDatasetId(""));
       dispatch(getUnsignedImagesCountSuccess(0));
-      setValue("filesInTask", 0);
-      setValue("countOfTasks", 0);
+      setCounter({filesInTask: '0', countOfTasks: '0'});
     },
     [newTask]
   );
@@ -139,13 +140,24 @@ export const Task: React.FC<TaskProps> = ({
       </MenuItem>
   ));
 
-  const validateNumber = (propName: string) => {
+  const validateNumber = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const name = event.target.name;
+    let value = event.target.value;
+    const isNum = /^\d+$/;
 
-      const value: string = getValues(propName);
-      if (value !== undefined && (value === '' || Number.parseFloat(value) < 0)) {
-        setValue(propName, 0);
+    if (!isNum.test(value) && value !== "") {
+      return;
+    }
+    else {
+      if (isNum.test(value) &&  Number(value) > filesCount) {
+        value = filesCount.toString();
       }
 
+      setCounter((counter) => ({
+        ...counter,
+        [name]: value
+      }));
+    }
   }
 
   return (
@@ -214,34 +226,26 @@ export const Task: React.FC<TaskProps> = ({
             </FormControl>
           </div>
           <div className="task__form-group">
-            <Controller
-              className="task__form-left-item"
-              name="filesInTask"
-              variant="outlined"
-              label="Files in task"
-              control={control}
-              as={
-                <TextField
-                  type="number"
-                  inputProps={{ min: 0, max: filesCount }}
-                  onChange={validateNumber('filesInTask') as ((event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void) | undefined}
-                />
-              }
-            />
-            <Controller
+          <TextField 
+            className="task__form-left-item"
+            name="filesInTask"
+            variant="outlined"
+            label="Files in task"
+            type="tel"
+            value={counter.filesInTask}
+            disabled={!filesCount}
+            onChange={validateNumber}
+           />
+           <TextField 
               className="task__form-right-item"
               name="countOfTasks"
               variant="outlined"
               label="Count of tasks"
-              control={control}
-              as={
-                <TextField
-                  type="number"
-                  inputProps={{ min: 0, max: filesCount }}
-                  onChange={validateNumber('countOfTasks') as ((event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void) | undefined}
-                />
-              }
-            />
+              type="tel"
+              value={counter.countOfTasks}
+              disabled={!filesCount}
+              onChange={validateNumber}
+           />
           </div>
           <Button
             className="task__form-item"
@@ -253,8 +257,8 @@ export const Task: React.FC<TaskProps> = ({
             || selectedDataset === DEFAULT_FORM_DATA.DATASET
             || taskNameValue === DEFAULT_FORM_DATA.TASK_NAME
             || userValue === DEFAULT_FORM_DATA.USER
-            || Number(countOfTasksValue) === DEFAULT_FORM_DATA.COUNT_OF_TASKS
-            || Number(filesInTaskValue) === DEFAULT_FORM_DATA.FILES_IN_TASK_VALUE
+            || Number(counter.countOfTasks) === DEFAULT_FORM_DATA.COUNT_OF_TASKS
+            || Number(counter.filesInTask) === DEFAULT_FORM_DATA.FILES_IN_TASK_VALUE
             }
           >
             Assign
