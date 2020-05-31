@@ -26,10 +26,8 @@ class TestCommand(BaseTransactionTestCase):
     super().tearDown()
 
   def test_handle(self):
-    labeling_task = self.test_factory.create_labeling_task()
-    media_asset = self.test_factory.create_media_asset(filename='test.jpg')
-    media_asset.labeling_task = labeling_task
-    media_asset.save(update_fields=('labeling_task',))
+    media_asset = self.test_factory.create_media_asset(filename='test.jpg', assigned=True)
+    labeling_task = media_asset.labeling_task
 
     management.call_command('process_task_statuses')
 
@@ -44,6 +42,15 @@ class TestCommand(BaseTransactionTestCase):
     )
     labeling_task.refresh_from_db()
     self.assertEqual(labeling_task.status, LabelingTaskStatus.SAVED)
+
+  @mock.patch("model_garden.management.commands.process_task_statuses.Command._process_labeling_tasks")
+  def test_handle_raises(self, process_labeling_tasks_mock):
+    self.test_factory.create_media_asset(assigned=True)
+
+    process_labeling_tasks_mock.side_effect = Exception("command error")
+
+    with self.assertRaisesRegex(Exception, "Failed to process labeling tasks: command error"):
+      management.call_command('process_task_statuses')
 
   def test_handle_get_task_error(self):
     self.cvat_service_mock.get_task.side_effect = Exception('CVAT error')
@@ -74,6 +81,15 @@ class TestCommand(BaseTransactionTestCase):
 
     labeling_task.refresh_from_db()
     self.assertEqual(labeling_task.error, "Failed to upload task annotations: S3 error")
+
+  def test_handle_missing_task_annotations(self):
+    media_asset = self.test_factory.create_media_asset(filename='test2.jpg', assigned=True)
+    labeling_task = media_asset.labeling_task
+
+    management.call_command('process_task_statuses')
+
+    labeling_task.refresh_from_db()
+    self.assertEqual(labeling_task.error, "Missing task annotations: test2.xml")
 
   @mock.patch('model_garden.management.commands.process_task_statuses.logger')
   def test_handle_no_pending_labeling_tasks(self, logger_mock):

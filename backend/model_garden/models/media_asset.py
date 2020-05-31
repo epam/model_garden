@@ -29,6 +29,10 @@ class MediaAsset(BaseModel):
     return f"{self.dataset.path}/{self.filename}"
 
   @property
+  def full_xml_path(self):
+    return f"{self.full_path}.xml"
+
+  @property
   def remote_path(self):
     return urljoin(self.dataset.bucket.url, quote(self.full_path))
 
