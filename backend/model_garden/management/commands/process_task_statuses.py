@@ -75,6 +75,7 @@ class Command(BaseCommand):
       try:
         result_future.result()
       except Exception as e:
+        logger.error(f"{e}")
         labeling_task.set_error(error=f"{e}")
       else:
         labeling_task.update_status(status=LabelingTaskStatus.SAVED)
@@ -105,28 +106,26 @@ class Command(BaseCommand):
 
     zip_fp = BytesIO(annotations_content_zip)
     zf = ZipFile(file=zip_fp)
-    annotation_filenames = {}
-    for zip_info in zf.filelist:
-      if zip_info.filename.startswith('Annotations'):
-        annotation_filename, _ = os.path.splitext(os.path.split(zip_info.filename)[-1])
-        annotation_filenames[annotation_filename] = zf.open(zip_info)
+    annotation_filenames = {
+      os.path.split(zi.filename)[-1]: zf.open(zi) for zi in zf.filelist if zi.filename.startswith('Annotations')
+    }
 
-    for media_asset in labeling_task.media_assets.all():
+    media_assets = labeling_task.media_assets.all()
+    media_assets_filenames = {f"{os.path.splitext(media_asset.filename)[0]}.xml" for media_asset in media_assets}
+    missing_annotation_filenames = media_assets_filenames - set(annotation_filenames)
+    if missing_annotation_filenames:
+      raise Exception(f"Missing task annotations: {', '.join(sorted(missing_annotation_filenames))}")
+
+    for media_asset in media_assets:
       try:
-        asset_filename, _ = os.path.splitext(media_asset.filename)
-        if asset_filename in annotation_filenames:
-          bucket_name = media_asset.dataset.bucket.name
-          annotation_full_path = f"{media_asset.full_path}.xml"
-          s3_client = S3Client(bucket_name=bucket_name)
-          s3_client.upload_file_obj(
-            file_obj=annotation_filenames[asset_filename],
-            bucket=bucket_name,
-            key=annotation_full_path,
-          )
-          logger.info(f"Uploaded annotation '{annotation_full_path}'")
-        else:
-          raise Exception(f"Media asset annotation file not found: '{asset_filename}'")
+        asset_filename = os.path.splitext(media_asset.filename)[0]
+        bucket_name = media_asset.dataset.bucket.name
+        s3_client = S3Client(bucket_name=bucket_name)
+        s3_client.upload_file_obj(
+          file_obj=annotation_filenames[f"{asset_filename}.xml"],
+          bucket=bucket_name,
+          key=media_asset.full_xml_path,
+        )
+        logger.info(f"Uploaded annotation '{media_asset.full_xml_path}'")
       except Exception as e:
         raise Exception(f"Failed to upload task annotations: {e}")
-
-    return labeling_task
