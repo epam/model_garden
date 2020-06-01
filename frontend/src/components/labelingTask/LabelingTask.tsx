@@ -1,7 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./LabelingTask.css";
 import { Task, FormData } from "./task";
 import { useSelector, useDispatch } from "react-redux";
+import { Snackbar } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import { AppState } from "../../store";
 import {
   getDatasets,
@@ -20,6 +22,7 @@ export const LabelingTask: React.FC = () => {
   const users = useSelector((state: AppState) => state.labelingTask.labelingToolUsers);
   const unsignedImagesCount = useSelector((state: AppState) => state.labelingTask.unsignedImagesCount);
   const newTask = useSelector((state: AppState) => state.labelingTask.newTask);
+  const [error,setError] = useState("");
 
   useEffect(() => {
     dispatch(getLabelingToolUsers());
@@ -36,18 +39,21 @@ export const LabelingTask: React.FC = () => {
   };
 
   const handleTaskSubmit = (data: FormData) => {
-    dispatch(
-      createLabelingTask({
-        task_name: data.taskName,
-        dataset_id: currentDatasetId,
-        assignee_id: data.user,
-        files_in_task: data.filesInTask,
-        count_of_tasks: data.countOfTasks,
-      } as LabelingTaskRequestData)
-    );
+  (   dispatch(
+    createLabelingTask({
+      task_name: data.taskName,
+      dataset_id: currentDatasetId,
+      assignee_id: data.user,
+      files_in_task: data.filesInTask,
+      count_of_tasks: data.countOfTasks,
+    } as LabelingTaskRequestData)
+  )   as any ) .catch(
+    () => setError("Failed to create labeling task")
+  )
   };
 
   return (
+   <>
     <Task
       users={users}
       taskName={(datasets.get(currentDatasetId) || {path: ""}).path}
@@ -59,5 +65,15 @@ export const LabelingTask: React.FC = () => {
       onDataSetChange={handleGetUnsignedImagesCount}
       newTask={newTask}
     />
+
+    <Snackbar open={error !== ""}
+              autoHideDuration={6000}
+              onClose={ ()=>{ setError("") }}
+              anchorOrigin={{vertical: 'top', horizontal: 'right'}}>
+      <Alert onClose={()=>{ setError("") }} severity="error">
+        {error}
+      </Alert>
+    </Snackbar>
+   </>
   );
 };
