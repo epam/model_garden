@@ -4,6 +4,7 @@ import { AppBar } from '@material-ui/core';
 import { useLocation, Redirect } from 'react-router-dom';
 import { ErrorAlert } from './components';
 import { getBuckets } from './store/main';
+import { getLabelingToolUsers } from './store/labelingTask'
 import { Tabs, LinkTabs } from './routerconfig';
 
 import './App.css';
@@ -14,6 +15,7 @@ const App: FC = () => {
 
   useEffect(() => {
     dispatch(getBuckets());
+    dispatch(getLabelingToolUsers());
   }, [dispatch]);
 
   if (pathname === '/') {
