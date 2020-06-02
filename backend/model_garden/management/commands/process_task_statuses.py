@@ -60,7 +60,7 @@ class Command(BaseCommand):
       try:
         cvat_task = result_future.result()
       except Exception as e:
-        labeling_task.set_error(error=f"Failed to get task status: {e}")
+        labeling_task.set_failed(error=f"Failed to get task status: {e}")
       else:
         if labeling_task.status in (LabelingTaskStatus.ANNOTATION, LabelingTaskStatus.VALIDATION):
           cvat_task_status = cvat_task.get('status')
@@ -76,7 +76,7 @@ class Command(BaseCommand):
         result_future.result()
       except Exception as e:
         logger.error(f"{e}")
-        labeling_task.set_error(error=f"{e}")
+        labeling_task.set_failed(error=f"{e}")
       else:
         labeling_task.update_status(status=LabelingTaskStatus.SAVED)
 

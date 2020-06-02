@@ -211,7 +211,12 @@ class LabelingTaskViewSet(ModelViewSet):
     ids_serializer.is_valid(raise_exception=True)
     labeling_tasks_ids = ids_serializer.data['id']
 
-    LabelingTask.objects.filter(pk__in=labeling_tasks_ids).exclude(error__isnull=True).update(error=None)
+    (
+      LabelingTask.objects
+      .filter(pk__in=labeling_tasks_ids)
+      .exclude(error__isnull=True)
+      .update(status=LabelingTaskStatus.ANNOTATION, error=None)
+    )
     logger.info(f"Retrying labeling tasks: {labeling_tasks_ids}")
 
     return Response()

@@ -16,6 +16,7 @@ class LabelingTask(BaseModel):
       (LabelingTaskStatus.COMPLETED, "Completed"),
       (LabelingTaskStatus.SAVED, "Saved"),
       (LabelingTaskStatus.ARCHIVED, "Archived"),
+      (LabelingTaskStatus.FAILED, "Failed"),
     ],
     default=LabelingTaskStatus.ANNOTATION,
   )
@@ -50,17 +51,12 @@ class LabelingTask(BaseModel):
     self.save(update_fields=('status', 'updated_at'))
 
   @classmethod
-  def update_statuses(
-    cls, tasks: List['LabelingTask'], status: str, *, batch_size=100,
-  ) -> None:
+  def update_statuses(cls, tasks: List['LabelingTask'], status: str, *, batch_size=100) -> None:
     for task in tasks:
       task.status = status
     cls.objects.bulk_update(tasks, ['status'], batch_size=batch_size)
 
-  def set_error(self, error: str) -> None:
+  def set_failed(self, error: str) -> None:
+    self.status = LabelingTaskStatus.FAILED
     self.error = error
-    self.save(update_fields=('error', 'updated_at'))
-
-  def reset_error(self) -> None:
-    self.error = None
-    self.save(update_fields=('error', 'updated_at'))
+    self.save(update_fields=('status', 'error', 'updated_at'))
