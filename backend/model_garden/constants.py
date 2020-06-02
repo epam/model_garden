@@ -8,6 +8,7 @@ class LabelingTaskStatus:
   COMPLETED = "completed"
   SAVED = "saved"
   ARCHIVED = "archived"
+  FAILED = "failed"
 
 
 IMAGE_EXTENSIONS = {

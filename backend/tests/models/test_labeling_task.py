@@ -49,19 +49,10 @@ class TestLabelingTask(BaseTestCase):
     for got in LabelingTask.objects.filter(pk__in=[t.id for t in tasks]).all():
       self.assertEqual(got.status, LabelingTaskStatus.ARCHIVED)
 
-  def test_set_error(self):
+  def test_set_failed(self):
     labeling_task = self.test_factory.create_labeling_task()
 
-    labeling_task.set_error(error='some error')
+    labeling_task.set_failed(error='some error')
 
     labeling_task.refresh_from_db()
     self.assertEqual(labeling_task.error, 'some error')
-
-  def test_reset_error(self):
-    labeling_task = self.test_factory.create_labeling_task()
-    labeling_task.set_error(error='some error')
-
-    labeling_task.reset_error()
-
-    labeling_task.refresh_from_db()
-    self.assertIsNone(labeling_task.error)
