@@ -72,7 +72,7 @@ export const LabelingTask: React.FC = () => {
       setShowLoader={setShowLoader}
     />
 
-    { showLoader && <ProgressLoader /> }
+    <ProgressLoader show={showLoader} />
     <Snackbar open={error !== ""}
               autoHideDuration={6000}
               onClose={ ()=>{ setError("") }}

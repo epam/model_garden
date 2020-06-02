@@ -111,7 +111,7 @@ export const UploadImages: React.FC = () => {
           </div>
         </form>
       </FormContainer>
-      { showLoader && <ProgressLoader /> }
+      <ProgressLoader show={showLoader} />
     </div>
   );
 };
