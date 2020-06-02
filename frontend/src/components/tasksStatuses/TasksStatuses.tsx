@@ -5,8 +5,9 @@ import {Table, Input, Button, Space} from 'antd';
 import {SearchOutlined} from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import './TasksStatuses.css';
+import {DropdownButton} from './DropdownButton';
 import {AppState} from '../../store';
-import {getDatasets, getLabelingTasks} from '../../store/labelingTask';
+import {archiveTask, getDatasets, getLabelingTasks, retryLabelingTask} from '../../store/labelingTask';
 import {ROWS_PER_PAGE} from './constants';
 
 export const TasksStatuses: React.FC = () => {
@@ -14,6 +15,7 @@ export const TasksStatuses: React.FC = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [filterMap, setFilterMap] = useState({});
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const currentBucketId = useSelector((state: AppState) => state.labelingTask.currentBucketId);
   const currentDatasetId = useSelector((state: AppState) => state.labelingTask.currentDatasetId);
@@ -157,11 +159,40 @@ export const TasksStatuses: React.FC = () => {
     dispatch(getLabelingTasks(currentBucketId, currentDatasetId, 1, ROWS_PER_PAGE, {}));
   };
 
+  const onSelectChange = (values: Array<number & never>) => {
+    setSelectedRowKeys(values);
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+
+  const handleArchive: any = () => {
+    if (selectedRowKeys.length > 0) {
+    (dispatch(archiveTask(selectedRowKeys)) as any)
+      .then(() => {
+        dispatch(getLabelingTasks(currentBucketId, currentDatasetId, 1, ROWS_PER_PAGE, {}));
+      })
+    }
+  }
+
+  const handleRetry: any = () => {
+    if (selectedRowKeys.length > 0) {
+      (dispatch(retryLabelingTask(selectedRowKeys)) as any)
+        .then(() => {
+          dispatch(getLabelingTasks(currentBucketId, currentDatasetId, 1, ROWS_PER_PAGE, {}));
+        })
+    }
+  }
+
   return (
       <div className={'task-statuses'}>
+        <DropdownButton onArchive={handleArchive} onRetry={handleRetry}/>
         <Table
           columns={TASK_STATUSES_COLUMNS as any}
           rowKey={record => record.id}
+          rowSelection={rowSelection as any}
           rowClassName={(record) => `task-status-${record.status}`}
           dataSource={tasks}
           pagination={{
