@@ -4,6 +4,7 @@ import { Task, FormData } from "./task";
 import { useSelector, useDispatch } from "react-redux";
 import { Snackbar } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
+import { ProgressLoader } from "../shared";
 import { AppState } from "../../store";
 import {
   getDatasets,
@@ -23,6 +24,7 @@ export const LabelingTask: React.FC = () => {
   const unsignedImagesCount = useSelector((state: AppState) => state.labelingTask.unsignedImagesCount);
   const newTask = useSelector((state: AppState) => state.labelingTask.newTask);
   const [error,setError] = useState("");
+  const [showLoader, setShowLoader] = useState(false);
 
   useEffect(() => {
     dispatch(getLabelingToolUsers());
@@ -39,17 +41,20 @@ export const LabelingTask: React.FC = () => {
   };
 
   const handleTaskSubmit = (data: FormData) => {
-  (   dispatch(
-    createLabelingTask({
-      task_name: data.taskName,
-      dataset_id: currentDatasetId,
-      assignee_id: data.user,
-      files_in_task: data.filesInTask,
-      count_of_tasks: data.countOfTasks,
-    } as LabelingTaskRequestData)
-  )   as any ) .catch(
-    () => setError("Failed to create labeling task")
-  )
+    (dispatch(
+      createLabelingTask({
+        task_name: data.taskName,
+        dataset_id: currentDatasetId,
+        assignee_id: data.user,
+        files_in_task: data.filesInTask,
+        count_of_tasks: data.countOfTasks
+      } as LabelingTaskRequestData)
+    ) as any)
+      .then(() => setShowLoader(false))
+      .catch(() => {
+        setShowLoader(false);
+        setError("Failed to create labeling task");
+      });
   };
 
   return (
@@ -64,8 +69,10 @@ export const LabelingTask: React.FC = () => {
       currentBucketId={currentBucketId}
       onDataSetChange={handleGetUnsignedImagesCount}
       newTask={newTask}
+      setShowLoader={setShowLoader}
     />
 
+    <ProgressLoader show={showLoader} />
     <Snackbar open={error !== ""}
               autoHideDuration={6000}
               onClose={ ()=>{ setError("") }}
