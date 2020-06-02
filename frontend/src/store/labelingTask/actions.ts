@@ -26,6 +26,8 @@ import {
   getLabelingToolUsersRequest,
   getUnsignedImagesCountRequest,
   getLabelingTasksRequest,
+  archiveTaskRequest,
+  retryLabelingTaskRequest
 } from "../../api";
 import { LabelingToolUser } from "../../models/labelingToolUser";
 import { setErrorAction } from '../error';
@@ -175,4 +177,20 @@ export const getLabelingTasks = (
   return getLabelingTasksRequest(bucketId, datasetId, page, rowsPerPage, filterMap)
     .then((tasksData) => dispatch(getLabelingTasksSuccess(tasksData)))
     .catch((error) => dispatch(setErrorAction(error)));
+};
+
+export const archiveTask = (
+  taskData: Array<number>
+): AppThunk => (dispatch) => {
+  dispatch(createLabelingTaskStart());
+  return archiveTaskRequest(taskData)
+    .catch((error: any) => dispatch(setErrorAction(error)));
+};
+
+export const retryLabelingTask = (
+  taskData: Array<number>
+): AppThunk => (dispatch) => {
+  dispatch(createLabelingTaskStart());
+  return retryLabelingTaskRequest(taskData)
+    .catch((error: any) => dispatch(setErrorAction(error)));
 };

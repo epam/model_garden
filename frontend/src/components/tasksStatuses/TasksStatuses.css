@@ -20,3 +20,13 @@
 .task-status-saved:hover > td {
     background-color: #e3f2e4 !important;
 }
+
+.ant-btn {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+.ant-row-rtl .ant-btn {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+    margin-left: 0.5rem;
+}

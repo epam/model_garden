@@ -111,3 +111,37 @@ export const getLabelingTasksRequest = async (
     }
   }
 };
+
+export const archiveTaskRequest = async (
+  taskIds: Array<number>,
+) => {
+  try {
+    return await axios.patch(
+      `http://${backendHostPort}/api/labeling-tasks/archive/`,
+      {id: taskIds}
+    );
+  } catch (error) {
+    if (error && error.response) {
+      throw new Error(error.response.data.message);
+    } else {
+      throw error;
+    }
+  }
+};
+
+export const retryLabelingTaskRequest = async (
+  taskIds: Array<number>,
+) => {
+  try {
+    return await axios.patch(
+      `http://${backendHostPort}/api/labeling-tasks/retry/`,
+      {id: taskIds}
+    );
+  } catch (error) {
+    if (error && error.response) {
+      throw new Error(error.response.data.message);
+    } else {
+      throw error;
+    }
+  }
+};
