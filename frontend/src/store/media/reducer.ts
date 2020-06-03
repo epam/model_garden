@@ -11,7 +11,6 @@ import {
 export interface MediaState {
   addedMediaAssets?: number;
   addingExistingDataSet: boolean;
-  isUploading: boolean;
   mediaFiles: File[];
   batchName: string;
 }
@@ -19,7 +18,6 @@ export interface MediaState {
 const initialState: MediaState = {
   addedMediaAssets: undefined,
   addingExistingDataSet: false,
-  isUploading: false,
   mediaFiles: [],
   batchName: ''
 };
@@ -36,19 +34,16 @@ export const mediaReducer = (
       }
     case UPLOAD_MEDIA_FILES_START:
       return {
-        ...state,
-        isUploading: true
+        ...state
       }
     case UPLOAD_MEDIA_FILES_SUCCESS:
       return {
         ...state,
-        isUploading: false,
         batchName: action.batchName
       }
     case UPLOAD_MEDIA_FILES_ERROR:
       return {
-        ...state,
-        isUploading: false
+        ...state
       }
     case ADD_EXISTING_DATASET_START:
       return {
