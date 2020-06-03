@@ -89,7 +89,7 @@ def delete_files_in_s3(bucket: str, keys: List[str]) -> List[DeleteError]:
 
   client = S3Client(bucket_name=bucket)
 
-  errors = client.delete_files(*keys)
+  errors = client.delete_files_concurrent(*keys)
 
   if errors:
     logger.error(
