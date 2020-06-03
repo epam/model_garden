@@ -1,3 +1,4 @@
+import os
 from collections import namedtuple
 from typing import Iterable
 from unittest import TestCase, mock
@@ -134,6 +135,41 @@ class TestS3Client(TestCase):
         version_id='string2',
       ),
     )
+
+  def test_delete_files_cuncurrent_when_tasks_more_than_executor_pool(self):
+    default_threads_count = os.cpu_count() + 4
+    keys_count = int(DELETE_REQUEST_LIMIT * default_threads_count * 1.5)
+
+    with mock.patch.object(S3Client, 'delete_files') as delete_mock:
+      delete_mock.return_value = []
+
+      result = self.client.delete_files_concurrent(
+        *[str(i) for i in range(keys_count)],
+      )
+
+      keys_sent = 0
+      for call in delete_mock.call_args_list:
+        keys_sent += len(call[0])
+      self.assertEqual(keys_sent, keys_count)
+
+    self.assertListEqual(result, [])
+
+  def test_delete_files_cuncurrent_when_erros_raised(self):
+    expected_exception = Exception('foo')
+
+    keys_count = int(DELETE_REQUEST_LIMIT * 1.5)
+
+    with mock.patch.object(S3Client, 'delete_files') as delete_mock:
+      delete_mock.side_effect = expected_exception
+
+      result = self.client.delete_files_concurrent(
+        *[str(i) for i in range(keys_count)],
+      )
+
+    self.assertEqual(len(result), keys_count)
+    for each in result:
+      self.assertIsInstance(each, DeleteError)
+      self.assertEqual(each.message, str(expected_exception))
 
 
 class TestImageExtFilter(TestCase):

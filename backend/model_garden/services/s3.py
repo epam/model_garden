@@ -84,6 +84,26 @@ class S3Client:
 
     return errors
 
+  def delete_files_concurrent(self, *keys: List[str]) -> List[DeleteError]:
+    result = []
+
+    with ThreadPoolExecutor() as executor:
+      future_to_batch = {
+        executor.submit(type(self)(self._bucket_name).delete_files, *batch): batch
+        for batch in chunkify(keys, DELETE_REQUEST_LIMIT)
+      }
+
+      for future in as_completed(future_to_batch):
+        try:
+          result.extend(future.result())
+        except Exception as err:
+          result.extend(
+            DeleteError(key=key, version_id='', code='', message=str(err))
+            for key in future_to_batch[future]
+          )
+
+    return result
+
 
 def image_ext_filter(obj: 's3.ObjectSummary') -> bool:  # noqa: F821
   if not obj:
