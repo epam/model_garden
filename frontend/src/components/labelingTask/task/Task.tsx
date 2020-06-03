@@ -102,7 +102,7 @@ export const Task: React.FC<TaskProps> = ({
       dispatch(getUnsignedImagesCountSuccess(0));
       setCounter({filesInTask: '0', countOfTasks: '0'});
     },
-    [newTask]
+    [dispatch, newTask]
   );
 
   const clearTaskData = () => {
