@@ -3,6 +3,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import Highlighter from 'react-highlight-words';
 import {Table, Input, Button, Space} from 'antd';
 import {SearchOutlined} from '@ant-design/icons';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import IconButton from '@material-ui/core/IconButton';
 import 'antd/dist/antd.css';
 import './TasksStatuses.css';
 import {DropdownButton} from './DropdownButton';
@@ -177,10 +179,16 @@ export const TasksStatuses: React.FC = () => {
         })
     }
   }
+  const handleRefresh = ()=>{
+    dispatch(getLabelingTasks(pageValue, ROWS_PER_PAGE, filterMap));
+  }
 
   return (
       <div className={'task-statuses'}>
         <DropdownButton onArchive={handleArchive} onRetry={handleRetry}/>
+        <IconButton aria-label="refresh" onClick={handleRefresh}>
+          <RefreshIcon />
+        </IconButton>
         <Table
           columns={TASK_STATUSES_COLUMNS as any}
           rowKey={record => record.id}
