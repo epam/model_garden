@@ -5,8 +5,9 @@ import {Table, Input, Button, Space} from 'antd';
 import {SearchOutlined} from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import './TasksStatuses.css';
+import {DropdownButton} from './DropdownButton';
 import {AppState} from '../../store';
-import {getDatasets, getLabelingTasks} from '../../store/labelingTask';
+import {archiveLabelingTask, getLabelingTasks, retryLabelingTask} from '../../store/labelingTask';
 import {ROWS_PER_PAGE} from './constants';
 
 export const TasksStatuses: React.FC = () => {
@@ -14,9 +15,8 @@ export const TasksStatuses: React.FC = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [filterMap, setFilterMap] = useState({});
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-  const currentBucketId = useSelector((state: AppState) => state.labelingTask.currentBucketId);
-  const currentDatasetId = useSelector((state: AppState) => state.labelingTask.currentDatasetId);
   const areTasksLoading = useSelector((state: AppState) => state.labelingTask.isLabelingTasksStatusesLoading);
   const tasks = useSelector(
     (state: AppState) => state.labelingTask.labelingTasksStatuses.tasks
@@ -27,13 +27,7 @@ export const TasksStatuses: React.FC = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    if (currentBucketId) {
-      dispatch(getDatasets(currentBucketId));
-    }
-  }, [dispatch, currentBucketId]);
-
-  useEffect(() => {
-    dispatch(getLabelingTasks(currentBucketId, currentDatasetId, pageValue, ROWS_PER_PAGE, filterMap));
+    dispatch(getLabelingTasks(pageValue, ROWS_PER_PAGE, filterMap));
   }, []);
 
   let searchInput: Input | null;
@@ -129,7 +123,7 @@ export const TasksStatuses: React.FC = () => {
   const handleTableChange = (pagination: {pageSize: number, current: number, total: number}) => {
     setPage((prevState: any) => {
       if (prevState !== pagination.current) {
-        dispatch(getLabelingTasks(currentBucketId, currentDatasetId, pagination.current, pagination.pageSize, filterMap));
+        dispatch(getLabelingTasks(pagination.current, pagination.pageSize, filterMap));
         return pagination.current;
       }
       return prevState;
@@ -145,7 +139,7 @@ export const TasksStatuses: React.FC = () => {
     setFilterMap((prevState: any) => ({
       ...prevState, [dataIndex]: selectedKeys[0]
     }));
-    dispatch(getLabelingTasks(currentBucketId, currentDatasetId, 1, ROWS_PER_PAGE,
+    dispatch(getLabelingTasks(1, ROWS_PER_PAGE,
       {...filterMap, [dataIndex]: selectedKeys[0]}));
   };
 
@@ -154,14 +148,43 @@ export const TasksStatuses: React.FC = () => {
     setPage(1);
     setSearchText('');
     setFilterMap({});
-    dispatch(getLabelingTasks(currentBucketId, currentDatasetId, 1, ROWS_PER_PAGE, {}));
+    dispatch(getLabelingTasks(1, ROWS_PER_PAGE, {}));
   };
+
+  const onSelectChange = (values: Array<number & never>) => {
+    setSelectedRowKeys(values);
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+
+  const handleArchive: any = () => {
+    if (selectedRowKeys.length > 0) {
+    (dispatch(archiveLabelingTask(selectedRowKeys)) as any)
+      .finally(() => {
+        setSelectedRowKeys([]);
+      })
+    }
+  }
+
+  const handleRetry: any = () => {
+    if (selectedRowKeys.length > 0) {
+      (dispatch(retryLabelingTask(selectedRowKeys)) as any)
+        .finally(() => {
+          setSelectedRowKeys([]);
+        })
+    }
+  }
 
   return (
       <div className={'task-statuses'}>
+        <DropdownButton onArchive={handleArchive} onRetry={handleRetry}/>
         <Table
           columns={TASK_STATUSES_COLUMNS as any}
           rowKey={record => record.id}
+          rowSelection={rowSelection as any}
           rowClassName={(record) => `task-status-${record.status}`}
           dataSource={tasks}
           pagination={{
