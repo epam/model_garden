@@ -79,8 +79,6 @@ export const createLabelingTaskRequest = async (
 };
 
 export const getLabelingTasksRequest = async (
-  bucketId: string,
-  datasetId: string,
   page: number,
   rowsPerPage: number,
   filterMap: any
@@ -112,7 +110,7 @@ export const getLabelingTasksRequest = async (
   }
 };
 
-export const archiveTaskRequest = async (
+export const archiveTaskLabelingRequest = async (
   taskIds: Array<number>,
 ) => {
   try {

@@ -26,7 +26,7 @@ export const DropdownButton: React.FC<DropdownButtonProps> = ({onArchive, onRetr
 
   return (
     <Dropdown overlay={menu(onArchive, onRetry)} placement="bottomLeft">
-      <Button>Handle</Button>
+      <Button>Actions</Button>
     </Dropdown>
   )
 };
