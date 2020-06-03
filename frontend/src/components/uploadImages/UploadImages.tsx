@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import {
   Typography,
@@ -7,13 +7,15 @@ import {
   TextField,
   Button,
   MenuItem,
-  FormControl,
+  FormControl
 } from "@material-ui/core";
 import {
   FormContainer,
   DropZone,
+  ExtendedFile,
   ProgressLoader
 } from "../shared";
+import { SnackbarAlert} from '../snackbarAlert'
 import "../shared/style.css";
 import { AppState } from "../../store";
 import { useSelector, useDispatch } from "react-redux";
@@ -27,12 +29,14 @@ type FormData = {
 
 export const UploadImages: React.FC = () => {
   const dispatch = useDispatch();
+  const [notification,setNotification] =  useState<{show:boolean,severity:"success" | "info" | "warning" | "error" | undefined, message:string}>({show:false,severity:undefined,message:''});
+  const [files, setFiles] = useState<ExtendedFile[]>([]);
   const [formData, setFormData] = useState<FormData>({
     bucketId: DEFAULT_FORM_DATA.BUCKET_ID,
     path: DEFAULT_FORM_DATA.PATH,
   });
   const [showLoader, setShowLoader] = useState(false);
-  const { handleSubmit, control, watch } = useForm<FormData>({
+  const { handleSubmit, control, watch, reset } = useForm<FormData>({
     defaultValues: formData,
   });
   const bucketIdValue = watch('bucketId');
@@ -41,7 +45,15 @@ export const UploadImages: React.FC = () => {
 
   const handleUploadImagesSubmit = (bucketId: string, path: string) => {
     (dispatch(uploadMediaFiles(mediaFiles, bucketId, path)) as any)
-      .then(() => setShowLoader(false));
+    .then(({data}:any) =>{
+      setNotification({show:true, severity:'success',message:data.message});
+      reset();
+      setFiles([]);
+    })
+    .catch(({message}:any) =>setNotification({show:true, severity:'error',message}))
+    .finally(()=>{
+      setShowLoader(false);
+     })
   };
 
   const handleDropFiles = (files: File[]) => {
@@ -60,7 +72,12 @@ export const UploadImages: React.FC = () => {
     </MenuItem>
   ));
 
+  const wipeNotification = () => {
+    setNotification((ps)=>({...ps ,show:false,message:''}));
+  };
+
   return (
+    <>
     <div className="upload-images">
       <FormContainer>
         <Typography
@@ -73,6 +90,8 @@ export const UploadImages: React.FC = () => {
         <form onSubmit={onSubmit} className="upload-images__form">
           <div className="upload-images__dropzone">
             <DropZone
+              files={files}
+              setFiles={setFiles}
               handleDrop={handleDropFiles}
             />
           </div>
@@ -112,6 +131,10 @@ export const UploadImages: React.FC = () => {
         </form>
       </FormContainer>
       <ProgressLoader show={showLoader} />
-    </div>
+    </div>    
+    <SnackbarAlert open={notification.show} onClose={wipeNotification} severity={notification.severity} >
+      {notification.message}
+    </SnackbarAlert>
+    </>
   );
 };
