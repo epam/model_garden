@@ -1,10 +1,12 @@
-from typing import Iterable
 from collections import namedtuple
+from typing import Iterable
 from unittest import TestCase, mock
 
 from parameterized import parameterized
 
-from model_garden.services.s3 import S3Client, image_ext_filter
+from model_garden.services.s3 import (
+  DELETE_REQUEST_LIMIT, DeleteError, S3Client, image_ext_filter,
+)
 
 
 class TestS3Client(TestCase):
@@ -83,6 +85,55 @@ class TestS3Client(TestCase):
       mock.call(file_obj_mock, self.bucket_name, 'test1.txt'),
       mock.call(file_obj_mock, self.bucket_name, 'test2.txt'),
     ])
+
+  def test_delete_files_when_empty_call(self):
+    self.bucket_mock.delete_objects.return_value = {}
+
+    result = self.client.delete_files()
+
+    self.bucket_mock.delete_objects.assert_not_called()
+    self.assertListEqual(result, [])
+
+  def test_delete_files_with_pagination(self):
+    self.bucket_mock.delete_objects.return_value = {}
+
+    keys_count = int(DELETE_REQUEST_LIMIT * 1.5)
+    result = self.client.delete_files(*[str(i) for i in range(keys_count)])
+
+    self.assertEqual(self.bucket_mock.delete_objects.call_count, 2)
+
+    keys_sent = 0
+    for i in range(2):
+      keys_sent += len(self.bucket_mock.delete_objects.call_args_list[i][1]['Delete']['Objects'])
+    self.assertEqual(keys_sent, keys_count)
+
+    self.assertListEqual(result, [])
+
+  def test_delete_files_with_error(self):
+    self.bucket_mock.delete_objects.return_value = {
+      'Errors': [
+        {
+          'Key': 'foo',
+          'VersionId': 'string2',
+          'Code': 'string3',
+          'Message': 'string4',
+        },
+      ],
+    }
+
+    result = self.client.delete_files('foo')
+
+    self.bucket_mock.delete_objects.assert_called_once()
+    self.assertEqual(len(result), 1)
+    self.assertEqual(
+      result[0],
+      DeleteError(
+        key='foo',
+        code='string3',
+        message='string4',
+        version_id='string2',
+      ),
+    )
 
 
 class TestImageExtFilter(TestCase):

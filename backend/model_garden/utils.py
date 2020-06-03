@@ -1,7 +1,9 @@
-from typing import Iterable
+from typing import Iterator, Sequence, TypeVar
+
+T = TypeVar('T')
 
 
-def chunkify(arr: Iterable, n: int):
+def chunkify(arr: Sequence[T], n: int) -> Iterator[Sequence[T]]:
   for i in range(0, len(arr), n):
     yield arr[i:i + n]
 
