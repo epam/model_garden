@@ -26,9 +26,12 @@ import {
   getLabelingToolUsersRequest,
   getUnsignedImagesCountRequest,
   getLabelingTasksRequest,
+  archiveTaskLabelingRequest,
+  retryLabelingTaskRequest
 } from "../../api";
 import { LabelingToolUser } from "../../models/labelingToolUser";
 import { setErrorAction } from '../error';
+import { ROWS_PER_PAGE } from '../../components/tasksStatuses/constants';
 
 export function getBucketPathsStart(): LabelingTaskActionTypes {
   return {
@@ -165,14 +168,34 @@ export const createLabelingTask = (
 };
 
 export const getLabelingTasks = (
-  bucketId: string,
-  datasetId: string,
   page: number,
   rowsPerPage: number,
   filterMap: any
 ): AppThunk => (dispatch) => {
   dispatch(getLabelingTasksStart());
-  return getLabelingTasksRequest(bucketId, datasetId, page, rowsPerPage, filterMap)
+  return getLabelingTasksRequest(page, rowsPerPage, filterMap)
     .then((tasksData) => dispatch(getLabelingTasksSuccess(tasksData)))
     .catch((error) => dispatch(setErrorAction(error)));
+};
+
+export const archiveLabelingTask = (
+  taskData: Array<number>
+): AppThunk => (dispatch) => {
+  dispatch(createLabelingTaskStart());
+  return archiveTaskLabelingRequest(taskData)
+    .then(() => {
+      dispatch(getLabelingTasks(1, ROWS_PER_PAGE, {}));
+    })
+    .catch((error: any) => dispatch(setErrorAction(error)));
+};
+
+export const retryLabelingTask = (
+  taskData: Array<number>
+): AppThunk => (dispatch) => {
+  dispatch(createLabelingTaskStart());
+  return retryLabelingTaskRequest(taskData)
+    .then(() => {
+      dispatch(getLabelingTasks(1, ROWS_PER_PAGE, {}));
+    })
+    .catch((error: any) => dispatch(setErrorAction(error)));
 };
