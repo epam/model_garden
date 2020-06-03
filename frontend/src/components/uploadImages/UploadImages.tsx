@@ -9,7 +9,11 @@ import {
   MenuItem,
   FormControl,
 } from "@material-ui/core";
-import { DropZone, FormContainer } from "../shared";
+import {
+  FormContainer,
+  DropZone,
+  ProgressLoader
+} from "../shared";
 import "../shared/style.css";
 import { AppState } from "../../store";
 import { useSelector, useDispatch } from "react-redux";
@@ -27,18 +31,17 @@ export const UploadImages: React.FC = () => {
     bucketId: DEFAULT_FORM_DATA.BUCKET_ID,
     path: DEFAULT_FORM_DATA.PATH,
   });
+  const [showLoader, setShowLoader] = useState(false);
   const { handleSubmit, control, watch } = useForm<FormData>({
     defaultValues: formData,
   });
   const bucketIdValue = watch('bucketId');
   const buckets = useSelector((state: AppState) => state.main.buckets);
-  const isFilesUploading = useSelector(
-    (state: AppState) => state.media.isUploading
-  );
   const mediaFiles = useSelector((state: AppState): File[] => state.media.mediaFiles);
 
   const handleUploadImagesSubmit = (bucketId: string, path: string) => {
-    dispatch(uploadMediaFiles(mediaFiles, bucketId, path));
+    (dispatch(uploadMediaFiles(mediaFiles, bucketId, path)) as any)
+      .then(() => setShowLoader(false));
   };
 
   const handleDropFiles = (files: File[]) => {
@@ -46,6 +49,7 @@ export const UploadImages: React.FC = () => {
   };
 
   const onSubmit = handleSubmit(({ bucketId, path }) => {
+    setShowLoader(true);
     setFormData({ bucketId, path });
     handleUploadImagesSubmit(bucketId, path);
   });
@@ -69,7 +73,6 @@ export const UploadImages: React.FC = () => {
         <form onSubmit={onSubmit} className="upload-images__form">
           <div className="upload-images__dropzone">
             <DropZone
-              isUploading={isFilesUploading}
               handleDrop={handleDropFiles}
             />
           </div>
@@ -108,6 +111,7 @@ export const UploadImages: React.FC = () => {
           </div>
         </form>
       </FormContainer>
+      <ProgressLoader show={showLoader} />
     </div>
   );
 };
