@@ -9,7 +9,7 @@ import {
   MenuItem,
   FormControl, Snackbar,
 } from "@material-ui/core";
-import { FormContainer } from "../shared";
+import { FormContainer, ProgressLoader } from "../shared";
 import "../shared/style.css";
 import { AppState } from "../../store";
 import { useSelector, useDispatch } from "react-redux";
@@ -42,6 +42,7 @@ export const AddExistingDataset: React.FC = () => {
 
     setOpen(false);
   };
+  const [showLoader, setShowLoader] = useState(false);
 
   const { handleSubmit, control, watch } = useForm<FormData>({
     defaultValues: formData,
@@ -54,16 +55,16 @@ export const AddExistingDataset: React.FC = () => {
     (state: AppState) => state.media.addedMediaAssets
   );
 
-
-
   const handleAddExistingDatasetSubmit = (bucketId: string, path: string) => {
     (dispatch(addExistingDataset(bucketId, path)) as any).then(() => {
 
+      setShowLoader(false);
       raiseSuccessAlert();
     });
   };
 
   const onSubmit = handleSubmit(({ bucketId, path }) => {
+    setShowLoader(true);
     setFormData({ bucketId, path });
     handleAddExistingDatasetSubmit(bucketId, path);
   });
@@ -117,6 +118,8 @@ export const AddExistingDataset: React.FC = () => {
             >
               ADD
             </Button>
+
+            <ProgressLoader show={showLoader} />
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={ { vertical: 'top', horizontal: 'right' } } >
               <Alert onClose={handleClose} severity="success">
                 Dataset with {addedDataSets} media assets has been added

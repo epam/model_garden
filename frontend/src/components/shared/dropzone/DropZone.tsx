@@ -1,6 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
-import { LinearProgress } from "@material-ui/core";
 import zipSvg from "../../../assets/zip.svg";
 import incorrectSvg from "../../../assets/incorrect.svg";
 import "./DropZone.css";
@@ -10,13 +9,11 @@ interface ExtendedFile extends File {
 }
 
 interface DropZoneProps {
-  isUploading: boolean;
   handleDrop: (files: File[]) => void;
 }
 
 export const DropZone: React.FC<DropZoneProps> = ({
   handleDrop,
-  isUploading,
 }: DropZoneProps) => {
   const [files, setFiles] = useState<ExtendedFile[]>([]);
 
@@ -79,7 +76,6 @@ export const DropZone: React.FC<DropZoneProps> = ({
           </div>
         </div>
         <aside className="dropzone__tumbs-container">{tumbs}</aside>
-        {isUploading && <LinearProgress />}
       </section>
     </>
   );
