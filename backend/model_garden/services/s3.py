@@ -1,14 +1,24 @@
 import logging
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Callable, IO, Iterator, Tuple
+from typing import IO, Callable, Iterator, List, NamedTuple, Tuple
 
 from boto3 import resource
 from django.conf import settings
 
 from model_garden.constants import IMAGE_EXTENSIONS
+from model_garden.utils import chunkify
 
 logger = logging.getLogger(__name__)
+
+DELETE_REQUEST_LIMIT = 1000
+
+
+class DeleteError(NamedTuple):
+  key: str
+  code: str
+  message: str
+  version_id: str
 
 
 class S3Client:
@@ -46,6 +56,33 @@ class S3Client:
       for future in as_completed((executor.submit(self.upload_file_obj, file_obj=file_obj, bucket=bucket, key=full_path)
                                   for file_obj, full_path in files_to_upload)):
         future.result()
+
+  def delete_files(self, *keys: List[str]) -> List[DeleteError]:
+    errors = []
+
+    for batch in chunkify(keys, DELETE_REQUEST_LIMIT):
+      logger.info('Delete in bucket %s, keys: %s', self._bucket_name, batch)
+
+      resp = self._bucket.delete_objects(
+        Delete={
+          'Objects': [
+            {'Key': key} for key in batch
+          ],
+          'Quiet': False,
+        },
+      )
+
+      errors.extend([
+        DeleteError(
+          key=error['Key'],
+          version_id=error['VersionId'],
+          code=error['Code'],
+          message=error['Message'],
+        )
+        for error in resp.get('Errors', [])
+      ])
+
+    return errors
 
 
 def image_ext_filter(obj: 's3.ObjectSummary') -> bool:  # noqa: F821
