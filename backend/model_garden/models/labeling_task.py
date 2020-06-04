@@ -6,18 +6,20 @@ from model_garden.models import BaseModel
 
 
 class LabelingTask(BaseModel):
+  STATUSES = [
+    (LabelingTaskStatus.ANNOTATION, "Annotation"),
+    (LabelingTaskStatus.VALIDATION, "Validation"),
+    (LabelingTaskStatus.COMPLETED, "Completed"),
+    (LabelingTaskStatus.SAVED, "Saved"),
+    (LabelingTaskStatus.ARCHIVED, "Archived"),
+    (LabelingTaskStatus.FAILED, "Failed"),
+  ]
+
   task_id = models.IntegerField()
   name = models.CharField(max_length=256)
   status = models.CharField(
     max_length=16,
-    choices=[
-      (LabelingTaskStatus.ANNOTATION, "Annotation"),
-      (LabelingTaskStatus.VALIDATION, "Validation"),
-      (LabelingTaskStatus.COMPLETED, "Completed"),
-      (LabelingTaskStatus.SAVED, "Saved"),
-      (LabelingTaskStatus.ARCHIVED, "Archived"),
-      (LabelingTaskStatus.FAILED, "Failed"),
-    ],
+    choices=STATUSES,
     default=LabelingTaskStatus.ANNOTATION,
   )
   labeler = models.ForeignKey(

@@ -29,7 +29,10 @@ class LabelingTaskFilterSet(filters.FilterSet):
   name = filters.CharFilter(field_name='name', lookup_expr='icontains')
   labeler = filters.CharFilter(field_name='labeler_name', lookup_expr='icontains', label='Labeler name contains')
   dataset = filters.CharFilter(field_name='dataset', lookup_expr='icontains', label='Dataset path contains')
-  status = filters.CharFilter(field_name='status', lookup_expr='icontains')
+  status = filters.MultipleChoiceFilter(
+    field_name='status',
+    choices=LabelingTask.STATUSES,
+  )
 
   class Meta:
     model = LabelingTask

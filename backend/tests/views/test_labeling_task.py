@@ -311,6 +311,22 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
     self.assertEqual(response.json()['count'], 1)
     self.assertEqual(response.json()['results'][0]['name'], t2.name)
 
+  def test_list_with_multiple_status_filters(self):
+    self.test_factory.create_labeling_task(name='Test labeling task 1', status=LabelingTaskStatus.ANNOTATION)
+    t2 = self.test_factory.create_labeling_task(name='Test labeling task 2', status=LabelingTaskStatus.VALIDATION)
+    t3 = self.test_factory.create_labeling_task(name='Test labeling task 3', status=LabelingTaskStatus.COMPLETED)
+
+    response = self.client.get(
+      path=reverse('labelingtask-list'),
+      data={
+        'status': [LabelingTaskStatus.VALIDATION, LabelingTaskStatus.COMPLETED],
+      },
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertEqual(response.json()['count'], 2)
+    self.assertEqual({t['name'] for t in response.json()['results']}, {t2.name, t3.name})
+
   def test_list_with_status_filter_empty_result(self):
     self.test_factory.create_labeling_task(name='Test labeling task 1', status=LabelingTaskStatus.ANNOTATION)
     self.test_factory.create_labeling_task(name='Test labeling task 3', status=LabelingTaskStatus.COMPLETED)
