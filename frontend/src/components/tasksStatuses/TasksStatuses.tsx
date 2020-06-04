@@ -131,8 +131,8 @@ export const TasksStatuses: React.FC = () => {
     filter: any,
     sorter: {
       column?: any;
-      order?: string | undefined;
-      field?: string | undefined;
+      order?: 'ascend' | 'descend';
+      field?: string;
       columnKey?: any;
     }
   ) => {

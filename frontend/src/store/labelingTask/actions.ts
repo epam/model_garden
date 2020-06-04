@@ -171,8 +171,8 @@ export const getLabelingTasks = (
   page: number,
   rowsPerPage: number,
   filterMap: any,
-  sortOrder?: string | undefined,
-  sortField?: string | undefined
+  sortOrder?: 'ascend' | 'descend',
+  sortField?: string 
 ): AppThunk => (dispatch) => {
   dispatch(getLabelingTasksStart());
   return getLabelingTasksRequest(page, rowsPerPage, filterMap, sortOrder, sortField)
