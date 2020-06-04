@@ -170,10 +170,12 @@ export const createLabelingTask = (
 export const getLabelingTasks = (
   page: number,
   rowsPerPage: number,
-  filterMap: any
+  filterMap: any,
+  sortOrder?: string | undefined,
+  sortField?: string | undefined
 ): AppThunk => (dispatch) => {
   dispatch(getLabelingTasksStart());
-  return getLabelingTasksRequest(page, rowsPerPage, filterMap)
+  return getLabelingTasksRequest(page, rowsPerPage, filterMap, sortOrder, sortField)
     .then((tasksData) => dispatch(getLabelingTasksSuccess(tasksData)))
     .catch((error) => dispatch(setErrorAction(error)));
 };
