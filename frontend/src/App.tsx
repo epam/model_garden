@@ -27,7 +27,7 @@ const App: FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <ErrorAlert />
-      <AppBar position="static">
+      <AppBar position="sticky">
         <LinkTabs pathname={pathname} />
       </AppBar>
       <Tabs />
