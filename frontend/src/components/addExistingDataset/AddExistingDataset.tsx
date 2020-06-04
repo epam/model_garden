@@ -56,8 +56,7 @@ export const AddExistingDataset: React.FC = () => {
   );
 
   const handleAddExistingDatasetSubmit = (bucketId: string, path: string) => {
-    (dispatch(addExistingDataset(bucketId, path)) as any).then(() => {
-
+    (dispatch(addExistingDataset({bucketId, path})) as any).then(() => {
       setShowLoader(false);
       raiseSuccessAlert();
     });
