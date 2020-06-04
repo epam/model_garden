@@ -166,7 +166,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
     self.assertEqual(
       response.json(),
       {
-        'message': "Media asset for dataset='test' and filename='test.txt' already exists",
+        'message': "Media asset for dataset='/test' and filename='test.txt' already exists",
       },
     )
 

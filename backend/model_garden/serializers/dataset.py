@@ -31,7 +31,7 @@ class DatasetSerializer(serializers.ModelSerializer):
     if not path:
       path = f'batch_{datetime.utcnow().date()}'
 
-    attrs['path'] = path.strip('/')
+    attrs['path'] = f"/{path.strip('/')}"
 
   def create(self, validated_data):
     dataset = Dataset.objects.filter(
@@ -50,4 +50,4 @@ class DatasetRawPathSerializer(DatasetSerializer):
     if not path:
       raise serializers.ValidationError('Field "path" can not be empty.')
 
-    attrs['path'] = path.strip('/')
+    attrs['path'] = f"/{path.strip('/')}"
