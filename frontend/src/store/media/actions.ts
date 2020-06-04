@@ -39,12 +39,13 @@ export function uploadMediaFilesError(): MediaActionTypes {
 
 export const uploadMediaFiles = (files: File[], bucketId: string, path: string): AppThunk => dispatch => {
   dispatch(uploadMediaFilesStart());
-  return uploadMediaFilesRequest(files, bucketId, path)
-    .then((response) => dispatch(uploadMediaFilesSuccess(response.data)))
+   const request= uploadMediaFilesRequest(files, bucketId, path)
+  
+  request.then((response) => dispatch(uploadMediaFilesSuccess(response.data)))
     .catch((error) => {
       dispatch(uploadMediaFilesError());
-      dispatch(setErrorAction(error));
     });
+    return request;
 };
 
 export function addExistingDatasetStart(): MediaActionTypes {

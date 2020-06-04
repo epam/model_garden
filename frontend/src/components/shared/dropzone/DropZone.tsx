@@ -4,19 +4,20 @@ import zipSvg from "../../../assets/zip.svg";
 import incorrectSvg from "../../../assets/incorrect.svg";
 import "./DropZone.css";
 
-interface ExtendedFile extends File {
+export interface ExtendedFile extends File {
   preview: string;
 }
 
 interface DropZoneProps {
   handleDrop: (files: File[]) => void;
+  files: ExtendedFile[];
+  setFiles: Function;
 }
 
 export const DropZone: React.FC<DropZoneProps> = ({
   handleDrop,
+  files,setFiles
 }: DropZoneProps) => {
-  const [files, setFiles] = useState<ExtendedFile[]>([]);
-
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       const formattedFiles = acceptedFiles.map((file: File) => {
