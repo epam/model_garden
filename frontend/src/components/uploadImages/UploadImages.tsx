@@ -44,23 +44,20 @@ export const UploadImages: React.FC = () => {
   const mediaFiles = useSelector((state: AppState): File[] => state.media.mediaFiles);
 
   const handleUploadImagesSubmit = (bucketId: string, path: string) => {
-    (dispatch(uploadMediaFiles({files:mediaFiles, bucketId, path})) as any)
-    .then((action:any) =>{
-      console.log(action)
-if(action.error){
-  setNotification({show:true, severity:'error',message:action.error.message})
-}else{
-  setNotification({show:true, severity:'success',message:action.payload.message});
-  reset();
-  setFiles([]);
-}
-
-     
-    })
-    // .catch((action:any) =>setNotification({show:true, severity:'error',message:action.error.message}))
-    .finally(()=>{
-      setShowLoader(false);
-     })
+    (dispatch(uploadMediaFiles({ files: mediaFiles, bucketId, path })) as any)
+      .then((action: any) => {
+        console.log(action);
+        if (action.error) {
+          setNotification({ show: true, severity: 'error', message: action.error.message });
+        } else {
+          setNotification({ show: true, severity: 'success', message: action.payload.message });
+          reset();
+          setFiles([]);
+        }
+      })
+      .finally(() => {
+        setShowLoader(false);
+      });
   };
 
   const handleDropFiles = (files: File[]) => {
