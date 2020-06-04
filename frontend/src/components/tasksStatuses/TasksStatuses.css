@@ -21,10 +21,20 @@
     background-color: #e3f2e4 !important;
 }
 
+.task-status-archived > td {
+    background-color: #eceff1;
+    color: #8f9ba3;
+}
+
+.task-status-archived:hover > td {
+    background-color: #e8ebee !important;
+}
+
 .ant-btn {
     margin-right: 0.5rem;
     margin-bottom: 0.5rem;
 }
+
 .ant-row-rtl .ant-btn {
     margin-right: 0;
     margin-bottom: 0.5rem;
