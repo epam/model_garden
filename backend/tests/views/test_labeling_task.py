@@ -162,7 +162,7 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
           {
             "id": labeling_task.id,
             "name": labeling_task.name,
-            "dataset": f"/{dataset.path}",
+            "dataset": dataset.path,
             "labeler": labeling_task.labeler.username,
             "url": 'http://localhost:8080/task/1',
             "status": labeling_task.status,
@@ -234,8 +234,8 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
     self.assertEqual(response.json()['count'], 0)
 
   def test_list_with_dataset_filter(self):
-    dataset1 = self.test_factory.create_dataset(path='test_path1')
-    dataset2 = self.test_factory.create_dataset(path='test_path2')
+    dataset1 = self.test_factory.create_dataset(path='/test_path1')
+    dataset2 = self.test_factory.create_dataset(path='/test_path2')
     self.test_factory.create_media_asset(dataset=dataset1, assigned=True)
     media_asset2 = self.test_factory.create_media_asset(dataset=dataset2, assigned=True)
 
@@ -251,8 +251,8 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
     self.assertEqual(response.json()['results'][0]['name'], media_asset2.labeling_task.name)
 
   def test_list_with_dataset_filter_empty_result(self):
-    dataset1 = self.test_factory.create_dataset(path='test_path1')
-    dataset2 = self.test_factory.create_dataset(path='test_path2')
+    dataset1 = self.test_factory.create_dataset(path='/test_path1')
+    dataset2 = self.test_factory.create_dataset(path='/test_path2')
     self.test_factory.create_media_asset(dataset=dataset1, assigned=True)
     self.test_factory.create_media_asset(dataset=dataset2, assigned=True)
 

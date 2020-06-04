@@ -20,7 +20,7 @@ class Factory:
       url='https://d3o54g14k1n39o.cloudfront.net/',
     )
 
-  def create_dataset(self, path: Optional[str] = 'test_path') -> Dataset:
+  def create_dataset(self, path: Optional[str] = '/test_path') -> Dataset:
     return Dataset.objects.create(
       path=path,
       bucket=self.create_bucket(),

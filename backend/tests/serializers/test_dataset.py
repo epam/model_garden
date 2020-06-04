@@ -29,7 +29,7 @@ class TestDatasetSerializer(BaseTestCase):
 
     dataset = Dataset.objects.get(pk=saved_dataset.pk)
 
-    self.assertEqual(dataset.path, 'test')
+    self.assertEqual(dataset.path, '/test')
     self.assertEqual(dataset.bucket, self.bucket)
 
   def test_create_path_with_slashes(self):
@@ -37,7 +37,7 @@ class TestDatasetSerializer(BaseTestCase):
 
     dataset = Dataset.objects.get(pk=saved_dataset.pk)
 
-    self.assertEqual(dataset.path, 'test')
+    self.assertEqual(dataset.path, '/test')
     self.assertEqual(dataset.bucket, self.bucket)
 
   @freeze_time('2020-05-01')
@@ -46,7 +46,7 @@ class TestDatasetSerializer(BaseTestCase):
 
     dataset = Dataset.objects.get(pk=saved_dataset.pk)
 
-    self.assertEqual(dataset.path, 'batch_2020-05-01')
+    self.assertEqual(dataset.path, '/batch_2020-05-01')
     self.assertEqual(dataset.bucket, self.bucket)
 
   def test_create_already_exists(self):
@@ -58,7 +58,7 @@ class TestDatasetSerializer(BaseTestCase):
 
   def test_validate_when_bucket_not_provided(self):
     serializer = DatasetSerializer(data={
-      'path': 'foo',
+      'path': '/foo',
     })
     self.assertFalse(serializer.is_valid())
 
@@ -81,7 +81,7 @@ class TestDatasetRawPathSerializer(BaseTestCase):
       'bucket': self.bucket.pk,
     })
     serializer.is_valid(raise_exception=True)
-    self.assertEqual(serializer.validated_data['path'], 'foo')
+    self.assertEqual(serializer.validated_data['path'], '/foo')
 
   def test_when_path_is_not_passed(self):
     serializer = DatasetRawPathSerializer(data={

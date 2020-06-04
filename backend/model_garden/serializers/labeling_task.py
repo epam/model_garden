@@ -31,7 +31,7 @@ class LabelingTaskSerializer(serializers.ModelSerializer):
   def get_dataset(self, obj: Labeler) -> str:
     media_asset = obj.media_assets.first()
     if media_asset is not None:
-      return f"/{media_asset.dataset.path}"
+      return media_asset.dataset.path
 
   def get_labeler(self, obj: Labeler) -> str:
     return obj.labeler.username

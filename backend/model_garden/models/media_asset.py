@@ -26,7 +26,7 @@ class MediaAsset(BaseModel):
 
   @property
   def full_path(self):
-    return f"{self.dataset.path}/{self.filename}"
+    return f"{self.dataset.path.strip('/')}/{self.filename}"
 
   @property
   def full_xml_path(self):
