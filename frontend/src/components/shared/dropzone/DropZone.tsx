@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import zipSvg from "../../../assets/zip.svg";
 import incorrectSvg from "../../../assets/incorrect.svg";
@@ -65,16 +65,13 @@ export const DropZone: React.FC<DropZoneProps> = ({
       <section className="dropzone">
         <div {...getRootProps({ className: "dropzone__field" })}>
           <input {...getInputProps()} />
-          <div
-            className="dropzone__text"
-            style={{ width: "100%", textAlign: "center" }}
-          >
+          <p className="dropzone__text">
             {isDragActive ? (
-              <p>Drop the files here ...</p>
+              <>Drop the files here ...</>
             ) : (
-              <p>Drag 'n' drop some files here, or click to select files</p>
+              <>Drag 'n' drop some files here, or click to select files</>
             )}
-          </div>
+          </p>
         </div>
         <aside className="dropzone__tumbs-container">{tumbs}</aside>
       </section>
