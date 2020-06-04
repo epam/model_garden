@@ -81,12 +81,18 @@ export const createLabelingTaskRequest = async (
 export const getLabelingTasksRequest = async (
   page: number,
   rowsPerPage: number,
-  filterMap: any
+  filterMap: any,
+  sortOrder?: 'ascend' | 'descend',
+  sortField?: string
 ): Promise<{count: number, tasks: LabelingTaskStatus[]}> => {
   try {
     const params: any = {
       page,
       page_size: rowsPerPage,
+    }
+
+    if (sortOrder && sortField) {
+      params.ordering = sortOrder === 'ascend' ? sortField : `-${sortField}`;
     }
 
     for (const [key, value] of Object.entries(filterMap)) {
