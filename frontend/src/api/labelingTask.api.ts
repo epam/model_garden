@@ -82,8 +82,8 @@ export const getLabelingTasksRequest = async (
   page: number,
   rowsPerPage: number,
   filterMap: any,
-  sortOrder?: string | undefined,
-  sortField?: string | undefined
+  sortOrder?: 'ascend' | 'descend',
+  sortField?: string
 ): Promise<{count: number, tasks: LabelingTaskStatus[]}> => {
   try {
     const params: any = {
