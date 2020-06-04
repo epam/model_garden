@@ -88,17 +88,20 @@ export const TasksStatuses: React.FC = () => {
       title: 'Task Name',
       dataIndex: 'name',
       width: '20%',
-    ...getColumnSearchProps('name')
+      sorter: true,
+      ...getColumnSearchProps('name')
     },
     {
       title: 'Dataset',
       dataIndex: 'dataset',
       width: '20%',
+      sorter: true,
       ...getColumnSearchProps('dataset')
     },
     {
       title: 'Labeler',
       dataIndex: 'labeler',
+      sorter: true,
       ...getColumnSearchProps('labeler')
     },
     {
@@ -118,14 +121,32 @@ export const TasksStatuses: React.FC = () => {
     {
       title: 'Status',
       dataIndex: 'status',
+      sorter: true,
       ...getColumnSearchProps('status')
     }
   ];
 
-  const handleTableChange = (pagination: {pageSize: number, current: number, total: number}) => {
+  const handleTableChange = (
+    pagination: { pageSize: number; current: number; total: number },
+    filter: any,
+    sorter: {
+      column?: any;
+      order?: 'ascend' | 'descend';
+      field?: string;
+      columnKey?: any;
+    }
+  ) => {
     setPage((prevState: any) => {
-      if (prevState !== pagination.current) {
-        dispatch(getLabelingTasks(pagination.current, pagination.pageSize, filterMap));
+      if (prevState !== pagination.current || prevState !== sorter.order) {
+        dispatch(
+          getLabelingTasks(
+            pagination.current,
+            pagination.pageSize,
+            filterMap,
+            sorter.order,
+            sorter.field,
+          )
+        );
         return pagination.current;
       }
       return prevState;
