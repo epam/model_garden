@@ -1,18 +1,19 @@
 import logging
 
 from django.conf import settings
+from django.db.models import F, OuterRef, Subquery
 from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound, ValidationError
-from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.filters import OrderingFilter
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from model_garden.constants import LabelingTaskStatus
-from model_garden.models import Dataset, Labeler, LabelingTask
+from model_garden.models import Dataset, Labeler, LabelingTask, MediaAsset
 from model_garden.serializers import (
   LabelingTaskCreateSerializer,
   LabelingTaskIDSerializer,
@@ -26,8 +27,8 @@ logger = logging.getLogger(__name__)
 
 class LabelingTaskFilterSet(filters.FilterSet):
   name = filters.CharFilter(field_name='name', lookup_expr='icontains')
-  labeler = filters.CharFilter(field_name='labeler__username', lookup_expr='icontains')
-  dataset = filters.CharFilter(field_name='media_assets__dataset__path', lookup_expr='icontains')
+  labeler = filters.CharFilter(field_name='labeler_name', lookup_expr='icontains', label='Labeler name contains')
+  dataset = filters.CharFilter(field_name='dataset', lookup_expr='icontains', label='Dataset path contains')
   status = filters.CharFilter(field_name='status', lookup_expr='icontains')
 
   class Meta:
@@ -40,8 +41,7 @@ class LabelingTaskOrderingFilter(OrderingFilter):
   the ordering must be applied to the different field that is requested.
   """
   REPLACE_REQUEST_FIELDS = {
-    'labeler': 'labeler__username',
-    'dataset': 'media_assets__dataset__path',
+    'labeler': 'labeler_name',
   }
 
   def get_ordering(self, request, queryset, view):
@@ -57,25 +57,28 @@ class LabelingTaskOrderingFilter(OrderingFilter):
     return field
 
 
-class LabelingTaskSearchFilter(SearchFilter):
-  SEARCH_FIELDS_REPLACEMENT = {
-    'labeler': 'labeler__username',
-    'dataset': 'media_assets__dataset__path',
-  }
-
-  def get_search_fields(self, view, request):
-    search_fields = super().get_search_fields(view, request)
-    return [self.SEARCH_FIELDS_REPLACEMENT.get(field, field) for field in search_fields or []]
-
-
 class LabelingTaskViewSet(ModelViewSet):
-  queryset = LabelingTask.objects.all()
+  queryset = (
+    LabelingTask.objects
+    .annotate(labeler_name=F('labeler__username'))
+    .annotate(
+      dataset=Subquery(
+        queryset=(
+          MediaAsset.objects
+          .filter(labeling_task=OuterRef('pk'))
+          .annotate(path=F('dataset__path'))
+          .values_list('path', flat=True)
+          [:1]
+        ),
+      ),
+    )
+    .all()
+  )
   serializer_class = LabelingTaskSerializer
   filterset_class = LabelingTaskFilterSet
   filter_backends = [
     DjangoFilterBackend,
     LabelingTaskOrderingFilter,
-    LabelingTaskSearchFilter,
   ]
   ordering_fields = ('name', 'dataset', 'labeler', 'status', 'url')
   search_fields = ('name', 'dataset', 'labeler', 'status', 'url')
