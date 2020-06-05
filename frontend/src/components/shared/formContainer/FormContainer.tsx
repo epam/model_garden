@@ -6,9 +6,16 @@ interface FormContainerProps {
   children: React.ReactNode | React.ReactNode[];
 }
 
-export const FormContainer: React.FC<FormContainerProps> = ({ children }: FormContainerProps) => {
+export const FormContainer: React.FC<FormContainerProps> = ({
+  children
+}: FormContainerProps) => {
   return (
-    <Container component={Paper} maxWidth="sm" className="form-container" elevation={5}>
+    <Container
+      component={Paper}
+      maxWidth="sm"
+      className="form-container"
+      elevation={5}
+    >
       {children}
     </Container>
   );
