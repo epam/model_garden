@@ -1,5 +1,12 @@
 import React from 'react';
-import { Box, GridList, GridListTile, makeStyles, GridListTileBar, IconButton } from '@material-ui/core';
+import {
+  Box,
+  GridList,
+  GridListTile,
+  makeStyles,
+  GridListTileBar,
+  IconButton
+} from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetApp';
 
 import { Empty } from 'antd';
@@ -32,7 +39,11 @@ export const GridGallery = ({ photos }: any) => {
 
       <GridList cellHeight={160}>
         {photos.map((tile: any) => (
-          <GridListTile className={classes.item} key={tile.remote_path} cols={1}>
+          <GridListTile
+            className={classes.item}
+            key={tile.remote_path}
+            cols={1}
+          >
             <img src={tile.remote_path} alt={'picture'} />
             {tile.remote_xml_path && (
               <GridListTileBar
