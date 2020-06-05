@@ -139,7 +139,7 @@ export const Task: React.FC<TaskProps> = ({
 
   const datasetsSelectOptions = datasets.map((dataset: Dataset, index) => (
       <MenuItem key={index} value={dataset.id}>
-        /{dataset.path}
+        {`${dataset.path.split('')[0] === '/' ? '' : '/'}${dataset.path}`}
       </MenuItem>
   ));
 
