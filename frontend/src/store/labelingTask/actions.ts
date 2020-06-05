@@ -1,4 +1,4 @@
-import { AppThunk } from "../index";
+import { AppThunk } from '../index';
 import {
   LabelingTaskActionTypes,
   GET_DATASETS_START,
@@ -13,13 +13,9 @@ import {
   CREATE_LABELING_TASK_SUCCESS,
   GET_LABELING_TASKS_START,
   GET_LABELING_TASKS_SUCCESS,
-  CLEAR_NEW_LABELING_TASK,
-} from "./types";
-import {
-  Dataset,
-  LabelingTaskRequestData,
-  LabelingTaskStatus,
-} from "../../models";
+  CLEAR_NEW_LABELING_TASK
+} from './types';
+import { Dataset, LabelingTaskRequestData, LabelingTaskStatus } from '../../models';
 import {
   createLabelingTaskRequest,
   getDatasetsRequest,
@@ -28,101 +24,97 @@ import {
   getLabelingTasksRequest,
   archiveTaskLabelingRequest,
   retryLabelingTaskRequest
-} from "../../api";
-import { LabelingToolUser } from "../../models/labelingToolUser";
+} from '../../api';
+import { LabelingToolUser } from '../../models/labelingToolUser';
 import { setErrorAction } from '../error';
 import { ROWS_PER_PAGE } from '../../components/tasksStatuses/constants';
 
 export function getBucketPathsStart(): LabelingTaskActionTypes {
   return {
-    type: GET_DATASETS_START,
+    type: GET_DATASETS_START
   };
 }
 
-export function getDatasetsSuccess(
-  datasets: Dataset[]
-): LabelingTaskActionTypes {
+export function getDatasetsSuccess(datasets: Dataset[]): LabelingTaskActionTypes {
   let datasetsMap = new Map<string, Dataset>();
   datasets.forEach((dataset) => {
     datasetsMap.set(dataset.id, dataset);
-  })
+  });
   return {
     type: GET_DATASETS_SUCCESS,
-    datasets: datasetsMap,
+    datasets: datasetsMap
   };
 }
 
 export function getLabelingToolUsersStart(): LabelingTaskActionTypes {
   return {
-    type: GET_LABELING_TOOL_USERS_START,
+    type: GET_LABELING_TOOL_USERS_START
   };
 }
 
-export function getLabelingToolUsersSuccess(
-  users: LabelingToolUser[]
-): LabelingTaskActionTypes {
+export function getLabelingToolUsersSuccess(users: LabelingToolUser[]): LabelingTaskActionTypes {
   return {
     type: GET_LABELING_TOOL_USERS_SUCCESS,
-    users,
+    users
   };
 }
 
 export function getUnsignedImagesCountStart(): LabelingTaskActionTypes {
   return {
-    type: GET_UNSIGNED_IMAGES_COUNT_START,
+    type: GET_UNSIGNED_IMAGES_COUNT_START
   };
 }
 
 export function getUnsignedImagesCountSuccess(imagesCount: number) {
   return {
     type: GET_UNSIGNED_IMAGES_COUNT_SUCCESS,
-    imagesCount,
+    imagesCount
   };
 }
 
 export function setCurrentBucketId(bucketId: string): LabelingTaskActionTypes {
   return {
     type: SET_CURRENT_BUCKET_ID,
-    bucketId,
+    bucketId
   };
 }
 
 export function setCurrentDatasetId(datasetId: string): LabelingTaskActionTypes {
   return {
     type: SET_CURRENT_DATASET_ID,
-    datasetId,
+    datasetId
   };
 }
 
 export function createLabelingTaskStart(): LabelingTaskActionTypes {
   return {
-    type: CREATE_LABELING_TASK_START,
+    type: CREATE_LABELING_TASK_START
   };
 }
 
-export function createLabelingTaskSuccess(newTask: {location: string}): LabelingTaskActionTypes {
+export function createLabelingTaskSuccess(newTask: { location: string }): LabelingTaskActionTypes {
   return {
     type: CREATE_LABELING_TASK_SUCCESS,
-    newTask,
+    newTask
   };
 }
 
 export function clearNewTaskData(): LabelingTaskActionTypes {
   return {
-    type: CLEAR_NEW_LABELING_TASK,
+    type: CLEAR_NEW_LABELING_TASK
   };
 }
 
 export function getLabelingTasksStart(): LabelingTaskActionTypes {
   return {
-    type: GET_LABELING_TASKS_START,
+    type: GET_LABELING_TASKS_START
   };
 }
 
-export function getLabelingTasksSuccess(tasksData: {count: number, tasks: LabelingTaskStatus[]}) {
+export function getLabelingTasksSuccess(tasksData: { count: number; tasks: LabelingTaskStatus[] }) {
   return {
     type: GET_LABELING_TASKS_SUCCESS,
-    tasksData,
+    tasksData
   };
 }
 
@@ -138,31 +130,27 @@ export const getLabelingToolUsers = (): AppThunk => (dispatch) => {
   return getLabelingToolUsersRequest()
     .then((response) => dispatch(getLabelingToolUsersSuccess(response.data)))
     .catch((error) => {
-      let errorMessage = error.message ? error: {message:'Error Getting Users'}
-      dispatch(setErrorAction(errorMessage))
+      let errorMessage = error.message ? error : { message: 'Error Getting Users' };
+      dispatch(setErrorAction(errorMessage));
     });
 };
 
-export const getUnsignedImagesCount = (
-  datasetId: string
-): AppThunk => (dispatch) => {
+export const getUnsignedImagesCount = (datasetId: string): AppThunk => (dispatch) => {
   dispatch(getUnsignedImagesCountStart());
   return getUnsignedImagesCountRequest(datasetId)
-    .then((response) =>
-      dispatch(getUnsignedImagesCountSuccess(response.data.count))
-    )
+    .then((response) => dispatch(getUnsignedImagesCountSuccess(response.data.count)))
     .catch((error) => dispatch(setErrorAction(error)));
 };
 
-export const createLabelingTask = (
-  taskData: LabelingTaskRequestData
-): AppThunk => (dispatch) => {
+export const createLabelingTask = (taskData: LabelingTaskRequestData): AppThunk => (dispatch) => {
   dispatch(createLabelingTaskStart());
   return createLabelingTaskRequest(taskData)
     .then((response) => {
-      dispatch(createLabelingTaskSuccess({
-        location: response.headers['location']
-      }))
+      dispatch(
+        createLabelingTaskSuccess({
+          location: response.headers['location']
+        })
+      );
     })
     .catch((error) => dispatch(setErrorAction(error)));
 };
@@ -172,7 +160,7 @@ export const getLabelingTasks = (
   rowsPerPage: number,
   filterMap: any,
   sortOrder?: 'ascend' | 'descend',
-  sortField?: string 
+  sortField?: string
 ): AppThunk => (dispatch) => {
   dispatch(getLabelingTasksStart());
   return getLabelingTasksRequest(page, rowsPerPage, filterMap, sortOrder, sortField)
@@ -180,9 +168,7 @@ export const getLabelingTasks = (
     .catch((error) => dispatch(setErrorAction(error)));
 };
 
-export const archiveLabelingTask = (
-  taskData: Array<number>
-): AppThunk => (dispatch) => {
+export const archiveLabelingTask = (taskData: Array<number>): AppThunk => (dispatch) => {
   dispatch(createLabelingTaskStart());
   return archiveTaskLabelingRequest(taskData)
     .then(() => {
@@ -191,9 +177,7 @@ export const archiveLabelingTask = (
     .catch((error: any) => dispatch(setErrorAction(error)));
 };
 
-export const retryLabelingTask = (
-  taskData: Array<number>
-): AppThunk => (dispatch) => {
+export const retryLabelingTask = (taskData: Array<number>): AppThunk => (dispatch) => {
   dispatch(createLabelingTaskStart());
   return retryLabelingTaskRequest(taskData)
     .then(() => {

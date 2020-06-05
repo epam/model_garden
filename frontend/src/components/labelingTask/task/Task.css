@@ -41,9 +41,9 @@
   transform: translate(0.875rem, 1.25rem);
 }
 
-#task-bucket-name[data-shrink="true"],
-#task-datasets[data-shrink="true"],
-#task-labeling-tool-user[data-shrink="true"] {
+#task-bucket-name[data-shrink='true'],
+#task-datasets[data-shrink='true'],
+#task-labeling-tool-user[data-shrink='true'] {
   transform: translate(0.875rem, -0.375rem);
   font-size: 0.75rem;
 }
