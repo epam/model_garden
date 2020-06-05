@@ -1,9 +1,5 @@
-import {
-  MainActionTypes,
-  GET_BUCKETS_START,
-  GET_BUCKETS_SUCCESS,
-} from "./types";
-import {Bucket} from "../../models";
+import { MainActionTypes, GET_BUCKETS_START, GET_BUCKETS_SUCCESS } from './types';
+import { Bucket } from '../../models';
 
 export interface MainState {
   isBucketsLoading: boolean;
@@ -12,13 +8,10 @@ export interface MainState {
 
 const initialState: MainState = {
   isBucketsLoading: false,
-  buckets: [],
+  buckets: []
 };
 
-export const mainReducer = (
-  state: MainState = initialState,
-  action: MainActionTypes
-): MainState => {
+export const mainReducer = (state: MainState = initialState, action: MainActionTypes): MainState => {
   switch (action.type) {
     case GET_BUCKETS_START:
       return {
@@ -29,7 +22,7 @@ export const mainReducer = (
       return {
         ...state,
         isBucketsLoading: false,
-        buckets: action.buckets,
+        buckets: action.buckets
       };
     default:
       return state;

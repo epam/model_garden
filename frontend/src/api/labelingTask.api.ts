@@ -1,21 +1,18 @@
-import axios from "axios";
-import { LabelingTaskRequestData, LabelingTaskStatus } from "../models";
-import { backendHostPort } from "./environment";
+import axios from 'axios';
+import { LabelingTaskRequestData, LabelingTaskStatus } from '../models';
+import { backendHostPort } from './environment';
 
 axios.defaults.headers = {
-  "Content-Type": "application/json",
+  'Content-Type': 'application/json'
 };
 
 export const getDatasetsRequest = async (bucketId: string) => {
   try {
-    return await axios.get(
-      `http://${backendHostPort}/api/datasets/`,
-      {
-        params: {
-          bucket_id: bucketId,
-        }
+    return await axios.get(`http://${backendHostPort}/api/datasets/`, {
+      params: {
+        bucket_id: bucketId
       }
-    );
+    });
   } catch (error) {
     if (error && error.response) {
       throw new Error(error.response.data.message);
@@ -27,9 +24,7 @@ export const getDatasetsRequest = async (bucketId: string) => {
 
 export const getLabelingToolUsersRequest = async () => {
   try {
-    return await axios.get(
-      `http://${backendHostPort}/api/cvat-users/`
-    );
+    return await axios.get(`http://${backendHostPort}/api/cvat-users/`);
   } catch (error) {
     if (error && error.response) {
       throw new Error(error.response.data.message);
@@ -39,19 +34,14 @@ export const getLabelingToolUsersRequest = async () => {
   }
 };
 
-export const getUnsignedImagesCountRequest = async (
-  datasetId: string,
-) => {
+export const getUnsignedImagesCountRequest = async (datasetId: string) => {
   try {
-    return await axios.get(
-      `http://${backendHostPort}/api/media-assets/`,
-        {
-          params: {
-            dataset_id: datasetId,
-            is_pending: true,
-          }
-        }
-    );
+    return await axios.get(`http://${backendHostPort}/api/media-assets/`, {
+      params: {
+        dataset_id: datasetId,
+        is_pending: true
+      }
+    });
   } catch (error) {
     if (error && error.response) {
       throw new Error(error.response.data.message);
@@ -61,14 +51,9 @@ export const getUnsignedImagesCountRequest = async (
   }
 };
 
-export const createLabelingTaskRequest = async (
-  taskData: LabelingTaskRequestData,
-) => {
+export const createLabelingTaskRequest = async (taskData: LabelingTaskRequestData) => {
   try {
-    return await axios.post(
-      `http://${backendHostPort}/api/labeling-tasks/`,
-      taskData
-    );
+    return await axios.post(`http://${backendHostPort}/api/labeling-tasks/`, taskData);
   } catch (error) {
     if (error && error.response) {
       throw new Error(error.response.data.message);
@@ -84,12 +69,12 @@ export const getLabelingTasksRequest = async (
   filterMap: any,
   sortOrder?: 'ascend' | 'descend',
   sortField?: string
-): Promise<{count: number, tasks: LabelingTaskStatus[]}> => {
+): Promise<{ count: number; tasks: LabelingTaskStatus[] }> => {
   try {
     const params: any = {
       page,
-      page_size: rowsPerPage,
-    }
+      page_size: rowsPerPage
+    };
 
     if (sortOrder && sortField) {
       params.ordering = sortOrder === 'ascend' ? sortField : `-${sortField}`;
@@ -99,14 +84,11 @@ export const getLabelingTasksRequest = async (
       params[key] = Array(value)[0];
     }
 
-    let resp = await axios.get(
-      `http://${backendHostPort}/api/labeling-tasks/`,
-      {params : params}
-    );
+    let resp = await axios.get(`http://${backendHostPort}/api/labeling-tasks/`, { params: params });
     return {
       tasks: resp.data.results,
       count: resp.data.count
-    }
+    };
   } catch (error) {
     if (error && error.response) {
       throw new Error(error.response.data.message);
@@ -116,14 +98,9 @@ export const getLabelingTasksRequest = async (
   }
 };
 
-export const archiveTaskLabelingRequest = async (
-  taskIds: Array<number>,
-) => {
+export const archiveTaskLabelingRequest = async (taskIds: Array<number>) => {
   try {
-    return await axios.patch(
-      `http://${backendHostPort}/api/labeling-tasks/archive/`,
-      {id: taskIds}
-    );
+    return await axios.patch(`http://${backendHostPort}/api/labeling-tasks/archive/`, { id: taskIds });
   } catch (error) {
     if (error && error.response) {
       throw new Error(error.response.data.message);
@@ -133,14 +110,9 @@ export const archiveTaskLabelingRequest = async (
   }
 };
 
-export const retryLabelingTaskRequest = async (
-  taskIds: Array<number>,
-) => {
+export const retryLabelingTaskRequest = async (taskIds: Array<number>) => {
   try {
-    return await axios.patch(
-      `http://${backendHostPort}/api/labeling-tasks/retry/`,
-      {id: taskIds}
-    );
+    return await axios.patch(`http://${backendHostPort}/api/labeling-tasks/retry/`, { id: taskIds });
   } catch (error) {
     if (error && error.response) {
       throw new Error(error.response.data.message);

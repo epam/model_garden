@@ -1,23 +1,19 @@
-import { AppThunk } from "../index";
-import {
-  MainActionTypes,
-  GET_BUCKETS_START,
-  GET_BUCKETS_SUCCESS,
-} from "./types";
-import { Bucket } from "../../models";
-import { getBucketsRequest } from "../../api";
+import { AppThunk } from '../index';
+import { MainActionTypes, GET_BUCKETS_START, GET_BUCKETS_SUCCESS } from './types';
+import { Bucket } from '../../models';
+import { getBucketsRequest } from '../../api';
 import { setErrorAction } from '../error';
 
 export function getBucketsStart(): MainActionTypes {
   return {
-    type: GET_BUCKETS_START,
+    type: GET_BUCKETS_START
   };
 }
 
 export function getBucketsSuccess(buckets: Bucket[]): MainActionTypes {
   return {
     type: GET_BUCKETS_SUCCESS,
-    buckets,
+    buckets
   };
 }
 

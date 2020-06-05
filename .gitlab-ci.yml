@@ -39,6 +39,13 @@ test:
     paths:
       - backend/venv/
 
+prettier:
+  stage: test
+  image: node
+  script:
+    - cd frontend
+    - npx prettier@2.0.5 --config ./.prettierrc.js --check "src/**/*.{js,jsx,ts,tsx,json,css}"
+
 backend:
   stage: build
   image: docker
