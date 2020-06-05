@@ -8,14 +8,14 @@ export interface LabelingTaskData {
   owner: number;
   assignee: number;
   labels: LabelingTaskLabel[];
-  image_quality: number,
-  z_order?: boolean,
-  segment_size?: string,
-  overlap?: string,
-  start_frame?: string,
-  stop_frame?: string,
-  frame_filter?: string,
-  segments?: []
+  image_quality: number;
+  z_order?: boolean;
+  segment_size?: string;
+  overlap?: string;
+  start_frame?: string;
+  stop_frame?: string;
+  frame_filter?: string;
+  segments?: [];
 }
 
 export interface LabelingTaskImagesData {
@@ -27,7 +27,7 @@ export interface LabelingTask {
   images_data: LabelingTaskImagesData;
 }
 
-export type LabelingTaskRequestData  = {
+export type LabelingTaskRequestData = {
   task_name: string;
   dataset_id: string;
   assignee_id: string;

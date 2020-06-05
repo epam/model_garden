@@ -17,7 +17,7 @@
   background-color: #ddf3fb;
   color: #6d99fd;
   outline: none;
-  transition: border .24s ease-in-out;
+  transition: border 0.24s ease-in-out;
 }
 
 .dropzone__text {
