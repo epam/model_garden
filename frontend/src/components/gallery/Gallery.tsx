@@ -1,14 +1,24 @@
 import React, { useEffect } from 'react';
 import { AppState } from '../../store';
 import { Bucket, Dataset } from '../../models';
-import { Grid, Container, Select, FormControl, InputLabel, MenuItem } from '@material-ui/core';
+import {
+  Grid,
+  Container,
+  Select,
+  FormControl,
+  InputLabel,
+  MenuItem
+} from '@material-ui/core';
 import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { getMediaImages } from '../../store/media';
 import { getDatasets } from '../../store/labelingTask';
 import { GridGallery } from './GridGallery';
 
-import { setCurrentBucketId, setCurrentDatasetId } from '../../store/labelingTask';
+import {
+  setCurrentBucketId,
+  setCurrentDatasetId
+} from '../../store/labelingTask';
 
 import axios from 'axios';
 
@@ -52,7 +62,10 @@ const GalleryComponent = (props: any) => {
 
   useEffect(() => {
     if (currentDatasetId) {
-      getMediaImages({ bucketId: currentBucketId, datasetId: currentDatasetId });
+      getMediaImages({
+        bucketId: currentBucketId,
+        datasetId: currentDatasetId
+      });
     }
   }, [currentDatasetId]);
 
@@ -62,12 +75,16 @@ const GalleryComponent = (props: any) => {
     }
   }, [currentBucketId]);
 
-  const handleBucketChange = (e: React.ChangeEvent<{ name?: string; value: unknown }>) => {
+  const handleBucketChange = (
+    e: React.ChangeEvent<{ name?: string; value: unknown }>
+  ) => {
     if (e.target.value) {
       setCurrentBucketId(e.target.value as string);
     }
   };
-  const handleDataSetChange = (e: React.ChangeEvent<{ name?: string; value: unknown }>) => {
+  const handleDataSetChange = (
+    e: React.ChangeEvent<{ name?: string; value: unknown }>
+  ) => {
     if (e.target.value) {
       setCurrentDatasetId(e.target.value as string);
     }
@@ -108,7 +125,9 @@ const GalleryComponent = (props: any) => {
             >
               {datasets.map((dataset: Dataset, index: any) => (
                 <MenuItem key={index} value={dataset.id}>
-                  {`${dataset.path.split('')[0] === '/' ? '' : '/'}${dataset.path}`}
+                  {`${dataset.path.split('')[0] === '/' ? '' : '/'}${
+                    dataset.path
+                  }`}
                 </MenuItem>
               ))}
             </Select>
