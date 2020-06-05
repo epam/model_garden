@@ -37,18 +37,13 @@ export const GridGallery = ({ photos }: any) => {
     <Box paddingTop={3}>
       {!photos.length && <Empty />}
 
-      <GridList cellHeight={160}>
+      <GridList>
         {photos.map((tile: any) => (
-          <GridListTile
-            className={classes.item}
-            key={tile.remote_path}
-            cols={1}
-          >
+          <GridListTile className={classes.item} key={tile.remote_path}>
             <img src={tile.remote_path} alt={'picture'} />
             {tile.remote_xml_path && (
               <GridListTileBar
                 title="Download XML"
-                // subtitle={<span>by: go to XML</span>}
                 actionIcon={
                   <IconButton
                     className={classes.icon}
