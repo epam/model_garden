@@ -1,42 +1,42 @@
 .task-statuses {
-    margin-top: 2.5rem;
-    margin-left: auto;
-    margin-right: auto;
-    width: 80vw;
+  margin-top: 2.5rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80vw;
 }
 
 .ant-table {
-    color: #000;
+  color: #000;
 }
 
 .ant-table-tbody > tr > td {
-    border-bottom-color: rgba(0,0,0,0.09);
+  border-bottom-color: rgba(0, 0, 0, 0.09);
 }
 
 .task-status-saved > td {
-    background-color: #e8f5e9;
+  background-color: #e8f5e9;
 }
 
 .task-status-saved:hover > td {
-    background-color: #e3f2e4 !important;
+  background-color: #e3f2e4 !important;
 }
 
 .task-status-archived > td {
-    background-color: #eceff1;
-    color: #8f9ba3;
+  background-color: #eceff1;
+  color: #8f9ba3;
 }
 
 .task-status-archived:hover > td {
-    background-color: #e8ebee !important;
+  background-color: #e8ebee !important;
 }
 
 .ant-btn {
-    margin-right: 0.5rem;
-    margin-bottom: 0.5rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .ant-row-rtl .ant-btn {
-    margin-right: 0;
-    margin-bottom: 0.5rem;
-    margin-left: 0.5rem;
+  margin-right: 0;
+  margin-bottom: 0.5rem;
+  margin-left: 0.5rem;
 }

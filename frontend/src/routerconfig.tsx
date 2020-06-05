@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Tabs as TabsMUI, Tab } from '@material-ui/core';
 import { Route, Switch, Link } from 'react-router-dom';
 
-import { AddExistingDataset, UploadImages, LabelingTask, TasksStatuses,Gallery } from './components';
+import { AddExistingDataset, UploadImages, LabelingTask, TasksStatuses, Gallery } from './components';
 
 interface Config {
   component: FC;
@@ -35,7 +35,7 @@ const config: Config[] = [
     component: Gallery,
     label: 'Gallery',
     path: '/gallery'
-  },
+  }
 ];
 
 export const Tabs: FC<{}> = () => (
