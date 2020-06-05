@@ -1,4 +1,4 @@
-import {Bucket} from "../../models";
+import { Bucket } from '../../models';
 
 export const GET_BUCKETS_START = 'GET_BUCKETS_START';
 export const GET_BUCKETS_SUCCESS = 'GET_BUCKETS_SUCCESS';
@@ -12,7 +12,4 @@ export interface getBucketsSuccess {
   buckets: Bucket[];
 }
 
-export type MainActionTypes =
-  | getBucketsStart
-  | getBucketsSuccess;
-  
+export type MainActionTypes = getBucketsStart | getBucketsSuccess;
