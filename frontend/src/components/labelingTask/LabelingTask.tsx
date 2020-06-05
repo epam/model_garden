@@ -17,11 +17,21 @@ import { LabelingTaskRequestData } from '../../models';
 export const LabelingTask: React.FC = () => {
   const dispatch = useDispatch();
   const buckets = useSelector((state: AppState) => state.main.buckets);
-  const currentBucketId = useSelector((state: AppState) => state.labelingTask.currentBucketId);
-  const datasets = useSelector((state: AppState) => state.labelingTask.datasets);
-  const currentDatasetId = useSelector((state: AppState) => state.labelingTask.currentDatasetId);
-  const users = useSelector((state: AppState) => state.labelingTask.labelingToolUsers);
-  const unsignedImagesCount = useSelector((state: AppState) => state.labelingTask.unsignedImagesCount);
+  const currentBucketId = useSelector(
+    (state: AppState) => state.labelingTask.currentBucketId
+  );
+  const datasets = useSelector(
+    (state: AppState) => state.labelingTask.datasets
+  );
+  const currentDatasetId = useSelector(
+    (state: AppState) => state.labelingTask.currentDatasetId
+  );
+  const users = useSelector(
+    (state: AppState) => state.labelingTask.labelingToolUsers
+  );
+  const unsignedImagesCount = useSelector(
+    (state: AppState) => state.labelingTask.unsignedImagesCount
+  );
   const newTask = useSelector((state: AppState) => state.labelingTask.newTask);
   const [error, setError] = useState('');
   const [showLoader, setShowLoader] = useState(false);

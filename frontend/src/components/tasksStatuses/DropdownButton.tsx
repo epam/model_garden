@@ -24,7 +24,10 @@ interface DropdownButtonProps {
   onRetry: () => void;
 }
 
-export const DropdownButton: React.FC<DropdownButtonProps> = ({ onArchive, onRetry }) => {
+export const DropdownButton: React.FC<DropdownButtonProps> = ({
+  onArchive,
+  onRetry
+}) => {
   return (
     <Dropdown overlay={menu(onArchive, onRetry)} placement="bottomLeft">
       <Button>Actions</Button>
