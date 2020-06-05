@@ -1,7 +1,15 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { Typography, TextField, Select, MenuItem, Button, FormControl, InputLabel } from '@material-ui/core';
+import {
+  Typography,
+  TextField,
+  Select,
+  MenuItem,
+  Button,
+  FormControl,
+  InputLabel
+} from '@material-ui/core';
 import './Task.css';
 import { FilesCounter } from '../filesCounter';
 import { Notification } from '../notification';
@@ -61,7 +69,10 @@ export const Task: React.FC<TaskProps> = ({
     }
   });
 
-  const { taskName: taskNameValue, user: userValue } = watch(['taskName', 'user']);
+  const { taskName: taskNameValue, user: userValue } = watch([
+    'taskName',
+    'user'
+  ]);
 
   useEffect(() => {
     setValue('taskName', taskName);
@@ -103,13 +114,17 @@ export const Task: React.FC<TaskProps> = ({
     </MenuItem>
   ));
 
-  const handleBucketChange = (e: React.ChangeEvent<{ name?: string; value: unknown }>) => {
+  const handleBucketChange = (
+    e: React.ChangeEvent<{ name?: string; value: unknown }>
+  ) => {
     if (e.target.value) {
       dispatch(setCurrentBucketId(e.target.value as string));
     }
   };
 
-  const handleDatasetChange = (e: React.ChangeEvent<{ name?: string; value: unknown }>) => {
+  const handleDatasetChange = (
+    e: React.ChangeEvent<{ name?: string; value: unknown }>
+  ) => {
     let datasetId: string = e.target.value as string;
     setSelectedDataset(datasetId);
     dispatch(setCurrentDatasetId(datasetId));
@@ -191,9 +206,14 @@ export const Task: React.FC<TaskProps> = ({
             as={<TextField />}
           />
           <div className="task__form-group">
-            <FilesCounter filesCount={filesCount} className="task__form-left-item" />
+            <FilesCounter
+              filesCount={filesCount}
+              className="task__form-left-item"
+            />
             <FormControl className="task__form-right-item">
-              <InputLabel id="task-labeling-tool-user">Labeling tool user</InputLabel>
+              <InputLabel id="task-labeling-tool-user">
+                Labeling tool user
+              </InputLabel>
               <Controller
                 labelId="task-labeling-tool-user"
                 name="user"
@@ -236,8 +256,10 @@ export const Task: React.FC<TaskProps> = ({
               selectedDataset === DEFAULT_FORM_DATA.DATASET ||
               taskNameValue === DEFAULT_FORM_DATA.TASK_NAME ||
               userValue === DEFAULT_FORM_DATA.USER ||
-              Number(counter.countOfTasks) === DEFAULT_FORM_DATA.COUNT_OF_TASKS ||
-              Number(counter.filesInTask) === DEFAULT_FORM_DATA.FILES_IN_TASK_VALUE
+              Number(counter.countOfTasks) ===
+                DEFAULT_FORM_DATA.COUNT_OF_TASKS ||
+              Number(counter.filesInTask) ===
+                DEFAULT_FORM_DATA.FILES_IN_TASK_VALUE
             }
           >
             Assign

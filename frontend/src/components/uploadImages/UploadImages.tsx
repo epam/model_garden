@@ -2,8 +2,21 @@ import React, { useState } from 'react';
 import { useAppDispatch } from '../../store';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useForm, Controller } from 'react-hook-form';
-import { Typography, InputLabel, Select, TextField, Button, MenuItem, FormControl } from '@material-ui/core';
-import { FormContainer, DropZone, ExtendedFile, ProgressLoader } from '../shared';
+import {
+  Typography,
+  InputLabel,
+  Select,
+  TextField,
+  Button,
+  MenuItem,
+  FormControl
+} from '@material-ui/core';
+import {
+  FormContainer,
+  DropZone,
+  ExtendedFile,
+  ProgressLoader
+} from '../shared';
 import { SnackbarAlert } from '../snackbarAlert';
 import '../shared/style.css';
 import { AppState } from '../../store';
@@ -36,7 +49,9 @@ export const UploadImages: React.FC = () => {
   });
   const bucketIdValue = watch('bucketId');
   const buckets = useSelector((state: AppState) => state.main.buckets);
-  const mediaFiles = useSelector((state: AppState): File[] => state.media.mediaFiles);
+  const mediaFiles = useSelector(
+    (state: AppState): File[] => state.media.mediaFiles
+  );
 
   const handleUploadImagesSubmit = (bucketId: string, path: string) => {
     dispatch(uploadMediaFiles({ files: mediaFiles, bucketId, path }))
@@ -76,12 +91,20 @@ export const UploadImages: React.FC = () => {
     <>
       <div className="upload-images">
         <FormContainer>
-          <Typography variant="h5" component="h1" className="upload-images__title">
+          <Typography
+            variant="h5"
+            component="h1"
+            className="upload-images__title"
+          >
             UPLOAD IMAGES
           </Typography>
           <form onSubmit={onSubmit} className="upload-images__form">
             <div className="upload-images__dropzone">
-              <DropZone files={files} setFiles={setFiles} handleDrop={handleDropFiles} />
+              <DropZone
+                files={files}
+                setFiles={setFiles}
+                handleDrop={handleDropFiles}
+              />
             </div>
             <div className="upload-images__settings">
               <FormControl className="upload-images__settings-item">
@@ -109,7 +132,10 @@ export const UploadImages: React.FC = () => {
                 color="primary"
                 variant="contained"
                 type="submit"
-                disabled={mediaFiles.length === 0 || bucketIdValue === DEFAULT_FORM_DATA.BUCKET_ID}
+                disabled={
+                  mediaFiles.length === 0 ||
+                  bucketIdValue === DEFAULT_FORM_DATA.BUCKET_ID
+                }
               >
                 Upload
               </Button>
@@ -118,7 +144,11 @@ export const UploadImages: React.FC = () => {
         </FormContainer>
         <ProgressLoader show={showLoader} />
       </div>
-      <SnackbarAlert open={notification.show} onClose={wipeNotification} severity={notification.severity}>
+      <SnackbarAlert
+        open={notification.show}
+        onClose={wipeNotification}
+        severity={notification.severity}
+      >
         {notification.message}
       </SnackbarAlert>
     </>
