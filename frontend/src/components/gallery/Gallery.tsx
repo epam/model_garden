@@ -10,7 +10,6 @@ import {
   MenuItem
 } from '@material-ui/core';
 import { connect } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
 import { getMediaImages } from '../../store/media';
 import { getDatasets } from '../../store/labelingTask';
 import { GridGallery } from './GridGallery';
@@ -21,23 +20,6 @@ import {
 } from '../../store/labelingTask';
 
 import axios from 'axios';
-
-const useStyles = makeStyles((theme) => ({
-  item: {
-    [theme.breakpoints.down('sm')]: {
-      width: `${100 / 3}%`
-    },
-    [theme.breakpoints.only('md')]: {
-      width: `${100 / 4}%`
-    },
-    [theme.breakpoints.only('lg')]: {
-      width: `${100 / 6}%`
-    },
-    [theme.breakpoints.up('xl')]: {
-      width: `${100 / 10}% `
-    }
-  }
-}));
 
 interface GalleryProps {
   photos: [{}];
@@ -58,7 +40,6 @@ const GalleryComponent = (props: any) => {
     setCurrentDatasetId,
     getDatasets
   } = props;
-  const classes = useStyles();
 
   useEffect(() => {
     if (currentDatasetId) {
