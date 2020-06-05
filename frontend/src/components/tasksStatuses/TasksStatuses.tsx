@@ -9,7 +9,11 @@ import 'antd/dist/antd.css';
 import './TasksStatuses.css';
 import { DropdownButton } from './DropdownButton';
 import { AppState } from '../../store';
-import { archiveLabelingTask, getLabelingTasks, retryLabelingTask } from '../../store/labelingTask';
+import {
+  archiveLabelingTask,
+  getLabelingTasks,
+  retryLabelingTask
+} from '../../store/labelingTask';
 import { ROWS_PER_PAGE } from './constants';
 
 export const TasksStatuses: React.FC = () => {
@@ -19,9 +23,15 @@ export const TasksStatuses: React.FC = () => {
   const [filterMap, setFilterMap] = useState({});
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-  const areTasksLoading = useSelector((state: AppState) => state.labelingTask.isLabelingTasksStatusesLoading);
-  const tasks = useSelector((state: AppState) => state.labelingTask.labelingTasksStatuses.tasks);
-  const tasksCount = useSelector((state: AppState) => state.labelingTask.labelingTasksStatuses.count);
+  const areTasksLoading = useSelector(
+    (state: AppState) => state.labelingTask.isLabelingTasksStatusesLoading
+  );
+  const tasks = useSelector(
+    (state: AppState) => state.labelingTask.labelingTasksStatuses.tasks
+  );
+  const tasksCount = useSelector(
+    (state: AppState) => state.labelingTask.labelingTasksStatuses.count
+  );
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -30,7 +40,12 @@ export const TasksStatuses: React.FC = () => {
 
   let searchInput: Input | null;
   const getColumnSearchProps = (dataIndex: string) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters
+    }: any) => (
       <div style={{ padding: 8 }}>
         <Input
           ref={(node) => {
@@ -38,7 +53,9 @@ export const TasksStatuses: React.FC = () => {
           }}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{ width: 188, marginBottom: 8, display: 'block' }}
         />
@@ -52,14 +69,21 @@ export const TasksStatuses: React.FC = () => {
           >
             Search
           </Button>
-          <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button
+            onClick={() => handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-    onFilter: (value: string, record: any) => record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+    onFilter: (value: string, record: any) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
     onFilterDropdownVisibleChange: (visible: boolean) => {
       if (visible) {
         setTimeout(() => searchInput && searchInput.select());
@@ -135,14 +159,26 @@ export const TasksStatuses: React.FC = () => {
   ) => {
     setPage((prevState: any) => {
       if (prevState !== pagination.current || prevState !== sorter.order) {
-        dispatch(getLabelingTasks(pagination.current, pagination.pageSize, filterMap, sorter.order, sorter.field));
+        dispatch(
+          getLabelingTasks(
+            pagination.current,
+            pagination.pageSize,
+            filterMap,
+            sorter.order,
+            sorter.field
+          )
+        );
         return pagination.current;
       }
       return prevState;
     });
   };
 
-  const handleSearch = (selectedKeys: Array<string>, confirm: any, dataIndex: string) => {
+  const handleSearch = (
+    selectedKeys: Array<string>,
+    confirm: any,
+    dataIndex: string
+  ) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -152,7 +188,12 @@ export const TasksStatuses: React.FC = () => {
       ...prevState,
       [dataIndex]: selectedKeys[0]
     }));
-    dispatch(getLabelingTasks(1, ROWS_PER_PAGE, { ...filterMap, [dataIndex]: selectedKeys[0] }));
+    dispatch(
+      getLabelingTasks(1, ROWS_PER_PAGE, {
+        ...filterMap,
+        [dataIndex]: selectedKeys[0]
+      })
+    );
   };
 
   const handleReset = (clearFilters: () => void) => {

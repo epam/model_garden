@@ -22,7 +22,9 @@ interface ProgressLoaderProps {
   show: boolean;
 }
 
-export const ProgressLoader: React.FC<ProgressLoaderProps> = ({ show }: ProgressLoaderProps) => {
+export const ProgressLoader: React.FC<ProgressLoaderProps> = ({
+  show
+}: ProgressLoaderProps) => {
   const classes = useStyles();
   if (!show) return null;
   return (

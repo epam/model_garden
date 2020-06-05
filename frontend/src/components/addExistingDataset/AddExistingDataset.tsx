@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Typography, InputLabel, Select, TextField, Button, MenuItem, FormControl, Snackbar } from '@material-ui/core';
+import {
+  Typography,
+  InputLabel,
+  Select,
+  TextField,
+  Button,
+  MenuItem,
+  FormControl,
+  Snackbar
+} from '@material-ui/core';
 import { FormContainer, ProgressLoader } from '../shared';
 import '../shared/style.css';
 import { AppState } from '../../store';
@@ -39,11 +48,16 @@ export const AddExistingDataset: React.FC = () => {
   const { handleSubmit, control, watch } = useForm<FormData>({
     defaultValues: formData
   });
-  const { bucketId: bucketIdValue, path: pathValue } = watch(['bucketId', 'path']);
+  const { bucketId: bucketIdValue, path: pathValue } = watch([
+    'bucketId',
+    'path'
+  ]);
 
   const buckets = useSelector((state: AppState) => state.main.buckets);
 
-  const addedDataSets = useSelector((state: AppState) => state.media.addedMediaAssets);
+  const addedDataSets = useSelector(
+    (state: AppState) => state.media.addedMediaAssets
+  );
 
   const handleAddExistingDatasetSubmit = (bucketId: string, path: string) => {
     (dispatch(addExistingDataset({ bucketId, path })) as any).then(() => {
@@ -67,7 +81,11 @@ export const AddExistingDataset: React.FC = () => {
   return (
     <div className="upload-images">
       <FormContainer>
-        <Typography variant="h5" component="h1" className="upload-images__title">
+        <Typography
+          variant="h5"
+          component="h1"
+          className="upload-images__title"
+        >
           {TITLE}
         </Typography>
         <form onSubmit={onSubmit} className="upload-images__form">
@@ -97,7 +115,10 @@ export const AddExistingDataset: React.FC = () => {
               color="primary"
               variant="contained"
               type="submit"
-              disabled={bucketIdValue === DEFAULT_FORM_DATA.BUCKET_ID || pathValue === DEFAULT_FORM_DATA.PATH}
+              disabled={
+                bucketIdValue === DEFAULT_FORM_DATA.BUCKET_ID ||
+                pathValue === DEFAULT_FORM_DATA.PATH
+              }
             >
               ADD
             </Button>

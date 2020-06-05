@@ -14,7 +14,11 @@ interface DropZoneProps {
   setFiles: Function;
 }
 
-export const DropZone: React.FC<DropZoneProps> = ({ handleDrop, files, setFiles }: DropZoneProps) => {
+export const DropZone: React.FC<DropZoneProps> = ({
+  handleDrop,
+  files,
+  setFiles
+}: DropZoneProps) => {
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       const formattedFiles = acceptedFiles.map((file: File) => {
@@ -45,7 +49,11 @@ export const DropZone: React.FC<DropZoneProps> = ({ handleDrop, files, setFiles 
   const tumbs = files.map((file) => (
     <div className="dropzone__thumb" key={file.name}>
       <div className="dropzone__thumb-inner">
-        <img src={file.preview} alt="dropzone" className="dropzone__thumb-image" />
+        <img
+          src={file.preview}
+          alt="dropzone"
+          className="dropzone__thumb-image"
+        />
       </div>
     </div>
   ));
@@ -63,7 +71,11 @@ export const DropZone: React.FC<DropZoneProps> = ({ handleDrop, files, setFiles 
         <div {...getRootProps({ className: 'dropzone__field' })}>
           <input {...getInputProps()} />
           <p className="dropzone__text">
-            {isDragActive ? <>Drop the files here ...</> : <>Drag 'n' drop some files here, or click to select files</>}
+            {isDragActive ? (
+              <>Drop the files here ...</>
+            ) : (
+              <>Drag 'n' drop some files here, or click to select files</>
+            )}
           </p>
         </div>
         <aside className="dropzone__tumbs-container">{tumbs}</aside>

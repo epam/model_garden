@@ -7,13 +7,22 @@ interface FilesCounterProps {
   className: string;
 }
 
-export const FilesCounter: React.FC<FilesCounterProps> = ({ filesCount, className }: FilesCounterProps) => {
+export const FilesCounter: React.FC<FilesCounterProps> = ({
+  filesCount,
+  className
+}: FilesCounterProps) => {
   return (
     <div className={`files-counter ${className}`}>
-      <Typography className="files-counter__description" variant="body1" component="div">
+      <Typography
+        className="files-counter__description"
+        variant="body1"
+        component="div"
+      >
         Files in Queue:
       </Typography>
-      <Typography className="files-counter__count">&nbsp;{filesCount}</Typography>
+      <Typography className="files-counter__count">
+        &nbsp;{filesCount}
+      </Typography>
     </div>
   );
 };
