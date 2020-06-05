@@ -30,25 +30,26 @@ const mediaSlice = createSlice({
   initialState,
   reducers: {
     //non-thunk reducer
-    setMediaFiles: (state: any, a: any) => {
-      state.mediaFiles = a.payload;
+    setMediaFiles: (state: any, action: any) => {
+      state.mediaFiles = action.payload;
     }
   },
   extraReducers: (builder) => {
     //reducer for async actions
-    builder.addCase(uploadMediaFiles.fulfilled, (state, action) => {
-      state = action.payload;
-    });
-    builder.addCase(getMediaImages.fulfilled, (state, action) => {
-      state.photos = action.payload;
-    });
-    builder.addCase(addExistingDataset.pending, (state, action) => {
-      state.addingExistingDataSet = true;
-    });
-    builder.addCase(addExistingDataset.fulfilled, (state, action) => {
-      state.addingExistingDataSet = false;
-      state.addedMediaAssets = action.payload;
-    });
+    builder
+      .addCase(uploadMediaFiles.fulfilled, (state, action) => {
+        state = action.payload;
+      })
+      .addCase(getMediaImages.fulfilled, (state, action) => {
+        state.photos = action.payload;
+      })
+      .addCase(addExistingDataset.pending, (state, action) => {
+        state.addingExistingDataSet = true;
+      })
+      .addCase(addExistingDataset.fulfilled, (state, action) => {
+        state.addingExistingDataSet = false;
+        state.addedMediaAssets = action.payload;
+      });
   }
 });
 

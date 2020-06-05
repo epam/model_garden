@@ -32,13 +32,28 @@
     "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.7",
     "@types/react-redux": "^7.1.7",
-    "@types/react-router-dom": "^5.1.5"
+    "@types/react-router-dom": "^5.1.5",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.9",
+    "prettier": "^2.0.5"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged --quiet"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css}": [
+      "prettier --write"
+    ]
+  },
+
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css}\""
   },
   "eslintConfig": {
     "extends": "react-app"

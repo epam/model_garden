@@ -1,21 +1,13 @@
-import React, { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
-import {
-  Typography,
-  InputLabel,
-  Select,
-  TextField,
-  Button,
-  MenuItem,
-  FormControl, Snackbar,
-} from "@material-ui/core";
-import { FormContainer, ProgressLoader } from "../shared";
-import "../shared/style.css";
-import { AppState } from "../../store";
-import { useSelector, useDispatch } from "react-redux";
-import {addExistingDataset} from "../../store/media";
-import {DEFAULT_FORM_DATA, TITLE} from "./constants";
-import {Alert} from "@material-ui/lab";
+import React, { useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { Typography, InputLabel, Select, TextField, Button, MenuItem, FormControl, Snackbar } from '@material-ui/core';
+import { FormContainer, ProgressLoader } from '../shared';
+import '../shared/style.css';
+import { AppState } from '../../store';
+import { useSelector, useDispatch } from 'react-redux';
+import { addExistingDataset } from '../../store/media';
+import { DEFAULT_FORM_DATA, TITLE } from './constants';
+import { Alert } from '@material-ui/lab';
 
 type FormData = {
   bucketId: string;
@@ -26,7 +18,7 @@ export const AddExistingDataset: React.FC = () => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState<FormData>({
     bucketId: DEFAULT_FORM_DATA.BUCKET_ID,
-    path: DEFAULT_FORM_DATA.PATH,
+    path: DEFAULT_FORM_DATA.PATH
   });
 
   const [open, setOpen] = React.useState(false);
@@ -45,18 +37,16 @@ export const AddExistingDataset: React.FC = () => {
   const [showLoader, setShowLoader] = useState(false);
 
   const { handleSubmit, control, watch } = useForm<FormData>({
-    defaultValues: formData,
+    defaultValues: formData
   });
-  const {bucketId: bucketIdValue, path: pathValue} = watch(['bucketId', 'path']);
+  const { bucketId: bucketIdValue, path: pathValue } = watch(['bucketId', 'path']);
 
   const buckets = useSelector((state: AppState) => state.main.buckets);
 
-  const addedDataSets = useSelector(
-    (state: AppState) => state.media.addedMediaAssets
-  );
+  const addedDataSets = useSelector((state: AppState) => state.media.addedMediaAssets);
 
   const handleAddExistingDatasetSubmit = (bucketId: string, path: string) => {
-    (dispatch(addExistingDataset({bucketId, path})) as any).then(() => {
+    (dispatch(addExistingDataset({ bucketId, path })) as any).then(() => {
       setShowLoader(false);
       raiseSuccessAlert();
     });
@@ -77,19 +67,13 @@ export const AddExistingDataset: React.FC = () => {
   return (
     <div className="upload-images">
       <FormContainer>
-        <Typography
-          variant="h5"
-          component="h1"
-          className="upload-images__title"
-        >
+        <Typography variant="h5" component="h1" className="upload-images__title">
           {TITLE}
         </Typography>
         <form onSubmit={onSubmit} className="upload-images__form">
           <div className="upload-images__settings">
             <FormControl className="upload-images__settings-item">
-              <InputLabel id="upload-images-bucket-name">
-                Bucket
-              </InputLabel>
+              <InputLabel id="upload-images-bucket-name">Bucket</InputLabel>
               <Controller
                 labelId="upload-images-bucket-name"
                 name="bucketId"
@@ -119,7 +103,12 @@ export const AddExistingDataset: React.FC = () => {
             </Button>
 
             <ProgressLoader show={showLoader} />
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={ { vertical: 'top', horizontal: 'right' } } >
+            <Snackbar
+              open={open}
+              autoHideDuration={6000}
+              onClose={handleClose}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            >
               <Alert onClose={handleClose} severity="success">
                 Dataset with {addedDataSets} media assets has been added
               </Alert>

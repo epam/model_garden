@@ -1,16 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Highlighter from 'react-highlight-words';
-import {Table, Input, Button, Space} from 'antd';
-import {SearchOutlined} from '@ant-design/icons';
+import { Table, Input, Button, Space } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import IconButton from '@material-ui/core/IconButton';
 import 'antd/dist/antd.css';
 import './TasksStatuses.css';
-import {DropdownButton} from './DropdownButton';
-import {AppState} from '../../store';
-import {archiveLabelingTask, getLabelingTasks, retryLabelingTask} from '../../store/labelingTask';
-import {ROWS_PER_PAGE} from './constants';
+import { DropdownButton } from './DropdownButton';
+import { AppState } from '../../store';
+import { archiveLabelingTask, getLabelingTasks, retryLabelingTask } from '../../store/labelingTask';
+import { ROWS_PER_PAGE } from './constants';
 
 export const TasksStatuses: React.FC = () => {
   const [pageValue, setPage] = useState(1);
@@ -20,12 +20,8 @@ export const TasksStatuses: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const areTasksLoading = useSelector((state: AppState) => state.labelingTask.isLabelingTasksStatusesLoading);
-  const tasks = useSelector(
-    (state: AppState) => state.labelingTask.labelingTasksStatuses.tasks
-  );
-  const tasksCount = useSelector(
-    (state: AppState) => state.labelingTask.labelingTasksStatuses.count
-  );
+  const tasks = useSelector((state: AppState) => state.labelingTask.labelingTasksStatuses.tasks);
+  const tasksCount = useSelector((state: AppState) => state.labelingTask.labelingTasksStatuses.count);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -37,12 +33,12 @@ export const TasksStatuses: React.FC = () => {
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
       <div style={{ padding: 8 }}>
         <Input
-          ref={node => {
+          ref={(node) => {
             searchInput = node;
           }}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{ width: 188, marginBottom: 8, display: 'block' }}
         />
@@ -63,8 +59,7 @@ export const TasksStatuses: React.FC = () => {
       </div>
     ),
     filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-    onFilter: (value: string, record: any) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilter: (value: string, record: any) => record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
     onFilterDropdownVisibleChange: (visible: boolean) => {
       if (visible) {
         setTimeout(() => searchInput && searchInput.select());
@@ -80,7 +75,7 @@ export const TasksStatuses: React.FC = () => {
         />
       ) : (
         text
-      ),
+      )
   });
 
   const TASK_STATUSES_COLUMNS = [
@@ -114,7 +109,9 @@ export const TasksStatuses: React.FC = () => {
           hostname = res[1];
         }
         return (
-          <a href={value} target="_blank" rel="noopener noreferrer">{hostname}</a>
+          <a href={value} target="_blank" rel="noopener noreferrer">
+            {hostname}
+          </a>
         );
       }
     },
@@ -138,15 +135,7 @@ export const TasksStatuses: React.FC = () => {
   ) => {
     setPage((prevState: any) => {
       if (prevState !== pagination.current || prevState !== sorter.order) {
-        dispatch(
-          getLabelingTasks(
-            pagination.current,
-            pagination.pageSize,
-            filterMap,
-            sorter.order,
-            sorter.field,
-          )
-        );
+        dispatch(getLabelingTasks(pagination.current, pagination.pageSize, filterMap, sorter.order, sorter.field));
         return pagination.current;
       }
       return prevState;
@@ -160,10 +149,10 @@ export const TasksStatuses: React.FC = () => {
     setPage(1);
 
     setFilterMap((prevState: any) => ({
-      ...prevState, [dataIndex]: selectedKeys[0]
+      ...prevState,
+      [dataIndex]: selectedKeys[0]
     }));
-    dispatch(getLabelingTasks(1, ROWS_PER_PAGE,
-      {...filterMap, [dataIndex]: selectedKeys[0]}));
+    dispatch(getLabelingTasks(1, ROWS_PER_PAGE, { ...filterMap, [dataIndex]: selectedKeys[0] }));
   };
 
   const handleReset = (clearFilters: () => void) => {
@@ -180,50 +169,48 @@ export const TasksStatuses: React.FC = () => {
 
   const rowSelection = {
     selectedRowKeys,
-    onChange: onSelectChange,
+    onChange: onSelectChange
   };
 
   const handleArchive: any = () => {
     if (selectedRowKeys.length > 0) {
-    (dispatch(archiveLabelingTask(selectedRowKeys)) as any)
-      .finally(() => {
+      (dispatch(archiveLabelingTask(selectedRowKeys)) as any).finally(() => {
         setSelectedRowKeys([]);
-      })
+      });
     }
-  }
+  };
 
   const handleRetry: any = () => {
     if (selectedRowKeys.length > 0) {
-      (dispatch(retryLabelingTask(selectedRowKeys)) as any)
-        .finally(() => {
-          setSelectedRowKeys([]);
-        })
+      (dispatch(retryLabelingTask(selectedRowKeys)) as any).finally(() => {
+        setSelectedRowKeys([]);
+      });
     }
-  }
-  const handleRefresh = ()=>{
+  };
+  const handleRefresh = () => {
     dispatch(getLabelingTasks(pageValue, ROWS_PER_PAGE, filterMap));
-  }
+  };
 
   return (
-      <div className={'task-statuses'}>
-        <DropdownButton onArchive={handleArchive} onRetry={handleRetry}/>
-        <IconButton aria-label="refresh" onClick={handleRefresh}>
-          <RefreshIcon />
-        </IconButton>
-        <Table
-          columns={TASK_STATUSES_COLUMNS as any}
-          rowKey={record => record.id}
-          rowSelection={rowSelection as any}
-          rowClassName={(record) => `task-status-${record.status}`}
-          dataSource={tasks}
-          pagination={{
-            pageSize: ROWS_PER_PAGE,
-            current: pageValue,
-            total: tasksCount
-          }}
-          loading={areTasksLoading}
-          onChange={handleTableChange as any}
-        />
-      </div>
+    <div className={'task-statuses'}>
+      <DropdownButton onArchive={handleArchive} onRetry={handleRetry} />
+      <IconButton aria-label="refresh" onClick={handleRefresh}>
+        <RefreshIcon />
+      </IconButton>
+      <Table
+        columns={TASK_STATUSES_COLUMNS as any}
+        rowKey={(record) => record.id}
+        rowSelection={rowSelection as any}
+        rowClassName={(record) => `task-status-${record.status}`}
+        dataSource={tasks}
+        pagination={{
+          pageSize: ROWS_PER_PAGE,
+          current: pageValue,
+          total: tasksCount
+        }}
+        loading={areTasksLoading}
+        onChange={handleTableChange as any}
+      />
+    </div>
   );
 };

@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect } from "react";
-import { useDropzone } from "react-dropzone";
-import zipSvg from "../../../assets/zip.svg";
-import incorrectSvg from "../../../assets/incorrect.svg";
-import "./DropZone.css";
+import React, { useCallback, useEffect } from 'react';
+import { useDropzone } from 'react-dropzone';
+import zipSvg from '../../../assets/zip.svg';
+import incorrectSvg from '../../../assets/incorrect.svg';
+import './DropZone.css';
 
 export interface ExtendedFile extends File {
   preview: string;
@@ -14,18 +14,15 @@ interface DropZoneProps {
   setFiles: Function;
 }
 
-export const DropZone: React.FC<DropZoneProps> = ({
-  handleDrop,
-  files,setFiles
-}: DropZoneProps) => {
+export const DropZone: React.FC<DropZoneProps> = ({ handleDrop, files, setFiles }: DropZoneProps) => {
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       const formattedFiles = acceptedFiles.map((file: File) => {
-        let preview = "";
+        let preview = '';
         let isCorrect = true;
         switch (file.type) {
-          case "application/x-zip-compressed":
-          case "application/zip":
+          case 'application/x-zip-compressed':
+          case 'application/zip':
             preview = zipSvg;
             break;
           case String(file.type.match(/image\/.*/)):
@@ -63,14 +60,10 @@ export const DropZone: React.FC<DropZoneProps> = ({
   return (
     <>
       <section className="dropzone">
-        <div {...getRootProps({ className: "dropzone__field" })}>
+        <div {...getRootProps({ className: 'dropzone__field' })}>
           <input {...getInputProps()} />
           <p className="dropzone__text">
-            {isDragActive ? (
-              <>Drop the files here ...</>
-            ) : (
-              <>Drag 'n' drop some files here, or click to select files</>
-            )}
+            {isDragActive ? <>Drop the files here ...</> : <>Drag 'n' drop some files here, or click to select files</>}
           </p>
         </div>
         <aside className="dropzone__tumbs-container">{tumbs}</aside>

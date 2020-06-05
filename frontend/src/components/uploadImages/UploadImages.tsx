@@ -1,26 +1,15 @@
-import React, { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
-import {
-  Typography,
-  InputLabel,
-  Select,
-  TextField,
-  Button,
-  MenuItem,
-  FormControl
-} from "@material-ui/core";
-import {
-  FormContainer,
-  DropZone,
-  ExtendedFile,
-  ProgressLoader
-} from "../shared";
-import { SnackbarAlert} from '../snackbarAlert'
-import "../shared/style.css";
-import { AppState } from "../../store";
-import { useSelector, useDispatch } from "react-redux";
-import { uploadMediaFiles, setMediaFiles } from "../../store/media";
-import {DEFAULT_FORM_DATA} from "./constants";
+import React, { useState } from 'react';
+import { useAppDispatch } from '../../store';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { useForm, Controller } from 'react-hook-form';
+import { Typography, InputLabel, Select, TextField, Button, MenuItem, FormControl } from '@material-ui/core';
+import { FormContainer, DropZone, ExtendedFile, ProgressLoader } from '../shared';
+import { SnackbarAlert } from '../snackbarAlert';
+import '../shared/style.css';
+import { AppState } from '../../store';
+import { useSelector } from 'react-redux';
+import { uploadMediaFiles, setMediaFiles } from '../../store/media';
+import { DEFAULT_FORM_DATA } from './constants';
 
 type FormData = {
   bucketId: string;
@@ -28,36 +17,39 @@ type FormData = {
 };
 
 export const UploadImages: React.FC = () => {
-  const dispatch = useDispatch();
-  const [notification,setNotification] =  useState<{show:boolean,severity:"success" | "info" | "warning" | "error" | undefined, message:string}>({show:false,severity:undefined,message:''});
+  const dispatch = useAppDispatch();
+
+  const [notification, setNotification] = useState<{
+    show: boolean;
+    severity: 'success' | 'info' | 'warning' | 'error' | undefined;
+    message: string;
+  }>({ show: false, severity: undefined, message: '' });
+
   const [files, setFiles] = useState<ExtendedFile[]>([]);
   const [formData, setFormData] = useState<FormData>({
     bucketId: DEFAULT_FORM_DATA.BUCKET_ID,
-    path: DEFAULT_FORM_DATA.PATH,
+    path: DEFAULT_FORM_DATA.PATH
   });
   const [showLoader, setShowLoader] = useState(false);
   const { handleSubmit, control, watch, reset } = useForm<FormData>({
-    defaultValues: formData,
+    defaultValues: formData
   });
   const bucketIdValue = watch('bucketId');
   const buckets = useSelector((state: AppState) => state.main.buckets);
   const mediaFiles = useSelector((state: AppState): File[] => state.media.mediaFiles);
 
   const handleUploadImagesSubmit = (bucketId: string, path: string) => {
-    (dispatch(uploadMediaFiles({ files: mediaFiles, bucketId, path })) as any)
-      .then((action: any) => {
-        console.log(action);
-        if (action.error) {
-          setNotification({ show: true, severity: 'error', message: action.error.message });
-        } else {
-          setNotification({ show: true, severity: 'success', message: action.payload.message });
-          reset();
-          setFiles([]);
-        }
+    dispatch(uploadMediaFiles({ files: mediaFiles, bucketId, path }))
+      .then(unwrapResult)
+      .then(({ message }) => {
+        setNotification({ show: true, severity: 'success', message });
       })
-      .finally(() => {
-        setShowLoader(false);
-      });
+      .catch(({ message }) => {
+        setNotification({ show: true, severity: 'error', message });
+        reset();
+        setFiles([]);
+      })
+      .finally(() => setShowLoader(false));
   };
 
   const handleDropFiles = (files: File[]) => {
@@ -67,7 +59,7 @@ export const UploadImages: React.FC = () => {
   const onSubmit = handleSubmit(({ bucketId, path }) => {
     setShowLoader(true);
     setFormData({ bucketId, path });
-    handleUploadImagesSubmit(bucketId, path);  
+    handleUploadImagesSubmit(bucketId, path);
   });
 
   const selectOptions = buckets.map((bucket) => (
@@ -77,68 +69,58 @@ export const UploadImages: React.FC = () => {
   ));
 
   const wipeNotification = () => {
-    setNotification((ps)=>({...ps ,show:false,message:''}));
+    setNotification((ps) => ({ ...ps, show: false, message: '' }));
   };
 
   return (
     <>
-    <div className="upload-images">
-      <FormContainer>
-        <Typography
-          variant="h5"
-          component="h1"
-          className="upload-images__title"
-        >
-          UPLOAD IMAGES
-        </Typography>
-        <form onSubmit={onSubmit} className="upload-images__form">
-          <div className="upload-images__dropzone">
-            <DropZone
-              files={files}
-              setFiles={setFiles}
-              handleDrop={handleDropFiles}
-            />
-          </div>
-          <div className="upload-images__settings">
-            <FormControl className="upload-images__settings-item">
-              <InputLabel id="upload-images-bucket-name">
-                Bucket
-              </InputLabel>
+      <div className="upload-images">
+        <FormContainer>
+          <Typography variant="h5" component="h1" className="upload-images__title">
+            UPLOAD IMAGES
+          </Typography>
+          <form onSubmit={onSubmit} className="upload-images__form">
+            <div className="upload-images__dropzone">
+              <DropZone files={files} setFiles={setFiles} handleDrop={handleDropFiles} />
+            </div>
+            <div className="upload-images__settings">
+              <FormControl className="upload-images__settings-item">
+                <InputLabel id="upload-images-bucket-name">Bucket</InputLabel>
+                <Controller
+                  labelId="upload-images-bucket-name"
+                  name="bucketId"
+                  control={control}
+                  label="Bucket"
+                  variant="outlined"
+                  as={<Select>{selectOptions}</Select>}
+                />
+              </FormControl>
               <Controller
-                labelId="upload-images-bucket-name"
-                name="bucketId"
+                className="upload-images__settings-item"
+                name="path"
                 control={control}
-                label="Bucket"
+                label="Dataset"
                 variant="outlined"
-                as={<Select>{selectOptions}</Select>}
+                helperText='Dataset path starting with "/"'
+                as={<TextField />}
               />
-            </FormControl>
-            <Controller
-              className="upload-images__settings-item"
-              name="path"
-              control={control}
-              label="Dataset"
-              variant="outlined"
-              helperText='Dataset path starting with "/"'
-              as={<TextField />}
-            />
-            <Button
-              className="upload-images__settings-item"
-              color="primary"
-              variant="contained"
-              type="submit"
-              disabled={mediaFiles.length === 0 || bucketIdValue === DEFAULT_FORM_DATA.BUCKET_ID}
-            >
-              Upload
-            </Button>
-          </div>
-        </form>
-      </FormContainer>
-      <ProgressLoader show={showLoader} />
-    </div>    
-    <SnackbarAlert open={notification.show} onClose={wipeNotification} severity={notification.severity} >
-      {notification.message}
-    </SnackbarAlert>
+              <Button
+                className="upload-images__settings-item"
+                color="primary"
+                variant="contained"
+                type="submit"
+                disabled={mediaFiles.length === 0 || bucketIdValue === DEFAULT_FORM_DATA.BUCKET_ID}
+              >
+                Upload
+              </Button>
+            </div>
+          </form>
+        </FormContainer>
+        <ProgressLoader show={showLoader} />
+      </div>
+      <SnackbarAlert open={notification.show} onClose={wipeNotification} severity={notification.severity}>
+        {notification.message}
+      </SnackbarAlert>
     </>
   );
 };
