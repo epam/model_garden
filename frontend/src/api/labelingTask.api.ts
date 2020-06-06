@@ -1,5 +1,7 @@
 import axios from 'axios';
+import qs from 'qs';
 import { LabelingTaskRequestData, LabelingTaskStatus } from '../models';
+import { tableStateProps } from './../interface';
 import { backendHostPort } from './environment';
 
 axios.defaults.headers = {
@@ -64,27 +66,33 @@ export const createLabelingTaskRequest = async (taskData: LabelingTaskRequestDat
 };
 
 export const getLabelingTasksRequest = async (
-  page: number,
-  rowsPerPage: number,
-  filterMap: any,
-  sortOrder?: 'ascend' | 'descend',
-  sortField?: string
+  table: tableStateProps
 ): Promise<{ count: number; tasks: LabelingTaskStatus[] }> => {
   try {
     const params: any = {
-      page,
-      page_size: rowsPerPage
+      page: table.page,
+      page_size: table.rowsPerPage
     };
 
-    if (sortOrder && sortField) {
-      params.ordering = sortOrder === 'ascend' ? sortField : `-${sortField}`;
+    if (table.sortOrder && table.sortField) {
+      params.ordering = table.sortOrder === 'ascend' ? table.sortField : `-${table.sortField}`;
     }
 
-    for (const [key, value] of Object.entries(filterMap)) {
+    for (const [key, value] of Object.entries(table.searchProps)) {
       params[key] = Array(value)[0];
     }
 
-    let resp = await axios.get(`http://${backendHostPort}/api/labeling-tasks/`, { params: params });
+    if (table.filterStatus) {
+      params.status = table.filterStatus;
+    }
+
+    let resp = await axios.get(`http://${backendHostPort}/api/labeling-tasks/`, {
+      params: params,
+      paramsSerializer: (params) => {
+        return qs.stringify(params, { arrayFormat: 'repeat' });
+      }
+    });
+
     return {
       tasks: resp.data.results,
       count: resp.data.count
