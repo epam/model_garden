@@ -40,3 +40,17 @@
   margin-bottom: 0.5rem;
   margin-left: 0.5rem;
 }
+
+.search {
+  padding: 0.5rem 0 0 0.5rem;
+}
+
+.search__input {
+  width: 11.75rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.search__button {
+  width: 5.625rem;
+}

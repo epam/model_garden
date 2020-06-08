@@ -65,25 +65,30 @@ export const createLabelingTaskRequest = async (taskData: LabelingTaskRequestDat
   }
 };
 
-export const getLabelingTasksRequest = async (
-  table: tableStateProps
-): Promise<{ count: number; tasks: LabelingTaskStatus[] }> => {
+export const getLabelingTasksRequest = async ({
+  page,
+  rowsPerPage,
+  searchProps,
+  filterStatus,
+  sortOrder,
+  sortField
+}: tableStateProps): Promise<{ count: number; tasks: LabelingTaskStatus[] }> => {
   try {
     const params: any = {
-      page: table.page,
-      page_size: table.rowsPerPage
+      page: page,
+      page_size: rowsPerPage
     };
 
-    if (table.sortOrder && table.sortField) {
-      params.ordering = table.sortOrder === 'ascend' ? table.sortField : `-${table.sortField}`;
+    if (sortOrder && sortField) {
+      params.ordering = sortOrder === 'ascend' ? sortField : `-${sortField}`;
     }
 
-    for (const [key, value] of Object.entries(table.searchProps)) {
+    for (const [key, value] of Object.entries(searchProps)) {
       params[key] = Array(value)[0];
     }
 
-    if (table.filterStatus) {
-      params.status = table.filterStatus;
+    if (filterStatus) {
+      params.status = filterStatus;
     }
 
     let resp = await axios.get(`http://${backendHostPort}/api/labeling-tasks/`, {
