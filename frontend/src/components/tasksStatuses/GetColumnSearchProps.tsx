@@ -70,12 +70,9 @@ export const GetColumnSearchProps = (
         </Button>
       </div>
     ),
-    filterIcon: (filtered: boolean) => {
-      console.log(filtered)
-      return (
-        <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
-      )
-    },
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
     onFilter: (value: string, record: any) =>
       record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
     onFilterDropdownVisibleChange: (visible: boolean) => {
