@@ -22,7 +22,7 @@ export const TasksStatuses: React.FC = () => {
     page: 1,
     rowsPerPage: ROWS_PER_PAGE,
     searchProps: {},
-    filterStatus: ['annotation', 'validation', 'completed', 'saved'],
+    filterStatus: [],
     sortOrder: undefined,
     sortField: undefined
   });
