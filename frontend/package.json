@@ -14,6 +14,7 @@
     "@types/react-highlight-words": "^0.16.1",
     "antd": "^4.2.5",
     "axios": "^0.19.2",
+    "qs": "^6.9.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-dropzone": "^10.2.2",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@types/jest": "^24.9.1",
     "@types/node": "^12.12.37",
+    "@types/qs": "^6.9.3",
     "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.7",
     "@types/react-redux": "^7.1.7",
@@ -52,7 +54,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css}\""
+    "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css}\""
   },
   "eslintConfig": {
     "extends": "react-app"
