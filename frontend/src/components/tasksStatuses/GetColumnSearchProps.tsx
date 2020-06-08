@@ -95,24 +95,3 @@ export const GetColumnSearchProps = (
       )
   };
 };
-
-// const updateSearchState = (newSearchProps: Object) => {
-//   setTableState((prevTableState: any) => {
-//     let updatedSearchProps = {}
-
-//     if (newSearchProps !== {}) {
-//       updatedSearchProps = {
-//         ...prevTableState.searchProps,
-//         ...newSearchProps
-//       };
-//     }
-
-//     return {
-//       ...prevTableState,
-//       searchProps: {
-//         ...updatedSearchProps
-//       },
-//       page: 1
-//     };
-//   });
-// };
