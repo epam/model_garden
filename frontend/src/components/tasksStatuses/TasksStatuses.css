@@ -30,13 +30,25 @@
   background-color: #e8ebee !important;
 }
 
-.ant-btn {
+.action-button {
   margin-right: 0.5rem;
-  margin-bottom: 0.5rem;
 }
 
-.ant-row-rtl .ant-btn {
-  margin-right: 0;
+.ant-dropdown-menu-item {
+  padding: 0.5rem 0.75rem;
+}
+
+.search {
+  padding: 0.5rem 0 0.5rem 0.5rem;
+}
+
+.search__input {
+  width: 11.75rem;
   margin-bottom: 0.5rem;
-  margin-left: 0.5rem;
+  display: block;
+}
+
+.search__button {
+  width: 5.625rem;
+  margin-right: 0.5rem;
 }

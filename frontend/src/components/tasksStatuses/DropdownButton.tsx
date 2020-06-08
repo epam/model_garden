@@ -9,10 +9,10 @@ const menu: any = (
 ) => {
   return (
     <Menu>
-      <Menu.Item>
+      <Menu.Item className="action-menu-item">
         <Button onClick={handleArchive}>Archive</Button>
       </Menu.Item>
-      <Menu.Item>
+      <Menu.Item className="action-menu-item">
         <Button onClick={handleRetry}>Retry</Button>
       </Menu.Item>
     </Menu>
@@ -29,7 +29,11 @@ export const DropdownButton: React.FC<DropdownButtonProps> = ({
   onRetry
 }) => {
   return (
-    <Dropdown overlay={menu(onArchive, onRetry)} placement="bottomLeft">
+    <Dropdown
+      className="action-button"
+      overlay={menu(onArchive, onRetry)}
+      placement="bottomLeft"
+    >
       <Button>Actions</Button>
     </Dropdown>
   );
