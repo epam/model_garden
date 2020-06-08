@@ -180,7 +180,7 @@ export const TasksStatuses: React.FC = () => {
 
   return (
     <div className={'task-statuses'}>
-      <Box display="flex" alignItems="center">
+      <Box display="flex" alignItems="center" marginBottom={1}>
         <DropdownButton onArchive={handleArchive} onRetry={handleRetry} />
         <IconButton aria-label="refresh" onClick={handleRefresh}>
           <RefreshIcon />
