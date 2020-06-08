@@ -39,7 +39,6 @@ export const TasksStatuses: React.FC = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log('useEffect', tableState);
     dispatch(getLabelingTasks(tableState));
   }, [tableState, dispatch]);
 
