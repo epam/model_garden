@@ -12,13 +12,13 @@ import {
   getLabelingTasks,
   retryLabelingTask
 } from '../../store/labelingTask';
-import { tableStateProps } from '../../interface';
+import { TableStateProps } from '../../models';
 import { ROWS_PER_PAGE } from './constants';
 import { GetColumnSearchProps } from './GetColumnSearchProps';
 
 export const TasksStatuses: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [tableState, setTableState] = useState<tableStateProps>({
+  const [tableState, setTableState] = useState<TableStateProps>({
     page: 1,
     rowsPerPage: ROWS_PER_PAGE,
     searchProps: {},
@@ -137,7 +137,7 @@ export const TasksStatuses: React.FC = () => {
       columnKey?: any;
     }
   ) => {
-    setTableState((prevState: tableStateProps) => ({
+    setTableState((prevState: TableStateProps) => ({
       ...prevState,
       page: pagination.current,
       filterStatus: filter.status,

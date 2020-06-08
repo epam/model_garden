@@ -1,4 +1,4 @@
-export interface tableStateProps {
+export interface TableStateProps {
   page: number;
   rowsPerPage: number;
   searchProps: any;

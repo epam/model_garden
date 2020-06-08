@@ -15,7 +15,7 @@ import {
   GET_LABELING_TASKS_SUCCESS,
   CLEAR_NEW_LABELING_TASK
 } from './types';
-import { tableStateProps } from '../../interface';
+import { TableStateProps } from '../../models';
 import { Dataset, LabelingTaskRequestData, LabelingTaskStatus } from '../../models';
 import {
   createLabelingTaskRequest,
@@ -155,14 +155,38 @@ export const createLabelingTask = (taskData: LabelingTaskRequestData): AppThunk 
     .catch((error) => dispatch(setErrorAction(error)));
 };
 
-export const getLabelingTasks = (tableState: tableStateProps): AppThunk => (dispatch) => {
+export const getLabelingTasks = ({
+  page,
+  rowsPerPage,
+  searchProps,
+  filterStatus,
+  sortOrder,
+  sortField
+}: TableStateProps): AppThunk => (dispatch) => {
   dispatch(getLabelingTasksStart());
-  return getLabelingTasksRequest(tableState)
+
+  const params: any = {
+    page,
+    page_size: rowsPerPage
+  };
+
+  if (sortOrder && sortField) {
+    params.ordering = sortOrder === 'ascend' ? sortField : `-${sortField}`;
+  }
+
+  for (const [key, value] of Object.entries(searchProps)) {
+    params[key] = Array(value)[0];
+  }
+
+  if (filterStatus) {
+    params.status = filterStatus;
+  }
+  return getLabelingTasksRequest(params)
     .then((tasksData) => dispatch(getLabelingTasksSuccess(tasksData)))
     .catch((error) => dispatch(setErrorAction(error)));
 };
 
-export const archiveLabelingTask = (taskIds: Array<number>, tableState: tableStateProps): AppThunk => (dispatch) => {
+export const archiveLabelingTask = (taskIds: Array<number>, tableState: TableStateProps): AppThunk => (dispatch) => {
   dispatch(createLabelingTaskStart());
   return archiveTaskLabelingRequest(taskIds)
     .then(() => {
@@ -171,7 +195,7 @@ export const archiveLabelingTask = (taskIds: Array<number>, tableState: tableSta
     .catch((error: any) => dispatch(setErrorAction(error)));
 };
 
-export const retryLabelingTask = (taskIds: Array<number>, tableState: tableStateProps): AppThunk => (dispatch) => {
+export const retryLabelingTask = (taskIds: Array<number>, tableState: TableStateProps): AppThunk => (dispatch) => {
   dispatch(createLabelingTaskStart());
   return retryLabelingTaskRequest(taskIds)
     .then(() => {
