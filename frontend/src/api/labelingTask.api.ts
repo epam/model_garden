@@ -75,7 +75,7 @@ export const getLabelingTasksRequest = async ({
 }: tableStateProps): Promise<{ count: number; tasks: LabelingTaskStatus[] }> => {
   try {
     const params: any = {
-      page: page,
+      page,
       page_size: rowsPerPage
     };
 
