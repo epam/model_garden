@@ -22,7 +22,7 @@ export const TasksStatuses: React.FC = () => {
     page: 1,
     rowsPerPage: ROWS_PER_PAGE,
     searchProps: {},
-    filterStatus: [],
+    filterStatus: ['annotation', 'validation', 'completed', 'saved'],
     sortOrder: undefined,
     sortField: undefined
   });
@@ -39,22 +39,23 @@ export const TasksStatuses: React.FC = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
+    console.log('useEffect', tableState);
     dispatch(getLabelingTasks(tableState));
   }, [tableState, dispatch]);
 
   const updateSearchState = (newSearchProps: Object) => {
-    setTableState((prevTableState: any) => {
+    setTableState((prevState: any) => {
       let updatedSearchProps = {};
 
       if (newSearchProps !== {}) {
         updatedSearchProps = {
-          ...prevTableState.searchProps,
+          ...prevState.searchProps,
           ...newSearchProps
         };
       }
 
       return {
-        ...prevTableState,
+        ...prevState,
         searchProps: {
           ...updatedSearchProps
         },
@@ -67,6 +68,7 @@ export const TasksStatuses: React.FC = () => {
     {
       title: 'Task Name',
       dataIndex: 'name',
+      key: 'name',
       width: '20%',
       sorter: true,
       ...GetColumnSearchProps('name', updateSearchState)
@@ -74,6 +76,7 @@ export const TasksStatuses: React.FC = () => {
     {
       title: 'Dataset',
       dataIndex: 'dataset',
+      key: 'dataset',
       width: '20%',
       sorter: true,
       ...GetColumnSearchProps('dataset', updateSearchState)
@@ -81,12 +84,14 @@ export const TasksStatuses: React.FC = () => {
     {
       title: 'Labeler',
       dataIndex: 'labeler',
+      key: 'labeler',
       sorter: true,
       ...GetColumnSearchProps('labeler', updateSearchState)
     },
     {
       title: 'Url',
       dataIndex: 'url',
+      key: 'url',
       render: (value: string) => {
         let hostname = value;
         let res = /https?:\/\/(.+?)\/.*/.exec(value);
@@ -103,6 +108,7 @@ export const TasksStatuses: React.FC = () => {
     {
       title: 'Status',
       dataIndex: 'status',
+      key: 'status',
       sorter: true,
       filters: [
         { text: 'annotation', value: 'annotation' },
@@ -111,7 +117,8 @@ export const TasksStatuses: React.FC = () => {
         { text: 'saved', value: 'saved' },
         { text: 'archived', value: 'archived' },
         { text: 'failed', value: 'failed' }
-      ]
+      ],
+      filteredValue: tableState.filterStatus
     }
   ];
 

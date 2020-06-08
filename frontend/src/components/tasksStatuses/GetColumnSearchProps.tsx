@@ -39,7 +39,7 @@ export const GetColumnSearchProps = (
       confirm,
       clearFilters
     }: any) => (
-      <div style={{ padding: 8 }}>
+      <div className="search">
         <Input
           ref={(node) => {
             searchInput = node;
@@ -50,31 +50,32 @@ export const GetColumnSearchProps = (
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
+          className="search__input"
         />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => handleReset(clearFilters)}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Reset
-          </Button>
-        </Space>
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          className="search__button"
+        >
+          Search
+        </Button>
+        <Button
+          onClick={() => handleReset(clearFilters)}
+          size="small"
+          className="search__button"
+        >
+          Reset
+        </Button>
       </div>
     ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
-    ),
+    filterIcon: (filtered: boolean) => {
+      console.log(filtered)
+      return (
+        <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+      )
+    },
     onFilter: (value: string, record: any) =>
       record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
     onFilterDropdownVisibleChange: (visible: boolean) => {
