@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from 'antd';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import IconButton from '@material-ui/core/IconButton';
+import { Box, IconButton } from '@material-ui/core';
 import 'antd/dist/antd.css';
 import './TasksStatuses.css';
 import { DropdownButton } from './DropdownButton';
@@ -44,20 +44,22 @@ export const TasksStatuses: React.FC = () => {
 
   const updateSearchState = (newSearchProps: Object) => {
     setTableState((prevState: any) => {
-      let updatedSearchProps = {};
-
-      if (newSearchProps !== {}) {
-        updatedSearchProps = {
-          ...prevState.searchProps,
-          ...newSearchProps
-        };
-      }
-
       return {
         ...prevState,
         searchProps: {
-          ...updatedSearchProps
+          ...prevState.searchProps,
+          ...newSearchProps
         },
+        page: 1
+      };
+    });
+  };
+
+  const resetSearchState = () => {
+    setTableState((prevState: any) => {
+      return {
+        ...prevState,
+        searchProps: {},
         page: 1
       };
     });
@@ -70,7 +72,9 @@ export const TasksStatuses: React.FC = () => {
       key: 'name',
       width: '20%',
       sorter: true,
-      ...GetColumnSearchProps('name', updateSearchState)
+      showSorterTooltip: false,
+      filtered: tableState.searchProps.name,
+      ...GetColumnSearchProps('name', updateSearchState, resetSearchState)
     },
     {
       title: 'Dataset',
@@ -78,14 +82,16 @@ export const TasksStatuses: React.FC = () => {
       key: 'dataset',
       width: '20%',
       sorter: true,
-      ...GetColumnSearchProps('dataset', updateSearchState)
+      filtered: tableState.searchProps.dataset,
+      ...GetColumnSearchProps('dataset', updateSearchState, resetSearchState)
     },
     {
       title: 'Labeler',
       dataIndex: 'labeler',
       key: 'labeler',
       sorter: true,
-      ...GetColumnSearchProps('labeler', updateSearchState)
+      filtered: tableState.searchProps.labeler,
+      ...GetColumnSearchProps('labeler', updateSearchState, resetSearchState)
     },
     {
       title: 'Url',
@@ -174,10 +180,13 @@ export const TasksStatuses: React.FC = () => {
 
   return (
     <div className={'task-statuses'}>
-      <DropdownButton onArchive={handleArchive} onRetry={handleRetry} />
-      <IconButton aria-label="refresh" onClick={handleRefresh}>
-        <RefreshIcon />
-      </IconButton>
+      <Box display="flex" alignItems="center">
+        <DropdownButton onArchive={handleArchive} onRetry={handleRetry} />
+        <IconButton aria-label="refresh" onClick={handleRefresh}>
+          <RefreshIcon />
+        </IconButton>
+      </Box>
+
       <Table
         columns={TASK_STATUSES_COLUMNS as any}
         rowKey={(record) => record.id}
