@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-import { Input, Button, Space } from 'antd';
+import { Input, Button } from 'antd';
 
 export const GetColumnSearchProps = (
   dataIndex: string,
-  updateSearchState: Function
+  updateSearchState: Function,
+  resetSearchState: Function
 ) => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -14,8 +15,7 @@ export const GetColumnSearchProps = (
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText('');
-
-    updateSearchState({});
+    resetSearchState();
   };
 
   const handleSearch = (
