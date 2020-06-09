@@ -17,10 +17,6 @@
   width: 80%;
 }
 
-.labeling-task__title {
-  text-align: center;
-}
-
 .labeling-task__settings {
   display: flex;
   flex-direction: column;
