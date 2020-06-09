@@ -58,11 +58,11 @@ export const UploadImages: React.FC = () => {
       .then(unwrapResult)
       .then(({ message }) => {
         setNotification({ show: true, severity: 'success', message });
+        reset();
+        setFiles([]);
       })
       .catch(({ message }) => {
         setNotification({ show: true, severity: 'error', message });
-        reset();
-        setFiles([]);
       })
       .finally(() => setShowLoader(false));
   };
