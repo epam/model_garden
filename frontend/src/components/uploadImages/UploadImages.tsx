@@ -96,7 +96,7 @@ export const UploadImages: React.FC = () => {
             component="h1"
             className="upload-images__title"
           >
-            UPLOAD IMAGES
+            Upload Images
           </Typography>
           <form onSubmit={onSubmit} className="upload-images__form">
             <div className="upload-images__dropzone">
