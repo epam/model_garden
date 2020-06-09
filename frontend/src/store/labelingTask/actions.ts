@@ -15,6 +15,7 @@ import {
   GET_LABELING_TASKS_SUCCESS,
   CLEAR_NEW_LABELING_TASK
 } from './types';
+import { TableStateProps } from '../../models';
 import { Dataset, LabelingTaskRequestData, LabelingTaskStatus } from '../../models';
 import {
   createLabelingTaskRequest,
@@ -27,7 +28,6 @@ import {
 } from '../../api';
 import { LabelingToolUser } from '../../models/labelingToolUser';
 import { setErrorAction } from '../error';
-import { ROWS_PER_PAGE } from '../../components/tasksStatuses/constants';
 
 export function getBucketPathsStart(): LabelingTaskActionTypes {
   return {
@@ -155,33 +155,51 @@ export const createLabelingTask = (taskData: LabelingTaskRequestData): AppThunk 
     .catch((error) => dispatch(setErrorAction(error)));
 };
 
-export const getLabelingTasks = (
-  page: number,
-  rowsPerPage: number,
-  filterMap: any,
-  sortOrder?: 'ascend' | 'descend',
-  sortField?: string
-): AppThunk => (dispatch) => {
+export const getLabelingTasks = ({
+  page,
+  rowsPerPage,
+  searchProps,
+  filterStatus,
+  sortOrder,
+  sortField
+}: TableStateProps): AppThunk => (dispatch) => {
   dispatch(getLabelingTasksStart());
-  return getLabelingTasksRequest(page, rowsPerPage, filterMap, sortOrder, sortField)
+
+  const params: any = {
+    page,
+    page_size: rowsPerPage
+  };
+
+  if (sortOrder && sortField) {
+    params.ordering = sortOrder === 'ascend' ? sortField : `-${sortField}`;
+  }
+
+  for (const [key, value] of Object.entries(searchProps)) {
+    params[key] = Array(value)[0];
+  }
+
+  if (filterStatus) {
+    params.status = filterStatus;
+  }
+  return getLabelingTasksRequest(params)
     .then((tasksData) => dispatch(getLabelingTasksSuccess(tasksData)))
     .catch((error) => dispatch(setErrorAction(error)));
 };
 
-export const archiveLabelingTask = (taskData: Array<number>): AppThunk => (dispatch) => {
+export const archiveLabelingTask = (taskIds: Array<number>, tableState: TableStateProps): AppThunk => (dispatch) => {
   dispatch(createLabelingTaskStart());
-  return archiveTaskLabelingRequest(taskData)
+  return archiveTaskLabelingRequest(taskIds)
     .then(() => {
-      dispatch(getLabelingTasks(1, ROWS_PER_PAGE, {}));
+      dispatch(getLabelingTasks(tableState));
     })
     .catch((error: any) => dispatch(setErrorAction(error)));
 };
 
-export const retryLabelingTask = (taskData: Array<number>): AppThunk => (dispatch) => {
+export const retryLabelingTask = (taskIds: Array<number>, tableState: TableStateProps): AppThunk => (dispatch) => {
   dispatch(createLabelingTaskStart());
-  return retryLabelingTaskRequest(taskData)
+  return retryLabelingTaskRequest(taskIds)
     .then(() => {
-      dispatch(getLabelingTasks(1, ROWS_PER_PAGE, {}));
+      dispatch(getLabelingTasks(tableState));
     })
     .catch((error: any) => dispatch(setErrorAction(error)));
 };
