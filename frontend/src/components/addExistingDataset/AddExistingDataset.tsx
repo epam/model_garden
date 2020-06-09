@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, FC } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
   Typography,
@@ -7,45 +7,47 @@ import {
   TextField,
   Button,
   MenuItem,
-  FormControl,
-  Snackbar
+  FormControl
 } from '@material-ui/core';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { FormContainer, ProgressLoader } from '../shared';
 import '../shared/style.css';
 import { AppState } from '../../store';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from '../../store';
 import { addExistingDataset } from '../../store/media';
 import { DEFAULT_FORM_DATA, TITLE } from './constants';
-import { Alert } from '@material-ui/lab';
+import { SnackbarAlert } from '../snackbarAlert';
 
 type FormData = {
   bucketId: string;
   path: string;
 };
+type Severity = 'success' | 'info' | 'warning' | 'error' | undefined;
 
-export const AddExistingDataset: React.FC = () => {
-  const dispatch = useDispatch();
+type ALERT = {
+  show: boolean;
+  severity: Severity;
+  message: string;
+};
+
+const alertState = {
+  show: false,
+  severity: undefined,
+  message: ''
+};
+
+export const AddExistingDataset: FC = () => {
+  const dispatch = useAppDispatch();
+
   const [formData, setFormData] = useState<FormData>({
     bucketId: DEFAULT_FORM_DATA.BUCKET_ID,
     path: DEFAULT_FORM_DATA.PATH
   });
-
-  const [open, setOpen] = React.useState(false);
-
-  const raiseSuccessAlert = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
+  const [notification, setNotification] = useState<ALERT>(alertState);
   const [showLoader, setShowLoader] = useState(false);
 
-  const { handleSubmit, control, watch } = useForm<FormData>({
+  const { handleSubmit, control, watch, reset } = useForm<FormData>({
     defaultValues: formData
   });
   const { bucketId: bucketIdValue, path: pathValue } = watch([
@@ -54,16 +56,39 @@ export const AddExistingDataset: React.FC = () => {
   ]);
 
   const buckets = useSelector((state: AppState) => state.main.buckets);
-
   const addedDataSets = useSelector(
     (state: AppState) => state.media.addedMediaAssets
   );
 
+  const raiseAlert = (severity: Severity, message: string) => {
+    setNotification({ show: true, severity, message });
+  };
+
+  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setNotification((prevState) => ({
+      ...prevState,
+      show: false,
+      message: ''
+    }));
+  };
+
   const handleAddExistingDatasetSubmit = (bucketId: string, path: string) => {
-    (dispatch(addExistingDataset({ bucketId, path })) as any).then(() => {
-      setShowLoader(false);
-      raiseSuccessAlert();
-    });
+    dispatch(addExistingDataset({ bucketId, path }))
+      .then(unwrapResult)
+      .then(() => {
+        raiseAlert(
+          'success',
+          `Dataset with ${addedDataSets} media assets has been added`
+        );
+        reset();
+      })
+      .catch(({ message }) => {
+        raiseAlert('error', message);
+      })
+      .finally(() => setShowLoader(false));
   };
 
   const onSubmit = handleSubmit(({ bucketId, path }) => {
@@ -124,16 +149,13 @@ export const AddExistingDataset: React.FC = () => {
             </Button>
 
             <ProgressLoader show={showLoader} />
-            <Snackbar
-              open={open}
-              autoHideDuration={6000}
+            <SnackbarAlert
+              open={notification.show}
               onClose={handleClose}
-              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              severity={notification.severity}
             >
-              <Alert onClose={handleClose} severity="success">
-                Dataset with {addedDataSets} media assets has been added
-              </Alert>
-            </Snackbar>
+              {notification.message}
+            </SnackbarAlert>
           </div>
         </form>
       </FormContainer>
