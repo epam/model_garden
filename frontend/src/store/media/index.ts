@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { SET_CURRENT_DATASET_ID } from '../labelingTask/types';
 import { UploadFiles, AddExistingDataset, initialState } from './types';
 
 //async Thunks
@@ -43,12 +44,15 @@ const mediaSlice = createSlice({
       .addCase(getMediaImages.fulfilled, (state, action) => {
         state.photos = action.payload;
       })
-      .addCase(addExistingDataset.pending, (state, action) => {
+      .addCase(addExistingDataset.pending, (state) => {
         state.addingExistingDataSet = true;
       })
       .addCase(addExistingDataset.fulfilled, (state, action) => {
         state.addingExistingDataSet = false;
         state.addedMediaAssets = action.payload;
+      })
+      .addCase(SET_CURRENT_DATASET_ID, (state) => {
+        state.photos = [];
       });
   }
 });
