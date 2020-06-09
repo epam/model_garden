@@ -81,13 +81,7 @@ export const AddExistingDataset: React.FC = () => {
   return (
     <div className="upload-images">
       <FormContainer>
-        <Typography
-          variant="h5"
-          component="h1"
-          className="upload-images__title"
-        >
-          {TITLE}
-        </Typography>
+        <Typography variant="h1">{TITLE}</Typography>
         <form onSubmit={onSubmit} className="upload-images__form">
           <div className="upload-images__settings">
             <FormControl className="upload-images__settings-item">
