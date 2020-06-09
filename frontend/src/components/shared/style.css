@@ -1,11 +1,3 @@
-.upload-images__form {
-  margin-top: 20px;
-}
-
-.upload-images__title {
-  text-align: center;
-}
-
 .upload-images__settings {
   display: flex;
   flex-direction: column;

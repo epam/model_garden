@@ -165,9 +165,7 @@ export const Task: React.FC<TaskProps> = ({
   return (
     <div className="task">
       <FormContainer>
-        <Typography variant="h5" component="h1" className="task__title">
-          Create Tasks
-        </Typography>
+        <Typography variant="h1">Create Tasks</Typography>
         <form onSubmit={onSubmit} className="task__form">
           <FormControl className="task__form-item">
             <InputLabel id="task-bucket-name">Bucket</InputLabel>

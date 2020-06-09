@@ -41,7 +41,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
       setFiles(formattedFiles);
       handleDrop(formattedFiles.filter((file) => file.isCorrect));
     },
-    [handleDrop]
+    [handleDrop, setFiles]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
