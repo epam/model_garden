@@ -24,13 +24,21 @@ const theme = createMuiTheme({
       cellHeight: 160
     },
     MuiFormControl: {
-      variant: 'outlined'
+      variant: 'outlined',
+      fullWidth: true
     },
     MuiSelect: {
       variant: 'outlined'
     },
     MuiTextField: {
       variant: 'outlined'
+    }
+  },
+  overrides: {
+    MuiAppBar: {
+      root: {
+        marginBottom: '2.5rem'
+      }
     }
   }
 });
