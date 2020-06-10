@@ -27,7 +27,7 @@ export interface getDatasetsStart {
 
 export interface getDatasetsSuccess {
   type: typeof GET_DATASETS_SUCCESS;
-  datasets: Map<string, Dataset>;
+  datasets: Dataset[];
 }
 
 export interface getLabelingToolUsersStart {

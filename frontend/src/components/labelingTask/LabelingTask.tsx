@@ -71,11 +71,17 @@ export const LabelingTask: React.FC = () => {
     <>
       <Task
         users={users}
-        taskName={(datasets.get(currentDatasetId) || { path: '' }).path}
+        taskName={
+          (
+            datasets.find(
+              (dataset: any) => dataset.id === currentDatasetId
+            ) || { path: '' }
+          ).path
+        }
         filesCount={unsignedImagesCount}
         handleTaskSubmit={handleTaskSubmit}
         buckets={buckets}
-        datasets={Array.from(datasets.values())}
+        datasets={datasets}
         currentBucketId={currentBucketId}
         onDataSetChange={handleGetUnsignedImagesCount}
         newTask={newTask}
