@@ -19,7 +19,7 @@ import { Dataset, LabelingTaskStatus } from '../../models';
 
 export interface LabelingTasksState {
   isDatasetsLoading: boolean;
-  datasets: Map<string, Dataset>;
+  datasets: Dataset[];
   isLabelingToolUsersLoading: boolean;
   labelingToolUsers: LabelingToolUser[];
   currentBucketId: string;
@@ -33,7 +33,7 @@ export interface LabelingTasksState {
 
 const initialState: LabelingTasksState = {
   isDatasetsLoading: false,
-  datasets: new Map(),
+  datasets: [],
   isLabelingToolUsersLoading: false,
   labelingToolUsers: [],
   currentBucketId: '',
