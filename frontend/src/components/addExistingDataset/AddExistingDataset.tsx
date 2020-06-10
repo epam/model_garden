@@ -116,7 +116,6 @@ export const AddExistingDataset: FC = () => {
                 name="bucketId"
                 control={control}
                 label="Bucket"
-                variant="outlined"
                 as={<Select>{selectOptions}</Select>}
               />
             </FormControl>
@@ -125,7 +124,6 @@ export const AddExistingDataset: FC = () => {
               name="path"
               control={control}
               label="Dataset"
-              variant="outlined"
               helperText='Dataset path starting with "/"'
               as={<TextField />}
             />
