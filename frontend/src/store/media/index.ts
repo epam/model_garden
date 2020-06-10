@@ -1,25 +1,25 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { SET_CURRENT_DATASET_ID } from '../labelingTask/types';
 import { UploadFiles, AddExistingDataset, initialState } from './types';
+import { uploadMediaFilesRequest, getImages, addExistingDatasetRequest } from '../../api';
 
 //async Thunks
 export const uploadMediaFiles = createAsyncThunk(
   'media/uploadMediaFile',
-  async ({ files, bucketId, path }: UploadFiles, { extra: { uploadMediaFilesRequest } }: any) => {
+  async ({ files, bucketId, path }: UploadFiles) => {
     const response = await uploadMediaFilesRequest(files, bucketId, path);
     return response.data;
   }
 );
-export const getMediaImages = createAsyncThunk(
-  'media/fetchImages',
-  async (params: any, { extra: { getImages } }: any) => {
-    const response = await getImages(params);
-    return response.data.results;
-  }
-);
+
+export const getMediaImages = createAsyncThunk('media/fetchImages', async (params: any) => {
+  const response = await getImages(params);
+  return response.data.results;
+});
+
 export const addExistingDataset = createAsyncThunk(
   'media/addExistingDataset',
-  async ({ bucketId, path }: AddExistingDataset, { extra: { addExistingDatasetRequest } }: any) => {
+  async ({ bucketId, path }: AddExistingDataset) => {
     const request = await addExistingDatasetRequest(bucketId, path);
     return request.data.imported;
   }
