@@ -22,6 +22,15 @@ const theme = createMuiTheme({
     MuiGridList: {
       cols: null,
       cellHeight: 160
+    },
+    MuiFormControl: {
+      variant: 'outlined'
+    },
+    MuiSelect: {
+      variant: 'outlined'
+    },
+    MuiTextField: {
+      variant: 'outlined'
     }
   }
 });
