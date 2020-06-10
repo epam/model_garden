@@ -1,7 +1,7 @@
 stages:
-    - test
-    - build
-    - push
+  - test
+  - build
+  - push
 
 .setup_python_env: &setup_python_env
   before_script:
