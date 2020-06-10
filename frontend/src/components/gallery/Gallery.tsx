@@ -125,7 +125,7 @@ const mstp = ({ media, main, labelingTask }: AppState) => ({
   buckets: main.buckets,
   currentBucketId: labelingTask.currentBucketId,
   currentDatasetId: labelingTask.currentDatasetId,
-  datasets: Array.from(labelingTask.datasets.values())
+  datasets: labelingTask.datasets
 });
 const actions = {
   setCurrentBucketId,
