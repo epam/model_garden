@@ -3,48 +3,48 @@ stages:
     - build
     - push
 
-  .setup_python_env: &setup_python_env
-    before_script:
-    - cd backend
-    - pip install virtualenv
-    - virtualenv venv
-    - source venv/bin/activate
-    - pip install -r requirements.txt -r test-requirements.txt
+.setup_python_env: &setup_python_env
+  before_script:
+  - cd backend
+  - pip install virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+  - pip install -r requirements.txt -r test-requirements.txt
 
-  lint:
-    stage: test
-    image: python:3.8
-    <<: *setup_python_env
-    script:
-      - pip install flake8
-      - flake8 .
-    cache:
-      paths:
-        - backend/venv/
+lint:
+  stage: test
+  image: python:3.8
+  <<: *setup_python_env
+  script:
+    - pip install flake8
+    - flake8 .
+  cache:
+    paths:
+      - backend/venv/
 
-  test:
-    stage: test
-    image: python:3.8
-    services:
-      - postgres:12.2-alpine
-    variables:
-      POSTGRES_DB: garden
-      POSTGRES_HOST_AUTH_METHOD: trust
-      POSTGRES_PASSWORD: ""
-      POSTGRES_USER: postgres
-    <<: *setup_python_env
-    script:
-      - pytest -v --cov=model_garden --cov-report=term-missing --no-cov-on-fail tests
-    cache:
-      paths:
-        - backend/venv/
+test:
+  stage: test
+  image: python:3.8
+  services:
+    - postgres:12.2-alpine
+  variables:
+    POSTGRES_DB: garden
+    POSTGRES_HOST_AUTH_METHOD: trust
+    POSTGRES_PASSWORD: ""
+    POSTGRES_USER: postgres
+  <<: *setup_python_env
+  script:
+    - pytest -v --cov=model_garden --cov-report=term-missing --no-cov-on-fail tests
+  cache:
+    paths:
+      - backend/venv/
 
-  prettier:
-    stage: test
-    image: node
-    script:
-      - cd frontend
-      - npx prettier@2.0.5 --config ./.prettierrc.js --check "src/**/*.{js,jsx,ts,tsx,json,css}"
+prettier:
+  stage: test
+  image: node
+  script:
+    - cd frontend
+    - npx prettier@2.0.5 --config ./.prettierrc.js --check "src/**/*.{js,jsx,ts,tsx,json,css}"
 
 backend:
   stage: build
