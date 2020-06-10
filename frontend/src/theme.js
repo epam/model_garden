@@ -1,9 +1,6 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
-  background: {
-    default: '#ffffff'
-  },
   typography: {
     h1: {
       textAlign: 'center',
@@ -38,6 +35,13 @@ const theme = createMuiTheme({
     }
   },
   overrides: {
+    MuiCssBaseline: {
+      '@global': {
+        body: {
+          backgroundColor: '#ffffff'
+        }
+      }
+    },
     MuiAppBar: {
       root: {
         marginBottom: '2.5rem'
