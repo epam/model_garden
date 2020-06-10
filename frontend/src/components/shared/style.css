@@ -11,12 +11,3 @@
   margin-top: 20px;
   width: 100%;
 }
-
-#upload-images-bucket-name {
-  transform: translate(14px, 20px);
-}
-
-#upload-images-bucket-name[data-shrink='true'] {
-  transform: translate(14px, -6px);
-  font-size: 12px;
-}

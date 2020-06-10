@@ -23,6 +23,9 @@ const theme = createMuiTheme({
       cols: null,
       cellHeight: 160
     },
+    MuiFormControl: {
+      variant: 'outlined'
+    },
     MuiSelect: {
       variant: 'outlined'
     },
