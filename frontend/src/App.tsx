@@ -1,6 +1,6 @@
 import React, { useEffect, FC } from 'react';
 import { useDispatch } from 'react-redux';
-import { AppBar } from '@material-ui/core';
+import { AppBar, CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useLocation, Redirect } from 'react-router-dom';
 import { ErrorAlert } from './components';
@@ -26,6 +26,7 @@ const App: FC = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <ErrorAlert />
       <AppBar position="sticky">
         <LinkTabs pathname={pathname} />
