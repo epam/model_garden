@@ -75,7 +75,7 @@ const GalleryComponent = (props: any) => {
     <Container maxWidth={'xl'}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6} md={3}>
-          <FormControl className="task__form-item">
+          <FormControl>
             <InputLabel id="task-bucket-name">Bucket</InputLabel>
             <Select
               labelId="task-bucket-name"
@@ -93,7 +93,7 @@ const GalleryComponent = (props: any) => {
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <FormControl className="task__form-item">
+          <FormControl>
             <InputLabel id="task-bucket-name">Dataset</InputLabel>
             <Select
               labelId="task-bucket-name"
