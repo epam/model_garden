@@ -36,13 +36,9 @@ export function getBucketPathsStart(): LabelingTaskActionTypes {
 }
 
 export function getDatasetsSuccess(datasets: Dataset[]): LabelingTaskActionTypes {
-  let datasetsMap = new Map<string, Dataset>();
-  datasets.forEach((dataset) => {
-    datasetsMap.set(dataset.id, dataset);
-  });
   return {
     type: GET_DATASETS_SUCCESS,
-    datasets: datasetsMap
+    datasets
   };
 }
 
