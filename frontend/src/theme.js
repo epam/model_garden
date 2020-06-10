@@ -1,6 +1,9 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
+  background: {
+    default: '#ffffff'
+  },
   typography: {
     h1: {
       textAlign: 'center',
