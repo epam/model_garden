@@ -172,7 +172,6 @@ export const Task: React.FC<TaskProps> = ({
             <Select
               labelId="task-bucket-name"
               name="bucketId"
-              variant="outlined"
               label="Bucket"
               value={currentBucketId}
               onChange={handleBucketChange}
@@ -185,7 +184,6 @@ export const Task: React.FC<TaskProps> = ({
             <Select
               labelId="task-datasets"
               name="dataset"
-              variant="outlined"
               label="Dataset"
               value={selectedDataset}
               onChange={handleDatasetChange}
@@ -197,7 +195,6 @@ export const Task: React.FC<TaskProps> = ({
           <Controller
             className="task__form-item"
             name="taskName"
-            variant="outlined"
             label="Task Name"
             defaultValue=""
             control={control}
@@ -215,7 +212,6 @@ export const Task: React.FC<TaskProps> = ({
               <Controller
                 labelId="task-labeling-tool-user"
                 name="user"
-                variant="outlined"
                 label="Labeling tool user"
                 control={control}
                 as={<Select>{usersSelectOptions}</Select>}
@@ -226,7 +222,6 @@ export const Task: React.FC<TaskProps> = ({
             <TextField
               className="task__form-left-item"
               name="filesInTask"
-              variant="outlined"
               label="Files in task"
               type="tel"
               value={counter.filesInTask}
@@ -236,7 +231,6 @@ export const Task: React.FC<TaskProps> = ({
             <TextField
               className="task__form-right-item"
               name="countOfTasks"
-              variant="outlined"
               label="Count of tasks"
               type="tel"
               value={counter.countOfTasks}

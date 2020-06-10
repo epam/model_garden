@@ -80,7 +80,6 @@ const GalleryComponent = (props: any) => {
             <Select
               labelId="task-bucket-name"
               name="bucketId"
-              variant="outlined"
               label="Bucket"
               value={currentBucketId}
               onChange={handleBucketChange}
@@ -99,7 +98,6 @@ const GalleryComponent = (props: any) => {
             <Select
               labelId="task-bucket-name"
               name="selectedDataset"
-              variant="outlined"
               label="Dataset"
               value={currentDatasetId}
               onChange={handleDataSetChange}
