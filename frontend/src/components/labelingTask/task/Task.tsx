@@ -138,9 +138,9 @@ export const Task: React.FC<TaskProps> = ({
   ));
 
   const datasetsSelectOptions = [...datasets]
-    .sort((a: any, b: any) => a.path - b.path)
-    .map((dataset: Dataset, index) => (
-      <MenuItem key={index} value={dataset.id}>
+    .sort((a: Dataset, b: Dataset) => (a.path > b.path ? 1 : -1))
+    .map((dataset: Dataset) => (
+      <MenuItem key={dataset.id} value={dataset.id}>
         {`${dataset.path.split('')[0] === '/' ? '' : '/'}${dataset.path}`}
       </MenuItem>
     ));
