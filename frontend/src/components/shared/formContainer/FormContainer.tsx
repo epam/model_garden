@@ -4,8 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   root: {
-    paddingTop: '2.5rem',
-    paddingBottom: '2.5rem'
+    padding: 0
+  },
+  paper: {
+    padding: '2.5rem 1.5rem'
   }
 });
 
@@ -18,13 +20,10 @@ export const FormContainer: React.FC<FormContainerProps> = ({
 }: FormContainerProps) => {
   const classes = useStyles();
   return (
-    <Container
-      component={Paper}
-      maxWidth="sm"
-      className={classes.root}
-      elevation={5}
-    >
-      {children}
+    <Container maxWidth="sm" className={classes.root}>
+      <Paper className={classes.paper} elevation={5}>
+        {children}
+      </Paper>
     </Container>
   );
 };
