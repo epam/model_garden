@@ -10,7 +10,6 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
-    "@types/antd": "^1.0.0",
     "@types/react-highlight-words": "^0.16.1",
     "antd": "^4.2.5",
     "axios": "^0.19.2",
