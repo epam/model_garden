@@ -22,7 +22,9 @@ export const TasksStatuses: React.FC = () => {
     page: 1,
     rowsPerPage: ROWS_PER_PAGE,
     searchProps: {},
-    filterStatus: ['annotation', 'validation', 'completed', 'saved'],
+    filterStatus: JSON.parse(
+      localStorage.getItem('taskStatusFilter') as any
+    ) || ['annotation', 'validation', 'completed', 'saved'],
     sortOrder: undefined,
     sortField: undefined
   });
@@ -137,6 +139,7 @@ export const TasksStatuses: React.FC = () => {
       columnKey?: any;
     }
   ) => {
+    localStorage.setItem('taskStatusFilter', JSON.stringify(filter.status));
     setTableState((prevState: TableStateProps) => ({
       ...prevState,
       page: pagination.current,
