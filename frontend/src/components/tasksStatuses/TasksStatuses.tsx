@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Table } from 'antd';
+import { Table, Tooltip } from 'antd';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { Box, IconButton } from '@material-ui/core';
 import 'antd/dist/antd.css';
@@ -117,6 +117,16 @@ export const TasksStatuses: React.FC = () => {
       dataIndex: 'status',
       key: 'status',
       sorter: true,
+      render: (text: any, record: any) => {
+        if (record.status !== 'failed') {
+          return text;
+        }
+        return (
+          <Tooltip title={record.error}>
+            <span>{text}</span>
+          </Tooltip>
+        );
+      },
       filters: [
         { text: 'annotation', value: 'annotation' },
         { text: 'validation', value: 'validation' },
