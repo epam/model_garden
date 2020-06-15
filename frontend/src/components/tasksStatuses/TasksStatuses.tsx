@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table, Tooltip } from 'antd';
-import RefreshIcon from '@material-ui/icons/Refresh';
 import { Box, IconButton } from '@material-ui/core';
+import { Refresh, FileCopy } from '@material-ui/icons';
 import 'antd/dist/antd.css';
 import './TasksStatuses.css';
 import { DropdownButton } from './DropdownButton';
@@ -18,6 +18,7 @@ import { GetColumnSearchProps } from './GetColumnSearchProps';
 
 export const TasksStatuses: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [iscopied, setIscopied] = useState(false);
   const [tableState, setTableState] = useState<TableStateProps>({
     page: 1,
     rowsPerPage: ROWS_PER_PAGE,
@@ -117,13 +118,28 @@ export const TasksStatuses: React.FC = () => {
       dataIndex: 'status',
       key: 'status',
       sorter: true,
-      render: (text: any, record: any) => {
+      render: (text: string, record: any) => {
         if (record.status !== 'failed') {
           return text;
         }
+
         return (
           <Tooltip title={record.error}>
-            <span>{text}</span>
+            <span className="task-tooltip">
+              {iscopied ? 'Copied!' : text}
+              <IconButton
+                aria-label="delete"
+                onClick={() => {
+                  navigator.clipboard.writeText(record.error);
+                  setIscopied(true);
+                  setTimeout(() => {
+                    setIscopied(false);
+                  }, 2000);
+                }}
+              >
+                <FileCopy fontSize="small" htmlColor="hsl(351, 100%, 75%)" />
+              </IconButton>
+            </span>
           </Tooltip>
         );
       },
@@ -196,7 +212,7 @@ export const TasksStatuses: React.FC = () => {
       <Box display="flex" alignItems="center" marginBottom={1}>
         <DropdownButton onArchive={handleArchive} onRetry={handleRetry} />
         <IconButton aria-label="refresh" onClick={handleRefresh}>
-          <RefreshIcon />
+          <Refresh />
         </IconButton>
       </Box>
 
