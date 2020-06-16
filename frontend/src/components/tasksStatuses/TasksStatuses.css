@@ -27,6 +27,7 @@
 .task-status-failed:hover > td {
   background-color: hsl(351, 100%, 97%) !important;
 }
+
 .task-tooltip {
   display: 'flex';
   align-items: 'center';
