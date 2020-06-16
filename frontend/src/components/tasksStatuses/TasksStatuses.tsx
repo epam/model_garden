@@ -130,7 +130,12 @@ export const TasksStatuses: React.FC = () => {
   ];
 
   const handleTableChange = (
-    pagination: { pageSize: number; current: number; total: number },
+    pagination: {
+      pageSize: number;
+      current: number;
+      total: number;
+    },
+
     filter: any,
     sorter: {
       column?: any;
@@ -181,6 +186,16 @@ export const TasksStatuses: React.FC = () => {
     dispatch(getLabelingTasks(tableState));
   };
 
+  const onShowSizeChange = (current: any, pageSize: any) => {
+    setTableState((prevState: any) => {
+      return {
+        ...prevState,
+        page: current,
+        rowsPerPage: pageSize
+      };
+    });
+  };
+
   return (
     <div className={'task-statuses'}>
       <Box display="flex" alignItems="center" marginBottom={1}>
@@ -197,9 +212,11 @@ export const TasksStatuses: React.FC = () => {
         rowClassName={(record) => `task-status-${record.status}`}
         dataSource={tasks}
         pagination={{
-          pageSize: ROWS_PER_PAGE,
+          pageSize: tableState.rowsPerPage,
           current: tableState.page,
-          total: tasksCount
+          total: tasksCount,
+          showSizeChanger: true,
+          onShowSizeChange: onShowSizeChange
         }}
         loading={areTasksLoading}
         onChange={handleTableChange as any}
