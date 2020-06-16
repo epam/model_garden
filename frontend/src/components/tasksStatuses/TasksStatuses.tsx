@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Table, Tooltip } from 'antd';
+import { Table } from 'antd';
 import { Box, IconButton } from '@material-ui/core';
-import { Refresh, FileCopy } from '@material-ui/icons';
+import { Refresh } from '@material-ui/icons';
 import 'antd/dist/antd.css';
 import './TasksStatuses.css';
 import { DropdownButton } from './DropdownButton';
@@ -26,7 +26,7 @@ export const TasksStatuses: React.FC = () => {
     searchProps: {},
     filterStatus: JSON.parse(
       localStorage.getItem('taskStatusFilter') as any
-    ) || ['annotation', 'validation', 'completed', 'saved'],
+    ) || ['annotation', 'validation', 'completed', 'saved', 'failed'],
     sortOrder: undefined,
     sortField: undefined
   });
@@ -127,8 +127,8 @@ export const TasksStatuses: React.FC = () => {
         { text: 'validation', value: 'validation' },
         { text: 'completed', value: 'completed' },
         { text: 'saved', value: 'saved' },
-        { text: 'archived', value: 'archived' },
-        { text: 'failed', value: 'failed' }
+        { text: 'failed', value: 'failed' },
+        { text: 'archived', value: 'archived' }
       ],
       filteredValue: tableState.filterStatus
     }
