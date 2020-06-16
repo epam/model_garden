@@ -13,11 +13,24 @@
 }
 
 .task-status-saved > td {
-  background-color: #e8f5e9;
+  background-color: hsl(125, 39%, 94%);
 }
 
 .task-status-saved:hover > td {
-  background-color: #e3f2e4 !important;
+  background-color: hsl(125, 39%, 96%) !important;
+}
+
+.task-status-failed > td {
+  background-color: hsl(351, 100%, 96%);
+}
+
+.task-status-failed:hover > td {
+  background-color: hsl(351, 100%, 97%) !important;
+}
+
+.task-tooltip {
+  display: 'flex';
+  align-items: 'center';
 }
 
 .task-status-archived > td {
