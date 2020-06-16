@@ -1,65 +1,54 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import './LabelingTask.css';
 import { Task, FormData } from './task';
-import { useSelector, useDispatch } from 'react-redux';
 import { Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { ProgressLoader } from '../shared';
-import { AppState } from '../../store';
-import {
-  getDatasets,
-  getLabelingToolUsers,
-  getUnsignedImagesCount,
-  createLabelingTask
-} from '../../store/labelingTask';
-import { LabelingTaskRequestData } from '../../models';
+import { Bucket, Dataset } from '../../models';
+import { SnackbarAlert } from '../snackbarAlert';
 
-export const LabelingTask: React.FC = () => {
-  const dispatch = useDispatch();
-  const buckets = useSelector((state: AppState) => state.main.buckets);
-  const currentBucketId = useSelector(
-    (state: AppState) => state.labelingTask.currentBucketId
-  );
-  const datasets = useSelector(
-    (state: AppState) => state.labelingTask.datasets
-  );
-  const currentDatasetId = useSelector(
-    (state: AppState) => state.labelingTask.currentDatasetId
-  );
-  const users = useSelector(
-    (state: AppState) => state.labelingTask.labelingToolUsers
-  );
-  const unsignedImagesCount = useSelector(
-    (state: AppState) => state.labelingTask.unsignedImagesCount
-  );
-  const newTask = useSelector((state: AppState) => state.labelingTask.newTask);
+import { mstp, actions } from './util';
+
+interface LabelingProps {
+  buckets: Bucket[];
+  datasets: Dataset[];
+  currentBucketId: string;
+  currentDatasetId: string;
+  newTask: any;
+  users: any;
+  unsignedImagesCount: any;
+  getLabelingToolUsers: any;
+  getUnsignedImagesCount: any;
+  createLabelingTask: any;
+  getDatasets: any;
+}
+
+const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
+  const {
+    buckets,
+    datasets,
+    currentBucketId,
+    currentDatasetId,
+    newTask,
+    users,
+    unsignedImagesCount,
+    getLabelingToolUsers,
+    getUnsignedImagesCount,
+    createLabelingTask,
+    getDatasets
+  } = props;
   const [error, setError] = useState('');
   const [showLoader, setShowLoader] = useState(false);
 
   useEffect(() => {
-    dispatch(getLabelingToolUsers());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (currentBucketId) {
-      dispatch(getDatasets(currentBucketId));
-    }
-  }, [dispatch, currentBucketId]);
-
-  const handleGetUnsignedImagesCount = (datasetId: string) => {
-    dispatch(getUnsignedImagesCount(datasetId));
-  };
+    //on enter, get users, and get datasets if bucketSelected
+    getLabelingToolUsers();
+    currentBucketId && getDatasets(currentBucketId);
+  }, [currentBucketId]);
 
   const handleTaskSubmit = (data: FormData) => {
-    (dispatch(
-      createLabelingTask({
-        task_name: data.taskName,
-        dataset_id: currentDatasetId,
-        assignee_id: data.user,
-        files_in_task: data.filesInTask,
-        count_of_tasks: data.countOfTasks
-      } as LabelingTaskRequestData)
-    ) as any)
+    createLabelingTask(data)
       .then(() => setShowLoader(false))
       .catch(() => {
         setShowLoader(false);
@@ -72,40 +61,30 @@ export const LabelingTask: React.FC = () => {
       <Task
         users={users}
         taskName={
-          (
-            datasets.find(
-              (dataset: any) => dataset.id === currentDatasetId
-            ) || { path: '' }
-          ).path
+          datasets.find(({ id }: Dataset) => id === currentDatasetId)?.path ??
+          ''
         }
         filesCount={unsignedImagesCount}
         handleTaskSubmit={handleTaskSubmit}
         buckets={buckets}
         datasets={datasets}
         currentBucketId={currentBucketId}
-        onDataSetChange={handleGetUnsignedImagesCount}
+        onDataSetChange={getUnsignedImagesCount}
         newTask={newTask}
         setShowLoader={setShowLoader}
       />
-
       <ProgressLoader show={showLoader} />
-      <Snackbar
+      <SnackbarAlert
         open={error !== ''}
-        autoHideDuration={6000}
         onClose={() => {
           setError('');
         }}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        severity="error"
       >
-        <Alert
-          onClose={() => {
-            setError('');
-          }}
-          severity="error"
-        >
-          {error}
-        </Alert>
-      </Snackbar>
+        {error}
+      </SnackbarAlert>
     </>
   );
 };
+
+export const LabelingTask = connect(mstp, actions)(LabelingTaskComponent);
