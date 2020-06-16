@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Table, Tooltip } from 'antd';
+import { Table } from 'antd';
 import { Box, IconButton } from '@material-ui/core';
-import { Refresh, FileCopy } from '@material-ui/icons';
+import { Refresh } from '@material-ui/icons';
 import 'antd/dist/antd.css';
 import './TasksStatuses.css';
 import { DropdownButton } from './DropdownButton';
