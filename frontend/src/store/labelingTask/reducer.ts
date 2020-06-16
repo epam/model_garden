@@ -59,7 +59,12 @@ export const labelingTaskReducer = (
       return {
         ...state,
         isDatasetsLoading: false,
-        datasets: action.datasets
+        datasets: [...action.datasets]
+          .sort((a: Dataset, b: Dataset) => (a.path > b.path ? 1 : -1))
+          .map((dataset) => ({
+            ...dataset,
+            path: `${dataset.path.split('')[0] === '/' ? '' : '/'}${dataset.path}`
+          }))
       };
     case GET_LABELING_TOOL_USERS_START:
       return {
