@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Table } from 'antd';
-import RefreshIcon from '@material-ui/icons/Refresh';
+import { Table, Tooltip } from 'antd';
 import { Box, IconButton } from '@material-ui/core';
+import { Refresh, FileCopy } from '@material-ui/icons';
 import 'antd/dist/antd.css';
 import './TasksStatuses.css';
 import { DropdownButton } from './DropdownButton';
@@ -15,9 +15,11 @@ import {
 import { TableStateProps } from '../../models';
 import { ROWS_PER_PAGE } from './constants';
 import { GetColumnSearchProps } from './GetColumnSearchProps';
+import StatusField from './StatusField';
 
 export const TasksStatuses: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
   const [tableState, setTableState] = useState<TableStateProps>({
     page: 1,
     rowsPerPage: ROWS_PER_PAGE,
@@ -117,6 +119,9 @@ export const TasksStatuses: React.FC = () => {
       dataIndex: 'status',
       key: 'status',
       sorter: true,
+      render: (text: string, record: { error: string; status: string }) => (
+        <StatusField text={text} record={record} />
+      ),
       filters: [
         { text: 'annotation', value: 'annotation' },
         { text: 'validation', value: 'validation' },
@@ -186,7 +191,7 @@ export const TasksStatuses: React.FC = () => {
       <Box display="flex" alignItems="center" marginBottom={1}>
         <DropdownButton onArchive={handleArchive} onRetry={handleRetry} />
         <IconButton aria-label="refresh" onClick={handleRefresh}>
-          <RefreshIcon />
+          <Refresh />
         </IconButton>
       </Box>
 
