@@ -26,7 +26,7 @@ export const TasksStatuses: React.FC = () => {
     searchProps: {},
     filterStatus: JSON.parse(
       localStorage.getItem('taskStatusFilter') as any
-    ) || ['annotation', 'validation', 'completed', 'saved'],
+    ) || ['annotation', 'validation', 'completed', 'saved', 'failed'],
     sortOrder: undefined,
     sortField: undefined
   });
@@ -127,8 +127,8 @@ export const TasksStatuses: React.FC = () => {
         { text: 'validation', value: 'validation' },
         { text: 'completed', value: 'completed' },
         { text: 'saved', value: 'saved' },
-        { text: 'archived', value: 'archived' },
-        { text: 'failed', value: 'failed' }
+        { text: 'failed', value: 'failed' },
+        { text: 'archived', value: 'archived' }
       ],
       filteredValue: tableState.filterStatus
     }
