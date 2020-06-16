@@ -15,10 +15,11 @@ import {
 import { TableStateProps } from '../../models';
 import { ROWS_PER_PAGE } from './constants';
 import { GetColumnSearchProps } from './GetColumnSearchProps';
+import StatusField from './StatusField';
 
 export const TasksStatuses: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [iscopied, setIscopied] = useState(false);
+
   const [tableState, setTableState] = useState<TableStateProps>({
     page: 1,
     rowsPerPage: ROWS_PER_PAGE,
@@ -118,31 +119,9 @@ export const TasksStatuses: React.FC = () => {
       dataIndex: 'status',
       key: 'status',
       sorter: true,
-      render: (text: string, record: any) => {
-        if (record.status !== 'failed') {
-          return text;
-        }
-
-        return (
-          <Tooltip title={record.error}>
-            <span className="task-tooltip">
-              {iscopied ? 'Copied!' : text}
-              <IconButton
-                aria-label="delete"
-                onClick={() => {
-                  navigator.clipboard.writeText(record.error);
-                  setIscopied(true);
-                  setTimeout(() => {
-                    setIscopied(false);
-                  }, 2000);
-                }}
-              >
-                <FileCopy fontSize="small" htmlColor="hsl(351, 100%, 75%)" />
-              </IconButton>
-            </span>
-          </Tooltip>
-        );
-      },
+      render: (text: string, record: { error: string; status: string }) => (
+        <StatusField text={text} record={record} />
+      ),
       filters: [
         { text: 'annotation', value: 'annotation' },
         { text: 'validation', value: 'validation' },
