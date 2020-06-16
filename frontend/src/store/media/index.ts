@@ -29,12 +29,7 @@ export const addExistingDataset = createAsyncThunk(
 const mediaSlice = createSlice({
   name: 'media',
   initialState,
-  reducers: {
-    //non-thunk reducer
-    setMediaFiles: (state: any, action: any) => {
-      state.mediaFiles = action.payload;
-    }
-  },
+  reducers: {},
   extraReducers: (builder) => {
     //reducer for async actions
     builder
@@ -58,4 +53,3 @@ const mediaSlice = createSlice({
 });
 
 export const mediaReducer = mediaSlice.reducer;
-export const { setMediaFiles } = mediaSlice.actions;

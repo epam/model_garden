@@ -9,13 +9,11 @@ export interface ExtendedFile extends File {
 }
 
 interface DropZoneProps {
-  handleDrop: (files: File[]) => void;
   files: ExtendedFile[];
   setFiles: Function;
 }
 
 export const DropZone: React.FC<DropZoneProps> = ({
-  handleDrop,
   files,
   setFiles
 }: DropZoneProps) => {
@@ -38,25 +36,26 @@ export const DropZone: React.FC<DropZoneProps> = ({
         }
         return Object.assign(file, { preview, isCorrect });
       });
-      setFiles(formattedFiles);
-      handleDrop(formattedFiles.filter((file) => file.isCorrect));
+      setFiles(formattedFiles.filter((file) => file.isCorrect));
     },
-    [handleDrop, setFiles]
+    [setFiles]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-  const tumbs = files.map((file) => (
-    <div className="dropzone__thumb" key={file.name}>
-      <div className="dropzone__thumb-inner">
-        <img
-          src={file.preview}
-          alt="dropzone"
-          className="dropzone__thumb-image"
-        />
+  const tumbs = files.map((file) => {
+    return (
+      <div className="dropzone__thumb" key={file.name}>
+        <div className="dropzone__thumb-inner">
+          <img
+            src={file.preview}
+            alt="dropzone"
+            className="dropzone__thumb-image"
+          />
+        </div>
       </div>
-    </div>
-  ));
+    );
+  });
 
   useEffect(
     () => () => {
