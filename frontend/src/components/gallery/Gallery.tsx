@@ -102,15 +102,11 @@ const GalleryComponent = (props: any) => {
               value={currentDatasetId}
               onChange={handleDataSetChange}
             >
-              {[...datasets]
-                .sort((a: Dataset, b: Dataset) => (a.path > b.path ? 1 : -1))
-                .map((dataset: Dataset) => (
-                  <MenuItem key={dataset.id} value={dataset.id}>
-                    {`${dataset.path.split('')[0] === '/' ? '' : '/'}${
-                      dataset.path
-                    }`}
-                  </MenuItem>
-                ))}
+              {datasets.map((dataset: Dataset) => (
+                <MenuItem key={dataset.id} value={dataset.id}>
+                  {dataset.path}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Grid>
