@@ -9,7 +9,8 @@ import {
   TextField,
   Button,
   MenuItem,
-  FormControl
+  FormControl,
+  InputAdornment
 } from '@material-ui/core';
 import {
   FormContainer,
@@ -115,8 +116,12 @@ export const UploadImages: React.FC = () => {
                 className="upload-images__settings-item"
                 name="path"
                 control={control}
-                label="Dataset"
-                helperText='Dataset path starting with "/"'
+                label="Dataset path"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">/</InputAdornment>
+                  )
+                }}
                 as={<TextField />}
               />
               <Button
