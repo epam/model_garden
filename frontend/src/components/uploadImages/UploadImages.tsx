@@ -21,7 +21,7 @@ import { SnackbarAlert } from '../snackbarAlert';
 import '../shared/style.css';
 import { AppState } from '../../store';
 import { useSelector } from 'react-redux';
-import { uploadMediaFiles, setMediaFiles } from '../../store/media';
+import { uploadMediaFiles } from '../../store/media';
 import { DEFAULT_FORM_DATA } from './constants';
 
 type FormData = {
@@ -49,12 +49,9 @@ export const UploadImages: React.FC = () => {
   });
   const bucketIdValue = watch('bucketId');
   const buckets = useSelector((state: AppState) => state.main.buckets);
-  const mediaFiles = useSelector(
-    (state: AppState): File[] => state.media.mediaFiles
-  );
 
   const handleUploadImagesSubmit = (bucketId: string, path: string) => {
-    dispatch(uploadMediaFiles({ files: mediaFiles, bucketId, path }))
+    dispatch(uploadMediaFiles({ files, bucketId, path }))
       .then(unwrapResult)
       .then(({ message }) => {
         setNotification({ show: true, severity: 'success', message });
@@ -65,10 +62,6 @@ export const UploadImages: React.FC = () => {
         setNotification({ show: true, severity: 'error', message });
       })
       .finally(() => setShowLoader(false));
-  };
-
-  const handleDropFiles = (files: File[]) => {
-    dispatch(setMediaFiles(files));
   };
 
   const onSubmit = handleSubmit(({ bucketId, path }) => {
@@ -94,11 +87,7 @@ export const UploadImages: React.FC = () => {
           <Typography variant="h1">Upload Images</Typography>
           <form onSubmit={onSubmit} className="upload-images__form">
             <div className="upload-images__dropzone">
-              <DropZone
-                files={files}
-                setFiles={setFiles}
-                handleDrop={handleDropFiles}
-              />
+              <DropZone files={files} setFiles={setFiles} />
             </div>
             <div className="upload-images__settings">
               <FormControl className="upload-images__settings-item">
@@ -125,7 +114,7 @@ export const UploadImages: React.FC = () => {
                 variant="contained"
                 type="submit"
                 disabled={
-                  mediaFiles.length === 0 ||
+                  files.length === 0 ||
                   bucketIdValue === DEFAULT_FORM_DATA.BUCKET_ID
                 }
               >
