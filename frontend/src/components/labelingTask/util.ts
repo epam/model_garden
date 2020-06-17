@@ -1,3 +1,5 @@
+import { connect as connectState } from 'react-redux';
+import { Bucket, Dataset } from '../../models';
 import {
   getDatasets,
   getLabelingToolUsers,
@@ -6,7 +8,7 @@ import {
 } from '../../store/labelingTask';
 import { AppState } from '../../store';
 
-export const mstp = ({ main: { buckets }, labelingTask }: AppState) => ({
+export const mapStateToProps = ({ main: { buckets }, labelingTask }: AppState) => ({
   buckets,
   currentBucketId: labelingTask.currentBucketId,
   datasets: labelingTask.datasets,
@@ -22,3 +24,18 @@ export const actions = {
   getUnsignedImagesCount,
   createLabelingTask
 };
+export interface LabelingProps {
+  buckets: Bucket[];
+  datasets: Dataset[];
+  currentBucketId: string;
+  currentDatasetId: string;
+  newTask: any;
+  users: any;
+  unsignedImagesCount: any;
+  getLabelingToolUsers: any;
+  getUnsignedImagesCount: any;
+  createLabelingTask: any;
+  getDatasets: any;
+}
+
+export const connect = connectState(mapStateToProps, actions);
