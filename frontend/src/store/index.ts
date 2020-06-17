@@ -5,28 +5,16 @@ import { errorReducer } from './error';
 import { mainReducer } from './main';
 import { mediaReducer } from './media';
 import { labelingTaskReducer } from './labelingTask';
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
-import * as api from '../api';
-
-const reducer = {
-  error: errorReducer,
-  main: mainReducer,
-  media: mediaReducer,
-  labelingTask: labelingTaskReducer
-};
-
-const middleware = getDefaultMiddleware({
-  thunk: { extraArgument: { ...api } },
-  immutableCheck: false,
-  serializableCheck: false
-});
-
-const devTools = process.env.NODE_ENV !== 'production';
+import { configureStore } from '@reduxjs/toolkit';
 
 const store = configureStore({
-  reducer,
-  middleware,
-  devTools
+  reducer: {
+    error: errorReducer,
+    main: mainReducer,
+    media: mediaReducer,
+    labelingTask: labelingTaskReducer
+  },
+  devTools: process.env.NODE_ENV !== 'production'
 });
 
 export type AppState = ReturnType<typeof store.getState>;
