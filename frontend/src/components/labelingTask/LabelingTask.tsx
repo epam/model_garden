@@ -1,54 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 import './LabelingTask.css';
 import { Task, FormData } from './task';
-import { Snackbar } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
 import { ProgressLoader } from '../shared';
-import { Bucket, Dataset } from '../../models';
+import { Dataset } from '../../models';
 import { SnackbarAlert } from '../snackbarAlert';
-
-import { mstp, actions } from './util';
-
-interface LabelingProps {
-  buckets: Bucket[];
-  datasets: Dataset[];
-  currentBucketId: string;
-  currentDatasetId: string;
-  newTask: any;
-  users: any;
-  unsignedImagesCount: any;
-  getLabelingToolUsers: any;
-  getUnsignedImagesCount: any;
-  createLabelingTask: any;
-  getDatasets: any;
-}
+import { connect, LabelingProps } from './util';
 
 const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
-  const {
-    buckets,
-    datasets,
-    currentBucketId,
-    currentDatasetId,
-    newTask,
-    users,
-    unsignedImagesCount,
-    getLabelingToolUsers,
-    getUnsignedImagesCount,
-    createLabelingTask,
-    getDatasets
-  } = props;
   const [error, setError] = useState('');
   const [showLoader, setShowLoader] = useState(false);
 
   useEffect(() => {
     //on enter, get users, and get datasets if bucketSelected
-    getLabelingToolUsers();
-    currentBucketId && getDatasets(currentBucketId);
-  }, [currentBucketId]);
+    props.getLabelingToolUsers();
+    props.currentBucketId && props.getDatasets(props.currentBucketId);
+  }, [props.currentBucketId]);
 
   const handleTaskSubmit = (data: FormData) => {
-    createLabelingTask(data)
+    props
+      .createLabelingTask(data)
       .then(() => setShowLoader(false))
       .catch(() => {
         setShowLoader(false);
@@ -59,18 +29,19 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
   return (
     <>
       <Task
-        users={users}
+        users={props.users}
         taskName={
-          datasets.find(({ id }: Dataset) => id === currentDatasetId)?.path ??
-          ''
+          props.datasets.find(
+            ({ id }: Dataset) => id === props.currentDatasetId
+          )?.path ?? ''
         }
-        filesCount={unsignedImagesCount}
+        filesCount={props.unsignedImagesCount}
         handleTaskSubmit={handleTaskSubmit}
-        buckets={buckets}
-        datasets={datasets}
-        currentBucketId={currentBucketId}
-        onDataSetChange={getUnsignedImagesCount}
-        newTask={newTask}
+        buckets={props.buckets}
+        datasets={props.datasets}
+        currentBucketId={props.currentBucketId}
+        onDataSetChange={props.getUnsignedImagesCount}
+        newTask={props.newTask}
         setShowLoader={setShowLoader}
       />
       <ProgressLoader show={showLoader} />
@@ -87,4 +58,4 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
   );
 };
 
-export const LabelingTask = connect(mstp, actions)(LabelingTaskComponent);
+export const LabelingTask = connect(LabelingTaskComponent);
