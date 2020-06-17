@@ -138,17 +138,23 @@ export const getUnsignedImagesCount = (datasetId: string): AppThunk => (dispatch
     .catch((error) => dispatch(setErrorAction(error)));
 };
 
-export const createLabelingTask = (taskData: LabelingTaskRequestData): AppThunk => (dispatch) => {
+export const createLabelingTask = (taskData: any): AppThunk => (dispatch, getState) => {
+  const params = {
+    task_name: taskData.taskName,
+    dataset_id: getState().labelingTask.currentDatasetId,
+    assignee_id: taskData.user,
+    files_in_task: taskData.filesInTask,
+    count_of_tasks: taskData.countOfTasks
+  };
+
   dispatch(createLabelingTaskStart());
-  return createLabelingTaskRequest(taskData)
-    .then((response) => {
-      dispatch(
-        createLabelingTaskSuccess({
-          location: response.headers['location']
-        })
-      );
-    })
-    .catch((error) => dispatch(setErrorAction(error)));
+  return createLabelingTaskRequest(params).then((response) => {
+    dispatch(
+      createLabelingTaskSuccess({
+        location: response.headers['location']
+      })
+    );
+  });
 };
 
 export const getLabelingTasks = ({
