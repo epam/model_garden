@@ -155,10 +155,37 @@ export const Task: React.FC<TaskProps> = ({
         value = filesCount.toString();
       }
 
-      setCounter((counter) => ({
-        ...counter,
-        [name]: value
-      }));
+      if (name === 'filesInTask' && counter.countOfTasks === '0') {
+        const calculatedValue = filesCount / parseInt(value);
+        const newCalculatedValue = isNaN(calculatedValue) ? 0 : calculatedValue;
+        const calculatedValueString = Math.ceil(newCalculatedValue);
+        setCounter((counter) => ({
+          ...counter,
+          countOfTasks:
+            calculatedValueString !== Infinity
+              ? calculatedValueString.toString()
+              : '0',
+          [name]: value
+        }));
+      } else if (name === 'countOfTasks' && counter.filesInTask === '0') {
+        const calculatedValue = filesCount / parseInt(value);
+        const newCalculatedValue = isNaN(calculatedValue) ? 0 : calculatedValue;
+        const calculatedValueString = Math.ceil(newCalculatedValue);
+
+        setCounter((counter) => ({
+          ...counter,
+          filesInTask:
+            calculatedValueString !== Infinity
+              ? calculatedValueString.toString()
+              : '0',
+          [name]: value
+        }));
+      } else {
+        setCounter((counter) => ({
+          ...counter,
+          [name]: value
+        }));
+      }
     }
   };
 
