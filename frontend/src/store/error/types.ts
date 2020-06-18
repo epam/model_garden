@@ -10,4 +10,9 @@ export interface clearError {
   type: typeof CLEAR_ERROR;
 }
 
-export type ErrorActionTypes = setError | clearError;
+export interface fetchBucketsError {
+  type: string;
+  error: Error;
+}
+
+export type ErrorActionTypes = setError | clearError | fetchBucketsError;
