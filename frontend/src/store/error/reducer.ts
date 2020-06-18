@@ -10,6 +10,7 @@ const initialState: ErrorState = {
 
 export const errorReducer = (state: ErrorState = initialState, action: ErrorActionTypes): ErrorState => {
   switch (action.type) {
+    case 'fetchBuckets/rejected':
     case SET_ERROR:
       return {
         ...state,
