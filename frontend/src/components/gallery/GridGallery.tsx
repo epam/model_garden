@@ -40,7 +40,7 @@ export const GridGallery = ({ photos }: any) => {
       <GridList>
         {photos.map((tile: any) => (
           <GridListTile className={classes.item} key={tile.remote_path}>
-            <img src={tile.remote_path} alt={'picture'} />
+            <img src={tile.remote_path} alt="taggable-item" />
             {tile.remote_xml_path && (
               <GridListTileBar
                 title="Download XML"

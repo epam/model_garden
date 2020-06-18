@@ -139,7 +139,7 @@ export const getUnsignedImagesCount = (datasetId: string): AppThunk => (dispatch
 };
 
 export const createLabelingTask = (taskData: any): AppThunk => (dispatch, getState) => {
-  const params = {
+  const params: LabelingTaskRequestData = {
     task_name: taskData.taskName,
     dataset_id: getState().labelingTask.currentDatasetId,
     assignee_id: taskData.user,

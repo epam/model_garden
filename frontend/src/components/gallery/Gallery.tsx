@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { AppState } from '../../store';
+import { connect } from 'react-redux';
 import { Bucket, Dataset } from '../../models';
 import {
   Grid,
@@ -9,7 +9,7 @@ import {
   InputLabel,
   MenuItem
 } from '@material-ui/core';
-import { connect } from 'react-redux';
+import { AppState } from '../../store';
 import { getMediaImages } from '../../store/media';
 import { getDatasets } from '../../store/labelingTask';
 import { GridGallery } from './GridGallery';
@@ -18,8 +18,6 @@ import {
   setCurrentBucketId,
   setCurrentDatasetId
 } from '../../store/labelingTask';
-
-import axios from 'axios';
 
 interface GalleryProps {
   photos: [{}];
@@ -48,13 +46,13 @@ const GalleryComponent = (props: any) => {
         datasetId: currentDatasetId
       });
     }
-  }, [currentDatasetId]);
+  }, [currentDatasetId, currentBucketId, getMediaImages]);
 
   useEffect(() => {
     if (currentBucketId) {
       getDatasets(currentBucketId);
     }
-  }, [currentBucketId]);
+  }, [currentBucketId, getDatasets]);
 
   const handleBucketChange = (
     e: React.ChangeEvent<{ name?: string; value: unknown }>
