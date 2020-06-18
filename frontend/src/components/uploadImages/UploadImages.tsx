@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useAppDispatch } from '../../store';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useForm, Controller } from 'react-hook-form';
 import {
@@ -20,8 +19,7 @@ import {
 } from '../shared';
 import { SnackbarAlert } from '../snackbarAlert';
 import '../shared/style.css';
-import { AppState } from '../../store';
-import { useSelector } from 'react-redux';
+import { useAppDispatch, useTypedSelector } from '../../store';
 import { uploadMediaFiles } from '../../store/media';
 import { DEFAULT_FORM_DATA } from './constants';
 
@@ -49,7 +47,7 @@ export const UploadImages: React.FC = () => {
     defaultValues: formData
   });
   const bucketIdValue = watch('bucketId');
-  const buckets = useSelector((state: AppState) => state.main.buckets);
+  const buckets = useTypedSelector((state) => state.main.buckets);
 
   const handleUploadImagesSubmit = (bucketId: string, path: string) => {
     dispatch(uploadMediaFiles({ files, bucketId, path }))

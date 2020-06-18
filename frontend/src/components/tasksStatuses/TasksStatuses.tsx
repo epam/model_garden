@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Table } from 'antd';
 import { Box, IconButton } from '@material-ui/core';
 import { Refresh } from '@material-ui/icons';
 import 'antd/dist/antd.css';
 import './TasksStatuses.css';
 import { DropdownButton } from './DropdownButton';
-import { AppState } from '../../store';
+import { useAppDispatch, useTypedSelector } from '../../store';
 import {
   archiveLabelingTask,
   getLabelingTasks,
@@ -31,17 +30,17 @@ export const TasksStatuses: React.FC = () => {
     sortField: undefined
   });
 
-  const areTasksLoading = useSelector(
-    (state: AppState) => state.labelingTask.isLabelingTasksStatusesLoading
+  const areTasksLoading = useTypedSelector(
+    (state) => state.labelingTask.isLabelingTasksStatusesLoading
   );
-  const tasks = useSelector(
-    (state: AppState) => state.labelingTask.labelingTasksStatuses.tasks
+  const tasks = useTypedSelector(
+    (state) => state.labelingTask.labelingTasksStatuses.tasks
   );
-  const tasksCount = useSelector(
-    (state: AppState) => state.labelingTask.labelingTasksStatuses.count
+  const tasksCount = useTypedSelector(
+    (state) => state.labelingTask.labelingTasksStatuses.count
   );
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(getLabelingTasks(tableState));
   }, [tableState, dispatch]);
