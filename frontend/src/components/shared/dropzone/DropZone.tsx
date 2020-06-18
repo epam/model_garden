@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import zipSvg from '../../../assets/zip.svg';
 import incorrectSvg from '../../../assets/incorrect.svg';
@@ -56,14 +56,6 @@ export const DropZone: React.FC<DropZoneProps> = ({
       </div>
     );
   });
-
-  useEffect(
-    () => () => {
-      files.forEach((file) => URL.revokeObjectURL(file.preview));
-    },
-    [files]
-  );
-
   return (
     <>
       <section className="dropzone">
