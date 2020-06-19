@@ -9,8 +9,6 @@ import { getLabelingToolUsers } from './store/labelingTask';
 import { Tabs, LinkTabs } from './routerconfig';
 import theme from './theme';
 
-import './App.css';
-
 const App: FC = () => {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
