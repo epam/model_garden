@@ -103,7 +103,7 @@ export const UploadImages: React.FC = () => {
                 className="upload-images__settings-item"
                 name="path"
                 control={control}
-                label="Dataset path"
+                label="Dataset path:"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">/</InputAdornment>
