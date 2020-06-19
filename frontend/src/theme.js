@@ -7,7 +7,8 @@ const theme = createMuiTheme({
       fontSize: '1.5rem',
       fontWeight: '400',
       lineHeight: '1.334',
-      letterSpacing: 0
+      letterSpacing: 0,
+      marginBottom: '1.25rem'
     },
     h2: {
       fontSize: '1.35rem',
@@ -31,7 +32,8 @@ const theme = createMuiTheme({
       variant: 'outlined'
     },
     MuiTextField: {
-      variant: 'outlined'
+      variant: 'outlined',
+      fullWidth: true
     }
   },
   overrides: {
@@ -45,6 +47,11 @@ const theme = createMuiTheme({
     MuiAppBar: {
       root: {
         marginBottom: '2.5rem'
+      }
+    },
+    MuiFormControl: {
+      root: {
+        marginBottom: '1.25rem'
       }
     }
   }

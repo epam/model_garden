@@ -1,33 +1,12 @@
-.task__form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
 .task__form-group {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  margin: 0 -0.625rem;
 }
 
-.task__form-group .task__form-left-item {
-  margin: 1.25rem 0.625rem 0 0;
-  width: 100%;
-}
-
-.task__form-group .task__form-right-item {
-  margin: 1.25rem 0 0 0.625rem;
-  width: 100%;
-}
-
-.task__form-group .task__form-item,
-.task__form-item.MuiFormControl-root,
-.task__form-item.MuiTextField-root,
-.task__form-item.MuiButton-root {
-  margin-top: 1.25rem;
-  width: 100%;
+.task__form-item {
+  padding: 0 0.625rem;
+  width: 50%;
 }
