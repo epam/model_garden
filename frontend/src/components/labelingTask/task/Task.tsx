@@ -190,11 +190,11 @@ export const Task: React.FC<TaskProps> = ({
   };
 
   return (
-    <div className="task">
+    <>
       <FormContainer>
         <Typography variant="h1">Create Tasks</Typography>
-        <form onSubmit={onSubmit} className="task__form">
-          <FormControl className="task__form-item">
+        <form onSubmit={onSubmit}>
+          <FormControl>
             <InputLabel id="task-bucket-name">Bucket</InputLabel>
             <Select
               labelId="task-bucket-name"
@@ -206,7 +206,7 @@ export const Task: React.FC<TaskProps> = ({
               {bucketsSelectOptions}
             </Select>
           </FormControl>
-          <FormControl className="task__form-item">
+          <FormControl>
             <InputLabel id="task-datasets">Dataset</InputLabel>
             <Select
               labelId="task-datasets"
@@ -220,7 +220,6 @@ export const Task: React.FC<TaskProps> = ({
             </Select>
           </FormControl>
           <Controller
-            className="task__form-item"
             name="taskName"
             label="Task Name"
             defaultValue=""
@@ -228,45 +227,48 @@ export const Task: React.FC<TaskProps> = ({
             as={<TextField />}
           />
           <div className="task__form-group">
-            <FilesCounter
-              filesCount={filesCount}
-              className="task__form-left-item"
-            />
-            <FormControl className="task__form-right-item">
-              <InputLabel id="task-labeling-tool-user">
-                Labeling tool user
-              </InputLabel>
-              <Controller
-                labelId="task-labeling-tool-user"
-                name="user"
-                label="Labeling tool user"
-                control={control}
-                as={<Select>{usersSelectOptions}</Select>}
-              />
-            </FormControl>
+            <div className="task__form-item">
+              <FilesCounter filesCount={filesCount} />
+            </div>
+            <div className="task__form-item">
+              <FormControl>
+                <InputLabel id="task-labeling-tool-user">
+                  Labeling tool user
+                </InputLabel>
+                <Controller
+                  labelId="task-labeling-tool-user"
+                  name="user"
+                  label="Labeling tool user"
+                  control={control}
+                  as={<Select>{usersSelectOptions}</Select>}
+                />
+              </FormControl>
+            </div>
           </div>
           <div className="task__form-group">
-            <TextField
-              className="task__form-left-item"
-              name="filesInTask"
-              label="Files in task"
-              type="tel"
-              value={counter.filesInTask}
-              disabled={!filesCount}
-              onChange={validateNumber}
-            />
-            <TextField
-              className="task__form-right-item"
-              name="countOfTasks"
-              label="Count of tasks"
-              type="tel"
-              value={counter.countOfTasks}
-              disabled={!filesCount}
-              onChange={validateNumber}
-            />
+            <div className="task__form-item">
+              <TextField
+                name="filesInTask"
+                label="Files in task"
+                type="tel"
+                value={counter.filesInTask}
+                disabled={!filesCount}
+                onChange={validateNumber}
+              />
+            </div>
+            <div className="task__form-item">
+              <TextField
+                name="countOfTasks"
+                label="Count of tasks"
+                type="tel"
+                value={counter.countOfTasks}
+                disabled={!filesCount}
+                onChange={validateNumber}
+              />
+            </div>
           </div>
           <Button
-            className="task__form-item"
+            fullWidth={true}
             type="submit"
             color="primary"
             variant="contained"
@@ -287,6 +289,6 @@ export const Task: React.FC<TaskProps> = ({
       </FormContainer>
 
       <Notification newTask={newTask} onClose={clearTaskData} />
-    </div>
+    </>
   );
 };
