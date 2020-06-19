@@ -1,13 +1,13 @@
 import React from 'react';
-import { Container, Paper } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, Container, Paper } from '@material-ui/core';
 
 const useStyles = makeStyles({
   root: {
     padding: 0
   },
   paper: {
-    padding: '2.5rem 1.5rem'
+    padding: '2.5rem 1.5rem',
+    marginBottom: '2rem'
   }
 });
 

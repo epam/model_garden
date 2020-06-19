@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './LabelingTask.css';
 import { Task, FormData } from './task';
 import { ProgressLoader } from '../shared';
 import { Dataset } from '../../models';

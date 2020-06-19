@@ -1,12 +1,3 @@
-.upload-images__settings {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.upload-images__settings-item.MuiFormControl-root,
-.upload-images__settings-item.MuiTextField-root,
 .upload-images__settings-item.MuiButton-root {
   margin-top: 20px;
   width: 100%;
