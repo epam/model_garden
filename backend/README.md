@@ -9,6 +9,13 @@ Also update the password in `DATABASES = {...}` dict in settings.py
 
 ## Installation
 
+### CVAT Installation
+Follow all the steps in [CVAT Installation Guide](cvat/README.md).
+
+### Add Backend .env File
+Create [<model_garden_root>/backend/.env](.env). Ask colleagues to share this
+file content.
+
 ### Make sure you have Python 3.8 installed
 ```
 $ python -V
