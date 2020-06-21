@@ -7,10 +7,13 @@ See the recommended pass in www.kb.epam.com/display/EPMCMLCV/Databases+and+Stora
 
 Also update the password in `DATABASES = {...}` dict in settings.py
 
+## Superuser
+See in [<model_garden_root>/backend/.env](.env) file.
+
 ## Installation
 
 ### CVAT Installation
-Follow all the steps in [CVAT Installation Guide](cvat/README.md).
+Follow all the steps in [CVAT Installation Guide](../cvat/README.md).
 
 ### Add Backend .env File
 Create [<model_garden_root>/backend/.env](.env). Ask colleagues to share this
