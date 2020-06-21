@@ -27,12 +27,13 @@ Superuser created successfully.
 ```
 
 ### Open CVAT
-Check that CVAT is running on 'CVAT_HOST':'CVAT_PORT' ('CVAT_HOST' and
-'CVAT_PORT' are specified in [<model_garden_root>/backend/.env](.env) file).
+Check that CVAT is running on `CVAT_HOST`:`CVAT_PORT` (`CVAT_HOST` and
+`CVAT_PORT` are specified in [<model_garden_root>/backend/.env](.env) file).
 
 ### Add Necessary Users to CVAT
 #### Add CVAT Admin
-In localhost:8080/admin/auth/user/ add `CVAT_ROOT_USER_NAME` with
+In _`CVAT_HOST`:`CVAT_PORT`/admin/auth/user/_ (for instance,
+_localhost:8080/admin/auth/user/_) add `CVAT_ROOT_USER_NAME` with
 `CVAT_ROOT_USER_PASSWORD` from [<model_garden_root>/backend/.env](.env) file.
 
 #### Add Test CVAT User
