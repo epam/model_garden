@@ -2,8 +2,9 @@
 
 ## Installation
 
-- [Backend installation guide](backend/README.md)
-- [Frontend installation guide](frontend/README.md)
+- [CVAT Installation Guide](cvat/README.md)
+- [Backend Installation Guide](backend/README.md)
+- [Frontend Installation Guide](frontend/README.md)
 
 ### Run Application with Docker Compose
 ```
