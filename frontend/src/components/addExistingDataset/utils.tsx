@@ -6,7 +6,8 @@ export const UploadPaper = withStyles({
   root: {
     minHeight: '10.125rem',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    marginBottom: '1.25rem'
   }
 })(Paper);
 
