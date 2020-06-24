@@ -1,4 +1,4 @@
-export * from './addExistingDataset';
+export * from './addDataset';
 export * from './labelingTask';
 export * from './tasksStatuses';
 export * from './shared';
