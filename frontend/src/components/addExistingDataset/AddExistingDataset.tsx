@@ -1,65 +1,55 @@
-import React, { useState, FC } from 'react';
+import React, { useState, FC, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import { Route, Redirect, Link } from 'react-router-dom';
 import {
-  Typography,
+  Button,
+  FormControl,
+  InputAdornment,
   InputLabel,
   Select,
+  Tab,
+  Tabs,
   TextField,
-  Button,
-  MenuItem,
-  FormControl,
-  InputAdornment
+  Typography
 } from '@material-ui/core';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { FormContainer, ProgressLoader } from '../shared';
-import '../shared/style.css';
-import { AppState } from '../../store';
-import { useSelector } from 'react-redux';
-import { useAppDispatch } from '../../store';
-import { addExistingDataset } from '../../store/media';
-import { DEFAULT_FORM_DATA, TITLE } from './constants';
+import { FormContainer, ProgressLoader, DropZone } from '../shared';
+import { useAppDispatch, useTypedSelector } from '../../store';
+import { addExistingDataset, uploadMediaFiles } from '../../store/media';
 import { SnackbarAlert } from '../snackbarAlert';
+import {
+  UploadPaper,
+  UploadDescription,
+  Alert,
+  FormData,
+  Severity,
+  BucketsSelect
+} from './utils';
+import '../shared/style.css';
 
-type FormData = {
-  bucketId: string;
-  path: string;
-};
-type Severity = 'success' | 'info' | 'warning' | 'error' | undefined;
-
-type ALERT = {
-  show: boolean;
-  severity: Severity;
-  message: string;
-};
-
-const alertState = {
+const alertState: Alert = {
   show: false,
   severity: undefined,
   message: ''
 };
 
-export const AddExistingDataset: FC = () => {
+export const AddExistingDataset: FC<any> = ({ match, location }) => {
   const dispatch = useAppDispatch();
-
-  const [formData, setFormData] = useState<FormData>({
-    bucketId: DEFAULT_FORM_DATA.BUCKET_ID,
-    path: DEFAULT_FORM_DATA.PATH
-  });
-  const [notification, setNotification] = useState<ALERT>(alertState);
+  const [files, setFiles] = useState<File[]>([]);
+  const [notification, setNotification] = useState(alertState);
   const [showLoader, setShowLoader] = useState(false);
+  const buckets = useTypedSelector((state) => state.main.buckets);
 
-  const { handleSubmit, control, watch, reset } = useForm<FormData>({
-    defaultValues: formData
-  });
-  const { bucketId: bucketIdValue, path: pathValue } = watch([
-    'bucketId',
-    'path'
-  ]);
-
-  const buckets = useSelector((state: AppState) => state.main.buckets);
-  const addedDataSets = useSelector(
-    (state: AppState) => state.media.addedMediaAssets
+  useEffect(
+    () => () => {
+      files.forEach((file: any) => URL.revokeObjectURL(file.preview));
+    },
+    [files]
   );
+
+  const { handleSubmit, control, reset, formState } = useForm<FormData>({
+    mode: 'onChange'
+  });
 
   const raiseAlert = (severity: Severity, message: string) => {
     setNotification({ show: true, severity, message });
@@ -76,15 +66,33 @@ export const AddExistingDataset: FC = () => {
     }));
   };
 
-  const handleAddExistingDatasetSubmit = (bucketId: string, path: string) => {
+  const resetForm = () => {
+    reset({
+      path: '',
+      bucketId: ''
+    });
+  };
+
+  const AddExistingDataset = (bucketId: string, path: string) => {
     dispatch(addExistingDataset({ bucketId, path }))
       .then(unwrapResult)
       .then(() => {
-        raiseAlert(
-          'success',
-          `Dataset with ${addedDataSets} media assets has been added`
-        );
-        reset();
+        raiseAlert('success', `Dataset has been added`);
+        resetForm();
+      })
+      .catch(({ message }) => {
+        raiseAlert('error', message);
+      })
+      .finally(() => setShowLoader(false));
+  };
+
+  const UploadImages = (bucketId: string, path: string) => {
+    dispatch(uploadMediaFiles({ files, bucketId, path }))
+      .then(unwrapResult)
+      .then(({ message }) => {
+        raiseAlert('success', message);
+        resetForm();
+        setFiles([]);
       })
       .catch(({ message }) => {
         raiseAlert('error', message);
@@ -94,30 +102,79 @@ export const AddExistingDataset: FC = () => {
 
   const onSubmit = handleSubmit(({ bucketId, path }) => {
     setShowLoader(true);
-    setFormData({ bucketId, path });
-    handleAddExistingDatasetSubmit(bucketId, path);
+    if (location.pathname === `${match.path}/upload-images`) {
+      UploadImages(bucketId, path);
+    } else {
+      AddExistingDataset(bucketId, path);
+    }
   });
 
-  const selectOptions = buckets.map((bucket) => (
-    <MenuItem key={bucket.id} value={bucket.id}>
-      {bucket.name}
-    </MenuItem>
-  ));
+  const subTabs = [
+    {
+      label: 'upload images',
+      path: 'upload-images',
+      component: (navProps: any) => (
+        <DropZone {...navProps} files={files} setFiles={setFiles} />
+      )
+    },
+    {
+      label: 'add Existing Bucket Path',
+      path: 'bucket-path',
+      component: () => (
+        <UploadDescription variant="body2">
+          <span>
+            Images should be already upload to the bucket (e.g. by CyberDuck)
+            and not to be referenced in the database yet
+          </span>
+        </UploadDescription>
+      )
+    }
+  ];
+
+  if (location.pathname === match.path) {
+    return <Redirect to={`${match.path}/upload-images`} />;
+  }
 
   return (
-    <div className="upload-images">
+    <>
       <FormContainer>
-        <Typography variant="h1">{TITLE}</Typography>
-        <form onSubmit={onSubmit} className="upload-images__form">
-          <div className="upload-images__settings">
+        <Typography variant="h1">Add Existing Dataset</Typography>
+        <UploadPaper variant="outlined">
+          <Tabs
+            indicatorColor="primary"
+            textColor="primary"
+            value={location.pathname.includes('/upload-images') ? 0 : 1}
+            aria-label="add Dataset Example"
+          >
+            {subTabs.map((item) => (
+              <Tab
+                label={item.label}
+                key={item.path}
+                component={Link}
+                to={`${match.path}/${item.path}`}
+              />
+            ))}
+          </Tabs>
+          {subTabs.map((item) => (
+            <Route
+              path={`${match.url}/${item.path}`}
+              key={item.path}
+              component={item.component}
+            />
+          ))}
+        </UploadPaper>
+        <form onSubmit={onSubmit}>
+          <>
             <FormControl className="upload-images__settings-item">
               <InputLabel id="upload-images-bucket-name">Bucket</InputLabel>
               <Controller
                 labelId="upload-images-bucket-name"
                 name="bucketId"
                 control={control}
+                rules={{ required: true }}
                 label="Bucket"
-                as={<Select>{selectOptions}</Select>}
+                defaultValue=""
+                as={<Select>{BucketsSelect(buckets)}</Select>}
               />
             </FormControl>
             <Controller
@@ -125,6 +182,8 @@ export const AddExistingDataset: FC = () => {
               name="path"
               control={control}
               label="Dataset path"
+              rules={{ required: true }}
+              defaultValue=""
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">/</InputAdornment>
@@ -137,25 +196,23 @@ export const AddExistingDataset: FC = () => {
               color="primary"
               variant="contained"
               type="submit"
-              disabled={
-                bucketIdValue === DEFAULT_FORM_DATA.BUCKET_ID ||
-                pathValue === DEFAULT_FORM_DATA.PATH
-              }
+              disabled={!formState.dirty || !formState.isValid}
             >
-              ADD
+              {location.pathname === `${match.path}/upload-images`
+                ? 'UPLOAD'
+                : 'ADD'}
             </Button>
-
-            <ProgressLoader show={showLoader} />
-            <SnackbarAlert
-              open={notification.show}
-              onClose={handleClose}
-              severity={notification.severity}
-            >
-              {notification.message}
-            </SnackbarAlert>
-          </div>
+          </>
         </form>
       </FormContainer>
-    </div>
+      <ProgressLoader show={showLoader} />
+      <SnackbarAlert
+        open={notification.show}
+        onClose={handleClose}
+        severity={notification.severity}
+      >
+        {notification.message}
+      </SnackbarAlert>
+    </>
   );
 };
