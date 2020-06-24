@@ -20,14 +20,14 @@ import { SnackbarAlert } from '../snackbarAlert';
 import {
   UploadPaper,
   UploadDescription,
-  ALERT,
+  Alert,
   FormData,
   Severity,
   BucketsSelect
 } from './utils';
 import '../shared/style.css';
 
-const alertState: ALERT = {
+const alertState: Alert = {
   show: false,
   severity: undefined,
   message: ''
@@ -39,9 +39,6 @@ export const AddExistingDataset: FC<any> = ({ match, location }) => {
   const [notification, setNotification] = useState(alertState);
   const [showLoader, setShowLoader] = useState(false);
   const buckets = useTypedSelector((state) => state.main.buckets);
-  const addedDataSets = useTypedSelector(
-    (state) => state.media.addedMediaAssets
-  );
 
   useEffect(
     () => () => {
@@ -69,15 +66,19 @@ export const AddExistingDataset: FC<any> = ({ match, location }) => {
     }));
   };
 
+  const resetForm = () => {
+    reset({
+      path: '',
+      bucketId: ''
+    });
+  };
+
   const AddExistingDataset = (bucketId: string, path: string) => {
     dispatch(addExistingDataset({ bucketId, path }))
       .then(unwrapResult)
       .then(() => {
-        raiseAlert(
-          'success',
-          `Dataset with ${addedDataSets} media assets has been added`
-        );
-        reset();
+        raiseAlert('success', `Dataset has been added`);
+        resetForm();
       })
       .catch(({ message }) => {
         raiseAlert('error', message);
@@ -90,7 +91,7 @@ export const AddExistingDataset: FC<any> = ({ match, location }) => {
       .then(unwrapResult)
       .then(({ message }) => {
         raiseAlert('success', message);
-        reset();
+        resetForm();
         setFiles([]);
       })
       .catch(({ message }) => {

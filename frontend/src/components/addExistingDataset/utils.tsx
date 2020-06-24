@@ -26,7 +26,7 @@ export const BucketsSelect = (buckets: Bucket[]) =>
       {bucket.name}
     </MenuItem>
   ));
-export type ALERT = {
+export type Alert = {
   show: boolean;
   severity: Severity;
   message: string;
