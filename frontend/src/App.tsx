@@ -19,7 +19,7 @@ const App: FC = () => {
   }, [dispatch]);
 
   if (pathname === '/') {
-    return <Redirect to="/upload-images" />;
+    return <Redirect to="/add-dataset" />;
   }
 
   return (
