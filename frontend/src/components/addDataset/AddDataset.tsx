@@ -25,7 +25,6 @@ import {
   Severity,
   BucketsSelect
 } from './utils';
-import '../shared/style.css';
 
 const alertState: Alert = {
   show: false,
@@ -33,7 +32,7 @@ const alertState: Alert = {
   message: ''
 };
 
-export const AddExistingDataset: FC<any> = ({ match, location }) => {
+export const AddDataset: FC<any> = ({ match, location }) => {
   const dispatch = useAppDispatch();
   const [files, setFiles] = useState<File[]>([]);
   const [notification, setNotification] = useState(alertState);
@@ -138,7 +137,7 @@ export const AddExistingDataset: FC<any> = ({ match, location }) => {
   return (
     <>
       <FormContainer>
-        <Typography variant="h1">Add Existing Dataset</Typography>
+        <Typography variant="h1">Add Dataset</Typography>
         <UploadPaper variant="outlined">
           <Tabs
             indicatorColor="primary"
@@ -165,7 +164,7 @@ export const AddExistingDataset: FC<any> = ({ match, location }) => {
         </UploadPaper>
         <form onSubmit={onSubmit}>
           <>
-            <FormControl className="upload-images__settings-item">
+            <FormControl>
               <InputLabel id="upload-images-bucket-name">Bucket</InputLabel>
               <Controller
                 labelId="upload-images-bucket-name"
@@ -178,7 +177,6 @@ export const AddExistingDataset: FC<any> = ({ match, location }) => {
               />
             </FormControl>
             <Controller
-              className="upload-images__settings-item"
               name="path"
               control={control}
               label="Dataset path"
@@ -192,7 +190,7 @@ export const AddExistingDataset: FC<any> = ({ match, location }) => {
               as={<TextField />}
             />
             <Button
-              className="upload-images__settings-item"
+              fullWidth={true}
               color="primary"
               variant="contained"
               type="submit"
