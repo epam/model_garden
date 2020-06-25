@@ -46,7 +46,9 @@ export const AddDataset: FC<any> = ({ match, location }) => {
     [files]
   );
 
-  const { handleSubmit, control, reset, formState } = useForm<FormData>({
+  const { handleSubmit, control, register, reset, formState } = useForm<
+    FormData
+  >({
     mode: 'onChange'
   });
 
@@ -176,25 +178,25 @@ export const AddDataset: FC<any> = ({ match, location }) => {
                 as={<Select>{BucketsSelect(buckets)}</Select>}
               />
             </FormControl>
-            <Controller
+            <TextField
+              className="upload-images__settings-item"
               name="path"
-              control={control}
               label="Dataset path"
-              rules={{ required: true }}
-              defaultValue=""
+              inputRef={register({
+                required: true
+              })}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">/</InputAdornment>
                 )
               }}
-              as={<TextField />}
             />
             <Button
               fullWidth={true}
               color="primary"
               variant="contained"
               type="submit"
-              disabled={!formState.dirty || !formState.isValid}
+              disabled={!formState.isValid}
             >
               {location.pathname === `${match.path}/upload-images`
                 ? 'UPLOAD'
