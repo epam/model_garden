@@ -2,7 +2,7 @@ import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
 import { errorReducer } from './error';
-import { mainReducer } from './main';
+import { dataReducer } from './data';
 import { mediaReducer } from './media';
 import { labelingTaskReducer } from './labelingTask';
 import { configureStore } from '@reduxjs/toolkit';
@@ -10,7 +10,7 @@ import { configureStore } from '@reduxjs/toolkit';
 const store = configureStore({
   reducer: {
     error: errorReducer,
-    main: mainReducer,
+    data: dataReducer,
     media: mediaReducer,
     labelingTask: labelingTaskReducer
   },

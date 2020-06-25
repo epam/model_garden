@@ -10,8 +10,7 @@ import {
   MenuItem
 } from '@material-ui/core';
 import { AppState } from '../../store';
-import { getMediaImages } from '../../store/media';
-import { getDatasets } from '../../store/labelingTask';
+import { getDatasets, getMediaAssets } from '../../store/data';
 import { GridGallery } from './GridGallery';
 import { DatasetGrid } from './datasetGrid/datasetGrid';
 
@@ -22,7 +21,7 @@ import {
 
 interface GalleryProps {
   photos: [{}];
-  buckets: any;
+  buckets: Bucket[];
   currentBucketId: any;
   dataset: any;
 }
@@ -33,7 +32,7 @@ const GalleryComponent = (props: any) => {
     buckets,
     currentBucketId,
     datasets,
-    getMediaImages,
+    getMediaAssets,
     setCurrentBucketId,
     currentDatasetId,
     setCurrentDatasetId,
@@ -42,12 +41,12 @@ const GalleryComponent = (props: any) => {
 
   useEffect(() => {
     if (currentDatasetId) {
-      getMediaImages({
+      getMediaAssets({
         bucketId: currentBucketId,
         datasetId: currentDatasetId
       });
     }
-  }, [currentDatasetId, currentBucketId, getMediaImages]);
+  }, [currentDatasetId, currentBucketId, getMediaAssets]);
 
   useEffect(() => {
     if (currentBucketId) {
@@ -116,17 +115,17 @@ const GalleryComponent = (props: any) => {
     </Container>
   );
 };
-const mapStateToProps = ({ media, main, labelingTask }: AppState) => ({
-  photos: media.photos,
-  buckets: main.buckets,
+const mapStateToProps = ({ data, labelingTask }: AppState) => ({
+  buckets: data.buckets,
+  datasets: data.datasets,
+  photos: data.mediaAssets,
   currentBucketId: labelingTask.currentBucketId,
-  currentDatasetId: labelingTask.currentDatasetId,
-  datasets: labelingTask.datasets
+  currentDatasetId: labelingTask.currentDatasetId
 });
 const actions = {
   setCurrentBucketId,
   setCurrentDatasetId,
-  getMediaImages,
+  getMediaAssets,
   getDatasets
 };
 export const Gallery = connect(mapStateToProps, actions)(GalleryComponent);
