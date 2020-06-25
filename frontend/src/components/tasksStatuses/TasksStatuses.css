@@ -29,8 +29,8 @@
 }
 
 .task-tooltip {
-  display: 'flex';
-  align-items: 'center';
+  display: flex;
+  align-items: center;
 }
 
 .task-status-archived > td {
