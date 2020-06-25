@@ -94,9 +94,8 @@ backend dev:
     - docker images
     - docker push $REPOSITORY_URL:latest-dev
     - docker push $REPOSITORY_URL:$CI_COMMIT_SHORT_SHA
-   # commented till dev cluster configuration
-   # - aws ecs update-service --cluster model-garden-dev --service model-garden-backend-dev
-   # - aws ecs list-tasks --cluster model-garden-dev --service model-garden-backend-dev | jq -r ".taskArns[]" | awk '{print "aws ecs stop-task --cluster model-garden --task \""$0"\""}' | sh
+    - aws ecs update-service --cluster model-garden-dev --service model-garden-backend-dev
+    - aws ecs list-tasks --cluster model-garden-dev --service model-garden-backend-dev | jq -r ".taskArns[]" | awk '{print "aws ecs stop-task --cluster model-garden --task \""$0"\""}' | sh
   only:
     - develop
 
@@ -148,8 +147,7 @@ frontend dev:
     - docker images
     - docker push $REPOSITORY_URL:latest-dev
     - docker push $REPOSITORY_URL:$CI_COMMIT_SHORT_SHA
-   # commented till dev cluster configuration
-   # - aws ecs update-service --cluster model-garden-dev --service model-garden-frontend-dev
-   # - aws ecs list-tasks --cluster model-garden-dev --service model-garden-frontend-dev | jq -r ".taskArns[]" | awk '{print "aws ecs stop-task --cluster model-garden --task \""$0"\""}' | sh
+    - aws ecs update-service --cluster model-garden-dev --service model-garden-frontend-dev
+    - aws ecs list-tasks --cluster model-garden-dev --service model-garden-frontend-dev | jq -r ".taskArns[]" | awk '{print "aws ecs stop-task --cluster model-garden --task \""$0"\""}' | sh
   only:
     - develop
