@@ -13,7 +13,7 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
     //on enter, get users, and get datasets if bucketSelected
     props.getLabelingToolUsers();
     props.currentBucketId && props.getDatasets(props.currentBucketId);
-  }, [props.currentBucketId]);
+  }, [props]);
 
   const handleTaskSubmit = (data: FormData) => {
     props

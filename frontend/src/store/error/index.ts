@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getBuckets } from '../main';
+import { getBuckets } from '../data';
 
 const initialState: string = '';
 

@@ -37,7 +37,7 @@ export const AddDataset: FC<any> = ({ match, location }) => {
   const [files, setFiles] = useState<File[]>([]);
   const [notification, setNotification] = useState(alertState);
   const [showLoader, setShowLoader] = useState(false);
-  const buckets = useTypedSelector((state) => state.main.buckets);
+  const buckets = useTypedSelector((state) => state.data.buckets);
 
   useEffect(
     () => () => {
