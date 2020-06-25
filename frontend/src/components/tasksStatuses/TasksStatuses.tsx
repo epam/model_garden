@@ -1,25 +1,31 @@
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import Highlighter from 'react-highlight-words';
-import {Table, Input, Button, Space} from 'antd';
-import {SearchOutlined} from '@ant-design/icons';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import IconButton from '@material-ui/core/IconButton';
-import 'antd/dist/antd.css';
-import './TasksStatuses.css';
-import {DropdownButton} from './DropdownButton';
-import {AppState} from '../../store';
-import {archiveLabelingTask, getLabelingTasks, retryLabelingTask} from '../../store/labelingTask';
-import {ROWS_PER_PAGE} from './constants';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Highlighter from "react-highlight-words";
+import { Table, Input, Button, Space } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+import RefreshIcon from "@material-ui/icons/Refresh";
+import IconButton from "@material-ui/core/IconButton";
+import "antd/dist/antd.css";
+import "./TasksStatuses.css";
+import { DropdownButton } from "./DropdownButton";
+import { AppState } from "../../store";
+import {
+  archiveLabelingTask,
+  getLabelingTasks,
+  retryLabelingTask
+} from "../../store/labelingTask";
+import { ROWS_PER_PAGE } from "./constants";
 
 export const TasksStatuses: React.FC = () => {
   const [pageValue, setPage] = useState(1);
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
   const [filterMap, setFilterMap] = useState({});
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-  const areTasksLoading = useSelector((state: AppState) => state.labelingTask.isLabelingTasksStatusesLoading);
+  const areTasksLoading = useSelector(
+    (state: AppState) => state.labelingTask.isLabelingTasksStatusesLoading
+  );
   const tasks = useSelector(
     (state: AppState) => state.labelingTask.labelingTasksStatuses.tasks
   );
@@ -34,7 +40,12 @@ export const TasksStatuses: React.FC = () => {
 
   let searchInput: Input | null;
   const getColumnSearchProps = (dataIndex: string) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters
+    }: any) => (
       <div style={{ padding: 8 }}>
         <Input
           ref={node => {
@@ -42,9 +53,11 @@ export const TasksStatuses: React.FC = () => {
           }}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onChange={e =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
+          style={{ width: 188, marginBottom: 8, display: "block" }}
         />
         <Space>
           <Button
@@ -56,15 +69,24 @@ export const TasksStatuses: React.FC = () => {
           >
             Search
           </Button>
-          <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button
+            onClick={() => handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
             Reset
           </Button>
         </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
     onFilter: (value: string, record: any) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
     onFilterDropdownVisibleChange: (visible: boolean) => {
       if (visible) {
         setTimeout(() => searchInput && searchInput.select());
@@ -73,40 +95,40 @@ export const TasksStatuses: React.FC = () => {
     render: (text: string) =>
       searchedColumn === dataIndex ? (
         <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
           searchWords={[searchText]}
           autoEscape
           textToHighlight={text.toString()}
         />
       ) : (
         text
-      ),
+      )
   });
 
   const TASK_STATUSES_COLUMNS = [
     {
-      title: 'Task Name',
-      dataIndex: 'name',
-      width: '20%',
+      title: "Task Name",
+      dataIndex: "name",
+      width: "20%",
       sorter: true,
-      ...getColumnSearchProps('name')
+      ...getColumnSearchProps("name")
     },
     {
-      title: 'Dataset',
-      dataIndex: 'dataset',
-      width: '20%',
+      title: "Dataset",
+      dataIndex: "dataset",
+      width: "20%",
       sorter: true,
-      ...getColumnSearchProps('dataset')
+      ...getColumnSearchProps("dataset")
     },
     {
-      title: 'Labeler',
-      dataIndex: 'labeler',
+      title: "Labeler",
+      dataIndex: "labeler",
       sorter: true,
-      ...getColumnSearchProps('labeler')
+      ...getColumnSearchProps("labeler")
     },
     {
-      title: 'Url',
-      dataIndex: 'url',
+      title: "Url",
+      dataIndex: "url",
       render: (value: string) => {
         let hostname = value;
         let res = /https?:\/\/(.+?)\/.*/.exec(value);
@@ -114,15 +136,17 @@ export const TasksStatuses: React.FC = () => {
           hostname = res[1];
         }
         return (
-          <a href={value} target="_blank" rel="noopener noreferrer">{hostname}</a>
+          <a href={value} target="_blank" rel="noopener noreferrer">
+            {hostname}
+          </a>
         );
       }
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
+      title: "Status",
+      dataIndex: "status",
       sorter: true,
-      ...getColumnSearchProps('status')
+      ...getColumnSearchProps("status")
     }
   ];
 
@@ -131,7 +155,7 @@ export const TasksStatuses: React.FC = () => {
     filter: any,
     sorter: {
       column?: any;
-      order?: 'ascend' | 'descend';
+      order?: "ascend" | "descend";
       field?: string;
       columnKey?: any;
     }
@@ -144,7 +168,7 @@ export const TasksStatuses: React.FC = () => {
             pagination.pageSize,
             filterMap,
             sorter.order,
-            sorter.field,
+            sorter.field
           )
         );
         return pagination.current;
@@ -153,23 +177,32 @@ export const TasksStatuses: React.FC = () => {
     });
   };
 
-  const handleSearch = (selectedKeys: Array<string>, confirm: any, dataIndex: string) => {
+  const handleSearch = (
+    selectedKeys: Array<string>,
+    confirm: any,
+    dataIndex: string
+  ) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
     setPage(1);
 
     setFilterMap((prevState: any) => ({
-      ...prevState, [dataIndex]: selectedKeys[0]
+      ...prevState,
+      [dataIndex]: selectedKeys[0]
     }));
-    dispatch(getLabelingTasks(1, ROWS_PER_PAGE,
-      {...filterMap, [dataIndex]: selectedKeys[0]}));
+    dispatch(
+      getLabelingTasks(1, ROWS_PER_PAGE, {
+        ...filterMap,
+        [dataIndex]: selectedKeys[0]
+      })
+    );
   };
 
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setPage(1);
-    setSearchText('');
+    setSearchText("");
     setFilterMap({});
     dispatch(getLabelingTasks(1, ROWS_PER_PAGE, {}));
   };
@@ -180,50 +213,58 @@ export const TasksStatuses: React.FC = () => {
 
   const rowSelection = {
     selectedRowKeys,
-    onChange: onSelectChange,
+    onChange: onSelectChange
   };
 
   const handleArchive: any = () => {
     if (selectedRowKeys.length > 0) {
-    (dispatch(archiveLabelingTask(selectedRowKeys)) as any)
-      .finally(() => {
+      (dispatch(archiveLabelingTask(selectedRowKeys)) as any).finally(() => {
         setSelectedRowKeys([]);
-      })
+      });
     }
-  }
+  };
 
   const handleRetry: any = () => {
     if (selectedRowKeys.length > 0) {
-      (dispatch(retryLabelingTask(selectedRowKeys)) as any)
-        .finally(() => {
-          setSelectedRowKeys([]);
-        })
+      (dispatch(retryLabelingTask(selectedRowKeys)) as any).finally(() => {
+        setSelectedRowKeys([]);
+      });
     }
-  }
-  const handleRefresh = ()=>{
+  };
+
+  const handleDisabled = () => {
+    return selectedRowKeys.length > 0 ? "" : "disabled";
+  };
+
+  const handleRefresh = () => {
     dispatch(getLabelingTasks(pageValue, ROWS_PER_PAGE, filterMap));
-  }
+  };
 
   return (
-      <div className={'task-statuses'}>
-        <DropdownButton onArchive={handleArchive} onRetry={handleRetry}/>
-        <IconButton aria-label="refresh" onClick={handleRefresh}>
-          <RefreshIcon />
-        </IconButton>
-        <Table
-          columns={TASK_STATUSES_COLUMNS as any}
-          rowKey={record => record.id}
-          rowSelection={rowSelection as any}
-          rowClassName={(record) => `task-status-${record.status}`}
-          dataSource={tasks}
-          pagination={{
-            pageSize: ROWS_PER_PAGE,
-            current: pageValue,
-            total: tasksCount
-          }}
-          loading={areTasksLoading}
-          onChange={handleTableChange as any}
-        />
-      </div>
+    <div className={"task-statuses"}>
+      <DropdownButton
+        onArchive={handleArchive}
+        onRetry={handleRetry}
+        className={handleDisabled()}
+        disabled={true}
+      />
+      <IconButton aria-label="refresh" onClick={handleRefresh}>
+        <RefreshIcon />
+      </IconButton>
+      <Table
+        columns={TASK_STATUSES_COLUMNS as any}
+        rowKey={record => record.id}
+        rowSelection={rowSelection as any}
+        rowClassName={record => `task-status-${record.status}`}
+        dataSource={tasks}
+        pagination={{
+          pageSize: ROWS_PER_PAGE,
+          current: pageValue,
+          total: tasksCount
+        }}
+        loading={areTasksLoading}
+        onChange={handleTableChange as any}
+      />
+    </div>
   );
 };
