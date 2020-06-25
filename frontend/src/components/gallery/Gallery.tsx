@@ -13,6 +13,7 @@ import { AppState } from '../../store';
 import { getMediaImages } from '../../store/media';
 import { getDatasets } from '../../store/labelingTask';
 import { GridGallery } from './GridGallery';
+import { DatasetGrid } from './datasetGrid/datasetGrid';
 
 import {
   setCurrentBucketId,
@@ -111,10 +112,11 @@ const GalleryComponent = (props: any) => {
       </Grid>
 
       <GridGallery photos={photos} />
+      {/* <DatasetGrid datasets={datasets} /> */}
     </Container>
   );
 };
-const mstp = ({ media, main, labelingTask }: AppState) => ({
+const mapStateToProps = ({ media, main, labelingTask }: AppState) => ({
   photos: media.photos,
   buckets: main.buckets,
   currentBucketId: labelingTask.currentBucketId,
@@ -127,4 +129,4 @@ const actions = {
   getMediaImages,
   getDatasets
 };
-export const Gallery = connect(mstp, actions)(GalleryComponent);
+export const Gallery = connect(mapStateToProps, actions)(GalleryComponent);
