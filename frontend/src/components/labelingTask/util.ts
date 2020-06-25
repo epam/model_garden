@@ -8,10 +8,10 @@ import {
 } from '../../store/labelingTask';
 import { AppState } from '../../store';
 
-export const mapStateToProps = ({ data: { buckets }, labelingTask, data }: AppState) => ({
+export const mapStateToProps = ({ data: { buckets }, labelingTask }: AppState) => ({
   buckets,
   currentBucketId: labelingTask.currentBucketId,
-  datasets: data.datasets,
+  datasets: labelingTask.datasets,
   currentDatasetId: labelingTask.currentDatasetId,
   users: labelingTask.labelingToolUsers,
   unsignedImagesCount: labelingTask.unsignedImagesCount,

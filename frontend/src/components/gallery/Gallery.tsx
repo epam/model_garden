@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Bucket, Dataset } from '../../models';
 import {
@@ -14,11 +14,6 @@ import { getDatasets, getMediaAssets } from '../../store/data';
 import { GridGallery } from './GridGallery';
 import { DatasetGrid } from './datasetGrid/datasetGrid';
 
-import {
-  setCurrentBucketId,
-  setCurrentDatasetId
-} from '../../store/labelingTask';
-
 interface GalleryProps {
   photos: [{}];
   buckets: Bucket[];
@@ -27,17 +22,10 @@ interface GalleryProps {
 }
 
 const GalleryComponent = (props: any) => {
-  const {
-    photos,
-    buckets,
-    currentBucketId,
-    datasets,
-    getMediaAssets,
-    setCurrentBucketId,
-    currentDatasetId,
-    setCurrentDatasetId,
-    getDatasets
-  } = props;
+  const { buckets, datasets, photos, getMediaAssets, getDatasets } = props;
+
+  const [currentDatasetId, setCurrentDatasetId] = useState('');
+  const [currentBucketId, setCurrentBucketId] = useState('');
 
   useEffect(() => {
     if (currentDatasetId) {
@@ -123,8 +111,6 @@ const mapStateToProps = ({ data, labelingTask }: AppState) => ({
   currentDatasetId: labelingTask.currentDatasetId
 });
 const actions = {
-  setCurrentBucketId,
-  setCurrentDatasetId,
   getMediaAssets,
   getDatasets
 };
