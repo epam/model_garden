@@ -68,7 +68,7 @@ backend:
     - docker push $REPOSITORY_URL:latest
     - docker push $REPOSITORY_URL:$CI_COMMIT_TAG
     - aws ecs update-service --cluster model-garden --service model-garden-backend
-    - aws ecs list-tasks --cluster model-garden --service model-garden-backend | jq -r ".taskArns[]" | awk '{print "aws ecs stop-task --cluster model-garden --task \""$0"\""}' | sh
+    - aws ecs list-tasks --cluster model-garden --service model-garden-backend | jq -r ".taskArns[]" | awk 'END { if (NR==0 || $0=="")  exit 0; print "aws ecs stop-task --cluster model-garden --task \""$0"\"";}' | sh
   only:
     - tags
     - master
@@ -95,7 +95,7 @@ backend dev:
     - docker push $REPOSITORY_URL:latest-dev
     - docker push $REPOSITORY_URL:$CI_COMMIT_SHORT_SHA
     - aws ecs update-service --cluster model-garden-dev --service model-garden-backend-dev
-    - aws ecs list-tasks --cluster model-garden-dev --service model-garden-backend-dev | jq -r ".taskArns[]" | awk '{print "aws ecs stop-task --cluster model-garden --task \""$0"\""}' | sh
+    - aws ecs list-tasks --cluster model-garden-dev --service model-garden-backend-dev | jq -r ".taskArns[]" | awk 'END { if (NR==0 || $0=="")  exit 0; print "aws ecs stop-task --cluster model-garden-dev --task \""$0"\"";}' | sh
   only:
     - develop
 
@@ -121,7 +121,7 @@ frontend:
     - docker push $REPOSITORY_URL:latest
     - docker push $REPOSITORY_URL:$CI_COMMIT_TAG
     - aws ecs update-service --cluster model-garden --service model-garden-frontend
-    - aws ecs list-tasks --cluster model-garden --service model-garden-frontend | jq -r ".taskArns[]" | awk '{print "aws ecs stop-task --cluster model-garden --task \""$0"\""}' | sh
+    - aws ecs list-tasks --cluster model-garden --service model-garden-frontend | jq -r ".taskArns[]" | awk 'END { if (NR==0 || $0=="")  exit 0; print "aws ecs stop-task --cluster model-garden --task \""$0"\"";}' | sh
   only:
     - tags
     - master
@@ -148,6 +148,6 @@ frontend dev:
     - docker push $REPOSITORY_URL:latest-dev
     - docker push $REPOSITORY_URL:$CI_COMMIT_SHORT_SHA
     - aws ecs update-service --cluster model-garden-dev --service model-garden-frontend-dev
-    - aws ecs list-tasks --cluster model-garden-dev --service model-garden-frontend-dev | jq -r ".taskArns[]" | awk '{print "aws ecs stop-task --cluster model-garden --task \""$0"\""}' | sh
+    - aws ecs list-tasks --cluster model-garden-dev --service model-garden-frontend-dev |  jq -r ".taskArns[]" | awk 'END { if (NR==0 || $0=="")  exit 0; print "aws ecs stop-task --cluster model-garden-dev --task \""$0"\"";}' | sh
   only:
     - develop
