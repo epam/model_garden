@@ -43,7 +43,7 @@ export const DropdownButton: React.FC<DropdownButtonProps> = ({
   onArchive,
   onRetry,
   className,
-  disabled
+  disabled,
 }) => {
   return (
     <Dropdown
