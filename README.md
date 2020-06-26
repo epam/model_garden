@@ -11,6 +11,7 @@
 
 ## Installation
 
+- [CVAT Installation Guide](cvat/README.md)
 - [Installation guide for Backend developer](backend/README.md)
 - [Installation guide for Frontend developer](frontend/README.md)
 
