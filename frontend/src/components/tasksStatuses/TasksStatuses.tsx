@@ -10,9 +10,8 @@ import {
   archiveLabelingTask,
   getLabelingTasks,
   retryLabelingTask
-} from '../../store/labelingTask';
+} from '../../store/tasksStatuses';
 import { TableStateProps } from '../../models';
-import { ROWS_PER_PAGE } from './constants';
 import { GetColumnSearchProps } from './GetColumnSearchProps';
 import StatusField from './StatusField';
 
@@ -21,7 +20,7 @@ export const TasksStatuses: React.FC = () => {
 
   const [tableState, setTableState] = useState<TableStateProps>({
     page: 1,
-    rowsPerPage: ROWS_PER_PAGE,
+    rowsPerPage: 10,
     searchProps: {},
     filterStatus: JSON.parse(
       localStorage.getItem('taskStatusFilter') as any
@@ -31,14 +30,10 @@ export const TasksStatuses: React.FC = () => {
   });
 
   const areTasksLoading = useTypedSelector(
-    (state) => state.labelingTask.isLabelingTasksStatusesLoading
+    (state) => state.tasksStatuses.isLabelingTasksStatusesLoading
   );
-  const tasks = useTypedSelector(
-    (state) => state.labelingTask.labelingTasksStatuses.tasks
-  );
-  const tasksCount = useTypedSelector(
-    (state) => state.labelingTask.labelingTasksStatuses.count
-  );
+  const tasks = useTypedSelector((state) => state.tasksStatuses.tasks);
+  const tasksCount = useTypedSelector((state) => state.tasksStatuses.count);
 
   const dispatch = useAppDispatch();
   useEffect(() => {

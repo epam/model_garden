@@ -10,12 +10,10 @@ import {
   SET_CURRENT_DATASET_ID,
   CREATE_LABELING_TASK_START,
   CREATE_LABELING_TASK_SUCCESS,
-  GET_LABELING_TASKS_START,
-  GET_LABELING_TASKS_SUCCESS,
   CLEAR_NEW_LABELING_TASK
 } from './types';
 import { LabelingToolUser } from '../../models/labelingToolUser';
-import { Dataset, LabelingTaskStatus } from '../../models';
+import { Dataset } from '../../models';
 
 export interface LabelingTasksState {
   isDatasetsLoading: boolean;
@@ -26,8 +24,6 @@ export interface LabelingTasksState {
   currentDatasetId: string;
   isImagesCountLoading: boolean;
   unsignedImagesCount: number;
-  isLabelingTasksStatusesLoading: boolean;
-  labelingTasksStatuses: { count: number; tasks: LabelingTaskStatus[] };
   newTask: { location: string };
 }
 
@@ -40,8 +36,6 @@ const initialState: LabelingTasksState = {
   currentDatasetId: '',
   isImagesCountLoading: false,
   unsignedImagesCount: 0,
-  isLabelingTasksStatusesLoading: false,
-  labelingTasksStatuses: { count: 0, tasks: [] },
   newTask: { location: '' }
 };
 
@@ -109,20 +103,6 @@ export const labelingTaskReducer = (
       return {
         ...state,
         newTask: { location: '' }
-      };
-    case GET_LABELING_TASKS_START:
-      return {
-        ...state,
-        isLabelingTasksStatusesLoading: true
-      };
-    case GET_LABELING_TASKS_SUCCESS:
-      return {
-        ...state,
-        isLabelingTasksStatusesLoading: false,
-        labelingTasksStatuses: {
-          tasks: action.tasksData.tasks,
-          count: action.tasksData.count
-        }
       };
     default:
       return state;
