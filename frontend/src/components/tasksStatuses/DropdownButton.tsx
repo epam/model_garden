@@ -1,7 +1,7 @@
-import React from "react";
-import { Menu, Dropdown, Button } from "antd";
-import "antd/dist/antd.css";
-import "./TasksStatuses.css";
+import React from 'react';
+import { Menu, Dropdown, Button } from 'antd';
+import 'antd/dist/antd.css';
+import './TasksStatuses.css';
 
 const menu: any = (
   handleArchive: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
@@ -10,18 +10,18 @@ const menu: any = (
 ) => {
   return (
     <Menu>
-      <Menu.Item>
+      <Menu.Item className="action-menu-item">
         <Button
-          className={enabled ? "disabled" : ""}
+          className={enabled ? 'disabled' : ''}
           onClick={handleArchive}
           disabled={enabled}
         >
           Archive
         </Button>
       </Menu.Item>
-      <Menu.Item>
+      <Menu.Item className="action-menu-item">
         <Button
-          className={enabled ? "disabled" : ""}
+          className={enabled ? 'disabled' : ''}
           onClick={handleRetry}
           disabled={enabled}
         >
@@ -43,10 +43,11 @@ export const DropdownButton: React.FC<DropdownButtonProps> = ({
   onArchive,
   onRetry,
   className,
-  disabled,
+  disabled
 }) => {
   return (
     <Dropdown
+      className="action-button"
       overlay={menu(onArchive, onRetry, className, disabled)}
       placement="bottomLeft"
     >
