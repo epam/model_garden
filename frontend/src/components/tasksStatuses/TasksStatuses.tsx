@@ -206,8 +206,7 @@ export const TasksStatuses: React.FC = () => {
         <DropdownButton
           onArchive={handleArchive}
           onRetry={handleRetry}
-          className={handleDisabled()}
-          disabled
+          disabled={handleDisabled()}
         />
         <IconButton aria-label="refresh" onClick={handleRefresh}>
           <Refresh />
