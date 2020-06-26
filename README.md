@@ -11,20 +11,9 @@
 
 ## Installation
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-- [CVAT Installation Guide](cvat/README.md)
-- [Backend Installation Guide](backend/README.md)
-- [Frontend Installation Guide](frontend/README.md)
-=======
-- [Installation guide for Backend developer](backend/README.md)
-- [Installation guide for Frontend developer](frontend/README.md)
->>>>>>> ff13436352d6fdf924bdd740b75a2a613fe5dce8
-=======
 - [CVAT Installation Guide](cvat/README.md)
 - [Installation guide for Backend developer](backend/README.md)
 - [Installation guide for Frontend developer](frontend/README.md)
->>>>>>> 7418dc59bd6a0179032852bbd14cdd87b684414d
 
 ## Run Application with Docker Compose
 ```
