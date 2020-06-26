@@ -12,7 +12,7 @@ import { AppState } from "../../store";
 import {
   archiveLabelingTask,
   getLabelingTasks,
-  retryLabelingTask
+  retryLabelingTask,
 } from "../../store/labelingTask";
 import { ROWS_PER_PAGE } from "./constants";
 
@@ -44,16 +44,16 @@ export const TasksStatuses: React.FC = () => {
       setSelectedKeys,
       selectedKeys,
       confirm,
-      clearFilters
+      clearFilters,
     }: any) => (
       <div style={{ padding: 8 }}>
         <Input
-          ref={node => {
+          ref={(node) => {
             searchInput = node;
           }}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={e =>
+          onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
@@ -102,7 +102,7 @@ export const TasksStatuses: React.FC = () => {
         />
       ) : (
         text
-      )
+      ),
   });
 
   const TASK_STATUSES_COLUMNS = [
@@ -111,20 +111,20 @@ export const TasksStatuses: React.FC = () => {
       dataIndex: "name",
       width: "20%",
       sorter: true,
-      ...getColumnSearchProps("name")
+      ...getColumnSearchProps("name"),
     },
     {
       title: "Dataset",
       dataIndex: "dataset",
       width: "20%",
       sorter: true,
-      ...getColumnSearchProps("dataset")
+      ...getColumnSearchProps("dataset"),
     },
     {
       title: "Labeler",
       dataIndex: "labeler",
       sorter: true,
-      ...getColumnSearchProps("labeler")
+      ...getColumnSearchProps("labeler"),
     },
     {
       title: "Url",
@@ -140,14 +140,14 @@ export const TasksStatuses: React.FC = () => {
             {hostname}
           </a>
         );
-      }
+      },
     },
     {
       title: "Status",
       dataIndex: "status",
       sorter: true,
-      ...getColumnSearchProps("status")
-    }
+      ...getColumnSearchProps("status"),
+    },
   ];
 
   const handleTableChange = (
@@ -189,12 +189,12 @@ export const TasksStatuses: React.FC = () => {
 
     setFilterMap((prevState: any) => ({
       ...prevState,
-      [dataIndex]: selectedKeys[0]
+      [dataIndex]: selectedKeys[0],
     }));
     dispatch(
       getLabelingTasks(1, ROWS_PER_PAGE, {
         ...filterMap,
-        [dataIndex]: selectedKeys[0]
+        [dataIndex]: selectedKeys[0],
       })
     );
   };
@@ -213,7 +213,7 @@ export const TasksStatuses: React.FC = () => {
 
   const rowSelection = {
     selectedRowKeys,
-    onChange: onSelectChange
+    onChange: onSelectChange,
   };
 
   const handleArchive: any = () => {
@@ -246,21 +246,21 @@ export const TasksStatuses: React.FC = () => {
         onArchive={handleArchive}
         onRetry={handleRetry}
         className={handleDisabled()}
-        disabled={true}
+        disabled
       />
       <IconButton aria-label="refresh" onClick={handleRefresh}>
         <RefreshIcon />
       </IconButton>
       <Table
         columns={TASK_STATUSES_COLUMNS as any}
-        rowKey={record => record.id}
+        rowKey={(record) => record.id}
         rowSelection={rowSelection as any}
-        rowClassName={record => `task-status-${record.status}`}
+        rowClassName={(record) => `task-status-${record.status}`}
         dataSource={tasks}
         pagination={{
           pageSize: ROWS_PER_PAGE,
           current: pageValue,
-          total: tasksCount
+          total: tasksCount,
         }}
         loading={areTasksLoading}
         onChange={handleTableChange as any}
