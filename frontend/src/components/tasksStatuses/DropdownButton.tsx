@@ -11,20 +11,12 @@ const menu: any = (
   return (
     <Menu>
       <Menu.Item className="action-menu-item">
-        <Button
-          className={enabled ? 'disabled' : ''}
-          onClick={handleArchive}
-          disabled={enabled}
-        >
+        <Button onClick={handleArchive} disabled={enabled}>
           Archive
         </Button>
       </Menu.Item>
       <Menu.Item className="action-menu-item">
-        <Button
-          className={enabled ? 'disabled' : ''}
-          onClick={handleRetry}
-          disabled={enabled}
-        >
+        <Button onClick={handleRetry} disabled={enabled}>
           Retry
         </Button>
       </Menu.Item>
@@ -35,20 +27,18 @@ const menu: any = (
 interface DropdownButtonProps {
   onArchive: () => void;
   onRetry: () => void;
-  className: any;
   disabled: any;
 }
 
 export const DropdownButton: React.FC<DropdownButtonProps> = ({
   onArchive,
   onRetry,
-  className,
   disabled
 }) => {
   return (
     <Dropdown
       className="action-button"
-      overlay={menu(onArchive, onRetry, className, disabled)}
+      overlay={menu(onArchive, onRetry, disabled)}
       placement="bottomLeft"
     >
       <Button>Actions</Button>
