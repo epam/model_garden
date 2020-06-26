@@ -1,5 +1,5 @@
 import { LabelingToolUser } from '../../models/labelingToolUser';
-import { Dataset, LabelingTaskStatus } from '../../models';
+import { Dataset } from '../../models';
 
 export const GET_DATASETS_START = 'GET_DATASETS_START';
 export const GET_DATASETS_SUCCESS = 'GET_DATASETS_SUCCESS';
@@ -17,9 +17,6 @@ export const CREATE_LABELING_TASK_START = 'CREATE_LABELING_TASK_START';
 export const CREATE_LABELING_TASK_SUCCESS = 'CREATE_LABELING_TASK_SUCCESS';
 
 export const CLEAR_NEW_LABELING_TASK = 'CLEAR_NEW_LABELING_TASK';
-
-export const GET_LABELING_TASKS_START = 'GET_LABELING_TASKS_START';
-export const GET_LABELING_TASKS_SUCCESS = 'GET_LABELING_TASKS_SUCCESS';
 
 export interface getDatasetsStart {
   type: typeof GET_DATASETS_START;
@@ -71,18 +68,6 @@ export interface clearNewTaskData {
   type: typeof CLEAR_NEW_LABELING_TASK;
 }
 
-export interface getLabelingTasksStart {
-  type: typeof GET_LABELING_TASKS_START;
-}
-
-export interface getLabelingTasksSuccess {
-  type: typeof GET_LABELING_TASKS_SUCCESS;
-  tasksData: {
-    tasks: LabelingTaskStatus[];
-    count: number;
-  };
-}
-
 export type LabelingTaskActionTypes =
   | getDatasetsStart
   | getDatasetsSuccess
@@ -94,6 +79,4 @@ export type LabelingTaskActionTypes =
   | setCurrentDataset
   | createLabelingTaskStart
   | createLabelingTaskSuccess
-  | clearNewTaskData
-  | getLabelingTasksStart
-  | getLabelingTasksSuccess;
+  | clearNewTaskData;

@@ -11,20 +11,14 @@ import {
   SET_CURRENT_DATASET_ID,
   CREATE_LABELING_TASK_START,
   CREATE_LABELING_TASK_SUCCESS,
-  GET_LABELING_TASKS_START,
-  GET_LABELING_TASKS_SUCCESS,
   CLEAR_NEW_LABELING_TASK
 } from './types';
-import { TableStateProps } from '../../models';
-import { Dataset, LabelingTaskRequestData, LabelingTaskStatus } from '../../models';
+import { Dataset, LabelingTaskRequestData } from '../../models';
 import {
   createLabelingTaskRequest,
   getDatasetsRequest,
   getLabelingToolUsersRequest,
-  getUnsignedImagesCountRequest,
-  getLabelingTasksRequest,
-  archiveTaskLabelingRequest,
-  retryLabelingTaskRequest
+  getUnsignedImagesCountRequest
 } from '../../api';
 import { LabelingToolUser } from '../../models/labelingToolUser';
 import { setErrorAction } from '../error';
@@ -101,19 +95,6 @@ export function clearNewTaskData(): LabelingTaskActionTypes {
   };
 }
 
-export function getLabelingTasksStart(): LabelingTaskActionTypes {
-  return {
-    type: GET_LABELING_TASKS_START
-  };
-}
-
-export function getLabelingTasksSuccess(tasksData: { count: number; tasks: LabelingTaskStatus[] }) {
-  return {
-    type: GET_LABELING_TASKS_SUCCESS,
-    tasksData
-  };
-}
-
 export const getDatasets = (bucketId: string): AppThunk => (dispatch) => {
   dispatch(getBucketPathsStart());
   return getDatasetsRequest(bucketId)
@@ -155,53 +136,4 @@ export const createLabelingTask = (taskData: any): AppThunk => (dispatch, getSta
       })
     );
   });
-};
-
-export const getLabelingTasks = ({
-  page,
-  rowsPerPage,
-  searchProps,
-  filterStatus,
-  sortOrder,
-  sortField
-}: TableStateProps): AppThunk => (dispatch) => {
-  dispatch(getLabelingTasksStart());
-
-  const params: any = {
-    page,
-    page_size: rowsPerPage
-  };
-
-  if (sortOrder && sortField) {
-    params.ordering = sortOrder === 'ascend' ? sortField : `-${sortField}`;
-  }
-
-  for (const [key, value] of Object.entries(searchProps)) {
-    params[key] = Array(value)[0];
-  }
-
-  if (filterStatus) {
-    params.status = filterStatus;
-  }
-  return getLabelingTasksRequest(params)
-    .then((tasksData) => dispatch(getLabelingTasksSuccess(tasksData)))
-    .catch((error) => dispatch(setErrorAction(error)));
-};
-
-export const archiveLabelingTask = (taskIds: Array<number>, tableState: TableStateProps): AppThunk => (dispatch) => {
-  dispatch(createLabelingTaskStart());
-  return archiveTaskLabelingRequest(taskIds)
-    .then(() => {
-      dispatch(getLabelingTasks(tableState));
-    })
-    .catch((error: any) => dispatch(setErrorAction(error)));
-};
-
-export const retryLabelingTask = (taskIds: Array<number>, tableState: TableStateProps): AppThunk => (dispatch) => {
-  dispatch(createLabelingTaskStart());
-  return retryLabelingTaskRequest(taskIds)
-    .then(() => {
-      dispatch(getLabelingTasks(tableState));
-    })
-    .catch((error: any) => dispatch(setErrorAction(error)));
 };

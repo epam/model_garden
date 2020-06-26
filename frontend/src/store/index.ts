@@ -6,13 +6,15 @@ import { dataReducer } from './data';
 import { mediaReducer } from './media';
 import { labelingTaskReducer } from './labelingTask';
 import { configureStore } from '@reduxjs/toolkit';
+import { tasksStatusesReducer } from './tasksStatuses';
 
 const store = configureStore({
   reducer: {
     error: errorReducer,
     data: dataReducer,
     media: mediaReducer,
-    labelingTask: labelingTaskReducer
+    labelingTask: labelingTaskReducer,
+    tasksStatuses: tasksStatusesReducer
   },
   devTools: process.env.NODE_ENV !== 'production'
 });
