@@ -63,7 +63,7 @@ backend:
     - aws ecs update-service --cluster model-garden --service model-garden-backend
     - aws ecs list-tasks --cluster model-garden --service model-garden-backend | jq -r ".taskArns[]" | awk 'END { if (NR==0 || $0=="")  exit 0; print "aws ecs stop-task --cluster model-garden --task \""$0"\"";}' | sh
   only:
-    - tags
+    - master
 
 frontend:
   stage: build
@@ -89,4 +89,4 @@ frontend:
     - aws ecs update-service --cluster model-garden --service model-garden-frontend
     - aws ecs list-tasks --cluster model-garden --service model-garden-frontend | jq -r ".taskArns[]" | awk 'END { if (NR==0 || $0=="")  exit 0; print "aws ecs stop-task --cluster model-garden --task \""$0"\"";}' | sh
   only:
-    - tags
+    - master
