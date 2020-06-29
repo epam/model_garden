@@ -61,12 +61,12 @@ backend:
     - cd backend
   script:
     - $(aws ecr get-login --no-include-email --region eu-central-1)
-    - echo $CI_COMMIT_TAG
+    - echo $CI_COMMIT_SHORT_SHA
     - docker build --network host -t $REPOSITORY_URL:latest .
-    - docker tag $REPOSITORY_URL:latest $REPOSITORY_URL:$CI_COMMIT_TAG
+    - docker tag $REPOSITORY_URL:latest $REPOSITORY_URL:$CI_COMMIT_SHORT_SHA
     - docker images
     - docker push $REPOSITORY_URL:latest
-    - docker push $REPOSITORY_URL:$CI_COMMIT_TAG
+    - docker push $REPOSITORY_URL:$CI_COMMIT_SHORT_SHA
     - aws ecs update-service --cluster model-garden --service model-garden-backend
     - aws ecs list-tasks --cluster model-garden --service model-garden-backend | jq -r ".taskArns[]" | awk 'END { if (NR==0 || $0=="")  exit 0; print "aws ecs stop-task --cluster model-garden --task \""$0"\"";}' | sh
   only:
@@ -113,12 +113,12 @@ frontend:
     - cd frontend
   script:
     - $(aws ecr get-login --no-include-email --region eu-central-1)
-    - echo $CI_COMMIT_TAG
+    - echo $CI_COMMIT_SHORT_SHA
     - docker build --network host -t $REPOSITORY_URL:latest .
-    - docker tag $REPOSITORY_URL:latest $REPOSITORY_URL:$CI_COMMIT_TAG
+    - docker tag $REPOSITORY_URL:latest $REPOSITORY_URL:$CI_COMMIT_SHORT_SHA
     - docker images
     - docker push $REPOSITORY_URL:latest
-    - docker push $REPOSITORY_URL:$CI_COMMIT_TAG
+    - docker push $REPOSITORY_URL:$CI_COMMIT_SHORT_SHA
     - aws ecs update-service --cluster model-garden --service model-garden-frontend
     - aws ecs list-tasks --cluster model-garden --service model-garden-frontend | jq -r ".taskArns[]" | awk 'END { if (NR==0 || $0=="")  exit 0; print "aws ecs stop-task --cluster model-garden --task \""$0"\"";}' | sh
   only:
