@@ -182,9 +182,7 @@ export const TasksStatuses: React.FC = () => {
     }
   };
 
-  const handleDisabled = () => {
-    return selectedRowKeys.length <= 0 ? 'disabled' : '';
-  };
+  const handleDisabled = selectedRowKeys.length <= 0;
 
   const handleRefresh = () => {
     dispatch(getLabelingTasks(tableState));
@@ -206,7 +204,7 @@ export const TasksStatuses: React.FC = () => {
         <DropdownButton
           onArchive={handleArchive}
           onRetry={handleRetry}
-          disabled={handleDisabled()}
+          disabled={handleDisabled}
         />
         <IconButton aria-label="refresh" onClick={handleRefresh}>
           <Refresh />
