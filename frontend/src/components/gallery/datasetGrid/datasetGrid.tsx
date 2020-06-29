@@ -2,10 +2,12 @@ import React from 'react';
 import { makeStyles, Grid, Link, Paper } from '@material-ui/core';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 import { Dataset } from '../../../models';
+import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    height: '19.6875rem',
+    // height: '19.6875rem',
+    height: '15.6875rem', // TODO: delete after adding the data
     position: 'relative',
     overflow: 'hidden',
     '&:hover': {
@@ -19,10 +21,21 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.text.primary
     }
   },
+  imgWrap: {
+    backgroundColor: blueGrey[50],
+    height: '12.5rem',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  photoIcon: {
+    color: blueGrey[200],
+    fontSize: '4rem'
+  },
   img: {
     objectFit: 'cover',
     width: '100%',
-    height: '12.5rem'
+    height: '100%'
   },
   info: {
     backgroundColor: '#ffffff',
@@ -39,12 +52,14 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: 20 / 16
   },
   date: {
+    display: 'none', // TODO: delete after adding the data
     marginBottom: '0.625rem',
     fontSize: '0.75rem',
     lineHeight: 14 / 12
   },
   items: {
-    display: 'flex',
+    // display: 'flex',
+    display: 'none', // TODO: delete after adding the data
     borderTop: `1px solid ${blueGrey[100]}`,
     '& dl': {
       textAlign: 'center',
@@ -76,7 +91,14 @@ export const DatasetGrid = ({ datasets }: any) => {
         <Grid item xs={6} sm={4} md={3} lg={2} key={dataset.id}>
           <Paper className={classes.card}>
             <Link className={classes.link}>
-              {/* <img className={classes.img} src={} alt={dataset.path}></img> */}
+              <div className={classes.imgWrap}>
+                {false ? ( // TODO: check if dataset image exist
+                  <img className={classes.img} src="" alt={dataset.path}></img>
+                ) : (
+                  <PhotoLibraryIcon className={classes.photoIcon} />
+                )}
+              </div>
+
               <div className={classes.info}>
                 <strong className={classes.name}>{dataset.path}</strong>
                 <div className={classes.date}>Created: {}</div>
