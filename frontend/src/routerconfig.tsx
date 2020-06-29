@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Tabs as TabsMUI, Tab } from '@material-ui/core';
 import { Route, Switch, Link } from 'react-router-dom';
 
-import { AddExistingDataset, UploadImages, LabelingTask, TasksStatuses,Gallery } from './components';
+import { AddDataset, LabelingTask, TasksStatuses, Gallery } from './components';
 
 interface Config {
   component: FC;
@@ -12,14 +12,9 @@ interface Config {
 
 const config: Config[] = [
   {
-    component: UploadImages,
-    label: 'Upload Images',
-    path: '/upload-images'
-  },
-  {
-    component: AddExistingDataset,
-    label: 'Add Existing Dataset',
-    path: '/add-existing-dataset'
+    component: AddDataset,
+    label: 'Add Dataset',
+    path: '/add-dataset'
   },
   {
     component: LabelingTask,
@@ -35,7 +30,7 @@ const config: Config[] = [
     component: Gallery,
     label: 'Gallery',
     path: '/gallery'
-  },
+  }
 ];
 
 export const Tabs: FC<{}> = () => (
@@ -47,7 +42,7 @@ export const Tabs: FC<{}> = () => (
 );
 
 export const LinkTabs: FC<{ pathname: string }> = ({ pathname }) => (
-  <TabsMUI value={config.findIndex(({ path }) => path === pathname)}>
+  <TabsMUI value={config.findIndex(({ path }) => pathname.includes(path))}>
     {config.map(({ label, path }) => (
       <Tab label={label} key={label} component={Link} to={path} />
     ))}

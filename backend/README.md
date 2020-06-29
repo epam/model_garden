@@ -35,13 +35,19 @@ $ pip install virtualenv
 $ virtualenv .venv
 ```
 
-### Activate Virtual Environment in Linux
+### Activate Virtual Environment
+#### For Linux
 ```
 $ . .venv/bin/activate
 ```
-### Activate Virtual Environment in Windows
+#### For Windows
 ```
 $ source ./.venv/Scripts/activate
+```
+Or
+
+```
+$ .venv/Scripts/activate.bat
 ```
  
 ### Install Requirements and Test Requirements
@@ -50,8 +56,14 @@ $ pip install -r requirements.txt -r test-requirements.txt
 ```
 
 ### Run Migrations
+Migrate the database from [<model_garden_root>/backend/](backend) dir:
 ```
-$ ./manage.py migrate
+$ python .\manage.py migrate
+```
+### Reset Database
+Reset the database from [<model_garden_root>/backend/](backend) dir:
+```
+$ python .\manage.py reset_db
 ```
 
 ### Run Server
@@ -90,12 +102,14 @@ To check the results:
 ```
 $ docker-compose ps   
 
-           Name                         Command               State           Ports         
---------------------------------------------------------------------------------------------
-model_garden_backend_1    bash -c ./manage.py migrat ...   Up      0.0.0.0:9000->9000/tcp
-model_garden_frontend_1   /bin/sh -c nginx -g 'daemo ...   Up      0.0.0.0:80->80/tcp
+         Name                        Command               State           Ports
+-----------------------------------------------------------------------------------------
+model_garden_backend_1    bash -c python3 manage.py  ...   Up      0.0.0.0:9000->9000/tcp
+model_garden_frontend_1   /bin/sh -c nginx -g 'daemo ...   Up      0.0.0.0:80->80/tcp    
 model_garden_postgres_1   docker-entrypoint.sh postgres    Up      0.0.0.0:5444->5432/tcp
+model_garden_worker_1     python3 worker.py                Up
 ```
+
 
 ## Linting
 
