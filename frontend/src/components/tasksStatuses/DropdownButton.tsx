@@ -6,17 +6,17 @@ import './TasksStatuses.css';
 const menu: any = (
   handleArchive: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
   handleRetry: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
-  enabled: any
+  isArchiveDisabled: any
 ) => {
   return (
     <Menu>
       <Menu.Item className="action-menu-item">
-        <Button onClick={handleArchive} disabled={enabled}>
+        <Button onClick={handleArchive} disabled={isArchiveDisabled}>
           Archive
         </Button>
       </Menu.Item>
       <Menu.Item className="action-menu-item">
-        <Button onClick={handleRetry} disabled={enabled}>
+        <Button onClick={handleRetry} disabled={isArchiveDisabled}>
           Retry
         </Button>
       </Menu.Item>
