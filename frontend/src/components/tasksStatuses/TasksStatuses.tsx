@@ -183,7 +183,7 @@ export const TasksStatuses: React.FC = () => {
   };
 
   const handleDisabled = () => {
-    return selectedRowKeys.length > 0 ? '' : 'disabled';
+    return selectedRowKeys.length <= 0 ? 'disabled' : '';
   };
 
   const handleRefresh = () => {
