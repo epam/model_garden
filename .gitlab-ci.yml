@@ -65,6 +65,32 @@ backend:
   only:
     - master
 
+backend dev:
+  stage: build
+  image: docker
+  services:
+    - docker:dind
+  variables:
+    AWS_DEFAULT_REGION: eu-central-1
+    DOCKER_HOST: tcp://localhost:2375/
+    REPOSITORY_URL: 363712795748.dkr.ecr.eu-central-1.amazonaws.com/model_garden_backend
+  before_script:
+    - apk add --no-cache curl jq python3 py-pip
+    - pip install awscli
+    - cd backend
+  script:
+    - $(aws ecr get-login --no-include-email --region eu-central-1)
+    - echo $CI_COMMIT_SHORT_SHA
+    - docker build --network host -t $REPOSITORY_URL:latest-dev .
+    - docker tag $REPOSITORY_URL:latest-dev $REPOSITORY_URL:$CI_COMMIT_SHORT_SHA
+    - docker images
+    - docker push $REPOSITORY_URL:latest-dev
+    - docker push $REPOSITORY_URL:$CI_COMMIT_SHORT_SHA
+    - aws ecs update-service --cluster model-garden-dev --service model-garden-backend-dev
+    - aws ecs list-tasks --cluster model-garden-dev --service model-garden-backend-dev | jq -r ".taskArns[]" | awk 'END { if (NR==0 || $0=="")  exit 0; print "aws ecs stop-task --cluster model-garden-dev --task \""$0"\"";}' | sh
+  only:
+    - develop
+
 frontend:
   stage: build
   image: docker
@@ -90,3 +116,29 @@ frontend:
     - aws ecs list-tasks --cluster model-garden --service model-garden-frontend | jq -r ".taskArns[]" | awk 'END { if (NR==0 || $0=="")  exit 0; print "aws ecs stop-task --cluster model-garden --task \""$0"\"";}' | sh
   only:
     - master
+
+frontend dev:
+  stage: build
+  image: docker
+  services:
+    - docker:dind
+  variables:
+    AWS_DEFAULT_REGION: eu-central-1
+    DOCKER_HOST: tcp://localhost:2375/
+    REPOSITORY_URL: 363712795748.dkr.ecr.eu-central-1.amazonaws.com/model_garden_frontend
+  before_script:
+    - apk add --no-cache curl jq python3 py-pip
+    - pip install awscli
+    - cd frontend
+  script:
+    - $(aws ecr get-login --no-include-email --region eu-central-1)
+    - echo $CI_COMMIT_SHORT_SHA
+    - docker build --network host -t $REPOSITORY_URL:latest-dev .
+    - docker tag $REPOSITORY_URL:latest-dev $REPOSITORY_URL:$CI_COMMIT_SHORT_SHA
+    - docker images
+    - docker push $REPOSITORY_URL:latest-dev
+    - docker push $REPOSITORY_URL:$CI_COMMIT_SHORT_SHA
+    - aws ecs update-service --cluster model-garden-dev --service model-garden-frontend-dev
+    - aws ecs list-tasks --cluster model-garden-dev --service model-garden-frontend-dev |  jq -r ".taskArns[]" | awk 'END { if (NR==0 || $0=="")  exit 0; print "aws ecs stop-task --cluster model-garden-dev --task \""$0"\"";}' | sh
+  only:
+    - develop
