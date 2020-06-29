@@ -1,49 +1,12 @@
-.task__title {
-  text-align: center;
-}
-
-.task__form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
 .task__form-group {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  margin: 0 -0.625rem;
 }
 
-.task__form-group .task__form-left-item {
-  margin: 1.25rem 0.625rem 0 0;
-  width: 100%;
-}
-
-.task__form-group .task__form-right-item {
-  margin: 1.25rem 0 0 0.625rem;
-  width: 100%;
-}
-
-.task__form-group .task__form-item,
-.task__form-item.MuiFormControl-root,
-.task__form-item.MuiTextField-root,
-.task__form-item.MuiButton-root {
-  margin-top: 1.25rem;
-  width: 100%;
-}
-#task-bucket-name,
-#task-datasets,
-#task-labeling-tool-user {
-  transform: translate(0.875rem, 1.25rem);
-}
-
-#task-bucket-name[data-shrink="true"],
-#task-datasets[data-shrink="true"],
-#task-labeling-tool-user[data-shrink="true"] {
-  transform: translate(0.875rem, -0.375rem);
-  font-size: 0.75rem;
+.task__form-item {
+  padding: 0 0.625rem;
+  width: 50%;
 }

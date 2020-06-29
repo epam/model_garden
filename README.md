@@ -1,12 +1,21 @@
-# EPAM Model Garden
+<div align="center"><img src="https://es.wiki.elvenar.com/images/0/04/Glossy_Garden.png" width="50%"/></div>
+
+<div align="center"><h2>🏷️ Model Garden</h2></div>
+
+
+**‍🖌️ Material Design**: **Intuitive** UI based on the world's most widespread design language.
+
+**🏃 Single Page Application**: Fast, responsive ux to get what you need done without waiting for fullscreen refreshes.
+
+**🐍 Python Django and Postgres**
 
 ## Installation
 
 - [CVAT Installation Guide](cvat/README.md)
-- [Backend Installation Guide](backend/README.md)
-- [Frontend Installation Guide](frontend/README.md)
+- [Installation guide for Backend developer](backend/README.md)
+- [Installation guide for Frontend developer](frontend/README.md)
 
-### Run Application with Docker Compose
+## Run Application with Docker Compose
 ```
 $ docker-compose up -d
 

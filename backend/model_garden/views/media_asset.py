@@ -80,7 +80,7 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
 
     files_to_upload = []
     for file in files:
-      if file.content_type == 'application/zip':
+      if file.content_type in ('application/zip', 'application/x-zip-compressed'):
         if not zipfile.is_zipfile(file.file):
           raise ParseError(detail={"message": f"File '{file.name}' is not a zip file"})
 
