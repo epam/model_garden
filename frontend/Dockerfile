@@ -4,6 +4,7 @@ RUN mkdir /src
 WORKDIR /src
 
 COPY ./package.json /src/
+COPY ./package-lock.json /src/
 COPY ./tsconfig.json /src/
 COPY ./.env /src/
 RUN npm install
