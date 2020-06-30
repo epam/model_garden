@@ -14,9 +14,14 @@ import {
 import { TableStateProps } from '../../models';
 import { GetColumnSearchProps } from './GetColumnSearchProps';
 import StatusField from './StatusField';
+import { ConformationDialog } from '../shared';
 
 export const TasksStatuses: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
+  const [openConformationDialog, setOpenConformationDialog] = React.useState(
+    false
+  );
 
   const [tableState, setTableState] = useState<TableStateProps>({
     page: 1,
@@ -168,6 +173,7 @@ export const TasksStatuses: React.FC = () => {
         archiveLabelingTask(selectedRowKeys, tableState)
       ) as any).finally(() => {
         setSelectedRowKeys([]);
+        setOpenConformationDialog(false);
       });
     }
   };
@@ -198,11 +204,15 @@ export const TasksStatuses: React.FC = () => {
     });
   };
 
+  const handleDialogOpen = () => {
+    setOpenConformationDialog(true);
+  };
+
   return (
     <div className={'task-statuses'}>
       <Box display="flex" alignItems="center" marginBottom={1}>
         <DropdownButton
-          onArchive={handleArchive}
+          onArchive={handleDialogOpen}
           onRetry={handleRetry}
           disabled={handleDisabled}
         />
@@ -227,6 +237,17 @@ export const TasksStatuses: React.FC = () => {
         loading={areTasksLoading}
         onChange={handleTableChange as any}
       />
+
+      <ConformationDialog
+        title="Archive Confirmation"
+        closeButton="No, Keep Task(s)"
+        confirmButton="Yes, Archive Task(s)"
+        open={openConformationDialog}
+        setOpen={setOpenConformationDialog}
+        handleConfirm={handleArchive}
+      >
+        <p>Are you sure you want to archive selected tasks?</p>
+      </ConformationDialog>
     </div>
   );
 };
