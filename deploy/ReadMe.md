@@ -6,6 +6,11 @@
 
 ### Standard Deployment Procedure
 
+#### AWS S2 Bucket and CDN configuration
+
+Please find information there: https://kb.epam.com/display/EPMCMLCV/AWS+Bucket+Typical+Setup
+
+
 ### Image Build Pipeline on Gitlab
 
 Gitlab pipeline uses `.gitlab-ci.yml` file for pipeline configuration. 
