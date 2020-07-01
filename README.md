@@ -39,5 +39,5 @@ model_garden_postgres_1   docker-entrypoint.sh postgres    Up      0.0.0.0:5444-
 
 ## Deployment
 
-
+  The build pipeline is started automatically after commits to main and develop branches
 - [Deployment guide](deploy/ReadMe.md)
