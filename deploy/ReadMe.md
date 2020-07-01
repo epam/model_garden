@@ -4,10 +4,14 @@
 
 ## Deployment
 
+### Standard Deployment Procedure
+
 ### Image Build Pipeline on Gitlab
 
-Gitlab pipeline uses `.gitlab-ci.yml` file for pipeline configuration. In order to launch 
-the docker image build a new git tag needs to be created:
+Gitlab pipeline uses `.gitlab-ci.yml` file for pipeline configuration. 
+
+
+### Additional Tags for Deployment
 
 #### Check Existing Tags
 ```
