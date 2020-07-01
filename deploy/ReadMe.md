@@ -13,7 +13,7 @@ Please find information there: https://kb.epam.com/display/EPMCMLCV/AWS+Bucket+T
 
 ### Image Build Pipeline on Gitlab
 
-Gitlab pipeline uses `.gitlab-ci.yml` file for pipeline configuration. 
+Gitlab pipeline uses `.gitlab-ci.yml` file for pipeline configuration. The build pipeline is started automatically after commits to main and develop branches.
 
 
 ### Additional Tags for Deployment
