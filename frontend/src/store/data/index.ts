@@ -1,13 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { DataState } from './types';
+import { AppState } from '../../store';
 import { Dataset } from '../../models';
 import { getBucketsRequest, getDatasetsRequest, getMediaAssetsRequest } from '../../api';
-
-export const initialState: DataState = {
-  buckets: [],
-  datasets: [],
-  mediaAssets: []
-};
 
 export const getBuckets = createAsyncThunk('fetchBuckets', async () => {
   const response = await getBucketsRequest();
@@ -24,14 +19,20 @@ export const getDatasets = createAsyncThunk('fetchDatasets', async (bucketId: st
     }));
 });
 
-export const getMediaAssets = createAsyncThunk('fetchMediaAssets', async (params: any) => {
-  const response = await getMediaAssetsRequest(params);
+export const getMediaAssets = createAsyncThunk('fetchMediaAssets', async ({ datasetId }: any, { getState }) => {
+  const { data } = getState() as AppState;
+  const bucketId = data.datasets.find((dataset: Dataset) => dataset.id === datasetId)?.bucket; //@todo: update once we change arrays to object
+  const response = await getMediaAssetsRequest({ datasetId, bucketId });
   return response.data.results;
 });
 
 const dataSlice = createSlice({
   name: 'data',
-  initialState,
+  initialState: {
+    buckets: [],
+    datasets: [],
+    mediaAssets: []
+  } as DataState,
   reducers: {},
   extraReducers: (builder) => {
     builder

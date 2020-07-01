@@ -49,7 +49,11 @@ export const AddDataset: FC<any> = ({ match, location }) => {
   const { handleSubmit, control, register, reset, formState } = useForm<
     FormData
   >({
-    mode: 'onChange'
+    mode: 'onChange',
+    defaultValues: {
+      bucketId: location.state?.dataset.bucket ?? '',
+      path: location.state?.dataset.path.replace('/', '') ?? ''
+    }
   });
 
   const raiseAlert = (severity: Severity, message: string) => {
