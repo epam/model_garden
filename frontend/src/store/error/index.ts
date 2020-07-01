@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getBuckets } from '../data';
+import { getLabelingToolUsers } from '../labelingTask';
 
 const initialState: string = '';
 
@@ -11,7 +12,9 @@ export const errorSlice = createSlice({
     setErrorAction: (_, action) => action.payload?.message || 'Network Error'
   },
   extraReducers: (builder) => {
-    builder.addCase(getBuckets.rejected, (_, { error }) => error.message || 'Network Error');
+    builder
+      .addCase(getBuckets.rejected, (_, { error }) => error.message || 'Network Error')
+      .addCase(getLabelingToolUsers.rejected, () => 'Error Getting Users');
   }
 });
 
