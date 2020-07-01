@@ -20,7 +20,7 @@ export const getDatasets = createAsyncThunk('fetchDatasets', async (bucketId: st
 });
 
 export const getMediaAssets = createAsyncThunk('fetchMediaAssets', async ({ datasetId }: any, { getState }) => {
-  const { data } = <AppState>getState();
+  const { data } = getState() as AppState;
   const bucketId = data.datasets.find((dataset: Dataset) => dataset.id === datasetId)?.bucket; //@todo: update once we change arrays to object
   const response = await getMediaAssetsRequest({ datasetId, bucketId });
   return response.data.results;
@@ -28,11 +28,11 @@ export const getMediaAssets = createAsyncThunk('fetchMediaAssets', async ({ data
 
 const dataSlice = createSlice({
   name: 'data',
-  initialState: <DataState>{
+  initialState: {
     buckets: [],
     datasets: [],
     mediaAssets: []
-  },
+  } as DataState,
   reducers: {},
   extraReducers: (builder) => {
     builder
