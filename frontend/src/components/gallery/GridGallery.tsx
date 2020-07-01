@@ -47,7 +47,7 @@ export const GridGallery = () => {
     if (datasets.length > 0) {
       dispatch(getMediaAssets({ datasetId: parseInt(datasetId) }));
     }
-  }, [dispatch, getMediaAssets, datasetId]);
+  }, [dispatch, datasetId, datasets.length]);
 
   if (datasets.length === 0) {
     return <Redirect to="/gallery" />;
