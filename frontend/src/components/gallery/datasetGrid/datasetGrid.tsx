@@ -1,8 +1,12 @@
 import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles, Grid, Link, Paper } from '@material-ui/core';
 import blueGrey from '@material-ui/core/colors/blueGrey';
-import { Dataset } from '../../../models';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
+import { Empty } from 'antd';
+
+import { Dataset } from '../../../models';
+import { useTypedSelector } from '../../../store';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -83,14 +87,20 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export const DatasetGrid = ({ datasets }: any) => {
+export const DatasetGrid = ({ match }: any) => {
   const classes = useStyles();
+  const datasets = useTypedSelector(({ data }) => data.datasets);
   return (
     <Grid container spacing={2}>
+      {!datasets.length && <Empty />}
       {datasets.map((dataset: Dataset) => (
         <Grid item xs={6} sm={4} md={3} lg={2} key={dataset.id}>
           <Paper className={classes.card}>
-            <Link className={classes.link}>
+            <Link
+              className={classes.link}
+              component={RouterLink}
+              to={`${match.path}/dataset/${dataset.id}`}
+            >
               <div className={classes.imgWrap}>
                 {false ? ( // TODO: check if dataset image exist
                   <img className={classes.img} src="" alt={dataset.path}></img>
