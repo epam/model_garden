@@ -8,15 +8,18 @@
 
 #### AWS S2 Bucket and CDN configuration
 
-Please find information there: https://kb.epam.com/display/EPMCMLCV/AWS+Bucket+Typical+Setup
+Please find information [there](https://kb.epam.com/display/EPMCMLCV/AWS+Bucket+Typical+Setup).
 
 
 ### Image Build Pipeline on Gitlab
 
-Gitlab pipeline uses `.gitlab-ci.yml` file for pipeline configuration. The build pipeline is started automatically after commits to main and develop branches.
+
+Gitlab pipeline uses `.gitlab-ci.yml` file for pipeline configuration. The build pipeline is started automatically after commits to **main** and **develop** branches.
 
 
 ### Additional Tags for Deployment
+
+The tag can be added to the build, but not required.
 
 #### Check Existing Tags
 ```
