@@ -14,10 +14,13 @@ Please find information [there](https://kb.epam.com/display/EPMCMLCV/AWS+Bucket+
 ### Image Build Pipeline on Gitlab
 
 
-Gitlab pipeline uses `.gitlab-ci.yml` file for pipeline configuration. The build pipeline is started automatically after commits to **main** and **develop** branches.
+Gitlab pipeline uses `.gitlab-ci.yml` file for pipeline configuration. The build
+pipeline is started automatically after commits to **main** and **develop** branches.
 
 
 ### Additional Tags for Deployment
+
+#### Purpose
 
 The tag can be added to the build, but not required.
 
@@ -41,4 +44,5 @@ $ git push origin v0.0.2
 
 A new pipeline run should be created [here](https://git.epam.com/epmc-mlcv/model_garden/pipelines).
 
-Once the run is completed successfully a new docker image will be available in [Amazon ECR repository](https://eu-central-1.console.aws.amazon.com/ecr/repositories/model_garden_backend/?region=eu-central-1).
+Once the run is completed successfully a new docker image will be available in 
+[Amazon ECR repository](https://eu-central-1.console.aws.amazon.com/ecr/repositories/model_garden_backend/?region=eu-central-1).
