@@ -1,13 +1,13 @@
 import { connect as connectState } from 'react-redux';
 import { Bucket, Dataset } from '../../models';
-import { getLabelingToolUsers, getUnsignedImagesCount, createLabelingTask } from '../../store/labelingTask';
-import { getDatasets } from '../../store/data';
+import { getUnsignedImagesCount, createLabelingTask } from '../../store/labelingTask';
+import { getDatasets, getLabelingToolUsers } from '../../store/data';
 import { AppState } from '../../store';
 
 export const mapStateToProps = ({ data: { buckets }, labelingTask, data }: AppState) => ({
   buckets,
   datasets: data.datasets,
-  users: labelingTask.labelingToolUsers,
+  users: data.labelingToolUsers,
   unsignedImagesCount: labelingTask.unsignedImagesCount,
   newTaskUrl: labelingTask.newTaskUrl
 });

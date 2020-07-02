@@ -4,8 +4,7 @@ import { AppBar, CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useLocation, Redirect } from 'react-router-dom';
 import { ErrorAlert } from './components';
-import { getBuckets } from './store/data';
-import { getLabelingToolUsers } from './store/labelingTask';
+import { getBuckets, getLabelingToolUsers } from './store/data';
 import { Tabs, LinkTabs } from './routerconfig';
 import theme from './theme';
 
