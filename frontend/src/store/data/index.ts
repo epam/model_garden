@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { DataState } from './types';
 import { AppState } from '../../store';
 import { Dataset } from '../../models';
-import { getBucketsRequest, getDatasetsRequest, getMediaAssetsRequest } from '../../api';
+import { getBucketsRequest, getDatasetsRequest, getMediaAssetsRequest, getLabelingToolUsersRequest } from '../../api';
 
 export const getBuckets = createAsyncThunk('fetchBuckets', async () => {
   const response = await getBucketsRequest();
@@ -26,12 +26,18 @@ export const getMediaAssets = createAsyncThunk('fetchMediaAssets', async ({ data
   return response.data.results;
 });
 
+export const getLabelingToolUsers = createAsyncThunk('fetchUsers', async () => {
+  const response = await getLabelingToolUsersRequest();
+  return response.data;
+});
+
 const dataSlice = createSlice({
   name: 'data',
   initialState: {
     buckets: [],
     datasets: [],
-    mediaAssets: []
+    mediaAssets: [],
+    labelingToolUsers: []
   } as DataState,
   reducers: {},
   extraReducers: (builder) => {
@@ -44,6 +50,9 @@ const dataSlice = createSlice({
       })
       .addCase(getMediaAssets.fulfilled, (state, action) => {
         state.mediaAssets = action.payload;
+      })
+      .addCase(getLabelingToolUsers.fulfilled, (state, action) => {
+        state.labelingToolUsers = action.payload;
       });
   }
 });

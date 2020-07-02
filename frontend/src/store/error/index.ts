@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getBuckets } from '../data';
-import { getLabelingToolUsers } from '../labelingTask';
+import { getBuckets, getLabelingToolUsers } from '../data';
 
 const initialState: string = '';
 

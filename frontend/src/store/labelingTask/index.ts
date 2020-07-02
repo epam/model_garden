@@ -1,23 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { LabelingToolUser, LabelingTaskRequestData } from '../../models';
-import { createLabelingTaskRequest, getLabelingToolUsersRequest, getUnsignedImagesCountRequest } from '../../api';
+import { LabelingTaskRequestData } from '../../models';
+import { createLabelingTaskRequest, getUnsignedImagesCountRequest } from '../../api';
 
 export interface LabelingTasksState {
   newTaskUrl: string;
-  labelingToolUsers: LabelingToolUser[];
   unsignedImagesCount: number;
 }
-
-export const initialState: LabelingTasksState = {
-  newTaskUrl: '',
-  labelingToolUsers: [],
-  unsignedImagesCount: 0
-};
-
-export const getLabelingToolUsers = createAsyncThunk('fetchUsers', async () => {
-  const response = await getLabelingToolUsersRequest();
-  return response.data;
-});
 
 export const getUnsignedImagesCount = createAsyncThunk('fetchUnsignedImagesCount', async (datasetId: string) => {
   const response = await getUnsignedImagesCountRequest(datasetId);
@@ -38,7 +26,10 @@ export const createLabelingTask = createAsyncThunk('createLabelingTask', async (
 
 const labelingTaskSlice = createSlice({
   name: 'labelingTask',
-  initialState,
+  initialState: {
+    newTaskUrl: '',
+    unsignedImagesCount: 0
+  } as LabelingTasksState,
   reducers: {
     clearUnsignedImagesCount(state) {
       state.unsignedImagesCount = 0;
@@ -49,9 +40,6 @@ const labelingTaskSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getLabelingToolUsers.fulfilled, (state, action) => {
-        state.labelingToolUsers = action.payload;
-      })
       .addCase(getUnsignedImagesCount.fulfilled, (state, action) => {
         state.unsignedImagesCount = action.payload;
       })

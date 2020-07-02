@@ -39,3 +39,17 @@ export const getMediaAssetsRequest = ({ bucketId, datasetId }: any) => {
   }`;
   return axios.get(url);
 };
+
+export const getLabelingToolUsersRequest = async () => {
+  try {
+    return await axios.get(`http://${backendHostPort}/api/cvat-users/`, {
+      timeout: 2000
+    });
+  } catch (error) {
+    if (error && error.response) {
+      throw new Error(error.response.data.message);
+    } else {
+      throw error;
+    }
+  }
+};
