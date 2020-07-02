@@ -4,8 +4,8 @@ import { getUnsignedImagesCount, createLabelingTask } from '../../store/labeling
 import { getDatasets, getLabelingToolUsers } from '../../store/data';
 import { AppState } from '../../store';
 
-export const mapStateToProps = ({ data: { buckets }, labelingTask, data }: AppState) => ({
-  buckets,
+export const mapStateToProps = ({ labelingTask, data }: AppState) => ({
+  buckets: data.buckets,
   datasets: data.datasets,
   users: data.labelingToolUsers,
   unsignedImagesCount: labelingTask.unsignedImagesCount,
