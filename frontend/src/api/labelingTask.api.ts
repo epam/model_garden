@@ -8,7 +8,9 @@ axios.defaults.headers = {
 
 export const getLabelingToolUsersRequest = async () => {
   try {
-    return await axios.get(`http://${backendHostPort}/api/cvat-users/`);
+    return await axios.get(`http://${backendHostPort}/api/cvat-users/`, {
+      timeout: 2000
+    });
   } catch (error) {
     if (error && error.response) {
       throw new Error(error.response.data.message);
