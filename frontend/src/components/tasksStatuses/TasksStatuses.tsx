@@ -35,7 +35,7 @@ export const TasksStatuses: React.FC = () => {
   });
 
   const areTasksLoading = useTypedSelector(
-    (state) => state.tasksStatuses.isLabelingTasksStatusesLoading
+    (state) => state.tasksStatuses.tasksLoading
   );
   const tasks = useTypedSelector((state) => state.tasksStatuses.tasks);
   const tasksCount = useTypedSelector((state) => state.tasksStatuses.count);
