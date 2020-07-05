@@ -1,13 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { DataState } from './types';
+import { AppState } from '../../store';
 import { Dataset } from '../../models';
-import { getBucketsRequest, getDatasetsRequest, getMediaAssetsRequest } from '../../api';
-
-export const initialState: DataState = {
-  buckets: [],
-  datasets: [],
-  mediaAssets: []
-};
+import { getBucketsRequest, getDatasetsRequest, getMediaAssetsRequest, getLabelingToolUsersRequest } from '../../api';
 
 export const getBuckets = createAsyncThunk('fetchBuckets', async () => {
   const response = await getBucketsRequest();
@@ -24,14 +19,26 @@ export const getDatasets = createAsyncThunk('fetchDatasets', async (bucketId: st
     }));
 });
 
-export const getMediaAssets = createAsyncThunk('fetchMediaAssets', async (params: any) => {
-  const response = await getMediaAssetsRequest(params);
+export const getMediaAssets = createAsyncThunk('fetchMediaAssets', async ({ datasetId }: any, { getState }) => {
+  const { data } = getState() as AppState;
+  const bucketId = data.datasets.find((dataset: Dataset) => dataset.id === datasetId)?.bucket; //@todo: update once we change arrays to object
+  const response = await getMediaAssetsRequest({ datasetId, bucketId });
   return response.data.results;
+});
+
+export const getLabelingToolUsers = createAsyncThunk('fetchUsers', async () => {
+  const response = await getLabelingToolUsersRequest();
+  return response.data;
 });
 
 const dataSlice = createSlice({
   name: 'data',
-  initialState,
+  initialState: {
+    buckets: [],
+    datasets: [],
+    mediaAssets: [],
+    labelingToolUsers: []
+  } as DataState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -43,6 +50,9 @@ const dataSlice = createSlice({
       })
       .addCase(getMediaAssets.fulfilled, (state, action) => {
         state.mediaAssets = action.payload;
+      })
+      .addCase(getLabelingToolUsers.fulfilled, (state, action) => {
+        state.labelingToolUsers = action.payload;
       });
   }
 });

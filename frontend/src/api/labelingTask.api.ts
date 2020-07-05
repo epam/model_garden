@@ -6,18 +6,6 @@ axios.defaults.headers = {
   'Content-Type': 'application/json'
 };
 
-export const getLabelingToolUsersRequest = async () => {
-  try {
-    return await axios.get(`http://${backendHostPort}/api/cvat-users/`);
-  } catch (error) {
-    if (error && error.response) {
-      throw new Error(error.response.data.message);
-    } else {
-      throw error;
-    }
-  }
-};
-
 export const getUnsignedImagesCountRequest = async (datasetId: string) => {
   try {
     return await axios.get(`http://${backendHostPort}/api/media-assets/`, {

@@ -3,17 +3,17 @@ import { Snackbar, Link } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 
 interface NotificationProps {
-  newTask: { location: string };
+  newTaskUrl: string;
   onClose: () => void;
 }
 
 export const Notification: React.FC<NotificationProps> = ({
-  newTask,
+  newTaskUrl,
   onClose
 }: NotificationProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => setIsOpen(newTask.location !== ''), [newTask]);
+  useEffect(() => setIsOpen(newTaskUrl !== ''), [newTaskUrl]);
 
   return (
     <Snackbar
@@ -24,7 +24,7 @@ export const Notification: React.FC<NotificationProps> = ({
     >
       <Alert onClose={onClose} severity="success">
         <Link
-          href={newTask.location}
+          href={newTaskUrl}
           color="inherit"
           underline="always"
           target="_blank"

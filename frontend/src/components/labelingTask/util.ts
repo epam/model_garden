@@ -1,21 +1,15 @@
 import { connect as connectState } from 'react-redux';
 import { Bucket, Dataset } from '../../models';
-import {
-  getDatasets,
-  getLabelingToolUsers,
-  getUnsignedImagesCount,
-  createLabelingTask
-} from '../../store/labelingTask';
+import { getUnsignedImagesCount, createLabelingTask } from '../../store/labelingTask';
+import { getDatasets, getLabelingToolUsers } from '../../store/data';
 import { AppState } from '../../store';
 
-export const mapStateToProps = ({ data: { buckets }, labelingTask }: AppState) => ({
-  buckets,
-  currentBucketId: labelingTask.currentBucketId,
-  datasets: labelingTask.datasets,
-  currentDatasetId: labelingTask.currentDatasetId,
-  users: labelingTask.labelingToolUsers,
+export const mapStateToProps = ({ labelingTask, data }: AppState) => ({
+  buckets: data.buckets,
+  datasets: data.datasets,
+  users: data.labelingToolUsers,
   unsignedImagesCount: labelingTask.unsignedImagesCount,
-  newTask: labelingTask.newTask
+  newTaskUrl: labelingTask.newTaskUrl
 });
 
 export const actions = {
@@ -24,14 +18,13 @@ export const actions = {
   getUnsignedImagesCount,
   createLabelingTask
 };
+
 export interface LabelingProps {
   buckets: Bucket[];
   datasets: Dataset[];
-  currentBucketId: string;
-  currentDatasetId: string;
-  newTask: any;
   users: any;
   unsignedImagesCount: any;
+  newTaskUrl: string;
   getLabelingToolUsers: any;
   getUnsignedImagesCount: any;
   createLabelingTask: any;
