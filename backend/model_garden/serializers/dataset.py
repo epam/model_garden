@@ -3,7 +3,7 @@ from datetime import datetime
 from rest_framework import serializers
 
 from model_garden.constants import LabelingTaskStatus
-from model_garden.models import Dataset, MediaAsset
+from model_garden.models import Dataset
 
 
 class DatasetSerializer(serializers.ModelSerializer):
@@ -39,7 +39,7 @@ class DatasetSerializer(serializers.ModelSerializer):
     xmls_count = 0
     for media_asset_obj in obj.media_assets.all():
       if (media_asset_obj.labeling_task.status and
-        media_asset_obj.labeling_task.status == LabelingTaskStatus.SAVED):
+              media_asset_obj.labeling_task.status == LabelingTaskStatus.SAVED):
         xmls_count += 1
 
     return xmls_count
