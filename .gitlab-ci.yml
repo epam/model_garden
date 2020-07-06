@@ -55,7 +55,7 @@ backend:
     AWS_DEFAULT_REGION: eu-central-1
     DOCKER_HOST: tcp://localhost:2375/
     REPOSITORY_URL: local/model_garden_backend
-    DEPLOY_TAG: 1
+    DEPLOY_TAG: $CI_COMMIT_SHORT_SHA
   before_script:
     - apk add --no-cache curl jq python3 py-pip
     - pip install awscli
@@ -108,7 +108,7 @@ frontend:
     AWS_DEFAULT_REGION: eu-central-1
     DOCKER_HOST: tcp://localhost:2375/
     REPOSITORY_URL: local/model_garden_frontend
-    DEPLOY_TAG: 1
+    DEPLOY_TAG: $CI_COMMIT_SHORT_SHA
   before_script:
     - apk add --no-cache curl jq python3 py-pip
     - pip install awscli
