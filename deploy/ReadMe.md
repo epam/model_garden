@@ -15,7 +15,7 @@ Please find information [there](https://kb.epam.com/display/EPMCMLCV/AWS+Bucket+
 
 
 Gitlab pipeline uses `.gitlab-ci.yml` file for pipeline configuration. The build
-pipeline is started automatically after commits to **main** and **develop** branches.
+pipeline is started automatically after commits to **master** and **develop** branches.
 
 
 ### Additional Tags for Deployment
