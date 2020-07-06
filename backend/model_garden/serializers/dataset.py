@@ -38,8 +38,8 @@ class DatasetSerializer(serializers.ModelSerializer):
   def get_xmls_number(self, obj):
     xmls_count = 0
     for media_asset_obj in obj.media_assets.all():
-      if media_asset_obj.labeling_task and \
-              media_asset_obj.labeling_task.status == LabelingTaskStatus.SAVED:
+      if (media_asset_obj.labeling_task
+              and media_asset_obj.labeling_task.status == LabelingTaskStatus.SAVED):
         xmls_count += 1
 
     return xmls_count
