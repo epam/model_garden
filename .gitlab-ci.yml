@@ -60,7 +60,7 @@ backend:
     - apk add --no-cache curl jq python3 py-pip
     - pip install awscli
     - cd backend
-  check_tag:
+  before_script:
     - $DEPLOY_TAG: $CI_COMMIT_TAG
   only:
     - tags
