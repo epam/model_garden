@@ -62,8 +62,10 @@ backend:
     - cd backend
   script:
     - $(aws ecr get-login --no-include-email --region eu-central-1)
-    - $DEPLOY_TAG: $CI_COMMIT_TAG
-      when: $CI_COMMIT_TAG == ""
+    check_tag:
+      - $DEPLOY_TAG: $CI_COMMIT_TAG
+    only 
+      - tags
     - echo $DEPLOY_TAG
     - docker build --network host -t $REPOSITORY_URL:latest .
     - docker tag $REPOSITORY_URL:latest $REPOSITORY_URL$DEPLOY_TAG
