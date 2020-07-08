@@ -115,11 +115,11 @@ class LabelingTaskViewSet(ModelViewSet):
           labeler_id=cvat_user['id'],
           username=cvat_user['username'],
         )
-        
+
     try:
       last_task_name = LabelingTask.objects.filter(name__startswith=task_name).first().name
       _, last_task_number = last_task_name.split('.')
-    except:
+    except AttributeError:
       last_task_number = 0
 
     media_assets = dataset.media_assets.filter(labeling_task__isnull=True).all()[:count_of_tasks * files_in_task]
