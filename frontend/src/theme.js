@@ -20,6 +20,9 @@ const theme = createMuiTheme({
     }
   },
   props: {
+    MuiCheckbox: {
+      color: 'primary'
+    },
     MuiGridList: {
       cols: null,
       cellHeight: 160
