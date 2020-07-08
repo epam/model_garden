@@ -115,12 +115,18 @@ class LabelingTaskViewSet(ModelViewSet):
           labeler_id=cvat_user['id'],
           username=cvat_user['username'],
         )
+        
+    try:
+      last_task_name = LabelingTask.objects.filter(name__startswith=task_name).first().name
+      _, last_task_number = last_task_name.split('.')
+    except:
+      last_task_number = 0
 
     media_assets = dataset.media_assets.filter(labeling_task__isnull=True).all()[:count_of_tasks * files_in_task]
     for chunk_id, chunk in zip(range(count_of_tasks),
                                chunkify(media_assets, files_in_task)):
       logger.info(f"Creating task '{task_name}' with {len(chunk)} files")
-      chunk_task_name = f"{task_name}.{(chunk_id + 1):02d}"
+      chunk_task_name = f"{task_name}.{(chunk_id + int(last_task_number) + 1):02d}"
       try:
         task_data = cvat_service.create_task(
           name=chunk_task_name,
