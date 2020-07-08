@@ -116,7 +116,7 @@ frontend:
     - cd frontend
   script:
     - $(aws ecr get-login --no-include-email --region eu-central-1)
-    - if [ $CI_COMMIT_TAG != ""]; then $DEPLOY_TAG: "${CI_COMMIT_SHORT_SHA}${CI_COMMIT_TAG}" ; fi;
+    - if [ $CI_COMMIT_TAG != ""]; then $DEPLOY_TAG: $CI_COMMIT_SHORT_SHA$CI_COMMIT_TAG ; fi;
     - echo $DEPLOY_TAG
     - docker build --network host -t $REPOSITORY_URL:latest .
     - docker tag $REPOSITORY_URL:latest $REPOSITORY_URL:$DEPLOY_TAG
