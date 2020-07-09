@@ -1,41 +1,13 @@
 import React, { useEffect } from 'react';
-import {
-  Box,
-  GridList,
-  GridListTile,
-  makeStyles,
-  GridListTileBar,
-  IconButton
-} from '@material-ui/core';
-import GetAppIcon from '@material-ui/icons/GetApp';
+import { Box, Grid } from '@material-ui/core';
 import { useRouteMatch, Redirect, Link } from 'react-router-dom';
 import { Empty } from 'antd';
 
 import { useTypedSelector, useAppDispatch } from '../../store';
 import { getMediaAssets } from '../../store/data';
-
-const useStyles = makeStyles((theme) => ({
-  item: {
-    [theme.breakpoints.down('sm')]: {
-      width: `${100 / 3}%`
-    },
-    [theme.breakpoints.only('md')]: {
-      width: `${100 / 4}%`
-    },
-    [theme.breakpoints.only('lg')]: {
-      width: `${100 / 6}%`
-    },
-    [theme.breakpoints.up('xl')]: {
-      width: `${100 / 10}% `
-    }
-  },
-  icon: {
-    color: 'rgba(255, 255, 255, 0.9)'
-  }
-}));
+import { ImageCard } from './imageCard';
 
 export const GridGallery = () => {
-  const classes = useStyles();
   const dispatch = useAppDispatch();
   const photos = useTypedSelector(({ data }) => data.mediaAssets);
   const datasets = useTypedSelector(({ data }) => data.datasets);
@@ -69,29 +41,16 @@ export const GridGallery = () => {
         </Link>
       )}
 
-      <GridList>
+      <Grid container spacing={2}>
         {photos.map((tile: any) => (
-          <GridListTile className={classes.item} key={tile.remote_path}>
-            <img src={tile.remote_path} alt="taggable-item" />
-            {tile.remote_xml_path && (
-              <GridListTileBar
-                title="Download XML"
-                actionIcon={
-                  <IconButton
-                    className={classes.icon}
-                    aria-label={`info about ${tile.title}`}
-                    onClick={() => {
-                      window.location.href = tile.remote_xml_path;
-                    }}
-                  >
-                    <GetAppIcon />
-                  </IconButton>
-                }
-              />
-            )}
-          </GridListTile>
+          <Grid item xs={6} sm={4} md={3} lg={2} key={tile.remote_path}>
+            <ImageCard
+              imageSrc={tile.remote_path}
+              xmlPath={tile.remote_xml_path}
+            />
+          </Grid>
         ))}
-      </GridList>
+      </Grid>
     </Box>
   );
 };
