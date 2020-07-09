@@ -66,6 +66,13 @@ Reset the database from [<model_garden_root>/backend/](backend) dir:
 $ python .\manage.py reset_db
 ```
 
+### Reload fixtures
+Provide initial data for models by reloading fixtures. It's used to pre-populate
+database with some defaults used in local development.
+```
+python3 manage.py loaddata default_bucket
+```
+
 ### Run Server
 ```
 $ ./manage.py runserver 0:9000
@@ -73,6 +80,12 @@ $ ./manage.py runserver 0:9000
 Django version 3.0.5, using settings 'model_garden.settings'
 Starting development server at http://127.0.0.1:9000/
 Quit the server with CONTROL-C.
+```
+
+### Run Worker
+Run worker in background to update task statuses from CVAT
+```
+python3 worker.py
 ```
 
 ## PyCharm
