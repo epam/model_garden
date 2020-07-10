@@ -152,7 +152,7 @@ class LabelingTaskViewSet(ModelViewSet):
 
   @action(methods=["PATCH"], detail=False)
   def archive(self, request: Request) -> Response:
-    """Change status of specified tasks and delete them in CVAT.
+    """Change status of specified tasks.
 
     Tasks that have been archived will be skipped as well as task IDs that
     are not exist.
