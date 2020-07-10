@@ -161,14 +161,8 @@ class LabelingTaskViewSet(ModelViewSet):
       {"id": [task_id]}
 
     Response::
-      {
+      {p
         "archived": [task_id],
-        "errors": [
-          {
-            "id": task_id,
-            "error": string
-          }
-        ]
       }
     """
     ids_serializer = LabelingTaskIDSerializer(data=request.data)
@@ -178,27 +172,11 @@ class LabelingTaskViewSet(ModelViewSet):
       pk__in=ids_serializer.data['id'],
     )
 
-    cvat_service = CvatService()
-    deleted = []
-    errors = []
-
-    for lt in labeling_tasks:
-      try:
-        cvat_service.delete_task(lt.task_id)
-      except CVATServiceException as err:
-        logger.error(
-          'Unable to delete cvat task %d. Reason: %s', lt.task_id, err,
-        )
-        errors.append({'id': lt.id, 'error': str(err)})
-      else:
-        deleted.append(lt)
-
-    LabelingTask.update_statuses(deleted, LabelingTaskStatus.ARCHIVED)
+    LabelingTask.update_statuses(labeling_tasks, LabelingTaskStatus.ARCHIVED)
 
     return Response(
       data={
-        'archived': [each.id for each in deleted],
-        'errors': errors,
+        'archived': [each.id for each in labeling_tasks],
       },
       status=status.HTTP_200_OK,
     )
