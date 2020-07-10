@@ -33,7 +33,10 @@ class DatasetSerializer(serializers.ModelSerializer):
     return obj.media_assets.count()
 
   def get_preview_image(self, obj):
-    return obj.media_assets.last().remote_path
+    try:
+      return obj.media_assets.last().remote_path
+    except AttributeError:
+      return None
 
   def get_xmls_number(self, obj):
     xmls_count = 0
