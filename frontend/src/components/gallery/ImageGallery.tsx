@@ -1,16 +1,18 @@
 import React, { useEffect } from 'react';
 import { Box, Grid } from '@material-ui/core';
+import { createSelector } from '@reduxjs/toolkit';
 import { useRouteMatch, Redirect, Link } from 'react-router-dom';
 import { Empty } from 'antd';
 
-import { useTypedSelector, useAppDispatch } from '../../store';
+import { useTypedSelector, useAppDispatch, AppState } from '../../store';
 import { getMediaAssets } from '../../store/data';
 import { ImageCard } from './imageCard';
 
-export const GridGallery = () => {
+const ImageGallery = () => {
   const dispatch = useAppDispatch();
   const photos = useTypedSelector(({ data }) => data.mediaAssets);
   const datasets = useTypedSelector(({ data }) => data.datasets);
+
   const {
     params: { datasetId }
   } = useRouteMatch();
@@ -54,3 +56,4 @@ export const GridGallery = () => {
     </Box>
   );
 };
+export default ImageGallery;

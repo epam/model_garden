@@ -1,12 +1,12 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useRouteMatch } from 'react-router-dom';
 import { makeStyles, Grid, Link, Paper } from '@material-ui/core';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import { Empty } from 'antd';
 
-import { Dataset } from '../../../models';
-import { useTypedSelector } from '../../../store';
+import { Dataset } from '../../models';
+import { useTypedSelector } from '../../store';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -88,9 +88,17 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export const DatasetGrid = ({ match }: any) => {
+export const DatasetGrid = ({ searchTerm }: any) => {
   const classes = useStyles();
-  const datasets = useTypedSelector(({ data }) => data.datasets);
+  const datasets = useTypedSelector(({ data }) =>
+    data.datasets.filter((dataset) =>
+      searchTerm
+        ? dataset.path.toLowerCase().includes(searchTerm.toLowerCase())
+        : true
+    )
+  );
+  const match = useRouteMatch('/gallery');
+
   return (
     <Grid container spacing={2}>
       {!datasets.length && <Empty className={classes.empty} />}
@@ -100,7 +108,7 @@ export const DatasetGrid = ({ match }: any) => {
             <Link
               className={classes.link}
               component={RouterLink}
-              to={`${match.path}/dataset/${dataset.id}`}
+              to={`${match?.path}/dataset/${dataset.id}`}
             >
               <div className={classes.imgWrap}>
                 {dataset.preview_image ? (
