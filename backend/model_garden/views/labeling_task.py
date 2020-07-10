@@ -161,7 +161,7 @@ class LabelingTaskViewSet(ModelViewSet):
       {"id": [task_id]}
 
     Response::
-      {p
+      {
         "archived": [task_id],
       }
     """
