@@ -70,7 +70,7 @@ $ python .\manage.py reset_db
 Provide initial data for models by reloading fixtures. It's used to pre-populate
 database with some defaults used in local development.
 ```
-python3 manage.py loaddata default_bucket
+python manage.py loaddata default_bucket
 ```
 
 ### Run Server
@@ -85,7 +85,7 @@ Quit the server with CONTROL-C.
 ### Run Worker
 Run worker in background to update task statuses from CVAT
 ```
-python3 worker.py
+python worker.py
 ```
 
 ## PyCharm
