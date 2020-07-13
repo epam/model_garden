@@ -3,16 +3,11 @@ import { TableStateProps, LabelingTaskStatus } from '../../models';
 import { getLabelingTasksRequest, archiveTaskLabelingRequest, retryLabelingTaskRequest } from '../../api';
 
 export interface TasksStatusesState {
-  tasksLoading: boolean;
+  loading: boolean;
+  actualView: boolean;
   count: number;
   tasks: LabelingTaskStatus[];
 }
-
-const initialState: TasksStatusesState = {
-  tasksLoading: false,
-  count: 0,
-  tasks: []
-};
 
 export const getLabelingTasks = createAsyncThunk(
   'fetchLabelingTask',
@@ -44,47 +39,45 @@ export const archiveLabelingTask = createAsyncThunk('archiveLabelingTask', async
   return response.data.results;
 });
 
-// export const archiveLabelingTask = (taskIds: Array<number>, tableState: TableStateProps): AppThunk => (dispatch) => {
-//   // dispatch(createLabelingTaskStart());
-//   return archiveTaskLabelingRequest(taskIds)
-//     .then(() => {
-//       dispatch(getLabelingTasks(tableState));
-//     })
-//     .catch((error: any) => dispatch(setErrorAction(error)));
-// };
-
 export const retryLabelingTask = createAsyncThunk('retryLabelingTask', async (taskIds: Array<number>, tableState) => {
   const response = await retryLabelingTaskRequest(taskIds);
   return response.data.results;
 });
 
-// export const retryLabelingTask = (taskIds: Array<number>, tableState: TableStateProps): AppThunk => (dispatch) => {
-//   // dispatch(createLabelingTaskStart());
-//   return retryLabelingTaskRequest(taskIds)
-//     .then(() => {
-//       dispatch(getLabelingTasks(tableState));
-//     })
-//     .catch((error: any) => dispatch(setErrorAction(error)));
-// };
-
 const tasksStatusesSlice = createSlice({
   name: 'taskStatus',
-  initialState,
+  initialState: {
+    loading: false,
+    actualView: false,
+    count: 0,
+    tasks: []
+  } as TasksStatusesState,
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(getLabelingTasks.pending, (state) => {
-        state.tasksLoading = true;
+        state.loading = true;
       })
       .addCase(getLabelingTasks.fulfilled, (state, action) => {
-        state.tasksLoading = false;
+        state.loading = false;
+        state.actualView = true;
         state.count = action.payload.count;
         state.tasks = action.payload.tasks;
       })
-      .addCase(archiveLabelingTask.fulfilled, (state, action) => {
-        action.meta.arg.map((item) => (state.tasks[item].status = 'archived'));
+      .addCase(archiveLabelingTask.pending, (state) => {
+        state.loading = true;
       })
-      .addCase(retryLabelingTask.fulfilled, (state, action) => {});
+      .addCase(archiveLabelingTask.fulfilled, (state) => {
+        state.loading = false;
+        state.actualView = false;
+      })
+      .addCase(retryLabelingTask.pending, (state) => {
+        state.loading = false;
+        state.actualView = false;
+      })
+      .addCase(retryLabelingTask.fulfilled, (state) => {
+        state.actualView = false;
+      });
   }
 });
 
