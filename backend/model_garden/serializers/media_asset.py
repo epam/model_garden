@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from model_garden.constants import LabelingTaskStatus
 from model_garden.models import MediaAsset
 
 
