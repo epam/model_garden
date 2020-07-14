@@ -10,33 +10,32 @@ import {
   FormControl,
   InputLabel
 } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import './Task.css';
 import { FilesCounter } from '../filesCounter';
 import { Notification } from '../notification';
 import { Bucket, Dataset, LabelingToolUser } from '../../../models';
 import { FormContainer } from '../../shared';
+import { getDatasets } from '../../../store/data';
 import { DEFAULT_FORM_DATA } from './constants';
 import {
-  setCurrentBucketId,
-  setCurrentDatasetId,
-  clearNewTaskData,
-  getUnsignedImagesCountSuccess
+  clearUnsignedImagesCount,
+  clearTaskUrl
 } from '../../../store/labelingTask';
 
 interface TaskProps {
-  users: LabelingToolUser[];
-  taskName: string;
-  filesCount: number;
-  handleTaskSubmit: (data: FormData) => void;
   buckets: Bucket[];
   datasets: Dataset[];
-  currentBucketId: string;
+  users: LabelingToolUser[];
+  filesCount: number;
+  newTaskUrl: string;
+  handleTaskSubmit: (data: FormData) => void;
   onDataSetChange: (datasetId: string) => void;
-  newTask: { location: string };
   setShowLoader: Function;
 }
 
 export type FormData = {
+  currentDatasetId: string;
   taskName: string;
   user: string | number;
   filesInTask: number;
@@ -44,25 +43,32 @@ export type FormData = {
 };
 
 export const Task: React.FC<TaskProps> = ({
-  users,
-  taskName,
-  filesCount,
-  handleTaskSubmit,
   buckets,
   datasets,
-  currentBucketId,
+  users,
+  filesCount,
+  handleTaskSubmit,
   onDataSetChange,
-  newTask,
+  newTaskUrl,
   setShowLoader
 }: TaskProps) => {
-  const [selectedDataset, setSelectedDataset] = useState('');
+  const [currentBucketId, setCurrentBucketId] = useState('');
+  const [currentDataset, setCurrentDataset] = useState({
+    id: '',
+    path: '',
+    bucket: ''
+  });
+  const [dataSetField, setDataSetField] = useState('');
+  const [taskName, setTaskName] = useState('');
   const [counter, setCounter] = useState({
     filesInTask: DEFAULT_FORM_DATA.FILES_IN_TASK_VALUE.toString(),
     countOfTasks: DEFAULT_FORM_DATA.COUNT_OF_TASKS.toString()
   });
   const dispatch = useDispatch();
 
-  const { handleSubmit, setValue, control, watch } = useForm<FormData>({
+  const { handleSubmit, setValue, control, watch, register } = useForm<
+    FormData
+  >({
     defaultValues: {
       taskName: DEFAULT_FORM_DATA.TASK_NAME,
       user: DEFAULT_FORM_DATA.USER
@@ -75,60 +81,67 @@ export const Task: React.FC<TaskProps> = ({
   ]);
 
   useEffect(() => {
-    setValue('taskName', taskName);
-  }, [taskName, setValue]);
-
-  useEffect(() => {
-    dispatch(setCurrentBucketId(''));
-    dispatch(setCurrentDatasetId(''));
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (!currentBucketId) {
-      dispatch(setCurrentDatasetId(''));
+    if (currentBucketId) {
+      dispatch(getDatasets(currentBucketId));
     }
-  }, [dispatch, currentBucketId]);
+  }, [currentBucketId, dispatch]);
+
+  useEffect(() => {
+    setValue('taskName', taskName);
+  }, [taskName, setValue, currentDataset]);
+
+  // clear form on a new task is created
+  useEffect(() => {
+    clearForm();
+    dispatch(clearUnsignedImagesCount());
+  }, [dispatch, newTaskUrl]);
 
   const onSubmit = handleSubmit((data: FormData) => {
     data.filesInTask = Number(counter.filesInTask);
     data.countOfTasks = Number(counter.countOfTasks);
+    data.currentDatasetId = currentDataset.id;
     setShowLoader(true);
     handleTaskSubmit(data);
   });
-
-  // clear form on a new task is created
-  useEffect(() => {
-    setSelectedDataset('');
-    dispatch(setCurrentDatasetId(''));
-    dispatch(getUnsignedImagesCountSuccess(0));
-    setCounter({ filesInTask: '0', countOfTasks: '0' });
-  }, [dispatch, newTask]);
-
-  const clearTaskData = () => {
-    dispatch(clearNewTaskData());
-  };
-
-  const usersSelectOptions = users.map((user) => (
-    <MenuItem key={user.id} value={user.id}>
-      {user.full_name} ({user.email})
-    </MenuItem>
-  ));
 
   const handleBucketChange = (
     e: React.ChangeEvent<{ name?: string; value: unknown }>
   ) => {
     if (e.target.value) {
-      dispatch(setCurrentBucketId(e.target.value as string));
+      setCurrentBucketId(e.target.value as string);
     }
   };
 
   const handleDatasetChange = (
-    e: React.ChangeEvent<{ name?: string; value: unknown }>
+    e: any,
+    dataset: Dataset | null,
+    reason: string
   ) => {
-    let datasetId: string = e.target.value as string;
-    setSelectedDataset(datasetId);
-    dispatch(setCurrentDatasetId(datasetId));
-    onDataSetChange(datasetId);
+    if (dataset) {
+      setCurrentDataset(dataset);
+      setTaskName(dataset.path);
+      onDataSetChange(dataset.id);
+      setCounter({ filesInTask: '0', countOfTasks: '0' });
+    }
+    if (reason === 'clear') {
+      clearForm();
+      dispatch(clearUnsignedImagesCount());
+    }
+  };
+
+  const clearForm = () => {
+    setCurrentDataset({
+      id: '',
+      path: '',
+      bucket: ''
+    });
+    setTaskName('');
+    setDataSetField('');
+    setCounter({ filesInTask: '0', countOfTasks: '0' });
+  };
+
+  const clearTaskData = () => {
+    dispatch(clearTaskUrl());
   };
 
   const bucketsSelectOptions = buckets.map((bucket: Bucket) => (
@@ -137,9 +150,9 @@ export const Task: React.FC<TaskProps> = ({
     </MenuItem>
   ));
 
-  const datasetsSelectOptions = datasets.map((dataset: Dataset) => (
-    <MenuItem key={dataset.id} value={dataset.id}>
-      {dataset.path}
+  const usersSelectOptions = users.map((user) => (
+    <MenuItem key={user.id} value={user.id}>
+      {user.full_name} ({user.email})
     </MenuItem>
   ));
 
@@ -206,19 +219,26 @@ export const Task: React.FC<TaskProps> = ({
               {bucketsSelectOptions}
             </Select>
           </FormControl>
-          <FormControl>
-            <InputLabel id="task-datasets">Dataset</InputLabel>
-            <Select
-              labelId="task-datasets"
-              name="dataset"
-              label="Dataset"
-              value={selectedDataset}
-              onChange={handleDatasetChange}
-              disabled={currentBucketId === DEFAULT_FORM_DATA.BUCKET_ID}
-            >
-              {datasetsSelectOptions}
-            </Select>
-          </FormControl>
+          <Autocomplete
+            onChange={handleDatasetChange}
+            options={datasets}
+            getOptionLabel={(option) => option.path}
+            inputValue={dataSetField}
+            onInputChange={(e: object, value: string) => {
+              setDataSetField(value);
+            }}
+            disabled={currentBucketId === DEFAULT_FORM_DATA.BUCKET_ID}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                inputRef={register({
+                  required: true
+                })}
+                name="dataset"
+                label="Dataset"
+              />
+            )}
+          />
           <Controller
             name="taskName"
             label="Task Name"
@@ -274,7 +294,7 @@ export const Task: React.FC<TaskProps> = ({
             variant="contained"
             disabled={
               currentBucketId === DEFAULT_FORM_DATA.BUCKET_ID ||
-              selectedDataset === DEFAULT_FORM_DATA.DATASET ||
+              currentDataset.id === DEFAULT_FORM_DATA.DATASET ||
               taskNameValue === DEFAULT_FORM_DATA.TASK_NAME ||
               userValue === DEFAULT_FORM_DATA.USER ||
               Number(counter.countOfTasks) ===
@@ -288,7 +308,7 @@ export const Task: React.FC<TaskProps> = ({
         </form>
       </FormContainer>
 
-      <Notification newTask={newTask} onClose={clearTaskData} />
+      <Notification newTaskUrl={newTaskUrl} onClose={clearTaskData} />
     </>
   );
 };
