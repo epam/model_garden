@@ -158,7 +158,7 @@ class LabelingTaskViewSet(ModelViewSet):
 
   @action(methods=["PATCH"], detail=False)
   def archive(self, request: Request) -> Response:
-    """Change status of specified tasks.
+    """Change status of specified tasks and delete them in CVAT.
 
     Tasks that have been archived will be skipped as well as task IDs that
     are not exist.
@@ -169,6 +169,12 @@ class LabelingTaskViewSet(ModelViewSet):
     Response::
       {
         "archived": [task_id],
+        "errors": [
+          {
+            "id": task_id,
+            "error": string
+          }
+        ]
       }
     """
     ids_serializer = LabelingTaskIDSerializer(data=request.data)
@@ -178,11 +184,27 @@ class LabelingTaskViewSet(ModelViewSet):
       pk__in=ids_serializer.data['id'],
     )
 
-    LabelingTask.update_statuses(labeling_tasks, LabelingTaskStatus.ARCHIVED)
+    cvat_service = CvatService()
+    deleted = []
+    errors = []
+
+    for lt in labeling_tasks:
+      try:
+        cvat_service.delete_task(lt.task_id)
+      except CVATServiceException as err:
+        logger.error(
+          'Unable to delete cvat task %d. Reason: %s', lt.task_id, err,
+        )
+        errors.append({'id': lt.id, 'error': str(err)})
+      else:
+        deleted.append(lt)
+
+    LabelingTask.update_statuses(deleted, LabelingTaskStatus.ARCHIVED)
 
     return Response(
       data={
-        'archived': [each.id for each in labeling_tasks],
+        'archived': [each.id for each in deleted],
+        'errors': errors,
       },
       status=status.HTTP_200_OK,
     )
