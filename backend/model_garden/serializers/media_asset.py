@@ -17,5 +17,5 @@ class MediaAssetSerializer(serializers.ModelSerializer):
     )
 
   def get_remote_xml_path(self, obj: MediaAsset) -> str:
-    if obj.labeling_task and obj.labeling_task.status == LabelingTaskStatus.SAVED:
+    if obj.labeling_task:
       return obj.remote_xml_path
