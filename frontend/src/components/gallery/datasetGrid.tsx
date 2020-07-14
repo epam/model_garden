@@ -1,18 +1,22 @@
 import React from 'react';
+import { Link as RouterLink, useRouteMatch } from 'react-router-dom';
 import { makeStyles, Grid, Link, Paper } from '@material-ui/core';
 import blueGrey from '@material-ui/core/colors/blueGrey';
-import { Dataset } from '../../../models';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
+import { Empty } from 'antd';
+
+import { Dataset } from '../../models';
+import { useTypedSelector } from '../../store';
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    // height: '19.6875rem',
-    height: '15.6875rem', // TODO: delete after adding the data
+    height: '19.6875rem',
     position: 'relative',
     overflow: 'hidden',
     '&:hover': {
       transition: 'box-shadow 0.3s',
-      boxShadow: theme.shadows[3]
+      boxShadow: theme.shadows[4],
+      transform: 'scale(1.005)'
     }
   },
   link: {
@@ -52,14 +56,12 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: 20 / 16
   },
   date: {
-    display: 'none', // TODO: delete after adding the data
     marginBottom: '0.625rem',
     fontSize: '0.75rem',
     lineHeight: 14 / 12
   },
   items: {
-    // display: 'flex',
-    display: 'none', // TODO: delete after adding the data
+    display: 'flex',
     borderTop: `1px solid ${blueGrey[100]}`,
     '& dl': {
       textAlign: 'center',
@@ -80,20 +82,41 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: 'normal',
       margin: '0'
     }
+  },
+  empty: {
+    margin: '0 auto'
   }
 }));
 
-export const DatasetGrid = ({ datasets }: any) => {
+export const DatasetGrid = ({ searchTerm }: any) => {
   const classes = useStyles();
+  const datasets = useTypedSelector(({ data }) =>
+    data.datasets.filter((dataset) =>
+      searchTerm
+        ? dataset.path.toLowerCase().includes(searchTerm.toLowerCase())
+        : true
+    )
+  );
+  const match = useRouteMatch('/gallery');
+
   return (
     <Grid container spacing={2}>
+      {!datasets.length && <Empty className={classes.empty} />}
       {datasets.map((dataset: Dataset) => (
         <Grid item xs={6} sm={4} md={3} lg={2} key={dataset.id}>
           <Paper className={classes.card}>
-            <Link className={classes.link}>
+            <Link
+              className={classes.link}
+              component={RouterLink}
+              to={`${match?.path}/dataset/${dataset.id}`}
+            >
               <div className={classes.imgWrap}>
-                {false ? ( // TODO: check if dataset image exist
-                  <img className={classes.img} src="" alt={dataset.path}></img>
+                {dataset.preview_image ? (
+                  <img
+                    className={classes.img}
+                    src={dataset.preview_image}
+                    alt={dataset.path}
+                  ></img>
                 ) : (
                   <PhotoLibraryIcon className={classes.photoIcon} />
                 )}
@@ -101,16 +124,18 @@ export const DatasetGrid = ({ datasets }: any) => {
 
               <div className={classes.info}>
                 <strong className={classes.name}>{dataset.path}</strong>
-                <div className={classes.date}>Created: {}</div>
+                <div className={classes.date}>
+                  Created: {new Date(dataset.created_at).toLocaleString()}
+                </div>
                 <div className={classes.items}>
                   <dl>
                     <dt>ITEMS</dt>
-                    <dd>{}</dd>
+                    <dd>{dataset.items_number}</dd>
                   </dl>
                   <dl>
                     <dt>XML</dt>
                     <dd>
-                      {}/{}
+                      {dataset.xmls_number}/{dataset.items_number}
                     </dd>
                   </dl>
                 </div>

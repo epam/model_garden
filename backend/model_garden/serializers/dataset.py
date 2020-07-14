@@ -2,6 +2,7 @@ from datetime import datetime
 
 from rest_framework import serializers
 
+from model_garden.constants import LabelingTaskStatus
 from model_garden.models import Dataset
 
 
@@ -11,6 +12,9 @@ class DatasetSerializer(serializers.ModelSerializer):
     allow_null=True,
     trim_whitespace=True,
   )
+  items_number = serializers.SerializerMethodField()
+  preview_image = serializers.SerializerMethodField()
+  xmls_number = serializers.SerializerMethodField()
 
   class Meta:
     model = Dataset
@@ -18,8 +22,30 @@ class DatasetSerializer(serializers.ModelSerializer):
       'id',
       'path',
       'bucket',
+      'created_at',
+      'preview_image',
+      'items_number',
+      'xmls_number',
     )
     validators = []
+
+  def get_items_number(self, obj):
+    return obj.media_assets.count()
+
+  def get_preview_image(self, obj):
+    try:
+      return obj.media_assets.last().remote_path
+    except AttributeError:
+      return None
+
+  def get_xmls_number(self, obj):
+    xmls_count = 0
+    for media_asset_obj in obj.media_assets.all():
+      if (media_asset_obj.labeling_task
+              and media_asset_obj.labeling_task.status == LabelingTaskStatus.SAVED):
+        xmls_count += 1
+
+    return xmls_count
 
   def validate(self, attrs):
     self._validate_path(attrs)
