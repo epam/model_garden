@@ -43,7 +43,8 @@ export const getMediaAssetsRequest = ({ bucketId, datasetId }: any) => {
 export const getLabelingToolUsersRequest = async () => {
   try {
     return await axios.get(`http://${backendHostPort}/api/cvat-users/`, {
-      timeout: 2000
+      timeout: 2000,
+      timeoutErrorMessage: 'Error getting users. Please confirm you are connected to VPN'
     });
   } catch (error) {
     if (error && error.response) {

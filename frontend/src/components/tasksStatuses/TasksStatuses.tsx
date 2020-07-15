@@ -174,7 +174,7 @@ export const TasksStatuses: React.FC = () => {
   const handleArchive: any = () => {
     if (selectedRowKeys.length > 0) {
       setOpenConformationDialog(false);
-      (dispatch(archiveLabelingTask(selectedRowKeys)) as any).finally(() => {
+      dispatch(archiveLabelingTask(selectedRowKeys)).finally(() => {
         setSelectedRowKeys([]);
       });
     }
@@ -182,7 +182,7 @@ export const TasksStatuses: React.FC = () => {
 
   const handleRetry: any = () => {
     if (selectedRowKeys.length > 0) {
-      (dispatch(retryLabelingTask(selectedRowKeys)) as any).finally(() => {
+      dispatch(retryLabelingTask(selectedRowKeys)).finally(() => {
         setSelectedRowKeys([]);
       });
     }
