@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Bucket } from '../../models';
 import {
+  Container,
   Grid,
   Select,
   FormControl,
@@ -12,7 +13,7 @@ import {
 import SearchIcon from '@material-ui/icons/Search';
 import { useTypedSelector, useAppDispatch } from '../../store';
 import { getDatasets } from '../../store/data';
-import { DatasetGrid } from './datasetGrid';
+import { DatasetGrid } from './DatasetGrid';
 
 const DatasetView = () => {
   const dispatch = useAppDispatch();
@@ -26,7 +27,7 @@ const DatasetView = () => {
   };
 
   return (
-    <>
+    <Container maxWidth={'xl'}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6} md={3}>
           <FormControl>
@@ -70,7 +71,7 @@ const DatasetView = () => {
         </Grid>
       </Grid>
       <DatasetGrid searchTerm={searchTerm} />
-    </>
+    </Container>
   );
 };
 
