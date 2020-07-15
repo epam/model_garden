@@ -35,15 +35,19 @@ export const TasksStatuses: React.FC = () => {
   });
 
   const areTasksLoading = useTypedSelector(
-    (state) => state.tasksStatuses.isLabelingTasksStatusesLoading
+    (state) => state.tasksStatuses.loading
   );
   const tasks = useTypedSelector((state) => state.tasksStatuses.tasks);
   const tasksCount = useTypedSelector((state) => state.tasksStatuses.count);
+  const tableUpdated = useTypedSelector(
+    (state) => state.tasksStatuses.actualView
+  );
 
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     dispatch(getLabelingTasks(tableState));
-  }, [tableState, dispatch]);
+  }, [tableState, dispatch, tableUpdated]);
 
   const updateSearchState = (newSearchProps: Object) => {
     setTableState((prevState: any) => {
@@ -169,22 +173,18 @@ export const TasksStatuses: React.FC = () => {
 
   const handleArchive: any = () => {
     if (selectedRowKeys.length > 0) {
-      (dispatch(
-        archiveLabelingTask(selectedRowKeys, tableState)
-      ) as any).finally(() => {
+      setOpenConformationDialog(false);
+      dispatch(archiveLabelingTask(selectedRowKeys)).finally(() => {
         setSelectedRowKeys([]);
-        setOpenConformationDialog(false);
       });
     }
   };
 
   const handleRetry: any = () => {
     if (selectedRowKeys.length > 0) {
-      (dispatch(retryLabelingTask(selectedRowKeys, tableState)) as any).finally(
-        () => {
-          setSelectedRowKeys([]);
-        }
-      );
+      dispatch(retryLabelingTask(selectedRowKeys)).finally(() => {
+        setSelectedRowKeys([]);
+      });
     }
   };
 
