@@ -13,7 +13,7 @@ import {
   Typography
 } from '@material-ui/core';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { FormContainer, ProgressLoader, DropZone } from '../shared';
+import { FormContainer, ProgressLoader } from '../shared';
 import { useAppDispatch, useTypedSelector } from '../../store';
 import { addExistingDataset, uploadMediaFiles } from '../../store/media';
 import { SnackbarAlert } from '../snackbarAlert';
@@ -25,6 +25,7 @@ import {
   Severity,
   BucketsSelect
 } from './utils';
+import { UploadFiles } from './uploadImages';
 
 const alertState: Alert = {
   show: false,
@@ -119,7 +120,7 @@ export const AddDataset: FC<any> = ({ match, location }) => {
       label: 'upload images',
       path: 'upload-images',
       component: (navProps: any) => (
-        <DropZone {...navProps} files={files} setFiles={setFiles} />
+        <UploadFiles {...navProps} files={files} setFiles={setFiles} />
       )
     },
     {

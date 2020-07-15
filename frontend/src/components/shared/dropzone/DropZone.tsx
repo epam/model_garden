@@ -1,20 +1,41 @@
 import React, { useCallback } from 'react';
+import { makeStyles } from '@material-ui/core';
 import { useDropzone } from 'react-dropzone';
 import zipSvg from '../../../assets/zip.svg';
 import incorrectSvg from '../../../assets/incorrect.svg';
-import './DropZone.css';
+import blue from '@material-ui/core/colors/blue';
 
-export interface ExtendedFile extends File {
-  preview: string;
-}
-
-interface DropZoneProps {
-  files: ExtendedFile[];
+export interface DropZoneProps {
   setFiles: Function;
 }
 
+const useStyles = makeStyles((theme) => ({
+  dropField: {
+    flex: '1',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    padding: '1.5rem',
+    borderWidth: '2px',
+    borderRadius: '2px',
+    borderColor: blue[500],
+    borderStyle: 'dashed',
+    backgroundColor: blue[50],
+    color: blue[500],
+    outline: 'none',
+    transition: 'border 0.24s ease-in-out',
+    cursor: 'pointer'
+  },
+  dropText: {
+    width: '100%',
+    textAlign: 'center',
+    margin: '0'
+  }
+}));
+
 export const DropZone: React.FC<DropZoneProps> = ({
-  files,
   setFiles
 }: DropZoneProps) => {
   const onDrop = useCallback(
@@ -42,35 +63,18 @@ export const DropZone: React.FC<DropZoneProps> = ({
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const classes = useStyles();
 
-  const tumbs = files.map((file) => {
-    return (
-      <div className="dropzone__thumb" key={file.name}>
-        <div className="dropzone__thumb-inner">
-          <img
-            src={file.preview}
-            alt="dropzone"
-            className="dropzone__thumb-image"
-          />
-        </div>
-      </div>
-    );
-  });
   return (
-    <>
-      <section className="dropzone">
-        <div {...getRootProps({ className: 'dropzone__field' })}>
-          <input {...getInputProps()} />
-          <p className="dropzone__text">
-            {isDragActive ? (
-              <>Drop the files here ...</>
-            ) : (
-              <>Drag 'n' drop some files here, or click to select files</>
-            )}
-          </p>
-        </div>
-        <aside className="dropzone__tumbs-container">{tumbs}</aside>
-      </section>
-    </>
+    <section {...getRootProps({ className: classes.dropField })}>
+      <input {...getInputProps()} />
+      <p className={classes.dropText}>
+        {isDragActive ? (
+          <>Drop the files here ...</>
+        ) : (
+          <>Drag 'n' drop some files here, or click to select files</>
+        )}
+      </p>
+    </section>
   );
 };
