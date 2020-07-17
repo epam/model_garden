@@ -74,7 +74,7 @@ const ImageGallery = () => {
           <TextField
             className="upload-images__settings-item"
             name="path"
-            label="Search By File Name"
+            placeholder="Search By File Name"
             value={searchTerm}
             disabled={!datasetId}
             onChange={(e: any) => {
@@ -96,7 +96,11 @@ const ImageGallery = () => {
         <Grid container spacing={2}>
           {searchTerm
             ? photos
-                .filter((tile: any) => tile.remote_path.includes(searchTerm))
+                .filter((tile: any) =>
+                  tile.remote_path
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase())
+                )
                 .map((tile: any) => (
                   <Grid item xs={6} sm={4} md={3} lg={2} key={tile.remote_path}>
                     <ImageCard
