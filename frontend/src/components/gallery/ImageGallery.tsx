@@ -15,7 +15,7 @@ import { Empty } from 'antd';
 
 import { useTypedSelector, useAppDispatch } from '../../store';
 import { getMediaAssets } from '../../store/data';
-import { ImageCard } from './imageCard';
+import { ImageCard } from './ImageCard';
 import { ImageGalleryHeader } from './ImageGalleryHeader';
 import { Dataset } from '../../models';
 
@@ -35,6 +35,14 @@ const ImageGallery = () => {
     (busket) => busket.id === currentDataset?.bucket
   ); //@todo: update once we change arrays to object
   const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredPhotos = useTypedSelector(({ data }) =>
+    data.mediaAssets.filter((photo) =>
+      searchTerm == ''
+        ? photo
+        : photo.remote_path.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
 
   useEffect(() => {
     if (datasets.length > 0) {
@@ -92,31 +100,15 @@ const ImageGallery = () => {
             }}
           />
         </Grid>
-
         <Grid container spacing={2}>
-          {searchTerm
-            ? photos
-                .filter((tile: any) =>
-                  tile.remote_path
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase())
-                )
-                .map((tile: any) => (
-                  <Grid item xs={6} sm={4} md={3} lg={2} key={tile.remote_path}>
-                    <ImageCard
-                      imageSrc={tile.remote_path}
-                      xmlPath={tile.remote_xml_path}
-                    />
-                  </Grid>
-                ))
-            : photos.map((tile: any) => (
-                <Grid item xs={6} sm={4} md={3} lg={2} key={tile.remote_path}>
-                  <ImageCard
-                    imageSrc={tile.remote_path}
-                    xmlPath={tile.remote_xml_path}
-                  />
-                </Grid>
-              ))}
+          {filteredPhotos.map((tile: any) => (
+            <Grid item xs={6} sm={4} md={3} lg={2} key={tile.remote_path}>
+              <ImageCard
+                imageSrc={tile.remote_path}
+                xmlPath={tile.remote_xml_path}
+              />
+            </Grid>
+          ))}
         </Grid>
       </Container>
     </>

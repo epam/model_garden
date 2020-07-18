@@ -13,7 +13,7 @@ import {
 import SearchIcon from '@material-ui/icons/Search';
 import { useTypedSelector, useAppDispatch } from '../../store';
 import { getDatasets } from '../../store/data';
-import { DatasetGrid } from './datasetGrid';
+import { DatasetGrid } from './DatasetGrid';
 
 const DatasetView = () => {
   const dispatch = useAppDispatch();
