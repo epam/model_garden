@@ -49,7 +49,6 @@ const DatasetView = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <TextField
-            className="upload-images__settings-item"
             name="path"
             label="Search Dataset Path"
             value={searchTerm}
@@ -58,9 +57,6 @@ const DatasetView = () => {
               setSearchTerm(e.target.value);
             }}
             InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">/</InputAdornment>
-              ),
               endAdornment: (
                 <InputAdornment position="end">
                   <SearchIcon />
