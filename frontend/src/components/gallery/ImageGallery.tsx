@@ -70,18 +70,14 @@ const ImageGallery = () => {
         )}
         <Grid item xs={12} sm={6} md={3}>
           <TextField
-            className="upload-images__settings-item"
             name="path"
-            placeholder="Search By File Name"
+            label="Search By File Name"
             value={searchTerm}
             disabled={!datasetId}
             onChange={(e: any) => {
               setSearchTerm(e.target.value);
             }}
             InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">/</InputAdornment>
-              ),
               endAdornment: (
                 <InputAdornment position="end">
                   <SearchIcon />
@@ -91,11 +87,11 @@ const ImageGallery = () => {
           />
         </Grid>
         <Grid container spacing={2}>
-          {filteredPhotos.map((tile: any) => (
-            <Grid item xs={6} sm={4} md={3} lg={2} key={tile.remote_path}>
+          {filteredPhotos.map((image: any) => (
+            <Grid item xs={6} sm={4} md={3} lg={2} key={image.remote_path}>
               <ImageCard
-                imageSrc={tile.remote_path}
-                xmlPath={tile.remote_xml_path}
+                imageSrc={image.remote_path}
+                xmlPath={image.remote_xml_path}
               />
             </Grid>
           ))}
