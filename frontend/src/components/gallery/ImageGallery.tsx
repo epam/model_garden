@@ -5,7 +5,7 @@ import { useRouteMatch, Redirect, Link } from 'react-router-dom';
 import { Empty } from 'antd';
 import { useTypedSelector, useAppDispatch } from '../../store';
 import { getMediaAssets } from '../../store/data';
-import { ImageCard } from './imageCard';
+import { ImageCard } from './ImageCard';
 import { ImageGalleryHeader } from './ImageGalleryHeader';
 import { Dataset } from '../../models';
 
