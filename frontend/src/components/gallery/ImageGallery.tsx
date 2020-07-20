@@ -14,7 +14,7 @@ const ImageGallery = () => {
   const photos = useTypedSelector(({ data }) => data.mediaAssets);
   const datasets = useTypedSelector(({ data }) => data.datasets);
   const buckets = useTypedSelector(({ data }) => data.buckets);
-
+  console.log(photos);
   const {
     params: { datasetId }
   } = useRouteMatch();
@@ -29,7 +29,7 @@ const ImageGallery = () => {
   const filteredPhotos = useTypedSelector(({ data }) =>
     data.mediaAssets.filter((photo) =>
       searchTerm
-        ? photo.remote_path.toLowerCase().includes(searchTerm.toLowerCase())
+        ? photo.filename.toLowerCase().includes(searchTerm.toLowerCase())
         : true
     )
   );
