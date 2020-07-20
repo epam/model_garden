@@ -119,7 +119,8 @@ frontend:
     - cd frontend
   script:
     - $(aws ecr get-login --no-include-email --region eu-central-1)
-    # Set deployment tag as commit tag instead of short hash code, if commit tag not empty for current deployment
+    # Set deployment tag as commit tag instead of short hash code, if commit tag
+    # is not empty for current deployment.
     - if [ $CI_COMMIT_TAG != ""]; then $DEPLOY_TAG:$CI_COMMIT_TAG ; fi;
     - echo $DEPLOY_TAG
     - docker build --network host -t $REPOSITORY_URL:latest .
