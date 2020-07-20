@@ -1,18 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Container,
-  Grid,
-  Select,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  TextField,
-  InputAdornment
-} from '@material-ui/core';
+import { Container, Grid, TextField, InputAdornment } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import { useRouteMatch, Redirect, Link } from 'react-router-dom';
 import { Empty } from 'antd';
-
 import { useTypedSelector, useAppDispatch } from '../../store';
 import { getMediaAssets } from '../../store/data';
 import { ImageCard } from './imageCard';
@@ -38,9 +28,9 @@ const ImageGallery = () => {
 
   const filteredPhotos = useTypedSelector(({ data }) =>
     data.mediaAssets.filter((photo) =>
-      searchTerm == ''
-        ? photo
-        : photo.remote_path.toLowerCase().includes(searchTerm.toLowerCase())
+      searchTerm
+        ? photo.remote_path.toLowerCase().includes(searchTerm.toLowerCase())
+        : true
     )
   );
 
