@@ -17,11 +17,19 @@ import StatusField from './StatusField';
 import { ConformationDialog } from '../shared';
 
 export const TasksStatuses: React.FC = () => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
-  const [openConformationDialog, setOpenConformationDialog] = React.useState(
-    false
+  const dispatch = useAppDispatch();
+  const areTasksLoading = useTypedSelector(
+    ({ tasksStatuses }) => tasksStatuses.loading
   );
+  const tasks = useTypedSelector(({ tasksStatuses }) => tasksStatuses.tasks);
+  const tasksCount = useTypedSelector(
+    ({ tasksStatuses }) => tasksStatuses.count
+  );
+  const tableUpdated = useTypedSelector(
+    ({ tasksStatuses }) => tasksStatuses.actualView
+  );
+  const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
+  const [openConformationDialog, setOpenConformationDialog] = useState(false);
 
   const [tableState, setTableState] = useState<TableStateProps>({
     page: 1,
@@ -33,17 +41,6 @@ export const TasksStatuses: React.FC = () => {
     sortOrder: undefined,
     sortField: undefined
   });
-
-  const areTasksLoading = useTypedSelector(
-    (state) => state.tasksStatuses.loading
-  );
-  const tasks = useTypedSelector((state) => state.tasksStatuses.tasks);
-  const tasksCount = useTypedSelector((state) => state.tasksStatuses.count);
-  const tableUpdated = useTypedSelector(
-    (state) => state.tasksStatuses.actualView
-  );
-
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getLabelingTasks(tableState));
@@ -162,36 +159,17 @@ export const TasksStatuses: React.FC = () => {
     }));
   };
 
-  const onSelectChange = (values: Array<number & never>) => {
-    setSelectedRowKeys(values);
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange
-  };
-
   const handleArchive: any = () => {
-    if (selectedRowKeys.length > 0) {
-      setOpenConformationDialog(false);
-      dispatch(archiveLabelingTask(selectedRowKeys)).finally(() => {
-        setSelectedRowKeys([]);
-      });
-    }
+    setOpenConformationDialog(false);
+    dispatch(archiveLabelingTask(selectedRowKeys)).finally(() => {
+      setSelectedRowKeys([]);
+    });
   };
 
   const handleRetry: any = () => {
-    if (selectedRowKeys.length > 0) {
-      dispatch(retryLabelingTask(selectedRowKeys)).finally(() => {
-        setSelectedRowKeys([]);
-      });
-    }
-  };
-
-  const handleDisabled = selectedRowKeys.length <= 0;
-
-  const handleRefresh = () => {
-    dispatch(getLabelingTasks(tableState));
+    dispatch(retryLabelingTask(selectedRowKeys)).finally(() => {
+      setSelectedRowKeys([]);
+    });
   };
 
   const onShowSizeChange = (current: any, pageSize: any) => {
@@ -204,35 +182,41 @@ export const TasksStatuses: React.FC = () => {
     });
   };
 
-  const handleDialogOpen = () => {
-    setOpenConformationDialog(true);
-  };
-
   return (
     <div className={'task-statuses'}>
       <Box display="flex" alignItems="center" marginBottom={1}>
         <DropdownButton
-          onArchive={handleDialogOpen}
-          onRetry={handleRetry}
-          disabled={handleDisabled}
+          handleArchive={() => {
+            setOpenConformationDialog(true);
+          }}
+          handleRetry={handleRetry}
+          selectedRowKeys={selectedRowKeys}
         />
-        <IconButton aria-label="refresh" onClick={handleRefresh}>
+        <IconButton
+          aria-label="refresh"
+          onClick={() => {
+            dispatch(getLabelingTasks(tableState));
+          }}
+        >
           <Refresh />
         </IconButton>
       </Box>
 
       <Table
         columns={TASK_STATUSES_COLUMNS as any}
-        rowKey={(record) => record.id}
-        rowSelection={rowSelection as any}
-        rowClassName={(record) => `task-status-${record.status}`}
+        rowKey={({ id }) => id}
+        rowSelection={{
+          selectedRowKeys,
+          onChange: setSelectedRowKeys as any
+        }}
+        rowClassName={({ status }) => `task-status-${status}`}
         dataSource={tasks}
         pagination={{
           pageSize: tableState.rowsPerPage,
           current: tableState.page,
           total: tasksCount,
           showSizeChanger: true,
-          onShowSizeChange: onShowSizeChange
+          onShowSizeChange
         }}
         loading={areTasksLoading}
         onChange={handleTableChange as any}
