@@ -40,15 +40,16 @@ const menu: any = (
 interface DropdownButtonProps {
   handleArchive: () => void;
   handleRetry: () => void;
-  selectedRowKeys: number[];
 }
 
 export const DropdownButton: React.FC<DropdownButtonProps> = ({
   handleArchive,
-  handleRetry,
-  selectedRowKeys
+  handleRetry
 }) => {
-  const tasks = useTypedSelector((state) => state.tasksStatuses.tasks);
+  const tasks = useTypedSelector(({ tasksStatuses }) => tasksStatuses.tasks);
+  const selectedRowKeys = useTypedSelector(
+    ({ tasksStatuses }) => tasksStatuses.selectedRowKeys
+  );
 
   return (
     <Dropdown
