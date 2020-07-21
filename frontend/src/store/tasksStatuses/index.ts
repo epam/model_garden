@@ -1,16 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { AppState } from '../index';
 import { TableStateProps, LabelingTaskStatus } from '../../models';
 import { getLabelingTasksRequest, archiveTaskLabelingRequest, retryLabelingTaskRequest } from '../../api';
 
-export interface TasksStatusesState {
-  loading: boolean;
-  actualView: boolean;
-  count: number;
-  tasks: LabelingTaskStatus[];
-}
-
 export const getLabelingTasks = createAsyncThunk(
-  'fetchLabelingTask',
+  'taskStatuses/fetchLabelingTask',
   async ({ page, rowsPerPage, searchProps, filterStatus, sortOrder, sortField }: TableStateProps) => {
     const params: any = {
       page,
@@ -34,25 +28,44 @@ export const getLabelingTasks = createAsyncThunk(
   }
 );
 
-export const archiveLabelingTask = createAsyncThunk('archiveLabelingTask', async (taskIds: Array<number>) => {
-  const response = await archiveTaskLabelingRequest(taskIds);
+export const archiveLabelingTask = createAsyncThunk('taskStatuses/archiveLabelingTask', async (_, { getState }) => {
+  const { tasksStatuses } = getState() as AppState;
+  const response = await archiveTaskLabelingRequest(tasksStatuses.selectedRowKeys);
   return response.data.results;
 });
 
-export const retryLabelingTask = createAsyncThunk('retryLabelingTask', async (taskIds: Array<number>, tableState) => {
-  const response = await retryLabelingTaskRequest(taskIds);
+export const retryLabelingTask = createAsyncThunk('taskStatuses/retryLabelingTask', async (_, { getState }) => {
+  const { tasksStatuses } = getState() as AppState;
+  const response = await retryLabelingTaskRequest(tasksStatuses.selectedRowKeys);
   return response.data.results;
 });
 
+export interface TasksStatusesState {
+  loading: boolean;
+  actualView: boolean;
+  count: number;
+  tasks: LabelingTaskStatus[];
+  selectedRowKeys: number[];
+  openConformationDialog: boolean;
+}
 const tasksStatusesSlice = createSlice({
-  name: 'taskStatus',
+  name: 'taskStatuses',
   initialState: {
     loading: false,
     actualView: false,
     count: 0,
-    tasks: []
+    tasks: [],
+    selectedRowKeys: [],
+    openConformationDialog: false
   } as TasksStatusesState,
-  reducers: {},
+  reducers: {
+    setSelectedRowKeys: (state, { payload }) => {
+      state.selectedRowKeys = payload;
+    },
+    setOpenConformationDialog: (state, { payload }) => {
+      state.openConformationDialog = payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getLabelingTasks.pending, (state) => {
@@ -65,20 +78,31 @@ const tasksStatusesSlice = createSlice({
         state.tasks = action.payload.tasks;
       })
       .addCase(archiveLabelingTask.pending, (state) => {
+        state.openConformationDialog = false;
         state.loading = true;
+      })
+      .addCase(archiveLabelingTask.rejected, (state) => {
+        state.selectedRowKeys = [];
       })
       .addCase(archiveLabelingTask.fulfilled, (state) => {
         state.loading = false;
         state.actualView = false;
+        state.selectedRowKeys = [];
       })
+
       .addCase(retryLabelingTask.pending, (state) => {
         state.loading = false;
         state.actualView = false;
       })
+      .addCase(retryLabelingTask.rejected, (state) => {
+        state.selectedRowKeys = [];
+      })
       .addCase(retryLabelingTask.fulfilled, (state) => {
         state.actualView = false;
+        state.selectedRowKeys = [];
       });
   }
 });
 
 export const tasksStatusesReducer = tasksStatusesSlice.reducer;
+export const { setSelectedRowKeys, setOpenConformationDialog } = tasksStatusesSlice.actions;

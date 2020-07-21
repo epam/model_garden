@@ -1,13 +1,26 @@
 import React from 'react';
 import { Menu, Dropdown, Button } from 'antd';
+import { useTypedSelector } from '../../store';
 import 'antd/dist/antd.css';
 import './TasksStatuses.css';
 
 const menu: any = (
-  handleArchive: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
-  handleRetry: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
-  isArchiveDisabled: any
+  handleArchive: any,
+  handleRetry: any,
+  selectedRowKeys: number[],
+  tasks: any[]
 ) => {
+  const SelectedTasks = tasks.filter((task) =>
+    selectedRowKeys.includes(task.id)
+  );
+  const isArchiveDisabled =
+    !SelectedTasks.length ||
+    SelectedTasks.some((task) => task.status === 'archived');
+
+  const isRetryDisabled =
+    !SelectedTasks.length ||
+    SelectedTasks.some((task) => task.status !== 'failed');
+
   return (
     <Menu>
       <Menu.Item className="action-menu-item">
@@ -16,7 +29,7 @@ const menu: any = (
         </Button>
       </Menu.Item>
       <Menu.Item className="action-menu-item">
-        <Button onClick={handleRetry} disabled={isArchiveDisabled}>
+        <Button onClick={handleRetry} disabled={isRetryDisabled}>
           Retry
         </Button>
       </Menu.Item>
@@ -25,20 +38,23 @@ const menu: any = (
 };
 
 interface DropdownButtonProps {
-  onArchive: () => void;
-  onRetry: () => void;
-  disabled: any;
+  handleArchive: () => void;
+  handleRetry: () => void;
 }
 
 export const DropdownButton: React.FC<DropdownButtonProps> = ({
-  onArchive,
-  onRetry,
-  disabled
+  handleArchive,
+  handleRetry
 }) => {
+  const tasks = useTypedSelector(({ tasksStatuses }) => tasksStatuses.tasks);
+  const selectedRowKeys = useTypedSelector(
+    ({ tasksStatuses }) => tasksStatuses.selectedRowKeys
+  );
+
   return (
     <Dropdown
       className="action-button"
-      overlay={menu(onArchive, onRetry, disabled)}
+      overlay={menu(handleArchive, handleRetry, selectedRowKeys, tasks)}
       placement="bottomLeft"
     >
       <Button>Actions</Button>
