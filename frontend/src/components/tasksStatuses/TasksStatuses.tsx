@@ -15,6 +15,10 @@ import { TableStateProps } from '../../models';
 import { GetColumnSearchProps } from './GetColumnSearchProps';
 import StatusField from './StatusField';
 import { ConformationDialog } from '../shared';
+import {
+  setSelectedRowKeys,
+  setOpenConformationDialog
+} from '../../store/tasksStatuses';
 
 export const TasksStatuses: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -22,14 +26,18 @@ export const TasksStatuses: React.FC = () => {
     ({ tasksStatuses }) => tasksStatuses.loading
   );
   const tasks = useTypedSelector(({ tasksStatuses }) => tasksStatuses.tasks);
+  const openConformationDialog = useTypedSelector(
+    ({ tasksStatuses }) => tasksStatuses.openConformationDialog
+  );
   const tasksCount = useTypedSelector(
     ({ tasksStatuses }) => tasksStatuses.count
   );
   const tableUpdated = useTypedSelector(
     ({ tasksStatuses }) => tasksStatuses.actualView
   );
-  const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
-  const [openConformationDialog, setOpenConformationDialog] = useState(false);
+  const selectedRowKeys = useTypedSelector(
+    ({ tasksStatuses }) => tasksStatuses.selectedRowKeys
+  );
 
   const [tableState, setTableState] = useState<TableStateProps>({
     page: 1,
@@ -159,19 +167,6 @@ export const TasksStatuses: React.FC = () => {
     }));
   };
 
-  const handleArchive: any = () => {
-    setOpenConformationDialog(false);
-    dispatch(archiveLabelingTask(selectedRowKeys)).finally(() => {
-      setSelectedRowKeys([]);
-    });
-  };
-
-  const handleRetry: any = () => {
-    dispatch(retryLabelingTask(selectedRowKeys)).finally(() => {
-      setSelectedRowKeys([]);
-    });
-  };
-
   const onShowSizeChange = (current: any, pageSize: any) => {
     setTableState((prevState: any) => {
       return {
@@ -186,11 +181,10 @@ export const TasksStatuses: React.FC = () => {
     <div className={'task-statuses'}>
       <Box display="flex" alignItems="center" marginBottom={1}>
         <DropdownButton
-          handleArchive={() => {
-            setOpenConformationDialog(true);
+          handleArchive={() => dispatch(setOpenConformationDialog(true))}
+          handleRetry={() => {
+            dispatch(retryLabelingTask());
           }}
-          handleRetry={handleRetry}
-          selectedRowKeys={selectedRowKeys}
         />
         <IconButton
           aria-label="refresh"
@@ -207,7 +201,7 @@ export const TasksStatuses: React.FC = () => {
         rowKey={({ id }) => id}
         rowSelection={{
           selectedRowKeys,
-          onChange: setSelectedRowKeys as any
+          onChange: (values) => dispatch(setSelectedRowKeys(values))
         }}
         rowClassName={({ status }) => `task-status-${status}`}
         dataSource={tasks}
@@ -227,8 +221,12 @@ export const TasksStatuses: React.FC = () => {
         closeButton="No, Keep Task(s)"
         confirmButton="Yes, Archive Task(s)"
         open={openConformationDialog}
-        setOpen={setOpenConformationDialog}
-        handleConfirm={handleArchive}
+        setOpen={(isOpen: boolean) =>
+          dispatch(setOpenConformationDialog(isOpen))
+        }
+        handleConfirm={() => {
+          dispatch(archiveLabelingTask());
+        }}
       >
         <p>Are you sure you want to archive selected tasks?</p>
       </ConformationDialog>
