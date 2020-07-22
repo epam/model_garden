@@ -4,7 +4,7 @@ import { getLabelingTasksRequest } from '../../api';
 
 export const getDatasetsTasks = createAsyncThunk('getDatasetsTasks', async (params: Object) => {
   const response = await getLabelingTasksRequest(params);
-  return response;
+  return response.tasks;
 });
 
 const gallerySlice = createSlice({
@@ -15,7 +15,7 @@ const gallerySlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getDatasetsTasks.fulfilled, (state, action) => {
-      state.tasks = action.payload.tasks;
+      state.tasks = action.payload;
     });
   }
 });
