@@ -5,15 +5,18 @@ import { useRouteMatch, Redirect, Link } from 'react-router-dom';
 import { Empty } from 'antd';
 import { useTypedSelector, useAppDispatch } from '../../store';
 import { getMediaAssets } from '../../store/data';
+import { getDatasetsTasks } from '../../store/gallery';
 import { ImageCard } from './ImageCard';
 import { ImageGalleryHeader } from './ImageGalleryHeader';
 import { Dataset } from '../../models';
+import { TasksTable } from './TasksTable';
 
 const ImageGallery = () => {
   const dispatch = useAppDispatch();
   const photos = useTypedSelector(({ data }) => data.mediaAssets);
   const datasets = useTypedSelector(({ data }) => data.datasets);
   const buckets = useTypedSelector(({ data }) => data.buckets);
+  const tasks = useTypedSelector(({ gallery }) => gallery.tasks);
 
   const {
     params: { datasetId }
@@ -40,6 +43,13 @@ const ImageGallery = () => {
     }
   }, [dispatch, datasetId, datasets.length]);
 
+  useEffect(() => {
+    //@todo: update once we will have API request by dataset Id
+    if (currentDataset?.path) {
+      dispatch(getDatasetsTasks({ dataset: currentDataset.path }));
+    }
+  }, [dispatch, currentDataset]);
+
   if (datasets.length === 0) {
     return <Redirect to="/gallery" />;
   }
@@ -54,6 +64,7 @@ const ImageGallery = () => {
         createdAt={currentDataset?.created_at}
       />
       <Container maxWidth={'xl'}>
+        <TasksTable tasks={tasks} />
         {!photos.length && (
           <Link
             to={{
