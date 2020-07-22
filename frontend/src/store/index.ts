@@ -7,6 +7,7 @@ import { mediaReducer } from './media';
 import { labelingTaskReducer } from './labelingTask';
 import { configureStore } from '@reduxjs/toolkit';
 import { tasksStatusesReducer } from './tasksStatuses';
+import { galleryReducer } from './gallery';
 
 const store = configureStore({
   reducer: {
@@ -14,7 +15,8 @@ const store = configureStore({
     data: dataReducer,
     media: mediaReducer,
     labelingTask: labelingTaskReducer,
-    tasksStatuses: tasksStatusesReducer
+    tasksStatuses: tasksStatusesReducer,
+    gallery: galleryReducer
   },
   devTools: process.env.NODE_ENV !== 'production'
 });
