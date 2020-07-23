@@ -1,39 +1,45 @@
-# EPAM Model Garden
+<div align="center"><img src="https://es.wiki.elvenar.com/images/0/04/Glossy_Garden.png" width="50%"/></div>
+
+<div align="center"><h2>🏷️ Model Garden</h2></div>
+
+
+**‍🖌️ Material Design**: **Intuitive** UI based on the world's most widespread design language.
+
+**🏃 Single Page Application**: Fast, responsive ux to get what you need done without waiting for fullscreen refreshes.
+
+**🐍 Python Django and Postgres**
 
 ## Installation
-Install Python3, pip, virtualenv:
-https://phoenixnap.com/kb/how-to-install-python-3-windows
 
-- virtualenv .env
-- .\.env\Scripts\activate
-- pip3 install -r requirements.txt
+- [CVAT Installation Guide](cvat/README.md)
+- [Installation guide for Backend developer](backend/README.md)
+- [Installation guide for Frontend developer](frontend/README.md)
 
-## Debug
-See https://automationpanda.com/2017/09/14/django-projects-in-pycharm-community-edition/
+## Run Application with Docker Compose
+```
+$ docker-compose up -d
 
-## Installation and running backend
+Creating network "model_garden_default" with the default driver
+...
+Creating model_garden_postgres_1 ... done
+Creating model_garden_backend_1  ... done
+Creating model_garden_frontend_1 ... done
+```
 
-Set up environment variables:
+### Check Running Docker Containers
+```
+$ docker-compose ps
 
-BACKEND_HOST
-BACKEND_PORT
+         Name                        Command               State           Ports         
+-----------------------------------------------------------------------------------------
+model_garden_backend_1    bash -c ./manage.py migrat ...   Up      0.0.0.0:9000->9000/tcp
+model_garden_frontend_1   /bin/sh -c nginx -g 'daemo ...   Up      0.0.0.0:80->80/tcp    
+model_garden_postgres_1   docker-entrypoint.sh postgres    Up      0.0.0.0:5444->5432/tcp
+```
 
-CVAT_HOST
-CVAT_PORT
-CVAT_ROOT_USER_NAME
-CVAT_ROOT_USER_PASSWORD
+## Deployment
 
-MONGO_URI
 
-AWS_ACCESS_KEY_ID
-AWS_SECRET_KEY
+- [Deployment guide](deploy/README.md)
 
-- cd ./backend
-- npm install
-- npm start
-
-## Installation and running frontend
-
-- cd ./frontend
-- npm install
-- npm start
+  The build pipeline is started automatically after commits to **master** and **develop** branches

@@ -1,0 +1,12 @@
+[
+{
+    "model": "model_garden.bucket",
+    "pk": 1,
+    "fields": {
+        "created_at": "2020-05-07T21:50:07.413Z",
+        "updated_at": "2020-05-07T21:50:07.413Z",
+        "name": "epam-mlvc-modeldata-dev",
+        "url": "https://d3juz9xdzxcjk0.cloudfront.net/"
+    }
+}
+]
