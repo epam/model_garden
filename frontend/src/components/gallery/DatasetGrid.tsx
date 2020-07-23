@@ -133,10 +133,8 @@ export const DatasetGrid = ({ searchTerm }: any) => {
                     <dd>{dataset.items_number}</dd>
                   </dl>
                   <dl>
-                    <dt>XML</dt>
-                    <dd>
-                      {dataset.xmls_number}/{dataset.items_number}
-                    </dd>
+                    <dt>LABELS</dt>
+                    <dd>{dataset.xmls_number}</dd>
                   </dl>
                 </div>
               </div>
