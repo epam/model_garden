@@ -5,7 +5,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { useLocation, Redirect } from 'react-router-dom';
 import { ErrorAlert } from './components';
 import { getBuckets, getLabelingToolUsers } from './store/data';
-import { Tabs, LinkTabs } from './routerconfig';
+import { Header, TabsContent } from './routerconfig';
 import theme from './theme';
 
 const App: FC = () => {
@@ -26,9 +26,9 @@ const App: FC = () => {
       <CssBaseline />
       <ErrorAlert />
       <AppBar position="sticky">
-        <LinkTabs pathname={pathname} />
+        <Header pathname={pathname} />
       </AppBar>
-      <Tabs />
+      <TabsContent />
     </ThemeProvider>
   );
 };
