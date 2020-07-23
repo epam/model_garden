@@ -1,44 +1,70 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<div align="center"><img src="https://es.wiki.elvenar.com/images/0/04/Glossy_Garden.png" width="50%"/></div>
 
-## Available Scripts
+<div align="center"><h2>🏷️ Model Garden</h2></div>
+<img src="https://img.shields.io/badge/Code_Style-prettier-ff69b4.svg"/>
+<img src="https://img.shields.io/badge/State-redux-44CC11.svg"/>
+<img src="https://img.shields.io/badge/Routing-react_router-007EC6.svg"/>
 
-In the project directory, you can run:
+**‍🖌️ Material Design**: Intuitive UI based on the world's most widespread design language.
 
-### `npm start`
+**🏃 Single Page Application**: Fast, responsive UX increase productivity and avoids fullscreen refreshes.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+**🐍 Python Django and Postgres**
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## Table of Contents
+- [Install docker](https://docs.docker.com/get-docker/)
+- [Run Database and Backend from Docker](#run-database-and-backend-from-docker)
+- [Setup Front-end Locally](#setup-front-end-locally)
 
-### `npm test`
+  
+ - [Learn More](#learn-more)
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Run Database and Backend from Docker
 
-### `npm run build`
+1. Create [<model_garden_root>/backend/.env](.env). Ask colleagues to share this
+   file content.
+2. Build Docker Image:
+   [<model_garden_root>/backend/README.md#build-docker-image](../backend/README.md#build-docker-image).
+3. Run the database container:
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+docker-compose up -d postgres
+```
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+4. Run the backend container:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+docker-compose up -d backend
+```
+5. Run the worker container:
 
-### `npm run eject`
+```
+docker-compose up -d worker 
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Setup Front-end Locally
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. Add [<model_garden_root>/frontend/.env](.env) if absent.
+2. Setup local backend port in [<model_garden_root>/frontend/.env](.env):
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```
+PORT=4200
+REACT_APP_BACKEND_PORT=9000
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+3. Install packages in [<model_garden_root>/frontend/](frontend) dir
+
+```
+npm install
+```
+
+4. Run front-end in [<model_garden_root>/frontend/](frontend) dir
+
+```
+npm start
+```
 
 ## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+This project was bootstrapped with
+[Create React App](https://github.com/facebook/create-react-app).

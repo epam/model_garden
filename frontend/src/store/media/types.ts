@@ -1,23 +1,24 @@
-export const SET_MEDIA_FILES = 'SET_MEDIA_FILES';
-
-export const UPLOAD_MEDIA_FILES_START = 'UPLOAD_MEDIA_FILES_START';
-export const UPLOAD_MEDIA_FILES_SUCCESS = 'UPLOAD_MEDIA_FILES_SUCCESS';
-export interface setMediaFiles {
-  type: typeof SET_MEDIA_FILES;
-  mediaFiles: File[];
+export interface MediaState {
+  addedMediaAssets?: number;
+  addingExistingDataSet: boolean;
+  batchName: string;
+  photos: [{}?];
 }
 
-export interface uploadMediaStart {
-  type: typeof UPLOAD_MEDIA_FILES_START;
+export interface UploadFiles {
+  files: File[];
+  bucketId: string;
+  path: string;
 }
 
-export interface uploadMediaSuccess {
-  type: typeof UPLOAD_MEDIA_FILES_SUCCESS;
-  butchName: string;
+export interface AddExistingDataset {
+  bucketId: string;
+  path: string;
 }
 
-export type MediaActionTypes =
-  | setMediaFiles
-  | uploadMediaStart
-  | uploadMediaSuccess;
-  
+export const initialState: MediaState = {
+  addedMediaAssets: undefined,
+  addingExistingDataSet: false,
+  batchName: '',
+  photos: []
+};

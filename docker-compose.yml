@@ -1,0 +1,58 @@
+version: '3'
+
+volumes:
+  postgres:
+
+services:
+  postgres:
+    image: postgres:12-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: model_garden
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_PASSWORD: ""
+      POSTGRES_USER: postgres
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - 5444:5432
+  backend:
+    image: model_garden:latest
+    build:
+      context: backend
+    restart: always
+    command: bash -c "python3 manage.py migrate && python3 manage.py loaddata default_bucket && python3 manage.py runserver 0.0.0.0:9000"
+    environment:
+      DJANGO_DB_HOST: postgres
+      DJANGO_DB_PORT: 5432
+      DJANGO_SETTINGS_MODULE: model_garden.settings
+    depends_on:
+      - postgres
+      - worker
+    ports:
+      - 9000:9000
+    volumes:
+      - ./backend:/src:rw,cached
+  worker:
+    image: model_garden:latest
+    build:
+      context: backend
+    restart: always
+    command: python3 worker.py
+    environment:
+      DJANGO_DB_HOST: postgres
+      DJANGO_DB_PORT: 5432
+      DJANGO_SETTINGS_MODULE: model_garden.settings
+    depends_on:
+      - postgres
+    volumes:
+      - ./backend:/src:rw,cached
+  frontend:
+    image: model_garden_frontend:latest
+    build:
+      context: frontend
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - backend

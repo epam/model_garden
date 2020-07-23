@@ -1,39 +1,30 @@
-import { createStore, compose, applyMiddleware, Action, combineReducers } from 'redux';
-import thunk, { ThunkAction } from 'redux-thunk';
-import { errorReducer, ErrorState } from './error';
-import { authReducer, AuthState } from './auth';
-import { mainReducer, MainState } from './main';
-import { mediaReducer, MediaState } from './media';
-import { labelingTaskReducer, LabelingTasksState } from './labelingTask';
+import { Action } from 'redux';
+import { ThunkAction } from 'redux-thunk';
+import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
+import { errorReducer } from './error';
+import { dataReducer } from './data';
+import { mediaReducer } from './media';
+import { labelingTaskReducer } from './labelingTask';
+import { configureStore } from '@reduxjs/toolkit';
+import { tasksStatusesReducer } from './tasksStatuses';
+import { galleryReducer } from './gallery';
 
-export interface AppState {
-  error: ErrorState;
-  auth: AuthState;
-  main: MainState;
-  media: MediaState;
-  labelingTask: LabelingTasksState;
-}
-
-// property should be declared to soothe typescript struggles
-// @see https://stackoverflow.com/questions/52800877/has-anyone-came-across-this-error-in-ts-with-redux-dev-tools-property-redux
-// @see https://stackoverflow.com/questions/12709074/how-do-you-explicitly-set-a-new-property-on-window-in-typescript
-declare global {
-  interface Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: typeof compose;
-  }
-}
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-const reducers = combineReducers<AppState>({
-  error: errorReducer,
-  auth: authReducer,
-  main: mainReducer,
-  media: mediaReducer,
-  labelingTask: labelingTaskReducer,
+const store = configureStore({
+  reducer: {
+    error: errorReducer,
+    data: dataReducer,
+    media: mediaReducer,
+    labelingTask: labelingTaskReducer,
+    tasksStatuses: tasksStatusesReducer,
+    gallery: galleryReducer
+  },
+  devTools: process.env.NODE_ENV !== 'production'
 });
 
-const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
-
-export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppState, null, Action<string>>;
+export type AppState = ReturnType<typeof store.getState>;
+export type AppThunk = ThunkAction<void, AppState, unknown, Action<string>>;
+export type AppDispatch = typeof store.dispatch;
+export const useAppDispatch = () => useDispatch<AppDispatch>(); // Export a hook that can be reused to resolve types
+export const useTypedSelector: TypedUseSelectorHook<AppState> = useSelector;
 
 export default store;
