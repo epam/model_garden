@@ -307,7 +307,6 @@ export const Task: React.FC<TaskProps> = ({
           </Button>
         </form>
       </FormContainer>
-
       <Notification newTaskUrl={newTaskUrl} onClose={clearTaskData} />
     </>
   );
