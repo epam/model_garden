@@ -72,7 +72,10 @@ export const DropZone: React.FC<DropZoneProps> = ({
         {isDragActive ? (
           <>Drop the files here ...</>
         ) : (
-          <>Drag 'n' drop some files here, or click to select files</>
+          <>
+            Drag 'n' drop some files here, or click to select files on your
+            computer
+          </>
         )}
       </p>
     </section>

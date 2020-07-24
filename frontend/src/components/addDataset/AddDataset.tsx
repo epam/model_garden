@@ -20,11 +20,10 @@ import { SnackbarAlert } from '../snackbarAlert';
 import {
   UploadPaper,
   UploadDescription,
-  Alert,
   FormData,
-  Severity,
   BucketsSelect
 } from './utils';
+import { Alert, Severity } from './../../models';
 import { UploadFiles } from './uploadImages';
 
 const alertState: Alert = {
