@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { useRouteMatch, Redirect, Link } from 'react-router-dom';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { Container, Grid, TextField, InputAdornment } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-import { useRouteMatch, Redirect, Link } from 'react-router-dom';
 import { Empty } from 'antd';
 import { useTypedSelector, useAppDispatch } from '../../store';
+import { Dataset, Severity, Alert } from '../../models';
 import { getMediaAssets } from '../../store/data';
 import { getDatasetsTasks } from '../../store/gallery';
+import { uploadMediaFiles } from '../../store/media';
 import { ImageCard } from './ImageCard';
 import { ImageGalleryHeader } from './ImageGalleryHeader';
-import { Dataset } from '../../models';
 import { TasksTable } from './TasksTable';
+import { DropZone, ProgressLoader } from '../shared';
+import { SnackbarAlert } from '../snackbarAlert';
 
 const ImageGallery = () => {
   const dispatch = useAppDispatch();
@@ -17,6 +21,16 @@ const ImageGallery = () => {
   const datasets = useTypedSelector(({ data }) => data.datasets);
   const buckets = useTypedSelector(({ data }) => data.buckets);
   const tasks = useTypedSelector(({ gallery }) => gallery.tasks);
+
+  const alertState: Alert = {
+    show: false,
+    severity: undefined,
+    message: ''
+  };
+
+  const [notification, setNotification] = useState(alertState);
+  const [files, setFiles] = useState<File[]>([]);
+  const [showLoader, setShowLoader] = useState(false);
 
   const {
     params: { datasetId }
@@ -37,6 +51,20 @@ const ImageGallery = () => {
     )
   );
 
+  const raiseAlert = (severity: Severity, message: string) => {
+    setNotification({ show: true, severity, message });
+  };
+  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setNotification((prevState) => ({
+      ...prevState,
+      show: false,
+      message: ''
+    }));
+  };
+
   useEffect(() => {
     if (datasets.length > 0) {
       dispatch(getMediaAssets({ datasetId: parseInt(datasetId) }));
@@ -49,6 +77,29 @@ const ImageGallery = () => {
       dispatch(getDatasetsTasks({ dataset: currentDataset.path }));
     }
   }, [dispatch, currentDataset]);
+
+  useEffect(() => {
+    if (currentBucket?.id && currentDataset?.path && files.length > 0) {
+      setShowLoader(true);
+      dispatch(
+        uploadMediaFiles({
+          files,
+          bucketId: currentBucket.id,
+          path: currentDataset.path
+        })
+      )
+        .then(unwrapResult)
+        .then(({ message }) => {
+          raiseAlert('success', message);
+          dispatch(getMediaAssets({ datasetId: parseInt(datasetId) }));
+          setFiles([]);
+        })
+        .catch(({ message }) => {
+          raiseAlert('error', message);
+        })
+        .finally(() => setShowLoader(false));
+    }
+  }, [dispatch, files, currentBucket, currentDataset, datasetId]);
 
   if (datasets.length === 0) {
     return <Redirect to="/gallery" />;
@@ -83,6 +134,7 @@ const ImageGallery = () => {
           <TextField
             name="path"
             label="Search By File Name"
+            size="small"
             value={searchTerm}
             disabled={!datasetId}
             onChange={(e: any) => {
@@ -98,6 +150,9 @@ const ImageGallery = () => {
           />
         </Grid>
         <Grid container spacing={2}>
+          <Grid item xs={6} sm={4} md={3} lg={2}>
+            <DropZone setFiles={setFiles} />
+          </Grid>
           {filteredPhotos.map((image: any) => (
             <Grid item xs={6} sm={4} md={3} lg={2} key={image.remote_path}>
               <ImageCard
@@ -108,6 +163,14 @@ const ImageGallery = () => {
           ))}
         </Grid>
       </Container>
+      <ProgressLoader show={showLoader} />
+      <SnackbarAlert
+        open={notification.show}
+        onClose={handleClose}
+        severity={notification.severity}
+      >
+        {notification.message}
+      </SnackbarAlert>
     </>
   );
 };
