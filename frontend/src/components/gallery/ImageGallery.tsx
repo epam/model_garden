@@ -11,7 +11,7 @@ import { uploadMediaFiles } from '../../store/media';
 import { ImageCard } from './ImageCard';
 import { ImageGalleryHeader } from './ImageGalleryHeader';
 import { TasksTable } from './TasksTable';
-import { DropZone, ProgressLoader, SnackbarAlert } from '../shared';
+import { DropZone, SnackbarAlert } from '../shared';
 
 const ImageGallery = () => {
   const dispatch = useAppDispatch();
@@ -28,7 +28,6 @@ const ImageGallery = () => {
 
   const [notification, setNotification] = useState(alertState);
   const [files, setFiles] = useState<File[]>([]);
-  const [showLoader, setShowLoader] = useState(false);
 
   const {
     params: { datasetId }
@@ -78,7 +77,6 @@ const ImageGallery = () => {
 
   useEffect(() => {
     if (currentBucket?.id && currentDataset?.path && files.length > 0) {
-      setShowLoader(true);
       dispatch(
         uploadMediaFiles({
           files,
@@ -94,8 +92,7 @@ const ImageGallery = () => {
         })
         .catch(({ message }) => {
           raiseAlert('error', message);
-        })
-        .finally(() => setShowLoader(false));
+        });
     }
   }, [dispatch, files, currentBucket, currentDataset, datasetId]);
 
@@ -161,7 +158,6 @@ const ImageGallery = () => {
           ))}
         </Grid>
       </Container>
-      <ProgressLoader show={showLoader} />
       <SnackbarAlert
         open={notification.show}
         onClose={handleClose}
