@@ -6,8 +6,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import { Empty } from 'antd';
 import { useTypedSelector, useAppDispatch } from '../../store';
 import { Dataset, Severity, Alert } from '../../models';
-import { getMediaAssets } from '../../store/data';
-import { getDatasetsTasks } from '../../store/gallery';
+import { getDatasetsTasks, getMediaAssets } from '../../store/gallery';
 import { uploadMediaFiles } from '../../store/media';
 import { ImageCard } from './ImageCard';
 import { ImageGalleryHeader } from './ImageGalleryHeader';
@@ -16,7 +15,7 @@ import { DropZone, ProgressLoader, SnackbarAlert } from '../shared';
 
 const ImageGallery = () => {
   const dispatch = useAppDispatch();
-  const photos = useTypedSelector(({ data }) => data.mediaAssets);
+  const photos = useTypedSelector(({ gallery }) => gallery.mediaAssets);
   const datasets = useTypedSelector(({ data }) => data.datasets);
   const buckets = useTypedSelector(({ data }) => data.buckets);
   const tasks = useTypedSelector(({ gallery }) => gallery.tasks);
@@ -42,8 +41,8 @@ const ImageGallery = () => {
   ); //@todo: update once we change arrays to object
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredPhotos = useTypedSelector(({ data }) =>
-    data.mediaAssets.filter((photo) =>
+  const filteredPhotos = useTypedSelector(({ gallery }) =>
+    gallery.mediaAssets.filter((photo) =>
       searchTerm
         ? photo.filename.toLowerCase().includes(searchTerm.toLowerCase())
         : true
