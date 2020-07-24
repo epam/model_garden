@@ -4,3 +4,4 @@ export * from './mediaAssets';
 export * from './labelingTask';
 export * from './labelingToolUser';
 export * from './tableStateProps';
+export * from './alert';
