@@ -54,7 +54,7 @@ export const TaskForm = ({ users }: any) => {
       user: DEFAULT_FORM_DATA.USER
     }
   });
-  w2;
+
   const { taskName: taskNameValue, user: userValue } = watch([
     'taskName',
     'user'
