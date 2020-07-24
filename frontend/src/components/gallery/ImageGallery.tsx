@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Grid, TextField, InputAdornment } from '@material-ui/core';
+import {
+  Container,
+  Grid,
+  TextField,
+  InputAdornment,
+  Button,
+  Modal
+} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
+import AddBoxIcon from '@material-ui/icons/AddBox';
 import { useRouteMatch, Redirect, Link } from 'react-router-dom';
 import { Empty } from 'antd';
 import { useTypedSelector, useAppDispatch } from '../../store';
@@ -10,6 +18,7 @@ import { ImageCard } from './ImageCard';
 import { ImageGalleryHeader } from './ImageGalleryHeader';
 import { Dataset } from '../../models';
 import { TasksTable } from './TasksTable';
+import { TaskForm } from './TaskForm';
 
 const ImageGallery = () => {
   const dispatch = useAppDispatch();
@@ -17,6 +26,7 @@ const ImageGallery = () => {
   const datasets = useTypedSelector(({ data }) => data.datasets);
   const buckets = useTypedSelector(({ data }) => data.buckets);
   const tasks = useTypedSelector(({ gallery }) => gallery.tasks);
+  const users = useTypedSelector(({ data }) => data.labelingToolUsers);
 
   const {
     params: { datasetId }
@@ -28,6 +38,7 @@ const ImageGallery = () => {
     (busket) => busket.id === currentDataset?.bucket
   ); //@todo: update once we change arrays to object
   const [searchTerm, setSearchTerm] = useState('');
+  const [openTaskModal, setOpenTaskModal] = useState(false);
 
   const filteredPhotos = useTypedSelector(({ data }) =>
     data.mediaAssets.filter((photo) =>
@@ -79,23 +90,35 @@ const ImageGallery = () => {
             <Empty description="this dataset doesn't have any images yet, click to upload" />
           </Link>
         )}
-        <Grid item xs={12} sm={6} md={3}>
-          <TextField
-            name="path"
-            label="Search By File Name"
-            value={searchTerm}
-            disabled={!datasetId}
-            onChange={(e: any) => {
-              setSearchTerm(e.target.value);
-            }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <SearchIcon />
-                </InputAdornment>
-              )
-            }}
-          />
+        <Grid container alignItems="center" spacing={2}>
+          <Grid item xs={12} sm={6} md={3}>
+            <TextField
+              name="path"
+              label="Search By File Name"
+              value={searchTerm}
+              disabled={!datasetId}
+              onChange={(e: any) => {
+                setSearchTerm(e.target.value);
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <SearchIcon />
+                  </InputAdornment>
+                )
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Button
+              color="primary"
+              variant="contained"
+              startIcon={<AddBoxIcon />}
+              onClick={(e: any) => setOpenTaskModal(true)}
+            >
+              CREATE NEW TASK
+            </Button>
+          </Grid>
         </Grid>
         <Grid container spacing={2}>
           {filteredPhotos.map((image: any) => (
@@ -107,6 +130,12 @@ const ImageGallery = () => {
             </Grid>
           ))}
         </Grid>
+        <Modal
+          open={openTaskModal}
+          onClose={(e: any) => setOpenTaskModal(false)}
+        >
+          {<TaskForm users={users} />}
+        </Modal>
       </Container>
     </>
   );
