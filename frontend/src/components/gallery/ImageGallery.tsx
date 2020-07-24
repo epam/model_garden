@@ -12,8 +12,7 @@ import { uploadMediaFiles } from '../../store/media';
 import { ImageCard } from './ImageCard';
 import { ImageGalleryHeader } from './ImageGalleryHeader';
 import { TasksTable } from './TasksTable';
-import { DropZone, ProgressLoader } from '../shared';
-import { SnackbarAlert } from '../snackbarAlert';
+import { DropZone, ProgressLoader, SnackbarAlert } from '../shared';
 
 const ImageGallery = () => {
   const dispatch = useAppDispatch();

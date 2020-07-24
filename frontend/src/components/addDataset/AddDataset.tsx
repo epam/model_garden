@@ -13,10 +13,9 @@ import {
   Typography
 } from '@material-ui/core';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { FormContainer, ProgressLoader } from '../shared';
+import { FormContainer, ProgressLoader, SnackbarAlert } from '../shared';
 import { useAppDispatch, useTypedSelector } from '../../store';
 import { addExistingDataset, uploadMediaFiles } from '../../store/media';
-import { SnackbarAlert } from '../snackbarAlert';
 import {
   UploadPaper,
   UploadDescription,
@@ -183,7 +182,6 @@ export const AddDataset: FC<any> = ({ match, location }) => {
               />
             </FormControl>
             <TextField
-              className="upload-images__settings-item"
               name="path"
               label="Dataset path"
               inputRef={register({

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Task, FormData } from './task';
-import { ProgressLoader } from '../shared';
-import { SnackbarAlert } from '../snackbarAlert';
+import { ProgressLoader, SnackbarAlert } from '../shared';
 import { connect, LabelingProps } from './util';
 
 const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
