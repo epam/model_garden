@@ -11,7 +11,7 @@ import {
   getLabelingTasks,
   retryLabelingTask
 } from '../../store/tasksStatuses';
-import { TableStateProps } from '../../models';
+import { TableStateProps, LabelingTaskStatus } from '../../models';
 import { GetColumnSearchProps } from './GetColumnSearchProps';
 import StatusField from './StatusField';
 import { ConformationDialog } from '../shared';
@@ -82,17 +82,23 @@ export const TasksStatuses: React.FC = () => {
       title: 'Task Name',
       dataIndex: 'name',
       key: 'name',
-      width: '20%',
+      width: '25%',
       sorter: true,
       showSorterTooltip: false,
       filtered: tableState.searchProps.name,
-      ...GetColumnSearchProps('name', updateSearchState, resetSearchState)
+      ...GetColumnSearchProps('name', updateSearchState, resetSearchState),
+      render: (name: string, record: LabelingTaskStatus) => {
+        return (
+          <a href={record.url} target="_blank" rel="noopener noreferrer">
+            {name}
+          </a>
+        );
+      }
     },
     {
       title: 'Dataset',
       dataIndex: 'dataset',
       key: 'dataset',
-      width: '20%',
       sorter: true,
       filtered: tableState.searchProps.dataset,
       ...GetColumnSearchProps('dataset', updateSearchState, resetSearchState)
@@ -104,23 +110,6 @@ export const TasksStatuses: React.FC = () => {
       sorter: true,
       filtered: tableState.searchProps.labeler,
       ...GetColumnSearchProps('labeler', updateSearchState, resetSearchState)
-    },
-    {
-      title: 'Url',
-      dataIndex: 'url',
-      key: 'url',
-      render: (value: string) => {
-        let hostname = value;
-        let res = /https?:\/\/(.+?)\/.*/.exec(value);
-        if (res && res.length === 2) {
-          hostname = res[1];
-        }
-        return (
-          <a href={value} target="_blank" rel="noopener noreferrer">
-            {hostname}
-          </a>
-        );
-      }
     },
     {
       title: 'Status',
