@@ -101,7 +101,12 @@ export const DatasetGrid = ({ searchTerm }: any) => {
 
   return (
     <Grid container spacing={2}>
-      {!datasets.length && <Empty className={classes.empty} />}
+      {!datasets.length && (
+        <Empty
+          description="To get started, select the buсket in the list on the top"
+          className={classes.empty}
+        />
+      )}
       {datasets.map((dataset: Dataset) => (
         <Grid item xs={6} sm={4} md={3} lg={2} key={dataset.id}>
           <Paper className={classes.card}>
