@@ -1,6 +1,7 @@
 import io
 import logging
 import zipfile
+from collections import defaultdict
 
 from django.db.utils import IntegrityError
 from django_filters import rest_framework as filters
@@ -16,6 +17,7 @@ from model_garden.serializers import (
   DatasetRawPathSerializer,
   DatasetSerializer,
   MediaAssetSerializer,
+  MediaAssetIDSerializer,
 )
 from model_garden.services.s3 import S3Client, image_ext_filter
 from model_garden.utils import strip_s3_key_prefix
@@ -162,3 +164,39 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
       data={'imported': assets_after - assets_before},
       status=status.HTTP_200_OK,
     )
+
+  @action(methods=["PATCH"], detail=False)
+  def delete(self, request):
+    media_asset_serializer = MediaAssetIDSerializer(data=request.data)
+    media_asset_serializer.is_valid(raise_exception=True)
+    media_assets_to_delete = MediaAsset.objects.filter(
+      pk__in=media_asset_serializer.data['id'],
+    )
+
+    bucket_map = defaultdict(list)
+    for asset in media_assets_to_delete:
+      bucket_map[asset.dataset.bucket.name].append(asset)
+
+    for bucket, assets in bucket_map.items():
+      self._delete_media_assets_from_s3(
+        bucket, [asset.full_path for asset in assets],
+      )
+    media_assets_to_delete.delete()
+
+    return Response(
+      status=status.HTTP_200_OK,
+    )
+
+  def _delete_media_assets_from_s3(self, bucket_name: str, assets_to_delete) -> None:
+    try:
+      S3Client(bucket_name=bucket_name).delete_files_concurrent(
+        bucket_name,
+        assets_to_delete,
+      )
+    except Exception as e:
+      logger.error(f"Failed to delete files from s3: {e}")
+      raise APIException(
+        detail={
+          'message': str(e),
+        },
+      )

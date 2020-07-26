@@ -17,6 +17,15 @@ class MediaAssetSerializer(serializers.ModelSerializer):
     )
 
   def get_remote_xml_path(self, obj: MediaAsset) -> str:
-      if obj.labeling_task and (obj.labeling_task.status == LabelingTaskStatus.SAVED
-                                or obj.labeling_task.status == LabelingTaskStatus.ARCHIVED):
-          return obj.remote_xml_path
+    if obj.labeling_task and (obj.labeling_task.status == LabelingTaskStatus.SAVED
+                              or obj.labeling_task.status == LabelingTaskStatus.ARCHIVED):
+      return obj.remote_xml_path
+
+
+class MediaAssetIDSerializer(serializers.Serializer):
+  id = serializers.ListField(
+    child=serializers.IntegerField(),
+    required=True,
+    allow_empty=False,
+    min_length=1,
+  )
