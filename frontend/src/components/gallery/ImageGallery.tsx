@@ -6,8 +6,7 @@ import {
   Grid,
   TextField,
   InputAdornment,
-  Button,
-  Modal
+  Button
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import AddBoxIcon from '@material-ui/icons/AddBox';
@@ -180,12 +179,13 @@ const ImageGallery = () => {
             </Grid>
           ))}
         </Grid>
-        <Modal
-          open={openTaskModal}
-          onClose={(e: any) => setOpenTaskModal(false)}
-        >
-          {<TaskForm users={users} />}
-        </Modal>
+        <TaskForm
+          users={users}
+          currentBucketId={currentBucket?.id}
+          currentDataset={currentDataset}
+          setOpenTaskModal={setOpenTaskModal}
+          openTaskModal={openTaskModal}
+        />
       </Container>
       <SnackbarAlert
         open={notification.show}
