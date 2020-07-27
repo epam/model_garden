@@ -1,7 +1,7 @@
 import React from 'react';
 import { Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import { Severity } from '../../models';
+import { Severity } from '../../../models';
 
 export interface SnackbarAlertProps {
   open: boolean;
