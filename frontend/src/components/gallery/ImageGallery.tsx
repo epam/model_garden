@@ -18,8 +18,7 @@ import { uploadMediaFiles } from '../../store/media';
 import { ImageCard } from './ImageCard';
 import { ImageGalleryHeader } from './ImageGalleryHeader';
 import { TasksTable } from './TasksTable';
-import { DropZone, ProgressLoader } from '../shared';
-import { SnackbarAlert } from '../snackbarAlert';
+import { DropZone, SnackbarAlert } from '../shared';
 import { TaskForm } from './TaskForm';
 
 const ImageGallery = () => {
@@ -136,11 +135,12 @@ const ImageGallery = () => {
             <Empty description="this dataset doesn't have any images yet, click to upload" />
           </Link>
         )}
-        <Grid container alignItems="center" spacing={2}>
+        <Grid container alignItems="baseline" spacing={2}>
           <Grid item xs={12} sm={6} md={3}>
             <TextField
               name="path"
               label="Search By File Name"
+              size="small"
               value={searchTerm}
               disabled={!datasetId}
               onChange={(e: any) => {
