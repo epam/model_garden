@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
-<<<<<<< HEAD
 import { useRouteMatch, Redirect, Link } from 'react-router-dom';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { Container, Grid, TextField, InputAdornment } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
-=======
 import {
   Container,
   Grid,
@@ -15,8 +11,6 @@ import {
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import AddBoxIcon from '@material-ui/icons/AddBox';
-import { useRouteMatch, Redirect, Link } from 'react-router-dom';
->>>>>>> added create task button and modal
 import { Empty } from 'antd';
 import { useTypedSelector, useAppDispatch } from '../../store';
 import { Dataset, Severity, Alert } from '../../models';
@@ -147,26 +141,6 @@ const ImageGallery = () => {
             <Empty description="this dataset doesn't have any images yet, click to upload" />
           </Link>
         )}
-<<<<<<< HEAD
-        <Grid item xs={12} sm={6} md={3}>
-          <TextField
-            name="path"
-            label="Search By File Name"
-            size="small"
-            value={searchTerm}
-            disabled={!datasetId}
-            onChange={(e: any) => {
-              setSearchTerm(e.target.value);
-            }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <SearchIcon />
-                </InputAdornment>
-              )
-            }}
-          />
-=======
         <Grid container alignItems="center" spacing={2}>
           <Grid item xs={12} sm={6} md={3}>
             <TextField
@@ -196,7 +170,6 @@ const ImageGallery = () => {
               CREATE NEW TASK
             </Button>
           </Grid>
->>>>>>> added create task button and modal
         </Grid>
         <Grid container spacing={2}>
           <Grid item xs={6} sm={4} md={3} lg={2}>
