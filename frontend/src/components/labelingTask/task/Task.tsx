@@ -31,7 +31,6 @@ interface TaskProps {
   newTaskUrl: string;
   handleTaskSubmit: (data: FormData) => void;
   onDataSetChange: (datasetId: string) => void;
-  setShowLoader: Function;
 }
 
 export type FormData = {
@@ -49,8 +48,7 @@ export const Task: React.FC<TaskProps> = ({
   filesCount,
   handleTaskSubmit,
   onDataSetChange,
-  newTaskUrl,
-  setShowLoader
+  newTaskUrl
 }: TaskProps) => {
   const [currentBucketId, setCurrentBucketId] = useState('');
   const [currentDataset, setCurrentDataset] = useState({
@@ -100,7 +98,6 @@ export const Task: React.FC<TaskProps> = ({
     data.filesInTask = Number(counter.filesInTask);
     data.countOfTasks = Number(counter.countOfTasks);
     data.currentDatasetId = currentDataset.id;
-    setShowLoader(true);
     handleTaskSubmit(data);
   });
 

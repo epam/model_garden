@@ -1,6 +1,7 @@
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
+import { uiReducer } from './ui';
 import { errorReducer } from './error';
 import { dataReducer } from './data';
 import { mediaReducer } from './media';
@@ -11,6 +12,7 @@ import { galleryReducer } from './gallery';
 
 const store = configureStore({
   reducer: {
+    ui: uiReducer,
     error: errorReducer,
     data: dataReducer,
     media: mediaReducer,
