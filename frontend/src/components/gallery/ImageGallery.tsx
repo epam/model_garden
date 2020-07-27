@@ -14,8 +14,7 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import { Empty } from 'antd';
 import { useTypedSelector, useAppDispatch } from '../../store';
 import { Dataset, Severity, Alert } from '../../models';
-import { getMediaAssets } from '../../store/data';
-import { getDatasetsTasks } from '../../store/gallery';
+import { getDatasetsTasks, getMediaAssets } from '../../store/gallery';
 import { uploadMediaFiles } from '../../store/media';
 import { ImageCard } from './ImageCard';
 import { ImageGalleryHeader } from './ImageGalleryHeader';
@@ -26,7 +25,7 @@ import { TaskForm } from './TaskForm';
 
 const ImageGallery = () => {
   const dispatch = useAppDispatch();
-  const photos = useTypedSelector(({ data }) => data.mediaAssets);
+  const photos = useTypedSelector(({ gallery }) => gallery.mediaAssets);
   const datasets = useTypedSelector(({ data }) => data.datasets);
   const buckets = useTypedSelector(({ data }) => data.buckets);
   const tasks = useTypedSelector(({ gallery }) => gallery.tasks);
@@ -40,7 +39,6 @@ const ImageGallery = () => {
 
   const [notification, setNotification] = useState(alertState);
   const [files, setFiles] = useState<File[]>([]);
-  const [showLoader, setShowLoader] = useState(false);
 
   const {
     params: { datasetId }
@@ -54,8 +52,8 @@ const ImageGallery = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [openTaskModal, setOpenTaskModal] = useState(false);
 
-  const filteredPhotos = useTypedSelector(({ data }) =>
-    data.mediaAssets.filter((photo) =>
+  const filteredPhotos = useTypedSelector(({ gallery }) =>
+    gallery.mediaAssets.filter((photo) =>
       searchTerm
         ? photo.filename.toLowerCase().includes(searchTerm.toLowerCase())
         : true
@@ -91,7 +89,6 @@ const ImageGallery = () => {
 
   useEffect(() => {
     if (currentBucket?.id && currentDataset?.path && files.length > 0) {
-      setShowLoader(true);
       dispatch(
         uploadMediaFiles({
           files,
@@ -107,8 +104,7 @@ const ImageGallery = () => {
         })
         .catch(({ message }) => {
           raiseAlert('error', message);
-        })
-        .finally(() => setShowLoader(false));
+        });
     }
   }, [dispatch, files, currentBucket, currentDataset, datasetId]);
 
@@ -191,7 +187,6 @@ const ImageGallery = () => {
           {<TaskForm users={users} />}
         </Modal>
       </Container>
-      <ProgressLoader show={showLoader} />
       <SnackbarAlert
         open={notification.show}
         onClose={handleClose}
