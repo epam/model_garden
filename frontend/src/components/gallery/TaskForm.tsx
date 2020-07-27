@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  Typography,
   TextField,
   Select,
   MenuItem,
@@ -13,8 +12,6 @@ import {
   FormControl,
   InputLabel
 } from '@material-ui/core';
-import { useAppDispatch } from '../../store';
-import { FormContainer } from '../shared';
 import { DEFAULT_FORM_DATA } from '.././labelingTask/task/constants';
 
 export type FormData = {
@@ -29,7 +26,6 @@ export const TaskForm = ({
   setOpenTaskModal,
   openTaskModal
 }: any) => {
-  const dispatch = useAppDispatch();
   const { control, watch } = useForm<FormData>({
     defaultValues: {
       taskName: DEFAULT_FORM_DATA.TASK_NAME,
@@ -48,10 +44,13 @@ export const TaskForm = ({
     </MenuItem>
   ));
 
-  const onSubmit = () => {};
+  const onSubmit = (e: any) => {
+    e.preventDefault();
+  };
   return (
     <>
       <Dialog
+        fullWidth
         open={openTaskModal}
         onClose={(e: any) => setOpenTaskModal(false)}
       >
