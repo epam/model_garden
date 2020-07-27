@@ -15,7 +15,6 @@ const menu: any = (
   );
   const isArchiveDisabled =
     !SelectedTasks.length ||
-    SelectedTasks.some((task) => task.status === 'archived') ||
     SelectedTasks.some((task) => task.status !== 'saved');
 
   const isRetryDisabled =
