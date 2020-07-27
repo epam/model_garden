@@ -135,7 +135,7 @@ const ImageGallery = () => {
             <Empty description="this dataset doesn't have any images yet, click to upload" />
           </Link>
         )}
-        <Grid container alignItems="baseline" spacing={2}>
+        <Grid container spacing={2}>
           <Grid item xs={12} sm={6} md={3}>
             <TextField
               name="path"
