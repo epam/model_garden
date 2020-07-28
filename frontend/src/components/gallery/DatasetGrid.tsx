@@ -10,13 +10,14 @@ import { useTypedSelector } from '../../store';
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    height: '19.6875rem',
+    height: '19.5rem',
     position: 'relative',
     overflow: 'hidden',
+    boxShadow: theme.shadows[4],
     '&:hover': {
-      transition: 'box-shadow 0.3s',
-      boxShadow: theme.shadows[4],
-      transform: 'scale(1.005)'
+      transition: 'all 0.1s ease-in-out',
+      boxShadow: theme.shadows[3],
+      transform: 'scale(1.01)'
     }
   },
   link: {
@@ -57,8 +58,9 @@ const useStyles = makeStyles((theme) => ({
   },
   date: {
     marginBottom: '0.625rem',
-    fontSize: '0.75rem',
-    lineHeight: 14 / 12
+    fontSize: '0.73rem',
+    lineHeight: 14 / 12,
+    whiteSpace: 'nowrap'
   },
   items: {
     display: 'flex',
