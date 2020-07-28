@@ -92,7 +92,9 @@ backend dev:
     - cd backend
  #start infrastructure rollout
     - echo $LBARN
-    - if [ $LBARN != ""]; then aws elbv2 create-load-balancer --name model-garden-devops-lb --subnets subnet-17d4107d subnet-e7dae99a subnet-dac9cf97 --security-groups sg-3b02fc5b sg-03b6a18f51a8cc356 sg-0153652719fde0da0 sg-0dbd4a9079111917d ; fi; 
+    - if [ $LBARN != ""]; then 
+        aws elbv2 create-load-balancer --name model-garden-devops-lb --subnets subnet-17d4107d subnet-e7dae99a subnet-dac9cf97 --security-groups sg-3b02fc5b sg-03b6a18f51a8cc356 sg-0153652719fde0da0 sg-0dbd4a9079111917d ; 
+      fi; 
   script:
     - $(aws ecr get-login --no-include-email --region eu-central-1)
     - echo $CI_COMMIT_SHORT_SHA
