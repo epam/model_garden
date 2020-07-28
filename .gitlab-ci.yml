@@ -85,7 +85,7 @@ backend dev:
     AWS_DEFAULT_REGION: eu-central-1
     DOCKER_HOST: tcp://localhost:2375/
     REPOSITORY_URL: local/model_garden_backend
-    LBARN = 'aws elbv2 describe-load-balancers --names "model-garden-devops-lb" --query LoadBalancers[*].LoadBalancerArn --output text'
+    LBARN : aws elbv2 describe-load-balancers --names "model-garden-devops-lb" --query LoadBalancers[*].LoadBalancerArn --output text
   before_script:
     - apk add --no-cache curl jq python3 py-pip
     - pip install awscli
