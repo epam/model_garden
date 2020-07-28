@@ -89,6 +89,8 @@ backend dev:
     - apk add --no-cache curl jq python3 py-pip
     - pip install awscli
     - cd backend
+ #start infrastructure rollout
+ 
   script:
     - $(aws ecr get-login --no-include-email --region eu-central-1)
     - echo $CI_COMMIT_SHORT_SHA
