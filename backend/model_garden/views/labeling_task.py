@@ -86,6 +86,18 @@ class LabelingTaskViewSet(ModelViewSet):
   ordering_fields = ('name', 'dataset', 'labeler', 'status', 'url')
   search_fields = ('name', 'dataset', 'labeler', 'status', 'url')
 
+  def get_queryset(self):
+    dataset_id = self.request.query_params.get('dataset_id', None)
+    if dataset_id is not None:
+      try:
+        dataset = Dataset.objects.get(id=dataset_id).path
+        return self.queryset.filter(dataset=dataset)
+      except Dataset.DoesNotExist:
+        raise ValidationError(
+          detail={"message": f"Dataset with id='{dataset_id}' not found"})
+    else:
+      return self.queryset
+
   def create(self, request: Request, *args, **kwargs) -> Response:
     cvat_service = CvatService()
     serializer = LabelingTaskCreateSerializer(data=request.data)
