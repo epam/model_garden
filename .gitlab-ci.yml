@@ -5,7 +5,7 @@ stages:
 
 .setup_python_env: &setup_python_env
   before_script:
-  - cd backend
+  - cd /backend
   - pip install virtualenv
   - virtualenv venv
   - source venv/bin/activate
