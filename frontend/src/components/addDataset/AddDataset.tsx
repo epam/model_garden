@@ -13,10 +13,9 @@ import {
   Typography
 } from '@material-ui/core';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { FormContainer, ProgressLoader } from '../shared';
+import { FormContainer, SnackbarAlert } from '../shared';
 import { useAppDispatch, useTypedSelector } from '../../store';
 import { addExistingDataset, uploadMediaFiles } from '../../store/media';
-import { SnackbarAlert } from '../snackbarAlert';
 import {
   UploadPaper,
   UploadDescription,
@@ -36,7 +35,6 @@ export const AddDataset: FC<any> = ({ match, location }) => {
   const dispatch = useAppDispatch();
   const [files, setFiles] = useState<File[]>([]);
   const [notification, setNotification] = useState(alertState);
-  const [showLoader, setShowLoader] = useState(false);
   const buckets = useTypedSelector((state) => state.data.buckets);
 
   useEffect(
@@ -87,8 +85,7 @@ export const AddDataset: FC<any> = ({ match, location }) => {
       })
       .catch(({ message }) => {
         raiseAlert('error', message);
-      })
-      .finally(() => setShowLoader(false));
+      });
   };
 
   const UploadImages = (bucketId: string, path: string) => {
@@ -101,12 +98,10 @@ export const AddDataset: FC<any> = ({ match, location }) => {
       })
       .catch(({ message }) => {
         raiseAlert('error', message);
-      })
-      .finally(() => setShowLoader(false));
+      });
   };
 
   const onSubmit = handleSubmit(({ bucketId, path }) => {
-    setShowLoader(true);
     if (location.pathname === `${match.path}/upload-images`) {
       UploadImages(bucketId, path);
     } else {
@@ -183,7 +178,6 @@ export const AddDataset: FC<any> = ({ match, location }) => {
               />
             </FormControl>
             <TextField
-              className="upload-images__settings-item"
               name="path"
               label="Dataset path"
               inputRef={register({
@@ -209,7 +203,6 @@ export const AddDataset: FC<any> = ({ match, location }) => {
           </>
         </form>
       </FormContainer>
-      <ProgressLoader show={showLoader} />
       <SnackbarAlert
         open={notification.show}
         onClose={handleClose}
