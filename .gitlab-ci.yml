@@ -5,6 +5,7 @@ stages:
 
 .setup_python_env: &setup_python_env
   before_script:
+  - apt-get -qq update && apt-get -qq install -y python3.8
   - cd backend
   - pip install virtualenv
   - virtualenv venv
