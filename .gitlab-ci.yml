@@ -5,7 +5,6 @@ stages:
 
 .setup_python_env: &setup_python_env
   before_script:
-  - apk add --no-cache curl jq python3 py-pip
   - cd backend
   - pip install virtualenv
   - virtualenv venv
