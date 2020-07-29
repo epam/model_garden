@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch, Redirect, Link } from 'react-router-dom';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { Container, Grid, TextField, InputAdornment } from '@material-ui/core';
+import {
+  Container,
+  Grid,
+  TextField,
+  InputAdornment,
+  Button
+} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
+import AddBoxIcon from '@material-ui/icons/AddBox';
 import { Empty } from 'antd';
 import { useTypedSelector, useAppDispatch } from '../../store';
 import { Dataset, Severity, Alert } from '../../models';
@@ -12,6 +19,7 @@ import { ImageCard } from './ImageCard';
 import { ImageGalleryHeader } from './ImageGalleryHeader';
 import { TasksTable } from './TasksTable';
 import { DropZone, SnackbarAlert } from '../shared';
+import { TaskForm } from './TaskForm';
 
 const ImageGallery = () => {
   const dispatch = useAppDispatch();
@@ -19,6 +27,7 @@ const ImageGallery = () => {
   const datasets = useTypedSelector(({ data }) => data.datasets);
   const buckets = useTypedSelector(({ data }) => data.buckets);
   const tasks = useTypedSelector(({ gallery }) => gallery.tasks);
+  const users = useTypedSelector(({ data }) => data.labelingToolUsers);
 
   const alertState: Alert = {
     show: false,
@@ -39,6 +48,7 @@ const ImageGallery = () => {
     (busket) => busket.id === currentDataset?.bucket
   ); //@todo: update once we change arrays to object
   const [searchTerm, setSearchTerm] = useState('');
+  const [openTaskModal, setOpenTaskModal] = useState(false);
 
   const filteredPhotos = useTypedSelector(({ gallery }) =>
     gallery.mediaAssets.filter((photo) =>
@@ -125,24 +135,36 @@ const ImageGallery = () => {
             <Empty description="this dataset doesn't have any images yet, click to upload" />
           </Link>
         )}
-        <Grid item xs={12} sm={6} md={3}>
-          <TextField
-            name="path"
-            label="Search By File Name"
-            size="small"
-            value={searchTerm}
-            disabled={!datasetId}
-            onChange={(e: any) => {
-              setSearchTerm(e.target.value);
-            }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <SearchIcon />
-                </InputAdornment>
-              )
-            }}
-          />
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6} md={3}>
+            <TextField
+              name="path"
+              label="Search By File Name"
+              size="small"
+              value={searchTerm}
+              disabled={!datasetId}
+              onChange={(e: any) => {
+                setSearchTerm(e.target.value);
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <SearchIcon />
+                  </InputAdornment>
+                )
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Button
+              color="primary"
+              variant="contained"
+              startIcon={<AddBoxIcon />}
+              onClick={(e: any) => setOpenTaskModal(true)}
+            >
+              CREATE NEW TASK
+            </Button>
+          </Grid>
         </Grid>
         <Grid container spacing={2}>
           <Grid item xs={6} sm={4} md={3} lg={2}>
@@ -157,6 +179,13 @@ const ImageGallery = () => {
             </Grid>
           ))}
         </Grid>
+        <TaskForm
+          users={users}
+          currentBucketId={currentBucket?.id}
+          currentDataset={currentDataset}
+          setOpenTaskModal={setOpenTaskModal}
+          openTaskModal={openTaskModal}
+        />
       </Container>
       <SnackbarAlert
         open={notification.show}
