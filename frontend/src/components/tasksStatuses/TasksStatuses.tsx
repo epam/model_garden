@@ -88,11 +88,15 @@ export const TasksStatuses: React.FC = () => {
       filtered: tableState.searchProps.name,
       ...GetColumnSearchProps('name', updateSearchState, resetSearchState),
       render: (name: string, record: LabelingTaskStatus) => {
-        return (
-          <a href={record.url} target="_blank" rel="noopener noreferrer">
-            {name}
-          </a>
-        );
+        if (record.status !== 'archived') {
+          return (
+            <a href={record.url} target="_blank" rel="noopener noreferrer">
+              {name}
+            </a>
+          );
+        } else {
+          return name;
+        }
       }
     },
     {
