@@ -56,6 +56,7 @@ export const ImageGalleryHeader = ({
           <li>ITEMS: {imageCount}</li>
           <li>LABELS: {labelCount}</li>
           <li>CREATED: {new Date(createdAt).toLocaleString()}</li>
+          <li>FORMAT: PASCAL VOC</li>
         </ul>
       </div>
     </header>
