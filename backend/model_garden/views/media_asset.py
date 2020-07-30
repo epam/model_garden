@@ -195,8 +195,4 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
       )
     except Exception as e:
       logger.error(f"Failed to delete files from s3: {e}")
-      raise APIException(
-        detail={
-          'message': str(e),
-        },
-      )
+      raise APIException(detail={'message': str(e),},)
