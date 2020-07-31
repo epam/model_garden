@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1rem',
     lineHeight: 20 / 16
   },
-  date: {
+  data: {
     marginBottom: '0.625rem',
     fontSize: '0.73rem',
     lineHeight: 14 / 12,
@@ -136,7 +136,8 @@ export const DatasetGrid = ({ searchTerm, currentBucketId }: any) => {
 
               <div className={classes.info}>
                 <strong className={classes.name}>{dataset.path}</strong>
-                <div className={classes.date}>
+                <div className={classes.data}>Format: PASCAL VOC</div>
+                <div className={classes.data}>
                   Created: {new Date(dataset.created_at).toLocaleString()}
                 </div>
                 <div className={classes.items}>

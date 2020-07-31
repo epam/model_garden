@@ -10,7 +10,8 @@ import {
   Tab,
   Tabs,
   TextField,
-  Typography
+  Typography,
+  MenuItem
 } from '@material-ui/core';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { FormContainer, SnackbarAlert } from '../shared';
@@ -50,7 +51,8 @@ export const AddDataset: FC<any> = ({ match, location }) => {
     mode: 'onChange',
     defaultValues: {
       bucketId: location.state?.dataset.bucket ?? '',
-      path: location.state?.dataset.path.replace('/', '') ?? ''
+      path: location.state?.dataset.path.replace('/', '') ?? '',
+      format: location.state?.dataset.format ?? ''
     }
   });
 
@@ -72,7 +74,8 @@ export const AddDataset: FC<any> = ({ match, location }) => {
   const resetForm = () => {
     reset({
       path: '',
-      bucketId: ''
+      bucketId: '',
+      format: ''
     });
   };
 
@@ -175,6 +178,22 @@ export const AddDataset: FC<any> = ({ match, location }) => {
                 label="Bucket"
                 defaultValue=""
                 as={<Select>{BucketsSelect(buckets)}</Select>}
+              />
+            </FormControl>
+            <FormControl>
+              <InputLabel id="dataset-format">Format</InputLabel>
+              <Controller
+                labelId="dataset-format"
+                name="datasetFormat"
+                control={control}
+                rules={{ required: true }}
+                label="Format"
+                defaultValue=""
+                as={
+                  <Select>
+                    <MenuItem value="PASCAL VOC">PASCAL VOC</MenuItem>
+                  </Select>
+                }
               />
             </FormControl>
             <TextField
