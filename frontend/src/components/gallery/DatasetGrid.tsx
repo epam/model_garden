@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export const DatasetGrid = ({ searchTerm }: any) => {
+export const DatasetGrid = ({ searchTerm, currentBucketId }: any) => {
   const classes = useStyles();
   const datasets = useTypedSelector(({ data }) =>
     data.datasets.filter((dataset) =>
@@ -100,6 +100,11 @@ export const DatasetGrid = ({ searchTerm }: any) => {
     )
   );
   const match = useRouteMatch('/gallery');
+
+  if (!currentBucketId) {
+    // we have to make sure we hide datasets if we don't have an active bucketId , otherwise we won't have a bucketID to navigate to
+    return null;
+  }
 
   return (
     <Grid container spacing={2}>
@@ -115,7 +120,7 @@ export const DatasetGrid = ({ searchTerm }: any) => {
             <Link
               className={classes.link}
               component={RouterLink}
-              to={`${match?.path}/dataset/${dataset.id}`}
+              to={`${match?.path}/bucket/${currentBucketId}/dataset/${dataset.id}`}
             >
               <div className={classes.imgWrap}>
                 {dataset.preview_image ? (
