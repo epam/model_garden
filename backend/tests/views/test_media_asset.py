@@ -295,3 +295,11 @@ class TestMediaAssetViewSet(BaseAPITestCase):
     )
 
     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+  def test_delete(self):
+    response = self.client.post(
+      path=reverse('mediaasset-delete'),
+      data={'id': [0, 1]}
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -167,13 +167,13 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
 
   @action(methods=["POST"], detail=False)
   def delete(self, request):
-    """Create a POST request with list of asset ids to delete from s3.
-        Request::
-          {"id": [id1, id2]}
+    """Creates a POST request with list of asset ids to delete from s3.
+    Request::
+        {"id": [id1, id2]}
 
-        Response::
-          {}
-        """
+    Response::
+        {HTTP_200_OK}
+    """
     media_asset_serializer = MediaAssetIDSerializer(data=request.data)
     media_asset_serializer.is_valid(raise_exception=True)
     media_assets_to_delete = MediaAsset.objects.filter(
@@ -202,6 +202,6 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
         bucket_name,
         assets_to_delete,
       )
-    except Exception as error:
-      logger.error(f"Failed to delete files from s3: {error}")
-      raise APIException(detail={'message': str(error)})
+    except Exception as s3_exception:
+      logger.error(f"Failed to delete files from s3: {s3_exception}")
+      raise APIException(detail={'message': str(s3_exception)})
