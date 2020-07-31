@@ -1,21 +1,41 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { GalleryState } from './types';
 import { getLabelingTasksRequest } from '../../api';
-import { AppState } from '..';
-import { Dataset } from '../../models';
+import { getDatasets } from '../data';
+
 import { getMediaAssetsRequest } from '../../api/gallery.api';
 
-export const getMediaAssets = createAsyncThunk('fetchMediaAssets', async ({ datasetId }: any, { getState }) => {
-  const { data } = getState() as AppState;
-  const bucketId = data.datasets.find((dataset: Dataset) => dataset.id === datasetId)?.bucket; //@todo: update once we change arrays to object
+import { Dataset } from '../../models';
+
+export const getMediaAssets = createAsyncThunk('fetchMediaAssets', async ({ bucketId, datasetId }: any) => {
   const response = await getMediaAssetsRequest({ datasetId, bucketId });
   return response.data.results;
 });
 
-export const getDatasetsTasks = createAsyncThunk('getDatasetsTasks', async (params: Object) => {
-  const response = await getLabelingTasksRequest(params);
+export const getDatasetsTasks = createAsyncThunk('getDatasetsTasks', async ({ dataset }: any) => {
+  const response = await getLabelingTasksRequest({ dataset });
   return response.tasks;
 });
+
+export const imageGalleryInit = createAsyncThunk(
+  'gallery/init',
+  async ({ bucketId, datasetId }: any, { getState, dispatch }) => {
+    let state = getState() as any;
+    if (!state.data.datasets.length) {
+      await dispatch(getDatasets(bucketId));
+      state = getState() as any;
+    }
+    const datasets = state.data.datasets;
+    const datasetPath = datasets.find((dataset: Dataset) => dataset.id === datasetId).path;
+    let [mediaAssetsResponse, tasksResponse] = await Promise.all([
+      getMediaAssetsRequest({ datasetId, bucketId }),
+      //@todo : update once we will have API request by dataset Id
+      getLabelingTasksRequest({ dataset: datasetPath })
+    ]);
+
+    return { mediaAssets: mediaAssetsResponse.data.results, tasks: tasksResponse.tasks };
+  }
+);
 
 const gallerySlice = createSlice({
   name: 'gallery',
@@ -31,6 +51,10 @@ const gallerySlice = createSlice({
       })
       .addCase(getDatasetsTasks.fulfilled, (state, action) => {
         state.tasks = action.payload;
+      })
+      .addCase(imageGalleryInit.fulfilled, (state, { payload }: any) => {
+        state.mediaAssets = payload.mediaAssets;
+        state.tasks = payload.tasks;
       });
   }
 });
