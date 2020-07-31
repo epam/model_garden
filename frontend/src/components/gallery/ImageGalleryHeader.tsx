@@ -68,6 +68,7 @@ export const ImageGalleryHeader = () => {
             CREATED:
             {new Date(currentDataset?.created_at ?? 0).toLocaleString()}
           </li>
+          <li>FORMAT: PASCAL VOC</li>
         </ul>
       </div>
     </header>
