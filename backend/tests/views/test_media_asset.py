@@ -299,7 +299,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
   def test_delete(self):
     response = self.client.post(
       path=reverse('mediaasset-delete'),
-      data={'id': [0, 1]}
+      data={'id': [0, 1]},
     )
 
     self.assertEqual(response.status_code, status.HTTP_200_OK)
