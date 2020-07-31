@@ -1,7 +1,7 @@
+from collections import defaultdict
 import io
 import logging
 import zipfile
-from collections import defaultdict
 
 from django.db.utils import IntegrityError
 from django_filters import rest_framework as filters
@@ -165,8 +165,15 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
       status=status.HTTP_200_OK,
     )
 
-  @action(methods=["PATCH"], detail=False)
+  @action(methods=["POST"], detail=False)
   def delete(self, request):
+    """Create a POST request with list of asset ids to delete from s3.
+        Request::
+          {"id": [id1, id2]}
+
+        Response::
+          {}
+        """
     media_asset_serializer = MediaAssetIDSerializer(data=request.data)
     media_asset_serializer.is_valid(raise_exception=True)
     media_assets_to_delete = MediaAsset.objects.filter(
@@ -174,9 +181,11 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
     )
 
     bucket_map = defaultdict(list)
+    # Map list of media assets to particular bucket.
     for asset in media_assets_to_delete:
       bucket_map[asset.dataset.bucket.name].append(asset)
 
+    # Delete media assets from each bucket.
     for bucket, assets in bucket_map.items():
       self._delete_media_assets_from_s3(
         bucket, [asset.full_path for asset in assets],
@@ -193,6 +202,6 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
         bucket_name,
         assets_to_delete,
       )
-    except Exception as e:
-      logger.error(f"Failed to delete files from s3: {e}")
-      raise APIException(detail={'message': str(e)})
+    except Exception as error:
+      logger.error(f"Failed to delete files from s3: {error}")
+      raise APIException(detail={'message': str(error)})
