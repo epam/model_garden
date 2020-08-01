@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 import { UploadFiles, AddExistingDataset, initialState } from './types';
 import { uploadMediaFilesRequest, addExistingDatasetRequest } from '../../api';
 
@@ -29,9 +30,11 @@ const mediaSlice = createSlice({
     builder
       .addCase(uploadMediaFiles.fulfilled, (state, action) => {
         state = action.payload;
+        toast.success(action.payload.message);
       })
       .addCase(addExistingDataset.pending, (state) => {
         state.addingExistingDataSet = true;
+        toast.success('Dataset has been added');
       })
       .addCase(addExistingDataset.fulfilled, (state, action) => {
         state.addingExistingDataSet = false;
