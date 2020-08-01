@@ -180,6 +180,12 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
       pk__in=media_asset_serializer.data['id'],
     )
 
+    if len(media_assets_to_delete) != len(media_asset_serializer.data['id']):
+      return Response(
+        data={'message': "Media assets with given list of ids doesn't exist."},
+        status=status.HTTP_400_BAD_REQUEST,
+      )
+
     bucket_map = defaultdict(list)
     # Map list of media assets to particular bucket.
     for asset in media_assets_to_delete:
