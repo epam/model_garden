@@ -67,15 +67,34 @@ const StyledCheckboxLabel = withStyles({
   }
 })(FormControlLabel);
 
-export const ImageCard = ({ imageSrc, xmlPath }: any) => {
+export const ImageCard = ({
+  imageSrc,
+  xmlPath,
+  setCheckList,
+  checklist
+}: any) => {
   const classes = useStyles();
   const fileName = imageSrc.substring(imageSrc.lastIndexOf('/') + 1);
+
+  const check = (fileName: string) =>
+    setCheckList((ps: string[]) => {
+      //symmetric difference (Xor)
+      const newArray = ps
+        .filter((x) => ![fileName].includes(x))
+        .concat([fileName].filter((x) => !ps.includes(x)));
+
+      console.log('select Images: ', newArray);
+      return newArray;
+    });
+
   return (
     <Paper className={classes.card}>
       <div className={classes.info}>
         <StyledCheckboxLabel
           title={fileName}
           label={fileName}
+          checked={checklist.includes(fileName)}
+          onChange={() => check(fileName)}
           control={<Checkbox size="small" />}
         />
       </div>
