@@ -49,6 +49,7 @@ const ImageGallery = (props: any) => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [openTaskModal, setOpenTaskModal] = useState(false);
+  const [checklist, setCheckList] = useState([]);
 
   const filteredPhotos = useTypedSelector(({ gallery }) =>
     gallery.mediaAssets.filter((photo) =>
@@ -89,7 +90,7 @@ const ImageGallery = (props: any) => {
         .then(unwrapResult)
         .then(({ message }: any) => {
           raiseAlert('success', message);
-          getMediaAssets({ datasetId }); //why are we not sending in the bucket  ?
+          getMediaAssets({ datasetId });
           setFiles([]);
         })
         .catch(({ message }: any) => {
@@ -168,6 +169,8 @@ const ImageGallery = (props: any) => {
           {filteredPhotos.map((image: any) => (
             <Grid item xs={6} sm={4} md={3} lg={2} key={image.remote_path}>
               <ImageCard
+                checklist={checklist}
+                setCheckList={setCheckList}
                 imageSrc={image.remote_path}
                 xmlPath={image.remote_xml_path}
               />
