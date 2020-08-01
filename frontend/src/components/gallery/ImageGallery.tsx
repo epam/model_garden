@@ -12,27 +12,19 @@ import SearchIcon from '@material-ui/icons/Search';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import { Empty } from 'antd';
 import { useTypedSelector, AppState } from '../../store';
-import { Dataset, Severity, Alert, Bucket } from '../../models';
+import { Dataset, Bucket } from '../../models';
 import { getMediaAssets, imageGalleryInit } from '../../store/gallery';
 import { uploadMediaFiles } from '../../store/media';
 import { ImageCard } from './ImageCard';
 import { ImageGalleryHeader } from './ImageGalleryHeader';
 import { TasksTable } from './TasksTable';
-import { DropZone, SnackbarAlert } from '../shared';
+import { DropZone } from '../shared';
 import { TaskForm } from './TaskForm';
 import { connect } from 'react-redux';
 
 const ImageGallery = (props: any) => {
   const { photos, datasets, buckets, tasks } = props;
   const { uploadMediaFiles, imageGalleryInit, getMediaAssets } = props;
-
-  const alertState: Alert = {
-    show: false,
-    severity: undefined,
-    message: ''
-  };
-
-  const [notification, setNotification] = useState(alertState);
   const [files, setFiles] = useState<File[]>([]);
 
   const {
@@ -58,20 +50,6 @@ const ImageGallery = (props: any) => {
     )
   );
 
-  const raiseAlert = (severity: Severity, message: string) => {
-    setNotification({ show: true, severity, message });
-  };
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setNotification((prevState) => ({
-      ...prevState,
-      show: false,
-      message: ''
-    }));
-  };
-
   useEffect(() => {
     imageGalleryInit({
       bucketId,
@@ -87,13 +65,9 @@ const ImageGallery = (props: any) => {
         path: currentDataset.path
       })
         .then(unwrapResult)
-        .then(({ message }: any) => {
-          raiseAlert('success', message);
+        .then(() => {
           getMediaAssets({ datasetId }); //why are we not sending in the bucket  ?
           setFiles([]);
-        })
-        .catch(({ message }: any) => {
-          raiseAlert('error', message);
         });
     }
   }, [
@@ -179,13 +153,6 @@ const ImageGallery = (props: any) => {
           openTaskModal={openTaskModal}
         />
       </Container>
-      <SnackbarAlert
-        open={notification.show}
-        onClose={handleClose}
-        severity={notification.severity}
-      >
-        {notification.message}
-      </SnackbarAlert>
     </>
   );
 };
