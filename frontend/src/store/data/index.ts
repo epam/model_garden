@@ -5,7 +5,7 @@ import { getBucketsRequest, getDatasetsRequest, getLabelingToolUsersRequest } fr
 
 export const getBuckets = createAsyncThunk('fetchBuckets', async () => {
   const response = await getBucketsRequest();
-  return response.data.results;
+  return response.data.results.map((item: any) => ({ ...item, id: `${item.id}` }));
 });
 
 export const getDatasets = createAsyncThunk('data/fetchDatasets', async (bucketId: string) => {
@@ -28,7 +28,10 @@ export const dataInit = createAsyncThunk('data/init', async () => {
   //special thunk that loads buckets and users in one action
   //this models the action as 'an event' instead of a getter
   const [bucketsResponse, usersResponse] = await Promise.all([getBucketsRequest(), getLabelingToolUsersRequest()]);
-  return { buckets: bucketsResponse.data.results, labelingToolUsers: usersResponse.data };
+  return {
+    buckets: bucketsResponse.data.results.map((item: any) => ({ ...item, id: `${item.id}` })),
+    labelingToolUsers: usersResponse.data
+  };
 });
 const dataSlice = createSlice({
   name: 'data',
