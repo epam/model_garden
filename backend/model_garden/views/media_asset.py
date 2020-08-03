@@ -181,7 +181,7 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
       pk__in=media_asset_serializer.data['id'],
     )
 
-    # Check if requested list of media asset ids present in db
+    # Check if requested list of media asset ids present in db.
     if len(media_assets_to_delete) != len(media_asset_serializer.data['id']):
       return Response(
         data={'message': "Media assets with such ids don't exist."},
