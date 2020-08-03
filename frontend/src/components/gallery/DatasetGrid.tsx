@@ -99,7 +99,7 @@ export const DatasetGrid = ({ searchTerm, currentBucketId }: any) => {
         : true
     )
   );
-  const match = useRouteMatch('/gallery');
+  const match = useRouteMatch();
 
   if (!currentBucketId) {
     // we have to make sure we hide datasets if we don't have an active bucketId , otherwise we won't have a bucketID to navigate to
@@ -120,7 +120,7 @@ export const DatasetGrid = ({ searchTerm, currentBucketId }: any) => {
             <Link
               className={classes.link}
               component={RouterLink}
-              to={`${match?.path}/bucket/${currentBucketId}/dataset/${dataset.id}`}
+              to={`${match?.url}/bucket/${currentBucketId}/dataset/${dataset.id}`}
             >
               <div className={classes.imgWrap}>
                 {dataset.preview_image ? (
