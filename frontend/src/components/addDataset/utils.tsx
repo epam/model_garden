@@ -30,4 +30,5 @@ export const BucketsSelect = (buckets: Bucket[]) =>
 export type FormData = {
   bucketId: string;
   path: string;
+  format: string;
 };
