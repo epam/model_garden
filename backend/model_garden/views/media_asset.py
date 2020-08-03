@@ -1,3 +1,4 @@
+from collections import defaultdict
 import io
 import logging
 import zipfile
@@ -16,6 +17,7 @@ from model_garden.serializers import (
   DatasetRawPathSerializer,
   DatasetSerializer,
   MediaAssetSerializer,
+  MediaAssetIDSerializer,
 )
 from model_garden.services.s3 import S3Client, image_ext_filter
 from model_garden.utils import strip_s3_key_prefix
@@ -162,3 +164,53 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
       data={'imported': assets_after - assets_before},
       status=status.HTTP_200_OK,
     )
+
+  @action(methods=["POST"], detail=False)
+  def delete(self, request):
+    """Creates a POST request with list of asset ids to delete from s3.
+    Request::
+        {"id": [id1, id2]}
+
+    Response::
+        {HTTP_400_BAD_REQUEST} if id doesn't exist in db
+        {HTTP_200_OK} for successful deletion
+    """
+    media_asset_serializer = MediaAssetIDSerializer(data=request.data)
+    media_asset_serializer.is_valid(raise_exception=True)
+    media_assets_to_delete = MediaAsset.objects.filter(
+      pk__in=media_asset_serializer.data['id'],
+    )
+
+    # Check if requested list of media asset ids present in db.
+    if len(media_assets_to_delete) != len(media_asset_serializer.data['id']):
+      return Response(
+        data={'message': "Media assets with such ids don't exist."},
+        status=status.HTTP_400_BAD_REQUEST,
+      )
+
+    bucket_map = defaultdict(list)
+
+    # Map list of media assets to particular bucket.
+    for asset in media_assets_to_delete:
+      bucket_map[asset.dataset.bucket.name].append(asset)
+
+    # Delete media assets from each bucket.
+    for bucket, assets in bucket_map.items():
+      self._delete_media_assets_from_s3(
+        bucket, [asset.full_path for asset in assets],
+      )
+    media_assets_to_delete.delete()
+
+    return Response(
+      status=status.HTTP_200_OK,
+    )
+
+  def _delete_media_assets_from_s3(self, bucket_name: str, assets_to_delete) -> None:
+    try:
+      S3Client(bucket_name=bucket_name).delete_files_concurrent(
+        bucket_name,
+        assets_to_delete,
+      )
+    except Exception as s3_exception:
+      logger.error(f"Failed to delete files from s3: {s3_exception}")
+      raise APIException(detail={'message': str(s3_exception)})
