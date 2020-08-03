@@ -13,6 +13,7 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import { Empty } from 'antd';
 import { useTypedSelector, AppState } from '../../store';
 import { Dataset, Bucket } from '../../models';
+import { createLabelingTask } from '../../store/labelingTask';
 import { getMediaAssets, imageGalleryInit } from '../../store/gallery';
 import { uploadMediaFiles } from '../../store/media';
 import { ImageCard } from './ImageCard';
@@ -154,6 +155,10 @@ const ImageGallery = (props: any) => {
         <TaskForm
           setOpenTaskModal={setOpenTaskModal}
           openTaskModal={openTaskModal}
+          createLabelingTask={createLabelingTask}
+          checklist={checklist}
+          setCheckList={setCheckList}
+          currentDataset={currentDataset}
         />
       </Container>
     </>
