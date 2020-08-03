@@ -128,6 +128,7 @@ const ImageGallery = (props: any) => {
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <Button
+              disabled={!checklist.length}
               color="primary"
               variant="contained"
               startIcon={<AddBoxIcon />}
