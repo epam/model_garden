@@ -3,6 +3,7 @@ import { UiState } from './types';
 import { uploadMediaFiles, addExistingDataset } from '../media';
 import { getMediaAssets } from '../gallery';
 import { createLabelingTask } from '../labelingTask';
+import { dataInit } from '../data';
 
 const uiSlice = createSlice({
   name: 'ui',
@@ -34,6 +35,12 @@ const uiSlice = createSlice({
         state.showLoader = true;
       })
       .addCase(createLabelingTask.fulfilled, (state) => {
+        state.showLoader = false;
+      })
+      .addCase(dataInit.pending, (state) => {
+        state.showLoader = true;
+      })
+      .addCase(dataInit.fulfilled, (state) => {
         state.showLoader = false;
       });
   }

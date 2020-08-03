@@ -66,7 +66,7 @@ const DatasetView = () => {
           />
         </Grid>
       </Grid>
-      <DatasetGrid searchTerm={searchTerm} />
+      <DatasetGrid searchTerm={searchTerm} currentBucketId={currentBucketId} />
     </Container>
   );
 };

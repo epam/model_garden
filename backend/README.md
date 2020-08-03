@@ -1,7 +1,7 @@
 # Django Backend
 
 ## Database (not recommended - use docker)
-www.postgresql.org/download
+www.postgresql.org/download (the current ver. 12.3)
 
 See the recommended pass in www.kb.epam.com/display/EPMCMLCV/Databases+and+Storages
 
