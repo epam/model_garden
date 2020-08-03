@@ -29,7 +29,6 @@ export const TaskForm = ({
   setOpenTaskModal,
   openTaskModal,
   createLabelingTask,
-  raiseAlert,
   checklist,
   setCheckList,
   currentDataset
@@ -54,11 +53,9 @@ export const TaskForm = ({
       .then(unwrapResult)
       .then(() => {
         setCheckList([]);
-        raiseAlert('success', 'New task created');
       })
       .catch((e: any) => {
         setCheckList([]);
-        raiseAlert('error', 'Failed to create labeling task');
       });
     setOpenTaskModal(false);
   };
