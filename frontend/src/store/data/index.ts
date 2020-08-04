@@ -6,7 +6,7 @@ import { getBucketsRequest, getDatasetsRequest, getLabelingToolUsersRequest } fr
 
 export const getBuckets = createAsyncThunk('fetchBuckets', async () => {
   const response = await getBucketsRequest();
-  return response.data.results;
+  return response.data.results.map((item: any) => ({ ...item, id: `${item.id}` }));
 });
 
 export const getDatasets = createAsyncThunk('data/fetchDatasets', async (bucketId: string) => {
