@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1rem',
     lineHeight: 20 / 16
   },
-  date: {
+  data: {
     marginBottom: '0.625rem',
     fontSize: '0.73rem',
     lineHeight: 14 / 12,
@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export const DatasetGrid = ({ searchTerm }: any) => {
+export const DatasetGrid = ({ searchTerm, currentBucketId }: any) => {
   const classes = useStyles();
   const datasets = useTypedSelector(({ data }) =>
     data.datasets.filter((dataset) =>
@@ -99,7 +99,12 @@ export const DatasetGrid = ({ searchTerm }: any) => {
         : true
     )
   );
-  const match = useRouteMatch('/gallery');
+  const match = useRouteMatch();
+
+  if (!currentBucketId) {
+    // we have to make sure we hide datasets if we don't have an active bucketId , otherwise we won't have a bucketID to navigate to
+    return null;
+  }
 
   return (
     <Grid container spacing={2}>
@@ -115,7 +120,7 @@ export const DatasetGrid = ({ searchTerm }: any) => {
             <Link
               className={classes.link}
               component={RouterLink}
-              to={`${match?.path}/dataset/${dataset.id}`}
+              to={`${match?.url}/bucket/${currentBucketId}/dataset/${dataset.id}`}
             >
               <div className={classes.imgWrap}>
                 {dataset.preview_image ? (
@@ -131,7 +136,8 @@ export const DatasetGrid = ({ searchTerm }: any) => {
 
               <div className={classes.info}>
                 <strong className={classes.name}>{dataset.path}</strong>
-                <div className={classes.date}>
+                <div className={classes.data}>Format: PASCAL VOC</div>
+                <div className={classes.data}>
                   Created: {new Date(dataset.created_at).toLocaleString()}
                 </div>
                 <div className={classes.items}>

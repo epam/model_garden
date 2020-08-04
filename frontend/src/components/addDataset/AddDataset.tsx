@@ -10,10 +10,11 @@ import {
   Tab,
   Tabs,
   TextField,
-  Typography
+  Typography,
+  MenuItem
 } from '@material-ui/core';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { FormContainer, SnackbarAlert } from '../shared';
+import { FormContainer } from '../shared';
 import { useAppDispatch, useTypedSelector } from '../../store';
 import { addExistingDataset, uploadMediaFiles } from '../../store/media';
 import {
@@ -22,19 +23,11 @@ import {
   FormData,
   BucketsSelect
 } from './utils';
-import { Alert, Severity } from './../../models';
 import { UploadFiles } from './uploadImages';
-
-const alertState: Alert = {
-  show: false,
-  severity: undefined,
-  message: ''
-};
 
 export const AddDataset: FC<any> = ({ match, location }) => {
   const dispatch = useAppDispatch();
   const [files, setFiles] = useState<File[]>([]);
-  const [notification, setNotification] = useState(alertState);
   const buckets = useTypedSelector((state) => state.data.buckets);
 
   useEffect(
@@ -50,29 +43,16 @@ export const AddDataset: FC<any> = ({ match, location }) => {
     mode: 'onChange',
     defaultValues: {
       bucketId: location.state?.dataset.bucket ?? '',
-      path: location.state?.dataset.path.replace('/', '') ?? ''
+      path: location.state?.dataset.path.replace('/', '') ?? '',
+      format: location.state?.dataset.format ?? ''
     }
   });
-
-  const raiseAlert = (severity: Severity, message: string) => {
-    setNotification({ show: true, severity, message });
-  };
-
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setNotification((prevState) => ({
-      ...prevState,
-      show: false,
-      message: ''
-    }));
-  };
 
   const resetForm = () => {
     reset({
       path: '',
-      bucketId: ''
+      bucketId: '',
+      format: ''
     });
   };
 
@@ -80,25 +60,19 @@ export const AddDataset: FC<any> = ({ match, location }) => {
     dispatch(addExistingDataset({ bucketId, path }))
       .then(unwrapResult)
       .then(() => {
-        raiseAlert('success', `Dataset has been added`);
         resetForm();
       })
-      .catch(({ message }) => {
-        raiseAlert('error', message);
-      });
+      .catch(() => {});
   };
 
   const UploadImages = (bucketId: string, path: string) => {
     dispatch(uploadMediaFiles({ files, bucketId, path }))
       .then(unwrapResult)
-      .then(({ message }) => {
-        raiseAlert('success', message);
+      .then(() => {
         resetForm();
         setFiles([]);
       })
-      .catch(({ message }) => {
-        raiseAlert('error', message);
-      });
+      .catch(() => {});
   };
 
   const onSubmit = handleSubmit(({ bucketId, path }) => {
@@ -177,6 +151,22 @@ export const AddDataset: FC<any> = ({ match, location }) => {
                 as={<Select>{BucketsSelect(buckets)}</Select>}
               />
             </FormControl>
+            <FormControl>
+              <InputLabel id="dataset-format">Format</InputLabel>
+              <Controller
+                labelId="dataset-format"
+                name="datasetFormat"
+                control={control}
+                rules={{ required: true }}
+                label="Format"
+                defaultValue=""
+                as={
+                  <Select>
+                    <MenuItem value="PASCAL VOC">PASCAL VOC</MenuItem>
+                  </Select>
+                }
+              />
+            </FormControl>
             <TextField
               name="path"
               label="Dataset path"
@@ -203,13 +193,6 @@ export const AddDataset: FC<any> = ({ match, location }) => {
           </>
         </form>
       </FormContainer>
-      <SnackbarAlert
-        open={notification.show}
-        onClose={handleClose}
-        severity={notification.severity}
-      >
-        {notification.message}
-      </SnackbarAlert>
     </>
   );
 };
