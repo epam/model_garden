@@ -13,6 +13,7 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import { Empty } from 'antd';
 import { useTypedSelector, AppState } from '../../store';
 import { Dataset, Bucket } from '../../models';
+import { createLabelingTask } from '../../store/labelingTask';
 import { getMediaAssets, imageGalleryInit } from '../../store/gallery';
 import { uploadMediaFiles } from '../../store/media';
 import { ImageCard } from './ImageCard';
@@ -67,7 +68,7 @@ const ImageGallery = (props: any) => {
       })
         .then(unwrapResult)
         .then(() => {
-          getMediaAssets({ datasetId }); //why are we not sending in the bucket  ?
+          getMediaAssets({ datasetId });
           setFiles([]);
         });
     }
@@ -127,6 +128,7 @@ const ImageGallery = (props: any) => {
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <Button
+              disabled={!checklist.length}
               color="primary"
               variant="contained"
               startIcon={<AddBoxIcon />}
@@ -154,6 +156,10 @@ const ImageGallery = (props: any) => {
         <TaskForm
           setOpenTaskModal={setOpenTaskModal}
           openTaskModal={openTaskModal}
+          createLabelingTask={createLabelingTask}
+          checklist={checklist}
+          setCheckList={setCheckList}
+          currentDataset={currentDataset}
         />
       </Container>
     </>

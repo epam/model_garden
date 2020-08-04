@@ -41,7 +41,7 @@ export const dataInit = createAsyncThunk('data/init', async () => {
   }
 
   return {
-    buckets: (bucketsResponse as any).value?.data.results ?? [],
+    buckets: (bucketsResponse as any).value?.data.results.map((item: any) => ({ ...item, id: `${item.id}` })) ?? [],
     labelingToolUsers: (usersResponse as any).value?.data ?? []
   };
 });
