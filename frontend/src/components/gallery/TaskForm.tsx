@@ -48,7 +48,6 @@ export const TaskForm = ({
     formData.currentDatasetId = currentDataset.id;
     formData.filesInTask = checklist.length;
     formData.countOfTasks = 1;
-    console.log('Form submitted with data: ', formData);
     dispatch(createLabelingTask(formData))
       .then(unwrapResult)
       .then(() => {
