@@ -11,44 +11,38 @@ import {
 import SearchIcon from '@material-ui/icons/Search';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import { Empty } from 'antd';
-import { useTypedSelector, useAppDispatch } from '../../store';
-import { Dataset, Severity, Alert } from '../../models';
-import { getDatasetsTasks, getMediaAssets } from '../../store/gallery';
+import { useTypedSelector, AppState } from '../../store';
+import { Dataset, Bucket } from '../../models';
+import { createLabelingTask } from '../../store/labelingTask';
+import { getMediaAssets, imageGalleryInit } from '../../store/gallery';
 import { uploadMediaFiles } from '../../store/media';
 import { ImageCard } from './ImageCard';
 import { ImageGalleryHeader } from './ImageGalleryHeader';
 import { TasksTable } from './TasksTable';
-import { DropZone, SnackbarAlert } from '../shared';
+import { DropZone } from '../shared';
 import { TaskForm } from './TaskForm';
+import { connect } from 'react-redux';
 
-const ImageGallery = () => {
-  const dispatch = useAppDispatch();
-  const photos = useTypedSelector(({ gallery }) => gallery.mediaAssets);
-  const datasets = useTypedSelector(({ data }) => data.datasets);
-  const buckets = useTypedSelector(({ data }) => data.buckets);
-  const tasks = useTypedSelector(({ gallery }) => gallery.tasks);
-  const users = useTypedSelector(({ data }) => data.labelingToolUsers);
-
-  const alertState: Alert = {
-    show: false,
-    severity: undefined,
-    message: ''
-  };
-
-  const [notification, setNotification] = useState(alertState);
+const ImageGallery = (props: any) => {
+  const { photos, datasets, buckets, tasks } = props;
+  const { uploadMediaFiles, imageGalleryInit, getMediaAssets } = props;
   const [files, setFiles] = useState<File[]>([]);
 
   const {
-    params: { datasetId }
+    params: { datasetId, bucketId }
   } = useRouteMatch();
+
   const currentDataset = datasets.find(
-    (dataset: Dataset) => dataset.id.toString() === datasetId
+    (dataset: Dataset) => dataset.id === datasetId
   ); //@todo: update once we change arrays to object
+
   const currentBucket = buckets.find(
-    (busket) => busket.id === currentDataset?.bucket
+    (bucket: Bucket) => bucket.id === bucketId
   ); //@todo: update once we change arrays to object
+
   const [searchTerm, setSearchTerm] = useState('');
   const [openTaskModal, setOpenTaskModal] = useState(false);
+  const [checklist, setCheckList] = useState([]);
 
   const filteredPhotos = useTypedSelector(({ gallery }) =>
     gallery.mediaAssets.filter((photo) =>
@@ -58,67 +52,46 @@ const ImageGallery = () => {
     )
   );
 
-  const raiseAlert = (severity: Severity, message: string) => {
-    setNotification({ show: true, severity, message });
-  };
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setNotification((prevState) => ({
-      ...prevState,
-      show: false,
-      message: ''
-    }));
-  };
-
   useEffect(() => {
-    if (datasets.length > 0) {
-      dispatch(getMediaAssets({ datasetId: parseInt(datasetId) }));
-    }
-  }, [dispatch, datasetId, datasets.length]);
-
-  useEffect(() => {
-    //@todo: update once we will have API request by dataset Id
-    if (currentDataset?.path) {
-      dispatch(getDatasetsTasks({ dataset: currentDataset.path }));
-    }
-  }, [dispatch, currentDataset]);
+    imageGalleryInit({
+      bucketId,
+      datasetId
+    });
+  }, [imageGalleryInit, bucketId, datasetId]);
 
   useEffect(() => {
     if (currentBucket?.id && currentDataset?.path && files.length > 0) {
-      dispatch(
-        uploadMediaFiles({
-          files,
-          bucketId: currentBucket.id,
-          path: currentDataset.path
-        })
-      )
+      uploadMediaFiles({
+        files,
+        bucketId: currentBucket.id,
+        path: currentDataset.path
+      })
         .then(unwrapResult)
-        .then(({ message }) => {
-          raiseAlert('success', message);
-          dispatch(getMediaAssets({ datasetId: parseInt(datasetId) }));
+        .then(() => {
+          getMediaAssets({ datasetId });
           setFiles([]);
-        })
-        .catch(({ message }) => {
-          raiseAlert('error', message);
         });
     }
-  }, [dispatch, files, currentBucket, currentDataset, datasetId]);
+  }, [
+    uploadMediaFiles,
+    getMediaAssets,
+    files,
+    currentBucket,
+    currentDataset,
+    datasetId
+  ]);
 
-  if (datasets.length === 0) {
+  if (
+    datasets.length &&
+    !datasets.find((dataset: any) => dataset.id === datasetId)
+  ) {
+    //in case we use an old URL with a dataset that doesnt exist
     return <Redirect to="/gallery" />;
   }
 
   return (
     <>
-      <ImageGalleryHeader
-        bucket={currentBucket?.name}
-        dataset={currentDataset?.path}
-        imageCount={currentDataset?.items_number}
-        labelCount={currentDataset?.xmls_number}
-        createdAt={currentDataset?.created_at}
-      />
+      <ImageGalleryHeader />
       <Container maxWidth={'xl'}>
         <TasksTable tasks={tasks} />
         {!photos.length && (
@@ -126,9 +99,7 @@ const ImageGallery = () => {
             to={{
               pathname: '/add-dataset/upload-images',
               state: {
-                dataset: datasets.find(
-                  (dataset: any) => dataset.id === parseInt(datasetId)
-                )
+                dataset: currentDataset
               }
             }}
           >
@@ -157,6 +128,7 @@ const ImageGallery = () => {
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <Button
+              disabled={!checklist.length}
               color="primary"
               variant="contained"
               startIcon={<AddBoxIcon />}
@@ -173,6 +145,8 @@ const ImageGallery = () => {
           {filteredPhotos.map((image: any) => (
             <Grid item xs={6} sm={4} md={3} lg={2} key={image.remote_path}>
               <ImageCard
+                checklist={checklist}
+                setCheckList={setCheckList}
                 imageSrc={image.remote_path}
                 xmlPath={image.remote_xml_path}
               />
@@ -180,21 +154,27 @@ const ImageGallery = () => {
           ))}
         </Grid>
         <TaskForm
-          users={users}
-          currentBucketId={currentBucket?.id}
-          currentDataset={currentDataset}
           setOpenTaskModal={setOpenTaskModal}
           openTaskModal={openTaskModal}
+          createLabelingTask={createLabelingTask}
+          checklist={checklist}
+          setCheckList={setCheckList}
+          currentDataset={currentDataset}
         />
       </Container>
-      <SnackbarAlert
-        open={notification.show}
-        onClose={handleClose}
-        severity={notification.severity}
-      >
-        {notification.message}
-      </SnackbarAlert>
     </>
   );
 };
-export default ImageGallery;
+
+const MapStateToProps = ({ gallery, data }: AppState) => ({
+  photos: gallery.mediaAssets,
+  datasets: data.datasets,
+  buckets: data.buckets,
+  tasks: gallery.tasks
+});
+
+export default connect(MapStateToProps, {
+  imageGalleryInit,
+  uploadMediaFiles,
+  getMediaAssets
+})(ImageGallery);

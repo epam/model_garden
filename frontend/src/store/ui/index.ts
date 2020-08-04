@@ -1,8 +1,9 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, AnyAction } from '@reduxjs/toolkit';
 import { UiState } from './types';
 import { uploadMediaFiles, addExistingDataset } from '../media';
 import { getMediaAssets } from '../gallery';
 import { createLabelingTask } from '../labelingTask';
+import { dataInit } from '../data';
 
 const uiSlice = createSlice({
   name: 'ui',
@@ -12,30 +13,28 @@ const uiSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getMediaAssets.pending, (state) => {
-        state.showLoader = true;
-      })
-      .addCase(getMediaAssets.fulfilled, (state) => {
-        state.showLoader = false;
-      })
-      .addCase(addExistingDataset.pending, (state) => {
-        state.showLoader = true;
-      })
-      .addCase(addExistingDataset.fulfilled, (state) => {
-        state.showLoader = false;
-      })
-      .addCase(uploadMediaFiles.pending, (state) => {
-        state.showLoader = true;
-      })
-      .addCase(uploadMediaFiles.fulfilled, (state) => {
-        state.showLoader = false;
-      })
-      .addCase(createLabelingTask.pending, (state) => {
-        state.showLoader = true;
-      })
-      .addCase(createLabelingTask.fulfilled, (state) => {
-        state.showLoader = false;
-      });
+      .addMatcher(
+        (action: AnyAction): action is PayloadAction<{}> => {
+          return [addExistingDataset, getMediaAssets, uploadMediaFiles, createLabelingTask, dataInit].some((thunk) =>
+            thunk.pending.match(action)
+          );
+        },
+        (state) => {
+          state.showLoader = true;
+        }
+      )
+      .addMatcher(
+        (action: AnyAction): action is PayloadAction<{}> => action.type.endsWith('fulfilled'),
+        (state) => {
+          state.showLoader = false;
+        }
+      )
+      .addMatcher(
+        (action: AnyAction): action is PayloadAction<{}> => action.type.endsWith('rejected'),
+        (state) => {
+          state.showLoader = false;
+        }
+      );
   }
 });
 
