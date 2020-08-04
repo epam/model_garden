@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 import { DataState } from './types';
 import { Dataset } from '../../models';
 import { getBucketsRequest, getDatasetsRequest, getLabelingToolUsersRequest } from '../../api';
@@ -27,10 +28,21 @@ export const getLabelingToolUsers = createAsyncThunk('fetchUsers', async () => {
 export const dataInit = createAsyncThunk('data/init', async () => {
   //special thunk that loads buckets and users in one action
   //this models the action as 'an event' instead of a getter
-  const [bucketsResponse, usersResponse] = await Promise.all([getBucketsRequest(), getLabelingToolUsersRequest()]);
+  const [bucketsResponse, usersResponse] = await Promise.allSettled([
+    getBucketsRequest(),
+    getLabelingToolUsersRequest()
+  ]);
+
+  if (usersResponse.status === 'rejected') {
+    toast.error(usersResponse.reason.message, { autoClose: false });
+  }
+  if (bucketsResponse.status === 'rejected') {
+    toast.error(bucketsResponse.reason.message || 'Error fetching Buckets', { autoClose: false });
+  }
+
   return {
-    buckets: bucketsResponse.data.results.map((item: any) => ({ ...item, id: `${item.id}` })),
-    labelingToolUsers: usersResponse.data
+    buckets: (bucketsResponse as any).value?.data.results ?? [],
+    labelingToolUsers: (usersResponse as any).value?.data ?? []
   };
 });
 const dataSlice = createSlice({
