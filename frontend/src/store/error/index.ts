@@ -25,8 +25,8 @@ export const errorSlice = createSlice({
       .addCase(getLabelingTasks.rejected, helperToast('Error getting labeling tasks', 4000))
       .addCase(archiveLabelingTask.rejected, helperToast('Error archiving task(s)', 4000))
       .addCase(retryLabelingTask.rejected, helperToast('Error retrying labeling task(s)', 4000))
-      .addCase(uploadMediaFiles.rejected, helperToast('Error uploading Images', 4000))
-      .addCase(addExistingDataset.rejected, helperToast('Error adding ExistingDataset', 4000))
+      .addCase(uploadMediaFiles.rejected, helperToast('Error uploading images', 4000))
+      .addCase(addExistingDataset.rejected, helperToast('Error adding existing dataset', 4000))
       .addCase(createLabelingTask.rejected, helperToast('Failed to create labeling task', 4000));
   }
 });
