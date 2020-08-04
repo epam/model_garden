@@ -77,15 +77,11 @@ export const ImageCard = ({
   const fileName = imageSrc.substring(imageSrc.lastIndexOf('/') + 1);
 
   const check = (fileName: string) =>
-    setCheckList((ps: string[]) => {
-      //symmetric difference (Xor)
-      const newArray = ps
+    setCheckList((ps: string[]) =>
+      ps
         .filter((x) => ![fileName].includes(x))
-        .concat([fileName].filter((x) => !ps.includes(x)));
-
-      console.log('select Images: ', newArray);
-      return newArray;
-    });
+        .concat([fileName].filter((x) => !ps.includes(x)))
+    );
 
   return (
     <Paper className={classes.card}>
