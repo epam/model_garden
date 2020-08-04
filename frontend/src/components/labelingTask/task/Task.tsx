@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import {
@@ -13,23 +13,19 @@ import {
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import './Task.css';
 import { FilesCounter } from '../filesCounter';
-import { Notification } from '../notification';
 import { Bucket, Dataset, LabelingToolUser } from '../../../models';
 import { FormContainer } from '../../shared';
 import { getDatasets } from '../../../store/data';
 import { DEFAULT_FORM_DATA } from './constants';
-import {
-  clearUnsignedImagesCount,
-  clearTaskUrl
-} from '../../../store/labelingTask';
+import { clearUnsignedImagesCount } from '../../../store/labelingTask';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 interface TaskProps {
   buckets: Bucket[];
   datasets: Dataset[];
   users: LabelingToolUser[];
   filesCount: number;
-  newTaskUrl: string;
-  handleTaskSubmit: (data: FormData) => void;
+  handleTaskSubmit: any;
   onDataSetChange: (datasetId: string) => void;
 }
 
@@ -47,8 +43,7 @@ export const Task: React.FC<TaskProps> = ({
   users,
   filesCount,
   handleTaskSubmit,
-  onDataSetChange,
-  newTaskUrl
+  onDataSetChange
 }: TaskProps) => {
   const [currentBucketId, setCurrentBucketId] = useState('');
   const [currentDataset, setCurrentDataset] = useState({
@@ -88,17 +83,17 @@ export const Task: React.FC<TaskProps> = ({
     setValue('taskName', taskName);
   }, [taskName, setValue, currentDataset]);
 
-  // clear form on a new task is created
-  useEffect(() => {
-    clearForm();
-    dispatch(clearUnsignedImagesCount());
-  }, [dispatch, newTaskUrl]);
-
   const onSubmit = handleSubmit((data: FormData) => {
     data.filesInTask = Number(counter.filesInTask);
     data.countOfTasks = Number(counter.countOfTasks);
     data.currentDatasetId = currentDataset.id;
-    handleTaskSubmit(data);
+
+    handleTaskSubmit(data)
+      .then(unwrapResult)
+      .then(() => {
+        clearForm();
+        dispatch(clearUnsignedImagesCount());
+      });
   });
 
   const handleBucketChange = (
@@ -135,10 +130,6 @@ export const Task: React.FC<TaskProps> = ({
     setTaskName('');
     setDataSetField('');
     setCounter({ filesInTask: '0', countOfTasks: '0' });
-  };
-
-  const clearTaskData = () => {
-    dispatch(clearTaskUrl());
   };
 
   const bucketsSelectOptions = buckets.map((bucket: Bucket) => (
@@ -304,7 +295,6 @@ export const Task: React.FC<TaskProps> = ({
           </Button>
         </form>
       </FormContainer>
-      <Notification newTaskUrl={newTaskUrl} onClose={clearTaskData} />
     </>
   );
 };

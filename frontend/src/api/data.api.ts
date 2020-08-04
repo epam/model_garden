@@ -32,7 +32,7 @@ export const getDatasetsRequest = async (bucketId: string) => {
 export const getLabelingToolUsersRequest = async () => {
   try {
     return await axios.get(`http://${backendHostPort}/api/cvat-users/`, {
-      timeout: 2000,
+      timeout: 4000,
       timeoutErrorMessage: 'Error getting users. Please confirm you are connected to VPN'
     });
   } catch (error) {

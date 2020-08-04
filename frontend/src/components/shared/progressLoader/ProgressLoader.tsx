@@ -1,6 +1,7 @@
 import React from 'react';
 import { Spin } from 'antd';
 import { makeStyles } from '@material-ui/core/styles';
+import { useTypedSelector } from '../../../store';
 
 const useStyles = makeStyles({
   root: {
@@ -18,15 +19,10 @@ const useStyles = makeStyles({
   }
 });
 
-interface ProgressLoaderProps {
-  show: boolean;
-}
-
-export const ProgressLoader: React.FC<ProgressLoaderProps> = ({
-  show
-}: ProgressLoaderProps) => {
+export const ProgressLoader: React.FC = () => {
+  const showLoader = useTypedSelector(({ ui }) => ui.showLoader);
   const classes = useStyles();
-  if (!show) return null;
+  if (!showLoader) return null;
   return (
     <div className={classes.root}>
       <Spin size="large" />

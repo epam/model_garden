@@ -8,8 +8,7 @@ export const mapStateToProps = ({ labelingTask, data }: AppState) => ({
   buckets: data.buckets,
   datasets: data.datasets,
   users: data.labelingToolUsers,
-  unsignedImagesCount: labelingTask.unsignedImagesCount,
-  newTaskUrl: labelingTask.newTaskUrl
+  unsignedImagesCount: labelingTask.unsignedImagesCount
 });
 
 export const actions = {
@@ -24,7 +23,6 @@ export interface LabelingProps {
   datasets: Dataset[];
   users: any;
   unsignedImagesCount: any;
-  newTaskUrl: string;
   getLabelingToolUsers: any;
   getUnsignedImagesCount: any;
   createLabelingTask: any;
