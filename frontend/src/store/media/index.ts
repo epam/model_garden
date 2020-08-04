@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { UploadFiles, AddExistingDataset, initialState } from './types';
+import { UploadFiles, AddExistingDataset, MediaState } from './types';
 import { uploadMediaFilesRequest, addExistingDatasetRequest } from '../../api';
 
 //async Thunks
 export const uploadMediaFiles = createAsyncThunk(
-  'media/uploadMediaFile',
+  'media/uploadMediaFiles',
   async ({ files, bucketId, path }: UploadFiles) => {
     const response = await uploadMediaFilesRequest(files, bucketId, path);
     return response.data;
@@ -23,22 +23,20 @@ export const addExistingDataset = createAsyncThunk(
 //actions and reducer
 const mediaSlice = createSlice({
   name: 'media',
-  initialState,
+  initialState: {
+    addedMediaAssets: undefined, // not really needed right now
+    batchName: '' // unused
+  } as MediaState,
   reducers: {},
   extraReducers: (builder) => {
     //reducer for async actions
     builder
-      .addCase(uploadMediaFiles.fulfilled, (state, action) => {
-        state = action.payload;
-        toast.success(action.payload.message);
-      })
-      .addCase(addExistingDataset.pending, (state) => {
-        state.addingExistingDataSet = true;
-        toast.success('Dataset has been added');
+      .addCase(uploadMediaFiles.fulfilled, (_, { payload }) => {
+        toast.success(payload.message);
       })
       .addCase(addExistingDataset.fulfilled, (state, action) => {
-        state.addingExistingDataSet = false;
         state.addedMediaAssets = action.payload;
+        toast.success('Dataset has been added');
       });
   }
 });

@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import { ProgressLoader } from './components';
 import { dataInit } from './store/data';
 import { Header, TabsContent } from './routerconfig';
+import { Slide } from 'react-toastify';
 import theme from './theme';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -25,7 +26,7 @@ const App: FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <ToastContainer />
+      <ToastContainer transition={Slide} />
       <AppBar position="sticky">
         <Header pathname={pathname} />
       </AppBar>
