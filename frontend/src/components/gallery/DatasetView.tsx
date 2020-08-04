@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bucket } from '../../models';
 import {
   Container,
@@ -20,6 +20,13 @@ const DatasetView = () => {
   const buckets = useTypedSelector(({ data }) => data.buckets);
   const [currentBucketId, setCurrentBucketId] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    if (buckets.length === 1) {
+      setCurrentBucketId(buckets[0].id);
+      dispatch(getDatasets(buckets[0].id));
+    }
+  }, [dispatch, buckets]);
 
   const HandleChange = ({ target: { value } }: any) => {
     setCurrentBucketId(value);
