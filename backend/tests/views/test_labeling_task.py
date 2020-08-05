@@ -361,7 +361,7 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
 
     self.assertEqual(response.status_code, status.HTTP_200_OK)
     self.assertEqual(response.json()['count'], 2)
-    self.assertEqual({t['name'] for t in response.json()['results']},{t1.name, t2.name})
+    self.assertEqual({t['name'] for t in response.json()['results']}, {t1.name, t2.name})
 
   def test_list_with_dataset_id_filter_empty_result(self):
     response = self.client.get(
