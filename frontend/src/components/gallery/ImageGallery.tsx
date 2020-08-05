@@ -6,7 +6,8 @@ import {
   Grid,
   TextField,
   InputAdornment,
-  Button
+  Button,
+  Tooltip
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import AddBoxIcon from '@material-ui/icons/AddBox';
@@ -127,15 +128,22 @@ const ImageGallery = (props: any) => {
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <Button
-              disabled={!checklist.length}
-              color="primary"
-              variant="contained"
-              startIcon={<AddBoxIcon />}
-              onClick={(e: any) => setOpenTaskModal(true)}
+            <Tooltip
+              title={!checklist.length ? 'No images selected' : ''}
+              arrow
             >
-              CREATE NEW TASK
-            </Button>
+              <span>
+                <Button
+                  disabled={!checklist.length}
+                  color="primary"
+                  variant="contained"
+                  startIcon={<AddBoxIcon />}
+                  onClick={(e: any) => setOpenTaskModal(true)}
+                >
+                  CREATE NEW TASK
+                </Button>
+              </span>
+            </Tooltip>
           </Grid>
         </Grid>
         <Grid container spacing={2}>
