@@ -12,6 +12,7 @@ from rest_framework.exceptions import APIException, ParseError, ValidationError
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
+from model_garden.constants import DATASET_FORMATS
 from model_garden.models import Bucket, MediaAsset
 from model_garden.serializers import (
   DatasetRawPathSerializer,
@@ -62,9 +63,14 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
     except Bucket.DoesNotExist:
       raise ValidationError(detail={"message": f"Bucket with id='{bucket_id}' not found"})
 
+    dataset_format = request.data.get('datasetFormat')
+    if not dataset_format or dataset_format not in DATASET_FORMATS:
+      raise ValidationError(detail={"message": "Missing 'datasetFormat' in request"})
+
     return {
       'bucket': bucket,
       'files': files,
+      'dataset_format': dataset_format,
     }
 
   @action(methods=["POST"], detail=False)
@@ -72,10 +78,12 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
     validated_attrs = self._validate_request_params(request=request)
     bucket = validated_attrs['bucket']
     files = validated_attrs['files']
+    dataset_format = validated_attrs['dataset_format']
 
     dataset_serializer = DatasetSerializer(data={
       'path': request.data.get('path'),
       'bucket': bucket.pk,
+      'dataset_format': dataset_format,
     })
     dataset_serializer.is_valid(raise_exception=True)
     dataset = dataset_serializer.save()
@@ -136,6 +144,7 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
     dataset_serializer = DatasetRawPathSerializer(data={
       'bucket': request.data.get('bucketId'),
       'path': request.data.get('path'),
+      'dataset_format': request.data.get('datasetFormat'),
     })
     dataset_serializer.is_valid(raise_exception=True)
     dataset = dataset_serializer.save()
