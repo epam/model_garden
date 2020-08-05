@@ -14,6 +14,9 @@ class LabelingTaskStatus:
 class DatasetFormat:
     PASCAL_VOC = 'PASCAL_VOC'
 
+DATASET_FORMATS = {
+    DatasetFormat.PASCAL_VOC,
+}
 
 IMAGE_EXTENSIONS = {
     'bmp',
