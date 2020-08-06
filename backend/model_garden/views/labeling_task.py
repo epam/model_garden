@@ -87,17 +87,19 @@ class LabelingTaskViewSet(ModelViewSet):
   search_fields = ('name', 'dataset', 'labeler', 'status', 'url')
 
   def get_queryset(self):
-    """Overrides and extends the class' build-in method.
-       Filters list of labeling tasks for requested dataset_id.
+    """Filters list of labeling tasks for requested dataset_id.
+       If dataset_id is None(i.e. normal get request), it will return whole query_set.
+
+       In general, It Overrides and extends the class' build-in method.
     """
-    dataset_id = self.request.query_params.get('dataset_id', None)
-    if dataset_id is not None:
+    dataset_id_query_param = self.request.query_params.get('dataset_id', None)
+    if dataset_id_query_param is not None:
       try:
-        dataset = Dataset.objects.get(id=dataset_id).path
+        dataset = Dataset.objects.get(id=dataset_id_query_param).path
         return self.queryset.filter(dataset=dataset)
       except Dataset.DoesNotExist:
         raise ValidationError(
-          detail={"message": f"Dataset with id='{dataset_id}' not found."})
+          detail={"message": f"Dataset with id='{dataset_id_query_param}' not found."})
     else:
       return self.queryset
 

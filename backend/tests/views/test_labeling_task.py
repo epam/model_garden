@@ -343,14 +343,14 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
 
   def test_list_with_dataset_id_filter(self):
     dataset = self.test_factory.create_dataset()
-    t1 = self.test_factory.create_labeling_task(name='Test labeling task1')
-    t2 = self.test_factory.create_labeling_task(name='Test labeling task2')
-    m1 = self.test_factory.create_media_asset(dataset=dataset)
-    m1.labeling_task = t1
-    m1.save()
-    m2 = self.test_factory.create_media_asset(dataset=dataset)
-    m2.labeling_task = t2
-    m2.save()
+    task1 = self.test_factory.create_labeling_task(name='Test labeling task1')
+    task2 = self.test_factory.create_labeling_task(name='Test labeling task2')
+    media1 = self.test_factory.create_media_asset(dataset=dataset)
+    media1.labeling_task = task1
+    media1.save()
+    media2 = self.test_factory.create_media_asset(dataset=dataset)
+    media2.labeling_task = task2
+    media2.save()
 
     response = self.client.get(
       path=reverse('labelingtask-list'),
@@ -361,7 +361,7 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
 
     self.assertEqual(response.status_code, status.HTTP_200_OK)
     self.assertEqual(response.json()['count'], 2)
-    self.assertEqual({t['name'] for t in response.json()['results']}, {t1.name, t2.name})
+    self.assertEqual({task['name'] for task in response.json()['results']}, {task1.name, task2.name})
 
   def test_list_with_dataset_id_filter_empty_result(self):
     response = self.client.get(
