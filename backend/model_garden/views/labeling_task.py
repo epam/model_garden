@@ -88,9 +88,14 @@ class LabelingTaskViewSet(ModelViewSet):
 
   def get_queryset(self):
     """Filters list of labeling tasks for requested dataset_id.
-       If dataset_id is None(i.e. normal get request), it will return whole query_set.
+       If dataset_id is None(i.e. normal get request), it will return default
+       query_set (a list of all labeling tasks).
 
-       In general, It Overrides and extends the class' build-in method.
+       In general, It overrides and extends the class' build-in method.
+
+       Response:
+        {labeling_task_id1, labeling_task_id2, ...} for specified or all datasets.
+        {HTTP_400_BAD_REQUEST} if the dataset is not found.
     """
     dataset_id_query_param = self.request.query_params.get('dataset_id', None)
     if dataset_id_query_param is not None:
