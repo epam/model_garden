@@ -6,16 +6,16 @@ import { uploadMediaFilesRequest, addExistingDatasetRequest } from '../../api';
 //async Thunks
 export const uploadMediaFiles = createAsyncThunk(
   'media/uploadMediaFiles',
-  async ({ files, bucketId, path }: UploadFiles) => {
-    const response = await uploadMediaFilesRequest(files, bucketId, path);
+  async ({ files, bucketId, path, format }: UploadFiles) => {
+    const response = await uploadMediaFilesRequest(files, bucketId, path, format);
     return response.data;
   }
 );
 
 export const addExistingDataset = createAsyncThunk(
   'media/addExistingDataset',
-  async ({ bucketId, path }: AddExistingDataset) => {
-    const request = await addExistingDatasetRequest(bucketId, path);
+  async ({ bucketId, path, format }: AddExistingDataset) => {
+    const request = await addExistingDatasetRequest(bucketId, path, format);
     return request.data.imported;
   }
 );
