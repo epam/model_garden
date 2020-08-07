@@ -34,6 +34,8 @@ test:
     POSTGRES_USER: postgres
   <<: *setup_python_env
   script:
+    - python manage.py makemigrations
+    - python manage.py migrate
     - pytest -v --cov=model_garden --cov-report=term-missing --no-cov-on-fail tests
   cache:
     paths:
