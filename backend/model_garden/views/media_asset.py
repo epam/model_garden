@@ -63,9 +63,9 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
     except Bucket.DoesNotExist:
       raise ValidationError(detail={"message": f"Bucket with id='{bucket_id}' not found"})
 
-    dataset_format = request.data.get('datasetFormat')
+    dataset_format = request.data.get('dataset_format')
     if not dataset_format or dataset_format not in DATASET_FORMATS:
-      raise ValidationError(detail={"message": "Missing 'datasetFormat' in request"})
+      raise ValidationError(detail={"message": "Missing 'dataset_format' in request"})
 
     return {
       'bucket': bucket,

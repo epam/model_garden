@@ -2,6 +2,7 @@ from urllib.parse import urljoin, quote
 
 from django.db import models
 
+from model_garden.constants import DatasetFormat
 from model_garden.models import BaseModel
 
 
@@ -39,3 +40,17 @@ class MediaAsset(BaseModel):
   @property
   def remote_xml_path(self):
     return f"{self.remote_path}.xml"
+
+  @property
+  def full_label_path(self):
+    if self.dataset.dataset_format == DatasetFormat.YOLO:
+      return f"{self.full_path}.txt"
+    else:
+      return f"{self.full_path}.xml"
+
+  @property
+  def remote_label_path(self):
+    if self.dataset.dataset_format == DatasetFormat.YOLO:
+      return f"{self.remote_path}.txt"
+    else:
+      return f"{self.remote_path}.xml"

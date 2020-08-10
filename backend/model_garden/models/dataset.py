@@ -7,6 +7,7 @@ from model_garden.models import BaseModel, Bucket
 class Dataset(BaseModel):
     FORMATS = [
         (DatasetFormat.PASCAL_VOC, 'Pascal VOC'),
+        (DatasetFormat.YOLO, 'YOLO'),
     ]
 
     path = models.CharField(max_length=512)
