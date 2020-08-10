@@ -167,6 +167,7 @@ export const AddDataset: FC<any> = ({ match, location }) => {
                 as={
                   <Select>
                     <MenuItem value="PASCAL_VOC">PASCAL VOC</MenuItem>
+                    <MenuItem value="YOLO">YOLO</MenuItem>
                   </Select>
                 }
               />
