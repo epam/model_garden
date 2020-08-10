@@ -16,8 +16,7 @@ export const getDatasets = createAsyncThunk('data/fetchDatasets', async (bucketI
     .map((dataset) => ({
       ...dataset,
       id: `${dataset.id}`,
-      path: `${dataset.path.split('')[0] === '/' ? '' : '/'}${dataset.path}`,
-      dataset_format: 'PASCAL VOC' //@todo Update when backend will be ready
+      path: `${dataset.path.split('')[0] === '/' ? '' : '/'}${dataset.path}`
     }));
 });
 
