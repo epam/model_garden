@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '1rem',
     margin: '-2.5rem 0 1.5rem'
   },
-  back: {
+  topRow: {
     display: 'flex'
   },
   backIcon: {
@@ -50,7 +50,7 @@ export const ImageGalleryHeader = () => {
 
   return (
     <header className={classes.header}>
-      <div className={classes.back}>
+      <div className={classes.topRow}>
         <Link to="/gallery">
           <ArrowBackIosIcon className={classes.backIcon} />
           <Typography variant="srOnly">Back to datasets list</Typography>
