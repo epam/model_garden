@@ -8,17 +8,15 @@ import { Bucket, Dataset } from '../../models';
 
 const useStyles = makeStyles((theme) => ({
   header: {
-    display: 'flex',
     backgroundColor: blueGrey[50],
     padding: '1rem',
     margin: '-2.5rem 0 1.5rem'
   },
-  back: {
-    display: 'flex',
-    alignItems: 'center'
+  topRow: {
+    display: 'flex'
   },
   backIcon: {
-    fontSize: '2.6rem'
+    fontSize: '1.5rem'
   },
   title: {
     fontSize: '1rem',
@@ -52,15 +50,17 @@ export const ImageGalleryHeader = () => {
 
   return (
     <header className={classes.header}>
-      <Link to="/gallery" className={classes.back}>
-        <ArrowBackIosIcon className={classes.backIcon} />
-        <Typography variant="srOnly">Back to datasets list</Typography>
-      </Link>
-      <div>
+      <div className={classes.topRow}>
+        <Link to="/gallery">
+          <ArrowBackIosIcon className={classes.backIcon} />
+          <Typography variant="srOnly">Back to datasets list</Typography>
+        </Link>
         <h1 className={classes.title}>
           {currentBucket?.name}
           {currentDataset?.path}
         </h1>
+      </div>
+      <div>
         <ul className={classes.info}>
           <li>ITEMS: {currentDataset?.items_number}</li>
           <li>LABELS: {currentDataset?.xmls_number}</li>
