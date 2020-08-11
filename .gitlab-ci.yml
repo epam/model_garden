@@ -92,7 +92,7 @@ backend dev:
     - apk add --no-cache curl jq python3 py-pip
     - pip install awscli
     - cd backend
- #start infrastructure rollout
+ #Start infrastructure rollout
     - echo $LBARN
     - call ./infrastructure.sh
   script:
