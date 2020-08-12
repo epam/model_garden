@@ -4,6 +4,15 @@ from model_garden.constants import LabelingTaskStatus
 from model_garden.models import MediaAsset
 
 
+class MediaAssetIDSerializer(serializers.Serializer):
+  id = serializers.ListField(
+    child=serializers.IntegerField(),
+    required=True,
+    allow_empty=False,
+    min_length=1,
+  )
+
+
 class MediaAssetSerializer(serializers.ModelSerializer):
   dataset_id = serializers.SerializerMethodField()
   remote_label_path = serializers.SerializerMethodField()
@@ -29,13 +38,5 @@ class MediaAssetSerializer(serializers.ModelSerializer):
   def get_remote_label_path(self, obj: MediaAsset) -> str:
     if obj.labeling_task and (obj.labeling_task.status == LabelingTaskStatus.SAVED
                               or obj.labeling_task.status == LabelingTaskStatus.ARCHIVED):
+
       return obj.remote_label_path
-
-
-class MediaAssetIDSerializer(serializers.Serializer):
-  id = serializers.ListField(
-    child=serializers.IntegerField(),
-    required=True,
-    allow_empty=False,
-    min_length=1,
-  )
