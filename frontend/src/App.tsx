@@ -3,20 +3,20 @@ import { useDispatch } from 'react-redux';
 import { AppBar, CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useLocation, Redirect } from 'react-router-dom';
-import { ErrorAlert, ProgressLoader } from './components';
-import { getBuckets, getLabelingToolUsers } from './store/data';
+import { ToastContainer } from 'react-toastify';
+import { ProgressLoader } from './components';
+import { dataInit } from './store/data';
 import { Header, TabsContent } from './routerconfig';
+import { Slide } from 'react-toastify';
 import theme from './theme';
-import { useTypedSelector } from './store';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App: FC = () => {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
-  const showLoader = useTypedSelector(({ ui }) => ui.showLoader);
 
   useEffect(() => {
-    dispatch(getBuckets());
-    dispatch(getLabelingToolUsers());
+    dispatch(dataInit());
   }, [dispatch]);
 
   if (pathname === '/') {
@@ -26,12 +26,12 @@ const App: FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <ErrorAlert />
+      <ToastContainer transition={Slide} />
       <AppBar position="sticky">
         <Header pathname={pathname} />
       </AppBar>
       <TabsContent />
-      <ProgressLoader show={showLoader} />
+      <ProgressLoader />
     </ThemeProvider>
   );
 };

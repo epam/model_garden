@@ -1,22 +1,22 @@
 import React from 'react';
 import { makeStyles, Typography } from '@material-ui/core';
 import blueGrey from '@material-ui/core/colors/blueGrey';
-import { Link } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import { useTypedSelector } from '../../store';
+import { Bucket, Dataset } from '../../models';
 
 const useStyles = makeStyles((theme) => ({
   header: {
-    display: 'flex',
     backgroundColor: blueGrey[50],
     padding: '1rem',
     margin: '-2.5rem 0 1.5rem'
   },
-  back: {
-    display: 'flex',
-    alignItems: 'center'
+  topRow: {
+    display: 'flex'
   },
   backIcon: {
-    fontSize: '2.6rem'
+    fontSize: '1.5rem'
   },
   title: {
     fontSize: '1rem',
@@ -33,29 +33,42 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export const ImageGalleryHeader = ({
-  bucket,
-  dataset,
-  imageCount,
-  labelCount,
-  createdAt
-}: any) => {
+export const ImageGalleryHeader = () => {
   const classes = useStyles();
+
+  const {
+    params: { datasetId, bucketId }
+  } = useRouteMatch();
+
+  const currentBucket = useTypedSelector((state) => state.data.buckets).find(
+    (bucket: Bucket) => bucket.id === bucketId
+  );
+
+  const currentDataset = useTypedSelector((state) => state.data.datasets).find(
+    (dataset: Dataset) => dataset.id === datasetId
+  );
+
   return (
     <header className={classes.header}>
-      <Link to="/gallery" className={classes.back}>
-        <ArrowBackIosIcon className={classes.backIcon} />
-        <Typography variant="srOnly">Back to datasets list</Typography>
-      </Link>
-      <div>
+      <div className={classes.topRow}>
+        <Link to="/gallery">
+          <ArrowBackIosIcon className={classes.backIcon} />
+          <Typography variant="srOnly">Back to datasets list</Typography>
+        </Link>
         <h1 className={classes.title}>
-          {bucket}
-          {dataset}
+          {currentBucket?.name}
+          {currentDataset?.path}
         </h1>
+      </div>
+      <div>
         <ul className={classes.info}>
-          <li>ITEMS: {imageCount}</li>
-          <li>LABELS: {labelCount}</li>
-          <li>CREATED: {new Date(createdAt).toLocaleString()}</li>
+          <li>ITEMS: {currentDataset?.items_number}</li>
+          <li>LABELS: {currentDataset?.xmls_number}</li>
+          <li>
+            CREATED:
+            {new Date(currentDataset?.created_at ?? 0).toLocaleString()}
+          </li>
+          <li>FORMAT: PASCAL VOC</li>
         </ul>
       </div>
     </header>
