@@ -72,7 +72,7 @@ export const TaskForm = ({
             <Controller
               name="taskName"
               label="Task Name"
-              defaultValue=""
+              defaultValue={currentDataset?.path ?? ''}
               control={control}
               rules={{ required: 'Task Name is required.' }}
               as={
