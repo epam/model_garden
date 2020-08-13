@@ -124,8 +124,8 @@ class Command(BaseCommand):
         s3_client.upload_file_obj(
           file_obj=annotation_filenames[f"{asset_filename}.xml"],
           bucket=bucket_name,
-          key=media_asset.full_xml_path,
+          key=media_asset.full_label_path,
         )
-        logger.info(f"Uploaded annotation '{media_asset.full_xml_path}'")
+        logger.info(f"Uploaded annotation '{media_asset.full_label_path}'")
       except Exception as e:
         raise Exception(f"Failed to upload task annotations: {e}")
