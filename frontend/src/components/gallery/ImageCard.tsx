@@ -69,7 +69,7 @@ const StyledCheckboxLabel = withStyles({
 
 export const ImageCard = ({
   imageSrc,
-  xmlPath,
+  labelPath,
   setCheckList,
   checklist
 }: any) => {
@@ -98,11 +98,11 @@ export const ImageCard = ({
       <div className={classes.imgWrap}>
         <img className={classes.img} src={imageSrc} alt={fileName}></img>
       </div>
-      {xmlPath && (
+      {labelPath && (
         <button
           className={classes.download}
           onClick={() => {
-            window.location.href = xmlPath;
+            window.location.href = labelPath;
           }}
         >
           Download Label <GetAppIcon />

@@ -1,12 +1,13 @@
 import axios from 'axios';
 import { backendHostPort } from './environment';
 
-export const uploadMediaFilesRequest = async (files: File[], bucketId: string, path?: string) => {
+export const uploadMediaFilesRequest = async (files: File[], bucketId: string, path: string, format: string) => {
   try {
     const formData = new FormData();
     files.forEach((file) => formData.append('file', file));
     formData.append('bucketId', bucketId);
     if (path) formData.append('path', path);
+    if (format) formData.append('dataset_format', format);
     return await axios.post(`http://${backendHostPort}/api/media-assets/upload/`, formData, {
       headers: {
         'Content-Type': 'application/zip'
@@ -21,11 +22,12 @@ export const uploadMediaFilesRequest = async (files: File[], bucketId: string, p
   }
 };
 
-export const addExistingDatasetRequest = async (bucketId: string, path: string) => {
+export const addExistingDatasetRequest = async (bucketId: string, path: string, format: string) => {
   try {
     const formData = new FormData();
     formData.append('bucketId', bucketId);
     if (path) formData.append('path', path);
+    if (format) formData.append('dataset_format', format);
     return await axios.post(`http://${backendHostPort}/api/media-assets/import-s3/`, formData, {
       headers: {
         'Content-Type': 'application/zip'

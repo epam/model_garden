@@ -6,4 +6,5 @@ export interface Dataset {
   preview_image: string;
   items_number: number;
   xmls_number: number;
+  dataset_format: string;
 }

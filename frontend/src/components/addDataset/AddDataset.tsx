@@ -56,8 +56,12 @@ export const AddDataset: FC<any> = ({ match, location }) => {
     });
   };
 
-  const AddExistingDataset = (bucketId: string, path: string) => {
-    dispatch(addExistingDataset({ bucketId, path }))
+  const AddExistingDataset = (
+    bucketId: string,
+    path: string,
+    format: string
+  ) => {
+    dispatch(addExistingDataset({ bucketId, path, format }))
       .then(unwrapResult)
       .then(() => {
         resetForm();
@@ -65,8 +69,8 @@ export const AddDataset: FC<any> = ({ match, location }) => {
       .catch(() => {});
   };
 
-  const UploadImages = (bucketId: string, path: string) => {
-    dispatch(uploadMediaFiles({ files, bucketId, path }))
+  const UploadImages = (bucketId: string, path: string, format: string) => {
+    dispatch(uploadMediaFiles({ files, bucketId, path, format }))
       .then(unwrapResult)
       .then(() => {
         resetForm();
@@ -75,11 +79,11 @@ export const AddDataset: FC<any> = ({ match, location }) => {
       .catch(() => {});
   };
 
-  const onSubmit = handleSubmit(({ bucketId, path }) => {
+  const onSubmit = handleSubmit(({ bucketId, path, format }) => {
     if (location.pathname === `${match.path}/upload-images`) {
-      UploadImages(bucketId, path);
+      UploadImages(bucketId, path, format);
     } else {
-      AddExistingDataset(bucketId, path);
+      AddExistingDataset(bucketId, path, format);
     }
   });
 
@@ -155,14 +159,15 @@ export const AddDataset: FC<any> = ({ match, location }) => {
               <InputLabel id="dataset-format">Format</InputLabel>
               <Controller
                 labelId="dataset-format"
-                name="datasetFormat"
+                name="format"
                 control={control}
                 rules={{ required: true }}
                 label="Format"
                 defaultValue=""
                 as={
                   <Select>
-                    <MenuItem value="PASCAL VOC">PASCAL VOC</MenuItem>
+                    <MenuItem value="PASCAL_VOC">PASCAL VOC</MenuItem>
+                    {/* <MenuItem value="YOLO">YOLO</MenuItem> @todo Uncomment when backend will be ready*/}
                   </Select>
                 }
               />

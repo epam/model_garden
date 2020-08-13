@@ -136,7 +136,9 @@ export const DatasetGrid = ({ searchTerm, currentBucketId }: any) => {
 
               <div className={classes.info}>
                 <strong className={classes.name}>{dataset.path}</strong>
-                <div className={classes.data}>Format: PASCAL VOC</div>
+                <div className={classes.data}>
+                  Format: {dataset.dataset_format}
+                </div>
                 <div className={classes.data}>
                   Created: {new Date(dataset.created_at).toLocaleString()}
                 </div>
