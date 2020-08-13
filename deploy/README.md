@@ -14,7 +14,7 @@ Please find information [there](https://kb.epam.com/display/EPMEMRDMGA/AWS+Bucke
 ### Image Build Pipeline on Gitlab
 
 
-Gitlab pipeline uses `.gitlab-ci.yml` file for pipeline configuration. The build
+Gitlab pipeline uses [`.gitlab-ci.yml`](.gitlab-ci.yml) file for pipeline configuration. The build
 pipeline is started automatically after commits to **master** and **develop** branches.
 
 
