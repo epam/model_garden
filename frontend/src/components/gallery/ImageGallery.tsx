@@ -156,7 +156,7 @@ const ImageGallery = (props: any) => {
                 checklist={checklist}
                 setCheckList={setCheckList}
                 imageSrc={image.remote_path}
-                labelPath={image.remote_xml_path}
+                labelPath={image.remote_label_path}
               />
             </Grid>
           ))}
