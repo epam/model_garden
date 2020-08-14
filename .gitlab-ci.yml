@@ -89,7 +89,7 @@ backend dev:
     - apk add --no-cache curl jq python3 py-pip
     - pip install awscli
     - cd backend
- #Start infrastructure rollout
+ #Start infrastructure roll-out
     - call ./deploy/aws_infra_setup.sh
   script:
     - $(aws ecr get-login --no-include-email --region eu-central-1)
