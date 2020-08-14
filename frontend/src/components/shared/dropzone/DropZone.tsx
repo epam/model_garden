@@ -59,11 +59,6 @@ export const DropZone: React.FC<DropZoneProps> = ({
       width: '100%',
       textAlign: 'center',
       margin: '0'
-    },
-    dropTextError: {
-      width: '100%',
-      textAlign: 'center',
-      margin: '0'
     }
   }))();
 
