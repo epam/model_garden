@@ -14,6 +14,7 @@ _ENV="${1:-devops}"
 # Exit script in case of failure.
   set -e 
   set -o pipefail
+  
 # Check AWS load balancer presence and create if it is absent.
 # Load balancer Amazon Resource Number - LB ARN.
 LBARN = 'aws elbv2 describe-load-balancers --names "model-garden-${_ENV}-lb" --query LoadBalancers[*].LoadBalancerArn --output text'
@@ -38,7 +39,6 @@ if [$LBARN != "" -a $tg_mg_frontend != ""]
 then
     echo "Load balancer frontend target group present."
 elif [$LBARN != ""]
-#
     aws elbv2 create-target-group --name model-garden-frontend-${_ENV} --protocol HTTP --port 80 --target-type ip --vpc-id vpc-88b8a5e3
     aws elbv2 create-listener --load-balancer-arn $lb_arn --protocol HTTP --port 80  --default-actions Type=forward,TargetGroupArn=$tg_mg_frontend
 else
