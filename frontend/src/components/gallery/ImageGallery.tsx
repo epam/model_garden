@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch, Redirect, Link } from 'react-router-dom';
-import { unwrapResult } from '@reduxjs/toolkit';
 import {
   Container,
   Grid,
@@ -27,7 +26,6 @@ import { connect } from 'react-redux';
 const ImageGallery = (props: any) => {
   const { photos, datasets, buckets, tasks } = props;
   const { uploadMediaFiles, imageGalleryInit, getMediaAssets } = props;
-  const [files, setFiles] = useState<File[]>([]);
 
   const {
     params: { datasetId, bucketId }
@@ -60,33 +58,23 @@ const ImageGallery = (props: any) => {
     });
   }, [imageGalleryInit, bucketId, datasetId]);
 
-  useEffect(() => {
-    if (currentBucket?.id && currentDataset?.path && files.length > 0) {
-      uploadMediaFiles({
-        files,
-        bucketId: currentBucket.id,
-        path: currentDataset.path
-      })
-        .then(unwrapResult)
-        .then(() => {
-          getMediaAssets({ datasetId });
-          setFiles([]);
-        });
-    }
-  }, [
-    uploadMediaFiles,
-    getMediaAssets,
-    files,
-    currentBucket,
-    currentDataset,
-    datasetId
-  ]);
+  const onDrop = (acceptedFiles: any) => {
+    uploadMediaFiles({
+      files: acceptedFiles,
+      bucketId: currentBucket.id,
+      path: currentDataset.path
+    }).then(({ type }: any) => {
+      if (type.match('fulfilled')) {
+        getMediaAssets({ datasetId });
+      }
+    });
+  };
 
   if (
     datasets.length &&
     !datasets.find((dataset: any) => dataset.id === datasetId)
   ) {
-    //in case we use an old URL with a dataset that doesnt exist
+    //in case we use an old URL with a dataset that doesn't exist
     return <Redirect to="/gallery" />;
   }
 
@@ -148,7 +136,7 @@ const ImageGallery = (props: any) => {
         </Grid>
         <Grid container spacing={2}>
           <Grid item xs={6} sm={4} md={3} lg={2}>
-            <DropZone setFiles={setFiles} />
+            <DropZone onDrop={onDrop} />
           </Grid>
           {filteredPhotos.map((image: any) => (
             <Grid item xs={6} sm={4} md={3} lg={2} key={image.remote_path}>
