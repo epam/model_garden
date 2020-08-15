@@ -30,7 +30,6 @@ fi
 LBARN = 'aws elbv2 describe-load-balancers --names "model-garden-${_ENV}-lb" --query LoadBalancers[*].LoadBalancerArn --output text'
 
 # AWS target group check and creation for frontend service.
-# AWS listener creation for frontend.
 tg_mg_frontend = 'aws elbv2 describe-target-groups --names model-garden-frontend-${_ENV} --query TargetGroups[*].TargetGroupArn --output text'
 echo $tg_mg_frontend
 
@@ -40,13 +39,14 @@ then
     echo "Load balancer frontend target group present."
 elif [$LBARN != ""]
     aws elbv2 create-target-group --name model-garden-frontend-${_ENV} --protocol HTTP --port 80 --target-type ip --vpc-id vpc-88b8a5e3
+    
+# AWS listener creation for frontend.
     aws elbv2 create-listener --load-balancer-arn $lb_arn --protocol HTTP --port 80  --default-actions Type=forward,TargetGroupArn=$tg_mg_frontend
 else
     echo "Loadbalancer is not present."
 fi
 
 # AWS target group check and creation for backend service.
-# AWS listener creation for backend.
 tg_mg_backend =  'aws elbv2 describe-target-groups --names model-garden-backend-${_ENV} --query TargetGroups[*].TargetGroupArn --output text'
 echo $tg_mg_backend
 
@@ -56,6 +56,7 @@ then
     echo "Load balancer backend target group present."
 elif [$LBARN != ""]
     aws elbv2 create-target-group --name model-garden-backend-${_ENV} --protocol HTTP --port 9000 --target-type ip --vpc-id vpc-88b8a5e3 --health-check-path /health_check/
+# AWS listener creation for backend.
     aws elbv2 create-listener --load-balancer-arn $lb_arn --protocol HTTP --port 9000  --default-actions Type=forward,TargetGroupArn=$tg_mg_backend
 else
     echo "Load balancer is not present."
