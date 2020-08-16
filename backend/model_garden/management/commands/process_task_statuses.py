@@ -125,7 +125,7 @@ class Command(BaseCommand):
       annotations_content_zip = self._cvat_service.get_annotations(
         task_id=labeling_task.task_id,
         task_name=labeling_task.name,
-        annotation_format = annotation_frmt,
+        annotation_format=annotation_frmt,
       )
     except Exception as e:
       raise Exception(f"Failed to get task annotations: {e}")
@@ -133,11 +133,14 @@ class Command(BaseCommand):
     zip_fp = BytesIO(annotations_content_zip)
     zf = ZipFile(file=zip_fp)
     annotation_filenames = {
-      os.path.split(zi.filename)[-1]: zf.open(zi) for zi in zf.filelist if zi.filename.startswith(self._get_foldername(annotation_frmt))
+      os.path.split(zi.filename)[-1]: zf.open(zi) for zi in zf.filelist if
+      zi.filename.startswith(self._get_foldername(annotation_frmt))
     }
 
     media_assets = labeling_task.media_assets.all()
-    media_assets_filenames = {f"{os.path.splitext(media_asset.filename)[0]}" + self._get_label_file_extension(annotation_frmt) for media_asset in media_assets}
+    media_assets_filenames = {
+      f"{os.path.splitext(media_asset.filename)[0]}" + self._get_label_file_extension(annotation_frmt) for media_asset
+      in media_assets}
     logger.info(media_assets_filenames)
     logger.info(annotation_filenames)
 
