@@ -1,39 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch, Redirect, Link } from 'react-router-dom';
-import { unwrapResult } from '@reduxjs/toolkit';
 import {
   Container,
   Grid,
   TextField,
   InputAdornment,
-  Button
+  Button,
+  Tooltip
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import { Empty } from 'antd';
 import { useTypedSelector, AppState } from '../../store';
-import { Dataset, Severity, Alert, Bucket } from '../../models';
+import { Dataset, Bucket } from '../../models';
+import { createLabelingTask } from '../../store/labelingTask';
 import { getMediaAssets, imageGalleryInit } from '../../store/gallery';
 import { uploadMediaFiles } from '../../store/media';
 import { ImageCard } from './ImageCard';
 import { ImageGalleryHeader } from './ImageGalleryHeader';
 import { TasksTable } from './TasksTable';
-import { DropZone, SnackbarAlert } from '../shared';
+import { DropZone } from '../shared';
 import { TaskForm } from './TaskForm';
 import { connect } from 'react-redux';
 
 const ImageGallery = (props: any) => {
   const { photos, datasets, buckets, tasks } = props;
   const { uploadMediaFiles, imageGalleryInit, getMediaAssets } = props;
-
-  const alertState: Alert = {
-    show: false,
-    severity: undefined,
-    message: ''
-  };
-
-  const [notification, setNotification] = useState(alertState);
-  const [files, setFiles] = useState<File[]>([]);
 
   const {
     params: { datasetId, bucketId }
@@ -59,20 +51,6 @@ const ImageGallery = (props: any) => {
     )
   );
 
-  const raiseAlert = (severity: Severity, message: string) => {
-    setNotification({ show: true, severity, message });
-  };
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setNotification((prevState) => ({
-      ...prevState,
-      show: false,
-      message: ''
-    }));
-  };
-
   useEffect(() => {
     imageGalleryInit({
       bucketId,
@@ -80,37 +58,23 @@ const ImageGallery = (props: any) => {
     });
   }, [imageGalleryInit, bucketId, datasetId]);
 
-  useEffect(() => {
-    if (currentBucket?.id && currentDataset?.path && files.length > 0) {
-      uploadMediaFiles({
-        files,
-        bucketId: currentBucket.id,
-        path: currentDataset.path
-      })
-        .then(unwrapResult)
-        .then(({ message }: any) => {
-          raiseAlert('success', message);
-          getMediaAssets({ datasetId });
-          setFiles([]);
-        })
-        .catch(({ message }: any) => {
-          raiseAlert('error', message);
-        });
-    }
-  }, [
-    uploadMediaFiles,
-    getMediaAssets,
-    files,
-    currentBucket,
-    currentDataset,
-    datasetId
-  ]);
+  const onDrop = (acceptedFiles: any) => {
+    uploadMediaFiles({
+      files: acceptedFiles,
+      bucketId: currentBucket.id,
+      path: currentDataset.path
+    }).then(({ type }: any) => {
+      if (type.match('fulfilled')) {
+        getMediaAssets({ datasetId });
+      }
+    });
+  };
 
   if (
     datasets.length &&
     !datasets.find((dataset: any) => dataset.id === datasetId)
   ) {
-    //in case we use an old URL with a dataset that doesnt exist
+    //in case we use an old URL with a dataset that doesn't exist
     return <Redirect to="/gallery" />;
   }
 
@@ -152,19 +116,27 @@ const ImageGallery = (props: any) => {
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <Button
-              color="primary"
-              variant="contained"
-              startIcon={<AddBoxIcon />}
-              onClick={(e: any) => setOpenTaskModal(true)}
+            <Tooltip
+              title={!checklist.length ? 'No images selected' : ''}
+              arrow
             >
-              CREATE NEW TASK
-            </Button>
+              <span>
+                <Button
+                  disabled={!checklist.length}
+                  color="primary"
+                  variant="contained"
+                  startIcon={<AddBoxIcon />}
+                  onClick={(e: any) => setOpenTaskModal(true)}
+                >
+                  CREATE NEW TASK
+                </Button>
+              </span>
+            </Tooltip>
           </Grid>
         </Grid>
         <Grid container spacing={2}>
           <Grid item xs={6} sm={4} md={3} lg={2}>
-            <DropZone setFiles={setFiles} />
+            <DropZone onDrop={onDrop} />
           </Grid>
           {filteredPhotos.map((image: any) => (
             <Grid item xs={6} sm={4} md={3} lg={2} key={image.remote_path}>
@@ -172,7 +144,7 @@ const ImageGallery = (props: any) => {
                 checklist={checklist}
                 setCheckList={setCheckList}
                 imageSrc={image.remote_path}
-                xmlPath={image.remote_xml_path}
+                labelPath={image.remote_label_path}
               />
             </Grid>
           ))}
@@ -180,15 +152,12 @@ const ImageGallery = (props: any) => {
         <TaskForm
           setOpenTaskModal={setOpenTaskModal}
           openTaskModal={openTaskModal}
+          createLabelingTask={createLabelingTask}
+          checklist={checklist}
+          setCheckList={setCheckList}
+          currentDataset={currentDataset}
         />
       </Container>
-      <SnackbarAlert
-        open={notification.show}
-        onClose={handleClose}
-        severity={notification.severity}
-      >
-        {notification.message}
-      </SnackbarAlert>
     </>
   );
 };

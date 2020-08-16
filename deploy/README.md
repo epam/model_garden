@@ -8,13 +8,13 @@
 
 #### AWS S2 Bucket and CDN configuration
 
-Please find information [there](https://kb.epam.com/display/EPMCMLCV/AWS+Bucket+Typical+Setup).
+Please find information [there](https://kb.epam.com/display/EPMEMRDMGA/AWS+Bucket+Typical+Setup).
 
 
 ### Image Build Pipeline on Gitlab
 
 
-Gitlab pipeline uses `.gitlab-ci.yml` file for pipeline configuration. The build
+Gitlab pipeline uses [`.gitlab-ci.yml`](.gitlab-ci.yml) file for pipeline configuration. The build
 pipeline is started automatically after commits to **master** and **develop** branches.
 
 
@@ -42,7 +42,7 @@ $ git push origin v0.0.2
 
 #### Check Gitlab Pipelines:
 
-A new pipeline run should be created [here](https://git.epam.com/epmc-mlcv/model_garden/pipelines).
+A new pipeline run should be created [here](https://git.epam.com/epm-emrd/model_garden/pipelines).
 
 Once the run is completed successfully a new docker image will be available in 
 [Amazon ECR repository](https://eu-central-1.console.aws.amazon.com/ecr/repositories/model_garden_backend/?region=eu-central-1).
