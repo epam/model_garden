@@ -69,7 +69,7 @@ const StyledCheckboxLabel = withStyles({
 
 export const ImageCard = ({
   imageSrc,
-  xmlPath,
+  labelPath,
   setCheckList,
   checklist
 }: any) => {
@@ -77,15 +77,11 @@ export const ImageCard = ({
   const fileName = imageSrc.substring(imageSrc.lastIndexOf('/') + 1);
 
   const check = (fileName: string) =>
-    setCheckList((ps: string[]) => {
-      //symmetric difference (Xor)
-      const newArray = ps
+    setCheckList((ps: string[]) =>
+      ps
         .filter((x) => ![fileName].includes(x))
-        .concat([fileName].filter((x) => !ps.includes(x)));
-
-      console.log('select Images: ', newArray);
-      return newArray;
-    });
+        .concat([fileName].filter((x) => !ps.includes(x)))
+    );
 
   return (
     <Paper className={classes.card}>
@@ -102,11 +98,11 @@ export const ImageCard = ({
       <div className={classes.imgWrap}>
         <img className={classes.img} src={imageSrc} alt={fileName}></img>
       </div>
-      {xmlPath && (
+      {labelPath && (
         <button
           className={classes.download}
           onClick={() => {
-            window.location.href = xmlPath;
+            window.location.href = labelPath;
           }}
         >
           Download Label <GetAppIcon />

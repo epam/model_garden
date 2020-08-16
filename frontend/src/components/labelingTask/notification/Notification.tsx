@@ -1,39 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { Snackbar, Link } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import React from 'react';
+import { Link } from '@material-ui/core';
 
-interface NotificationProps {
-  newTaskUrl: string;
-  onClose: () => void;
-}
-
-export const Notification: React.FC<NotificationProps> = ({
-  newTaskUrl,
-  onClose
-}: NotificationProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => setIsOpen(newTaskUrl !== ''), [newTaskUrl]);
-
-  return (
-    <Snackbar
-      open={isOpen}
-      autoHideDuration={6000}
-      onClose={onClose}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+export const Notification = (newTaskUrl: any) => (
+  <>
+    <Link
+      href={newTaskUrl}
+      color="inherit"
+      underline="always"
+      target="_blank"
+      rel="noopener"
     >
-      <Alert onClose={onClose} severity="success">
-        <Link
-          href={newTaskUrl}
-          color="inherit"
-          underline="always"
-          target="_blank"
-          rel="noopener"
-        >
-          A new task
-        </Link>
-        &nbsp;has been created
-      </Alert>
-    </Snackbar>
-  );
-};
+      A new task
+    </Link>
+    &nbsp;has been created
+  </>
+);

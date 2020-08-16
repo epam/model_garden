@@ -5,10 +5,8 @@ import { getDatasets } from '../data';
 
 import { getMediaAssetsRequest } from '../../api/gallery.api';
 
-import { Dataset } from '../../models';
-
-export const getMediaAssets = createAsyncThunk('fetchMediaAssets', async ({ bucketId, datasetId }: any) => {
-  const response = await getMediaAssetsRequest({ datasetId, bucketId });
+export const getMediaAssets = createAsyncThunk('fetchMediaAssets', async ({ datasetId }: any) => {
+  const response = await getMediaAssetsRequest({ datasetId });
   return response.data.results;
 });
 
@@ -25,12 +23,9 @@ export const imageGalleryInit = createAsyncThunk(
       await dispatch(getDatasets(bucketId));
       state = getState() as any;
     }
-    const datasets = state.data.datasets;
-    const datasetPath = datasets.find((dataset: Dataset) => dataset.id === datasetId).path;
     let [mediaAssetsResponse, tasksResponse] = await Promise.all([
-      getMediaAssetsRequest({ datasetId, bucketId }),
-      //@todo : update once we will have API request by dataset Id
-      getLabelingTasksRequest({ dataset: datasetPath })
+      getMediaAssetsRequest({ datasetId }),
+      getLabelingTasksRequest({ dataset_id: datasetId })
     ]);
 
     return { mediaAssets: mediaAssetsResponse.data.results, tasks: tasksResponse.tasks };

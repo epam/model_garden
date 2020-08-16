@@ -1,7 +1,8 @@
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { useTypedSelector } from '../../store';
-
 import {
   Dialog,
   DialogTitle,
@@ -19,9 +20,19 @@ import {
 export type FormData = {
   taskName: string;
   user: string | number;
+  currentDatasetId: string | number;
+  filesInTask: number;
+  countOfTasks: number;
 };
 
-export const TaskForm = ({ setOpenTaskModal, openTaskModal }: any) => {
+export const TaskForm = ({
+  setOpenTaskModal,
+  openTaskModal,
+  createLabelingTask,
+  checklist,
+  setCheckList,
+  currentDataset
+}: any) => {
   const { control, handleSubmit, errors } = useForm<FormData>({});
   const users = useTypedSelector(({ data }) => data.labelingToolUsers);
 
@@ -31,15 +42,20 @@ export const TaskForm = ({ setOpenTaskModal, openTaskModal }: any) => {
     </MenuItem>
   ));
 
-  const onSubmit = (formData: FormData) => {
-    console.log('Form submitted with data: ', formData);
+  const dispatch = useDispatch();
 
-    /*
-    Missing:
-    dispatch(createNewTask(formData))
-      .unwrapResult()
-      .then (()=>setOpenTaskModal(false))  or whatever
-    */
+  const onSubmit = (formData: FormData) => {
+    formData.currentDatasetId = currentDataset.id;
+    formData.filesInTask = checklist.length;
+    formData.countOfTasks = 1;
+    dispatch(createLabelingTask(formData))
+      .then(unwrapResult)
+      .then(() => {
+        setCheckList([]);
+      })
+      .catch((e: any) => {
+        setCheckList([]);
+      });
     setOpenTaskModal(false);
   };
 
@@ -56,7 +72,7 @@ export const TaskForm = ({ setOpenTaskModal, openTaskModal }: any) => {
             <Controller
               name="taskName"
               label="Task Name"
-              defaultValue=""
+              defaultValue={currentDataset?.path ?? ''}
               control={control}
               rules={{ required: 'Task Name is required.' }}
               as={
