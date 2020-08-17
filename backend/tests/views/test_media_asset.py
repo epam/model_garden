@@ -140,6 +140,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
       data={
         'bucketId': self.dataset.bucket.id,
         'file': [uploaded_file],
+        'dataset_format': self.dataset.dataset_format,
       },
     )
 
@@ -159,6 +160,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
           'bucketId': self.dataset.bucket.id,
           'file': [uploaded_file],
           'path': 'test',
+          'dataset_format': self.dataset.dataset_format,
         },
       )
 
@@ -184,6 +186,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
       data={
         'bucketId': self.dataset.bucket.id,
         'file': [uploaded_file],
+        'dataset_format': self.dataset.dataset_format,
       },
     )
 
@@ -198,6 +201,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
       data={
         'bucketId': self.dataset.bucket.id,
         'file': [uploaded_file],
+        'dataset_format': self.dataset.dataset_format,
       },
     )
 
@@ -212,6 +216,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
       data={
         'bucketId': self.dataset.bucket.id,
         'file': [uploaded_file],
+        'dataset_format': self.dataset.dataset_format,
       },
     )
 
@@ -227,6 +232,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
       data={
         'bucketId': self.dataset.bucket.id,
         'file': [uploaded_file],
+        'dataset_format': self.dataset.dataset_format,
       },
     )
 
@@ -248,6 +254,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
         data={
           'bucketId': self.dataset.bucket.id,
           'path': 'foo',
+          'dataset_format': 'VOC',
         },
       )
 
@@ -269,6 +276,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
         data={
           'bucketId': self.dataset.bucket.id,
           'path': 'foo',
+          'dataset_format': 'VOC',
         },
       )
       self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -279,6 +287,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
         data={
           'bucketId': self.dataset.bucket.id,
           'path': 'foo',
+          'dataset_format': 'VOC',
         },
       )
 
@@ -291,6 +300,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
       data={
         'bucketId': 0,
         'path': 'foo',
+        'dataset_format': 'VOC',
       },
     )
 
