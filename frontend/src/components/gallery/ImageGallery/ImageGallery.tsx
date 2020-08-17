@@ -115,24 +115,27 @@ const ImageGallery = (props: any) => {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Tooltip
-              title={!checklist.length ? 'No images selected' : ''}
-              arrow
-            >
-              <span>
-                <Button
-                  disabled={!checklist.length}
-                  color="primary"
-                  variant="contained"
-                  startIcon={<AddBoxIcon />}
-                  onClick={(e: any) => setOpenTaskModal(true)}
-                >
-                  CREATE NEW TASK
-                </Button>
-              </span>
-            </Tooltip>
-          </Grid>
+
+          {process.env.NODE_ENV !== 'production' && (
+            <Grid item xs={12} sm={6} md={3}>
+              <Tooltip
+                title={!checklist.length ? 'No images selected' : ''}
+                arrow
+              >
+                <span>
+                  <Button
+                    disabled={!checklist.length}
+                    color="primary"
+                    variant="contained"
+                    startIcon={<AddBoxIcon />}
+                    onClick={(e: any) => setOpenTaskModal(true)}
+                  >
+                    CREATE NEW TASK
+                  </Button>
+                </span>
+              </Tooltip>
+            </Grid>
+          )}
         </Grid>
         <Grid container spacing={2}>
           <Grid item xs={6} sm={4} md={3} lg={2}>
@@ -141,10 +144,9 @@ const ImageGallery = (props: any) => {
           {filteredPhotos.map((image: any) => (
             <Grid item xs={6} sm={4} md={3} lg={2} key={image.remote_path}>
               <ImageCard
+                image={image}
                 checklist={checklist}
                 setCheckList={setCheckList}
-                imageSrc={image.remote_path}
-                labelPath={image.remote_label_path}
               />
             </Grid>
           ))}
