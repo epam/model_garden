@@ -5,8 +5,8 @@ import blueGrey from '@material-ui/core/colors/blueGrey';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import { Empty } from 'antd';
 
-import { Dataset } from '../../models';
-import { useTypedSelector } from '../../store';
+import { Dataset } from '../../../models';
+import { useTypedSelector } from '../../../store';
 
 const useStyles = makeStyles((theme) => ({
   card: {
