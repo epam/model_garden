@@ -96,7 +96,7 @@ class Command(BaseCommand):
         yield labeling_task, future
 
   @staticmethod
-  def _get_foldername(annotations_format: str):
+  def _get_cvat_zip_folderpath(annotations_format: str):
     if annotations_format == AnnotationsFormat.YOLO_ZIP_1_1:
       return 'obj_train_data'
     else:
@@ -117,7 +117,6 @@ class Command(BaseCommand):
       return AnnotationsFormat.PASCAL_VOB_ZIP_1_1
 
   def _upload_labeling_task_annotations(self, labeling_task: LabelingTask):
-
     dataset = labeling_task.media_assets.first().dataset
     annotation_frmt = self._get_annotations_format(dataset)
 
@@ -134,7 +133,7 @@ class Command(BaseCommand):
     zf = ZipFile(file=zip_fp)
     annotation_filenames = {
       os.path.split(zi.filename)[-1]: zf.open(zi) for zi in zf.filelist if
-      zi.filename.startswith(self._get_foldername(annotation_frmt))
+      zi.filename.startswith(self._get_cvat_zip_folderpath(annotation_frmt))
     }
 
     media_assets = labeling_task.media_assets.all()

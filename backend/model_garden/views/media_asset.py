@@ -65,7 +65,7 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
 
     dataset_format = request.data.get('dataset_format')
     if not dataset_format or dataset_format not in DATASET_FORMATS:
-      raise ValidationError(detail={"message": "Missing 'dataset_format' in request"})
+      raise ValidationError(detail={"message": "Missing 'dataset_format' in request."})
 
     return {
       'bucket': bucket,
