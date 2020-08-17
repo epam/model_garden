@@ -144,7 +144,7 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
     dataset_serializer = DatasetRawPathSerializer(data={
       'bucket': request.data.get('bucketId'),
       'path': request.data.get('path'),
-      'dataset_format': request.data.get('datasetFormat'),
+      'dataset_format': request.data.get('dataset_format'),
     })
     dataset_serializer.is_valid(raise_exception=True)
     dataset = dataset_serializer.save()
