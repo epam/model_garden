@@ -11,15 +11,15 @@ import {
 import SearchIcon from '@material-ui/icons/Search';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import { Empty } from 'antd';
-import { useTypedSelector, AppState } from '../../store';
-import { Dataset, Bucket } from '../../models';
-import { createLabelingTask } from '../../store/labelingTask';
-import { getMediaAssets, imageGalleryInit } from '../../store/gallery';
-import { uploadMediaFiles } from '../../store/media';
+import { useTypedSelector, AppState } from '../../../store';
+import { Dataset, Bucket } from '../../../models';
+import { createLabelingTask } from '../../../store/labelingTask';
+import { getMediaAssets, imageGalleryInit } from '../../../store/gallery';
+import { uploadMediaFiles } from '../../../store/media';
 import { ImageCard } from './ImageCard';
 import { ImageGalleryHeader } from './ImageGalleryHeader';
 import { TasksTable } from './TasksTable';
-import { DropZone } from '../shared';
+import { DropZone } from '../../shared';
 import { TaskForm } from './TaskForm';
 import { connect } from 'react-redux';
 
