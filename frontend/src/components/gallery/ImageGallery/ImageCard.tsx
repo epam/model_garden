@@ -13,16 +13,19 @@ const useStyles = makeStyles((theme) => ({
   card: {
     position: 'relative',
     overflow: 'hidden',
-    paddingTop: '3.875rem',
-    height: '13.9375rem'
+    height: '100%'
   },
   info: {
-    backgroundColor: '#ffffff',
-    padding: '0 0.75rem 0 0',
-    position: 'absolute',
-    left: '0',
-    top: '0',
-    right: '0'
+    padding: '0.75rem',
+    fontSize: '0.75rem',
+    minHeight: '3.875rem'
+  },
+  filename: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    display: 'block',
+    marginBottom: '0.25rem'
   },
   imgWrap: {
     backgroundColor: blueGrey[50],
@@ -56,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
 const StyledCheckboxLabel = withStyles({
   root: {
     width: '100%',
-    margin: '0'
+    margin: '-0.75rem 0 0 -0.75rem'
   },
   label: {
     whiteSpace: 'nowrap',
@@ -67,14 +70,9 @@ const StyledCheckboxLabel = withStyles({
   }
 })(FormControlLabel);
 
-export const ImageCard = ({
-  imageSrc,
-  labelPath,
-  setCheckList,
-  checklist
-}: any) => {
+export const ImageCard = ({ image, setCheckList, checklist }: any) => {
   const classes = useStyles();
-  const fileName = imageSrc.substring(imageSrc.lastIndexOf('/') + 1);
+  const { remote_path, remote_label_path, filename: fileName } = image;
 
   const check = (fileName: string) =>
     setCheckList((ps: string[]) =>
@@ -86,23 +84,31 @@ export const ImageCard = ({
   return (
     <Paper className={classes.card}>
       <div className={classes.info}>
-        <StyledCheckboxLabel
-          title={fileName}
-          label={fileName}
-          checked={checklist.includes(fileName)}
-          onChange={() => check(fileName)}
-          control={<Checkbox size="small" />}
-        />
+        {/* todo: Feature toogle. Remove after BE API will be ready */}
+        {process.env.NODE_ENV !== 'production' ? (
+          <StyledCheckboxLabel
+            title={fileName}
+            label={fileName}
+            checked={checklist.includes(fileName)}
+            onChange={() => check(fileName)}
+            control={<Checkbox size="small" />}
+          />
+        ) : (
+          <strong className={classes.filename} title={fileName}>
+            {fileName}
+          </strong>
+        )}
+        {image.labeling_task_name && `Task: ${image.labeling_task_name}`}
       </div>
 
       <div className={classes.imgWrap}>
-        <img className={classes.img} src={imageSrc} alt={fileName}></img>
+        <img className={classes.img} src={remote_path} alt={fileName}></img>
       </div>
-      {labelPath && (
+      {remote_label_path && (
         <button
           className={classes.download}
           onClick={() => {
-            window.location.href = labelPath;
+            window.location.href = remote_label_path;
           }}
         >
           Download Label <GetAppIcon />
