@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bucket } from '../../models';
+import { Bucket } from '../../../models';
 import {
   Container,
   Grid,
@@ -11,8 +11,8 @@ import {
   InputAdornment
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-import { useTypedSelector, useAppDispatch } from '../../store';
-import { getDatasets } from '../../store/data';
+import { useTypedSelector, useAppDispatch } from '../../../store';
+import { getDatasets } from '../../../store/data';
 import { DatasetGrid } from './DatasetGrid';
 
 const DatasetView = () => {

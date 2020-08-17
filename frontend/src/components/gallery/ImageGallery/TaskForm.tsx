@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { useTypedSelector } from '../../store';
+import { useTypedSelector } from '../../../store';
 import {
   Dialog,
   DialogTitle,

@@ -3,8 +3,8 @@ import { makeStyles, Typography } from '@material-ui/core';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 import { Link, useRouteMatch } from 'react-router-dom';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import { useTypedSelector } from '../../store';
-import { Bucket, Dataset } from '../../models';
+import { useTypedSelector } from '../../../store';
+import { Bucket, Dataset } from '../../../models';
 
 const useStyles = makeStyles((theme) => ({
   header: {
