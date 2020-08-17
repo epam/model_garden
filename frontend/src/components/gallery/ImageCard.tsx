@@ -67,14 +67,10 @@ const StyledCheckboxLabel = withStyles({
   }
 })(FormControlLabel);
 
-export const ImageCard = ({
-  imageSrc,
-  labelPath,
-  setCheckList,
-  checklist
-}: any) => {
+export const ImageCard = ({ image, setCheckList, checklist }: any) => {
   const classes = useStyles();
-  const fileName = imageSrc.substring(imageSrc.lastIndexOf('/') + 1);
+  const { remote_path, remote_label_path } = image;
+  const fileName = remote_path.substring(remote_path.lastIndexOf('/') + 1);
 
   const check = (fileName: string) =>
     setCheckList((ps: string[]) =>
@@ -86,23 +82,26 @@ export const ImageCard = ({
   return (
     <Paper className={classes.card}>
       <div className={classes.info}>
-        <StyledCheckboxLabel
-          title={fileName}
-          label={fileName}
-          checked={checklist.includes(fileName)}
-          onChange={() => check(fileName)}
-          control={<Checkbox size="small" />}
-        />
+        {process.env.NODE_ENV !== 'production' && (
+          <StyledCheckboxLabel
+            title={fileName}
+            label={fileName}
+            checked={checklist.includes(fileName)}
+            onChange={() => check(fileName)}
+            control={<Checkbox size="small" />}
+          />
+        )}
+        {image.labeling_task_name && `Task: ${image.labeling_task_name}`}
       </div>
 
       <div className={classes.imgWrap}>
-        <img className={classes.img} src={imageSrc} alt={fileName}></img>
+        <img className={classes.img} src={remote_path} alt={fileName}></img>
       </div>
-      {labelPath && (
+      {remote_label_path && (
         <button
           className={classes.download}
           onClick={() => {
-            window.location.href = labelPath;
+            window.location.href = remote_label_path;
           }}
         >
           Download Label <GetAppIcon />
