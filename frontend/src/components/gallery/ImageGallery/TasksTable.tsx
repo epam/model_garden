@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Table } from 'antd';
-import { LabelingTaskStatus } from '../../models';
+import { LabelingTaskStatus } from '../../../models';
 import { makeStyles } from '@material-ui/core';
-import StatusField from '../tasksStatuses/StatusField';
+import StatusField from '../../tasksStatuses/StatusField';
 
 const useStyles = makeStyles((theme) => ({
   table: {
