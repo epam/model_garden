@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import { createLabelingTask } from '../labelingTask';
 import { uploadMediaFiles, addExistingDataset } from '../media';
 
-const helper = (defaultText: string) => (_: any, { error }: any) => error.message || defaultText;
 const helperToast = (defaultText: string, autoClose: any) => (_: any, { error }: any) => {
   toast.error(error.message || defaultText, { autoClose });
   return '';
