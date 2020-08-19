@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import { useDropzone } from 'react-dropzone';
 import zipSvg from '../../../assets/zip.svg';
