@@ -56,11 +56,8 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props: any) => {
   >({
     mode: 'onChange',
     defaultValues: {
-      // currentDatasetId: '',
       taskName: '',
       user: ''
-      // filesInTask: 0,
-      // countOfTasks: 0
     }
   });
 
