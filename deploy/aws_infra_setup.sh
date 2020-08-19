@@ -11,6 +11,7 @@
 
 # Get parameter for environment.
 _ENV="${1:-devops}"
+
 # Exit script in case of failure.
   set -e 
   set -o pipefail
@@ -24,12 +25,11 @@ then
     echo "Load balancer is present."
 else
     aws elbv2 create-load-balancer --name model-garden-${_ENV}-lb --subnets subnet-17d4107d subnet-e7dae99a subnet-dac9cf97 --security-groups sg-3b02fc5b sg-03b6a18f51a8cc356 sg-0153652719fde0da0 sg-0dbd4a9079111917d
+    # Re-load Load Balancer ARN to LBARN variable after creation on previous step
+    LBARN = 'aws elbv2 describe-load-balancers --names "model-garden-${_ENV}-lb" --query LoadBalancers[*].LoadBalancerArn --output text'
 fi
 
-# Update LB ARN after creation.
-LBARN = 'aws elbv2 describe-load-balancers --names "model-garden-${_ENV}-lb" --query LoadBalancers[*].LoadBalancerArn --output text'
-
-# AWS target group check and creation for frontend service.
+# Obtain existing frontend target groups ARN to tg_mg_frontend variable.
 tg_mg_frontend = 'aws elbv2 describe-target-groups --names model-garden-frontend-${_ENV} --query TargetGroups[*].TargetGroupArn --output text'
 echo $tg_mg_frontend
 
@@ -46,7 +46,7 @@ else
     echo "Loadbalancer is not present."
 fi
 
-# AWS target group check and creation for backend service.
+# Obtain existing backend target groups ARN to tg_mg_backend variable.
 tg_mg_backend =  'aws elbv2 describe-target-groups --names model-garden-backend-${_ENV} --query TargetGroups[*].TargetGroupArn --output text'
 echo $tg_mg_backend
 
