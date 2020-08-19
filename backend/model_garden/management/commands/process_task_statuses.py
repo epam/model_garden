@@ -9,8 +9,8 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 
-from model_garden.constants import LabelingTaskStatus
-from model_garden.models import LabelingTask
+from model_garden.constants import LabelingTaskStatus, AnnotationsFormat, DatasetFormat
+from model_garden.models import LabelingTask, Dataset
 from model_garden.services import CvatService, S3Client
 
 logger = logging.getLogger(__name__)
@@ -95,11 +95,36 @@ class Command(BaseCommand):
         labeling_task = future_to_labeling_task[future]
         yield labeling_task, future
 
+  @staticmethod
+  def _get_cvat_zip_folderpath(annotations_format: str):
+    if annotations_format == AnnotationsFormat.YOLO_ZIP_1_1:
+      return 'obj_train_data'
+    else:
+      return 'Annotations'
+
+  @staticmethod
+  def _get_label_file_extension(annotations_format: str):
+    if annotations_format == AnnotationsFormat.YOLO_ZIP_1_1:
+      return '.txt'
+    else:
+      return '.xml'
+
+  @staticmethod
+  def _get_annotations_format(dataset: Dataset):
+    if dataset.dataset_format == DatasetFormat.YOLO:
+      return AnnotationsFormat.YOLO_ZIP_1_1
+    else:
+      return AnnotationsFormat.PASCAL_VOB_ZIP_1_1
+
   def _upload_labeling_task_annotations(self, labeling_task: LabelingTask):
+    dataset = labeling_task.media_assets.first().dataset
+    annotation_frmt = self._get_annotations_format(dataset)
+
     try:
       annotations_content_zip = self._cvat_service.get_annotations(
         task_id=labeling_task.task_id,
         task_name=labeling_task.name,
+        annotation_format=annotation_frmt,
       )
     except Exception as e:
       raise Exception(f"Failed to get task annotations: {e}")
@@ -107,11 +132,17 @@ class Command(BaseCommand):
     zip_fp = BytesIO(annotations_content_zip)
     zf = ZipFile(file=zip_fp)
     annotation_filenames = {
-      os.path.split(zi.filename)[-1]: zf.open(zi) for zi in zf.filelist if zi.filename.startswith('Annotations')
+      os.path.split(zi.filename)[-1]: zf.open(zi) for zi in zf.filelist if
+      zi.filename.startswith(self._get_cvat_zip_folderpath(annotation_frmt))
     }
 
     media_assets = labeling_task.media_assets.all()
-    media_assets_filenames = {f"{os.path.splitext(media_asset.filename)[0]}.xml" for media_asset in media_assets}
+    media_assets_filenames = {
+      f"{os.path.splitext(media_asset.filename)[0]}" + self._get_label_file_extension(annotation_frmt) for media_asset
+      in media_assets}
+    logger.info(media_assets_filenames)
+    logger.info(annotation_filenames)
+
     missing_annotation_filenames = media_assets_filenames - set(annotation_filenames)
     if missing_annotation_filenames:
       raise Exception(f"Missing task annotations: {', '.join(sorted(missing_annotation_filenames))}")
@@ -122,7 +153,7 @@ class Command(BaseCommand):
         bucket_name = media_asset.dataset.bucket.name
         s3_client = S3Client(bucket_name=bucket_name)
         s3_client.upload_file_obj(
-          file_obj=annotation_filenames[f"{asset_filename}.xml"],
+          file_obj=annotation_filenames[f"{asset_filename}" + self._get_label_file_extension(annotation_frmt)],
           bucket=bucket_name,
           key=media_asset.full_label_path,
         )

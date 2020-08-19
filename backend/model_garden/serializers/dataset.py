@@ -26,6 +26,7 @@ class DatasetSerializer(serializers.ModelSerializer):
       'preview_image',
       'items_number',
       'xmls_number',
+      'dataset_format',
     )
     validators = []
 
