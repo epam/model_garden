@@ -2,7 +2,7 @@ from unittest import mock
 
 from django.core import management
 
-from model_garden.constants import LabelingTaskStatus
+from model_garden.constants import LabelingTaskStatus, AnnotationsFormat
 from tests import BaseTransactionTestCase
 
 
@@ -34,6 +34,7 @@ class TestCommand(BaseTransactionTestCase):
     self.cvat_service_mock.get_annotations.assert_called_once_with(
       task_id=labeling_task.task_id,
       task_name=labeling_task.name,
+      annotation_format=AnnotationsFormat.PASCAL_VOB_ZIP_1_1,
     )
     self.s3_client_mock.upload_file_obj.assert_called_once_with(
       file_obj=mock.ANY,
