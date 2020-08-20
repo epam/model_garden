@@ -1,36 +1,12 @@
-.labeling-task {
+.task__form-group {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  width: 600px;
-  margin: 0 auto;
-  margin-top: 20px;
-  margin-bottom: 40px;
-  padding: 20px;
-  border: 1px solid #3F51B5;
-  border-radius: 2px;
+  margin: 0 -0.625rem;
 }
 
-.labeling-task__form {
-  margin-top: 20px;
-  width: 80%;
-}
-
-.labeling-task__title {
-  text-align: center;
-}
-
-.labeling-task__settings {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.labeling-task__settings-item.MuiInputBase-root,
-.labeling-task__settings-item.MuiTextField-root,
-.labeling-task__settings-item.MuiButton-root {
-  margin-top: 20px;
-  width: 100%;
+.task__form-item {
+  padding: 0 0.625rem;
+  width: 50%;
 }
