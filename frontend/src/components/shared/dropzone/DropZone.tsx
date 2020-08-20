@@ -9,7 +9,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
   setFiles,
   onDrop
 }: DropZoneProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const {
     getRootProps,
@@ -20,7 +20,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
   } = useDropzone({
     onDrop: (acceptedFiles, fileRejections) => {
       if (fileRejections.length) {
-        setIsModalOpen(true);
+        setIsDialogOpen(true);
       }
       if (acceptedFiles.length) {
         onDrop?.(acceptedFiles);
@@ -83,19 +83,24 @@ export const DropZone: React.FC<DropZoneProps> = ({
         )}
       </section>
       <ConformationDialog
-        title="Some files were ignored. Wrong format"
-        open={isModalOpen}
-        setOpen={setIsModalOpen}
-        closeButton="Ok"
+        title="There is a Problem Uploading Your File"
+        open={isDialogOpen}
+        setOpen={setIsDialogOpen}
+        closeButton="Close"
       >
-        The only supported file types are
+        <p>
+          Looks like you are trying to upload file with the unsupported format.
+          <br />
+          Supported file formats are:
+        </p>
+
         <ul>
-          <li> bmp</li>
+          <li>jpeg</li>
           <li>png</li>
           <li>gif</li>
-          <li>jpeg</li>
           <li>tiff</li>
           <li>svg</li>
+          <li>bmp</li>
           <li>zip</li>
         </ul>
       </ConformationDialog>
