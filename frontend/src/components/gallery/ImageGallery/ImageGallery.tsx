@@ -62,7 +62,8 @@ const ImageGallery = (props: any) => {
     uploadMediaFiles({
       files: acceptedFiles,
       bucketId: currentBucket.id,
-      path: currentDataset.path
+      path: currentDataset.path,
+      format: currentDataset.dataset_format
     }).then(({ type }: any) => {
       if (type.match('fulfilled')) {
         getMediaAssets({ datasetId });
