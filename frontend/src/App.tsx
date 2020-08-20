@@ -1,36 +1,37 @@
 import React, { useEffect, FC } from 'react';
 import { useDispatch } from 'react-redux';
-import { AppBar } from '@material-ui/core';
-import { ThemeProvider } from "@material-ui/core/styles";
+import { AppBar, CssBaseline } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/core/styles';
 import { useLocation, Redirect } from 'react-router-dom';
-import { ErrorAlert } from './components';
-import { getBuckets } from './store/main';
-import { getLabelingToolUsers } from './store/labelingTask'
-import { Tabs, LinkTabs } from './routerconfig';
-import theme from "./theme";
-
-import './App.css';
+import { ToastContainer } from 'react-toastify';
+import { ProgressLoader } from './components';
+import { dataInit } from './store/data';
+import { Header, TabsContent } from './routerconfig';
+import { Slide } from 'react-toastify';
+import theme from './theme';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App: FC = () => {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getBuckets());
-    dispatch(getLabelingToolUsers());
+    dispatch(dataInit());
   }, [dispatch]);
 
   if (pathname === '/') {
-    return <Redirect to="/upload-images" />;
+    return <Redirect to="/add-dataset" />;
   }
 
   return (
     <ThemeProvider theme={theme}>
-      <ErrorAlert />
+      <CssBaseline />
+      <ToastContainer transition={Slide} />
       <AppBar position="sticky">
-        <LinkTabs pathname={pathname} />
+        <Header pathname={pathname} />
       </AppBar>
-      <Tabs />
+      <TabsContent />
+      <ProgressLoader />
     </ThemeProvider>
   );
 };
