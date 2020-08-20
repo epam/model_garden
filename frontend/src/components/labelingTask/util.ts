@@ -1,11 +1,10 @@
-import { Bucket, Dataset } from '../../models';
+import { Bucket, Dataset, LabelingToolUser } from '../../models';
 
 export interface LabelingProps {
   buckets: Bucket[];
   datasets: Dataset[];
-  users: any;
-  unsignedImagesCount: any;
-  getLabelingToolUsers: any;
+  users: LabelingToolUser[];
+  filesCount: number;
   getUnsignedImagesCount: any;
   createLabelingTask: any;
   getDatasets: any;
