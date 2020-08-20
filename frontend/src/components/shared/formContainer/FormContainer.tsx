@@ -7,8 +7,7 @@ const useStyles = makeStyles({
   },
   paper: {
     padding: '2.5rem 1.5rem',
-    marginBottom: '2rem',
-    marginTop: '2rem',
+    marginBottom: '2rem'
   }
 });
 

@@ -17,8 +17,8 @@ logger = logging.getLogger(__name__)
 @admin.register(Dataset)
 class DatasetAdmin(admin.ModelAdmin, FilterCreatedFixture):
   date_hierarchy = 'created_at'
-  list_display = ('id', 'created', 'path', 'bucket')
-  list_filter = ('created_at', 'bucket')
+  list_display = ('id', 'created', 'path', 'bucket', 'dataset_format')
+  list_filter = ('created_at', 'bucket', 'dataset_format')
   search_fields = ('id', 'path')
 
   def has_add_permission(self, request, obj=None):

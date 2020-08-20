@@ -1,25 +1,21 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { UploadFiles, AddExistingDataset, initialState } from './types';
+import { toast } from 'react-toastify';
+import { UploadFiles, AddExistingDataset, MediaState } from './types';
+import { uploadMediaFilesRequest, addExistingDatasetRequest } from '../../api';
 
 //async Thunks
 export const uploadMediaFiles = createAsyncThunk(
-  'media/uploadMediaFile',
-  async ({ files, bucketId, path }: UploadFiles, { extra: { uploadMediaFilesRequest } }: any) => {
-    const response = await uploadMediaFilesRequest(files, bucketId, path);
+  'media/uploadMediaFiles',
+  async ({ files, bucketId, path, format }: UploadFiles) => {
+    const response = await uploadMediaFilesRequest(files, bucketId, path, format);
     return response.data;
   }
 );
-export const getMediaImages = createAsyncThunk(
-  'media/fetchImages',
-  async (params: any, { extra: { getImages } }: any) => {
-    const response = await getImages(params);
-    return response.data.results;
-  }
-);
+
 export const addExistingDataset = createAsyncThunk(
   'media/addExistingDataset',
-  async ({ bucketId, path }: AddExistingDataset, { extra: { addExistingDatasetRequest } }: any) => {
-    const request = await addExistingDatasetRequest(bucketId, path);
+  async ({ bucketId, path, format }: AddExistingDataset) => {
+    const request = await addExistingDatasetRequest(bucketId, path, format);
     return request.data.imported;
   }
 );
@@ -27,30 +23,22 @@ export const addExistingDataset = createAsyncThunk(
 //actions and reducer
 const mediaSlice = createSlice({
   name: 'media',
-  initialState,
-  reducers: {
-    //non-thunk reducer
-    setMediaFiles: (state: any, a: any) => {
-      state.mediaFiles = a.payload;
-    }
-  },
+  initialState: {
+    addedMediaAssets: undefined, // not really needed right now
+    batchName: '' // unused
+  } as MediaState,
+  reducers: {},
   extraReducers: (builder) => {
     //reducer for async actions
-    builder.addCase(uploadMediaFiles.fulfilled, (state, action) => {
-      state = action.payload;
-    });
-    builder.addCase(getMediaImages.fulfilled, (state, action) => {
-      state.photos = action.payload;
-    });
-    builder.addCase(addExistingDataset.pending, (state, action) => {
-      state.addingExistingDataSet = true;
-    });
-    builder.addCase(addExistingDataset.fulfilled, (state, action) => {
-      state.addingExistingDataSet = false;
-      state.addedMediaAssets = action.payload;
-    });
+    builder
+      .addCase(uploadMediaFiles.fulfilled, (_, { payload }) => {
+        toast.success(payload.message);
+      })
+      .addCase(addExistingDataset.fulfilled, (state, action) => {
+        state.addedMediaAssets = action.payload;
+        toast.success('Dataset has been added');
+      });
   }
 });
 
 export const mediaReducer = mediaSlice.reducer;
-export const { setMediaFiles } = mediaSlice.actions;

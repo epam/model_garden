@@ -86,6 +86,28 @@ class LabelingTaskViewSet(ModelViewSet):
   ordering_fields = ('name', 'dataset', 'labeler', 'status', 'url')
   search_fields = ('name', 'dataset', 'labeler', 'status', 'url')
 
+  def get_queryset(self):
+    """Filters list of labeling tasks for requested dataset_id.
+       If dataset_id is None(i.e. normal get request), it will return default
+       query_set (a list of all labeling tasks).
+
+       In general, It overrides and extends the class' build-in method.
+
+       Response:
+        {labeling_task_id1, labeling_task_id2, ...} for specified or all datasets.
+        {HTTP_400_BAD_REQUEST} if the dataset is not found.
+    """
+    dataset_id_query_param = self.request.query_params.get('dataset_id', None)
+    if dataset_id_query_param is not None:
+      try:
+        dataset = Dataset.objects.get(id=dataset_id_query_param).path
+        return self.queryset.filter(dataset=dataset)
+      except Dataset.DoesNotExist:
+        raise ValidationError(
+          detail={"message": f"Dataset with id='{dataset_id_query_param}' not found."})
+    else:
+      return self.queryset
+
   def create(self, request: Request, *args, **kwargs) -> Response:
     cvat_service = CvatService()
     serializer = LabelingTaskCreateSerializer(data=request.data)
@@ -116,11 +138,17 @@ class LabelingTaskViewSet(ModelViewSet):
           username=cvat_user['username'],
         )
 
+    try:
+      last_task_name = LabelingTask.objects.filter(name__startswith=task_name).first().name
+      _, last_task_number = last_task_name.split('.')
+    except AttributeError:
+      last_task_number = 0
+
     media_assets = dataset.media_assets.filter(labeling_task__isnull=True).all()[:count_of_tasks * files_in_task]
     for chunk_id, chunk in zip(range(count_of_tasks),
                                chunkify(media_assets, files_in_task)):
       logger.info(f"Creating task '{task_name}' with {len(chunk)} files")
-      chunk_task_name = f"{task_name}.{(chunk_id + 1):02d}"
+      chunk_task_name = f"{task_name}.{(chunk_id + int(last_task_number) + 1):02d}"
       try:
         task_data = cvat_service.create_task(
           name=chunk_task_name,

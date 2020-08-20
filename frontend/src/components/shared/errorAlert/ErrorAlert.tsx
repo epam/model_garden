@@ -1,28 +1,26 @@
-import React from "react";
-import "./ErrorAlert.css";
-import { IconButton, Container, Paper } from "@material-ui/core";
-import Alert from "@material-ui/lab/Alert";
-import CloseIcon from "@material-ui/icons/Close";
-import { clearError } from "../../../store/error";
-import { useDispatch, useSelector } from "react-redux";
-import { AppState } from "../../../store";
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { IconButton, Container, Paper } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
+import CloseIcon from '@material-ui/icons/Close';
+import { clearError } from '../../../store/error';
+import { useTypedSelector } from '../../../store';
+import './ErrorAlert.css';
 
 export const ErrorAlert: React.FC = () => {
   const dispatch = useDispatch();
-  const errorMessage = useSelector(
-    (state: AppState) => state.error.errorMessage
-  );
+  const errorMessage = useTypedSelector(({ error }) => error);
 
   const close = () => {
     dispatch(clearError());
   };
 
-  if(!errorMessage){
+  if (!errorMessage) {
     return null;
   }
 
   return (
-    <div className="error-alert-container" >
+    <div className="error-alert-container">
       <Container
         className="error-alert"
         component={Paper}

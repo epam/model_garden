@@ -14,14 +14,15 @@ class TestMediaAssetSerializer(BaseTestCase):
     self.assertEqual(
       serializer.data,
       {
-        'dataset': media_asset.dataset.id,
+        'dataset_id': media_asset.dataset.id,
         'filename': media_asset.filename,
         'remote_path': media_asset.remote_path,
-        'remote_xml_path': None,
+        'remote_label_path': None,
+        'labeling_task_name': None,
       },
     )
 
-  def test_serialize_with_remote_xml_path(self):
+  def test_serialize_with_remote_label_path(self):
     labeling_task = self.test_factory.create_labeling_task(status=LabelingTaskStatus.SAVED)
     media_asset = self.test_factory.create_media_asset()
     media_asset.labeling_task = labeling_task
@@ -32,9 +33,10 @@ class TestMediaAssetSerializer(BaseTestCase):
     self.assertEqual(
       serializer.data,
       {
-        'dataset': media_asset.dataset.id,
+        'dataset_id': media_asset.dataset.id,
         'filename': media_asset.filename,
         'remote_path': media_asset.remote_path,
-        'remote_xml_path': media_asset.remote_xml_path,
+        'remote_label_path': media_asset.remote_label_path,
+        'labeling_task_name': media_asset.labeling_task.name,
       },
     )
