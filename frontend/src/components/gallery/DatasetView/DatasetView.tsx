@@ -8,18 +8,32 @@ import {
   InputLabel,
   MenuItem,
   TextField,
-  InputAdornment
+  InputAdornment,
+  Button,
+  makeStyles,
+  Dialog,
+  DialogTitle,
+  DialogContent
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import { useTypedSelector, useAppDispatch } from '../../../store';
 import { getDatasets } from '../../../store/data';
 import { DatasetGrid } from './DatasetGrid';
+import { AddDataset } from '../../addDataset';
+
+const useStyles = makeStyles({
+  button: {
+    padding: 10
+  }
+});
 
 const DatasetView = () => {
+  const classes = useStyles();
   const dispatch = useAppDispatch();
   const buckets = useTypedSelector(({ data }) => data.buckets);
   const [currentBucketId, setCurrentBucketId] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [isCreatingTask, setIsCreatingTask] = useState(false);
 
   useEffect(() => {
     if (buckets.length === 1) {
@@ -72,8 +86,27 @@ const DatasetView = () => {
             }}
           />
         </Grid>
+
+        <Grid item xs={12} sm={6} md={3}>
+          <Button
+            variant="outlined"
+            color="primary"
+            size="small"
+            className={classes.button}
+            onClick={() => setIsCreatingTask(true)}
+          >
+            Create
+          </Button>
+        </Grid>
       </Grid>
       <DatasetGrid searchTerm={searchTerm} currentBucketId={currentBucketId} />
+
+      <Dialog open={isCreatingTask} onClose={() => setIsCreatingTask(false)}>
+        <DialogTitle>Add Dataset</DialogTitle>
+        <DialogContent dividers>
+          <AddDataset onClose={() => setIsCreatingTask(false)} />
+        </DialogContent>
+      </Dialog>
     </Container>
   );
 };

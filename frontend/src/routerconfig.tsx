@@ -20,11 +20,6 @@ const useStyles = makeStyles((theme) => ({
 
 const config: Config[] = [
   {
-    component: AddDataset,
-    label: 'Add Dataset',
-    path: '/add-dataset'
-  },
-  {
     component: Gallery,
     label: 'Gallery',
     path: '/gallery'
