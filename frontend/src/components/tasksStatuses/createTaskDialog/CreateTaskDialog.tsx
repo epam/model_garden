@@ -195,7 +195,11 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
   };
 
   return (
-    <Dialog open={openCreateTaskDialog} onClose={handleDialogClose}>
+    <Dialog
+      open={openCreateTaskDialog}
+      onClose={handleDialogClose}
+      scroll="body"
+    >
       <DialogTitle>Create Tasks</DialogTitle>
       <form onSubmit={onSubmit} className="dialog-form">
         <CustomDialogContent dividers>
