@@ -20,7 +20,7 @@ const App: FC = () => {
   }, [dispatch]);
 
   if (pathname === '/') {
-    return <Redirect to="/add-dataset" />;
+    return <Redirect to="/gallery" />;
   }
 
   return (
