@@ -12,6 +12,7 @@ import {
   TextField,
   Typography,
   MenuItem,
+  DialogActions,
   Box
 } from '@material-ui/core';
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -179,21 +180,6 @@ export const AddDataset: FC<any> = (props) => {
               )
             }}
           />
-          {/* <Button
-            color="primary"
-            variant="contained"
-            type="submit"
-            disabled={!formState.isValid}
-          >
-            {subTabs[submitAction].path}
-          </Button>
-          <Button
-            color="primary"
-            variant="contained"
-            type="submit"
-          >
-            CLOSE
-          </Button> */}
 
           <DialogActions>
             <Button type="button" color="primary" onClick={props.onClose}>
@@ -203,9 +189,9 @@ export const AddDataset: FC<any> = (props) => {
               type="submit"
               color="primary"
               variant="contained"
-              disabled={false}
+              disabled={!formState.isValid}
             >
-              Assign
+              {subTabs[submitAction].path}
             </Button>
           </DialogActions>
         </>
