@@ -1,15 +1,13 @@
 import React from 'react';
-import { Box, IconButton, Button, makeStyles } from '@material-ui/core';
-import { useTypedSelector, AppState } from '../../store';
+import { Box, Button, makeStyles } from '@material-ui/core';
+import { AppState } from '../../store';
 import 'antd/dist/antd.css';
 import './TasksStatuses.css';
-import { Refresh } from '@material-ui/icons';
 import { CreateTaskDialog } from './createTaskDialog';
 import { ConformationDialog } from '../shared';
 import { connect } from 'react-redux';
 import {
   archiveLabelingTask,
-  getLabelingTasks,
   retryLabelingTask,
   setOpenConformationDialog
 } from '../../store/tasksStatuses';
@@ -18,29 +16,21 @@ import { LabelingTaskStatus } from '../../models';
 
 interface TaskActionsProps {
   openConformationDialog: boolean;
-  openCreateTaskDialog: boolean;
   tasks: LabelingTaskStatus[];
   selectedRowKeys: number[];
   setOpenConformationDialog: (state: boolean) => void;
   setOpenCreateTaskDialog: any;
   archiveLabelingTask: any;
   retryLabelingTask: any;
-  getLabelingTasks: any;
 }
 
 const TaskActionsComponent: React.FC<TaskActionsProps> = (props) => {
-  const {
-    openConformationDialog,
-    openCreateTaskDialog,
-    tasks,
-    selectedRowKeys
-  } = props;
+  const { openConformationDialog, tasks, selectedRowKeys } = props;
   const {
     setOpenConformationDialog,
     setOpenCreateTaskDialog,
     archiveLabelingTask,
-    retryLabelingTask,
-    getLabelingTasks
+    retryLabelingTask
   } = props;
 
   const classes = makeStyles((theme) => ({
@@ -110,19 +100,17 @@ const TaskActionsComponent: React.FC<TaskActionsProps> = (props) => {
   );
 };
 
-const mapStateToProps = ({ labelingTask, tasksStatuses }: AppState) => ({
+const mapStateToProps = ({ tasksStatuses }: AppState) => ({
   tasks: tasksStatuses.tasks,
   selectedRowKeys: tasksStatuses.selectedRowKeys,
-  openConformationDialog: tasksStatuses.openConformationDialog,
-  openCreateTaskDialog: labelingTask.openCreateTaskDialog
+  openConformationDialog: tasksStatuses.openConformationDialog
 });
 
 const mapDispatchToProps = {
   setOpenConformationDialog,
   setOpenCreateTaskDialog,
   archiveLabelingTask,
-  retryLabelingTask,
-  getLabelingTasks
+  retryLabelingTask
 };
 
 export const TaskActions = connect(
