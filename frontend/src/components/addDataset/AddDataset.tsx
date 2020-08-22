@@ -1,6 +1,6 @@
 import React, { useState, FC, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Route, Redirect, Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import {
   Button,
   FormControl,
@@ -10,11 +10,12 @@ import {
   Tab,
   Tabs,
   TextField,
-  Typography,
-  MenuItem
+  MenuItem,
+  DialogActions,
+  DialogTitle,
+  DialogContent
 } from '@material-ui/core';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { FormContainer } from '../shared';
 import { useAppDispatch, useTypedSelector } from '../../store';
 import { addExistingDataset, uploadMediaFiles } from '../../store/media';
 import {
@@ -24,11 +25,21 @@ import {
   BucketsSelect
 } from './utils';
 import { UploadFiles } from './uploadImages';
+import '../tasksStatuses/createTaskDialog/CreateTaskDialog.tsx';
+// @todo create component for dialog and put there styles
 
-export const AddDataset: FC<any> = ({ match, location }) => {
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: any;
+  value: any;
+}
+
+export const AddDataset: FC<any> = (props) => {
+  const location = useLocation() as any;
   const dispatch = useAppDispatch();
   const [files, setFiles] = useState<File[]>([]);
   const buckets = useTypedSelector((state) => state.data.buckets);
+  const [submitAction, setSubmitAction] = useState(0);
 
   useEffect(
     () => () => {
@@ -80,24 +91,24 @@ export const AddDataset: FC<any> = ({ match, location }) => {
   };
 
   const onSubmit = handleSubmit(({ bucketId, path, format }) => {
-    if (location.pathname === `${match.path}/upload-images`) {
-      UploadImages(bucketId, path, format);
-    } else {
+    if (submitAction) {
       AddExistingDataset(bucketId, path, format);
+    } else {
+      UploadImages(bucketId, path, format);
     }
   });
 
   const subTabs = [
     {
       label: 'upload images',
-      path: 'upload-images',
+      path: 'upload',
       component: (navProps: any) => (
         <UploadFiles {...navProps} files={files} setFiles={setFiles} />
       )
     },
     {
       label: 'add Existing Bucket Path',
-      path: 'bucket-path',
+      path: 'add',
       component: () => (
         <UploadDescription variant="body2">
           <span>
@@ -109,95 +120,83 @@ export const AddDataset: FC<any> = ({ match, location }) => {
     }
   ];
 
-  if (location.pathname === match.path) {
-    return <Redirect to={`${match.path}/upload-images`} />;
-  }
-
   return (
     <>
-      <FormContainer>
-        <Typography variant="h1">Add Dataset</Typography>
-        <UploadPaper variant="outlined">
-          <Tabs
-            indicatorColor="primary"
-            textColor="primary"
-            value={location.pathname.includes('/upload-images') ? 0 : 1}
-            aria-label="add Dataset Example"
-          >
-            {subTabs.map((item) => (
-              <Tab
-                label={item.label}
-                key={item.path}
-                component={Link}
-                to={`${match.path}/${item.path}`}
-              />
-            ))}
-          </Tabs>
-          {subTabs.map((item) => (
-            <Route
-              path={`${match.url}/${item.path}`}
-              key={item.path}
-              component={item.component}
-            />
-          ))}
-        </UploadPaper>
-        <form onSubmit={onSubmit}>
-          <>
-            <FormControl>
-              <InputLabel id="upload-images-bucket-name">Bucket</InputLabel>
-              <Controller
-                labelId="upload-images-bucket-name"
-                name="bucketId"
-                control={control}
-                rules={{ required: true }}
-                label="Bucket"
-                defaultValue=""
-                as={<Select>{BucketsSelect(buckets)}</Select>}
-              />
-            </FormControl>
-            <FormControl>
-              <InputLabel id="dataset-format">Format</InputLabel>
-              <Controller
-                labelId="dataset-format"
-                name="format"
-                control={control}
-                rules={{ required: true }}
-                label="Format"
-                defaultValue=""
-                as={
-                  <Select>
-                    <MenuItem value="PASCAL_VOC">PASCAL VOC</MenuItem>
-                    <MenuItem value="YOLO">YOLO</MenuItem>
-                  </Select>
-                }
-              />
-            </FormControl>
-            <TextField
-              name="path"
-              label="Dataset path"
-              inputRef={register({
-                required: true
-              })}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">/</InputAdornment>
-                )
-              }}
-            />
-            <Button
-              fullWidth={true}
-              color="primary"
-              variant="contained"
-              type="submit"
-              disabled={!formState.isValid}
+      <DialogTitle>Add Dataset</DialogTitle>
+      <form onSubmit={onSubmit} className="dialog-form">
+        <DialogContent dividers>
+          <UploadPaper variant="outlined">
+            <Tabs
+              indicatorColor="primary"
+              textColor="primary"
+              value={submitAction}
+              onChange={(_, newValue: any) => setSubmitAction(newValue)}
+              aria-label="add Dataset Example"
             >
-              {location.pathname === `${match.path}/upload-images`
-                ? 'UPLOAD'
-                : 'ADD'}
-            </Button>
-          </>
-        </form>
-      </FormContainer>
+              {subTabs.map((item) => (
+                <Tab label={item.label} key={item.path} />
+              ))}
+            </Tabs>
+            {subTabs.map((item, index) =>
+              submitAction === index ? <item.component /> : null
+            )}
+          </UploadPaper>
+          <FormControl>
+            <InputLabel id="upload-images-bucket-name">Bucket</InputLabel>
+            <Controller
+              labelId="upload-images-bucket-name"
+              name="bucketId"
+              control={control}
+              rules={{ required: true }}
+              label="Bucket"
+              defaultValue=""
+              as={<Select>{BucketsSelect(buckets)}</Select>}
+            />
+          </FormControl>
+          <FormControl>
+            <InputLabel id="dataset-format">Format</InputLabel>
+            <Controller
+              labelId="dataset-format"
+              name="format"
+              control={control}
+              rules={{ required: true }}
+              label="Format"
+              defaultValue=""
+              as={
+                <Select>
+                  <MenuItem value="VOC">PASCAL VOC</MenuItem>
+                  <MenuItem value="YOLO">YOLO</MenuItem>
+                </Select>
+              }
+            />
+          </FormControl>
+          <TextField
+            name="path"
+            label="Dataset path"
+            inputRef={register({
+              required: true
+            })}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">/</InputAdornment>
+              )
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button type="button" color="primary" onClick={props.onClose}>
+            Close
+          </Button>
+          <Button
+            type="submit"
+            color="primary"
+            variant="contained"
+            disabled={!formState.isValid}
+          >
+            {subTabs[submitAction].path}
+          </Button>
+        </DialogActions>
+      </form>
     </>
   );
 };
