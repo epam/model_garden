@@ -1,6 +1,6 @@
 import React, { useState, FC, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { useLocation, useRouteMatch } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import {
   Button,
   FormControl,
@@ -10,10 +10,10 @@ import {
   Tab,
   Tabs,
   TextField,
-  Typography,
   MenuItem,
   DialogActions,
-  Box
+  DialogTitle,
+  DialogContent
 } from '@material-ui/core';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useAppDispatch, useTypedSelector } from '../../store';
@@ -25,6 +25,8 @@ import {
   BucketsSelect
 } from './utils';
 import { UploadFiles } from './uploadImages';
+import '../tasksStatuses/createTaskDialog/CreateTaskDialog.tsx';
+// @todo create component for dialog and put there styles
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -34,7 +36,6 @@ interface TabPanelProps {
 
 export const AddDataset: FC<any> = (props) => {
   const location = useLocation() as any;
-  const match = useRouteMatch();
   const dispatch = useAppDispatch();
   const [files, setFiles] = useState<File[]>([]);
   const buckets = useTypedSelector((state) => state.data.buckets);
@@ -121,24 +122,25 @@ export const AddDataset: FC<any> = (props) => {
 
   return (
     <>
-      <UploadPaper variant="outlined">
-        <Tabs
-          indicatorColor="primary"
-          textColor="primary"
-          value={submitAction}
-          onChange={(_, newValue: any) => setSubmitAction(newValue)}
-          aria-label="add Dataset Example"
-        >
-          {subTabs.map((item) => (
-            <Tab label={item.label} key={item.path} />
-          ))}
-        </Tabs>
-        {subTabs.map((item, index) =>
-          submitAction === index ? <item.component /> : null
-        )}
-      </UploadPaper>
-      <form onSubmit={onSubmit}>
-        <>
+      <DialogTitle>Add Dataset</DialogTitle>
+      <form onSubmit={onSubmit} className="dialog-form">
+        <DialogContent dividers>
+          <UploadPaper variant="outlined">
+            <Tabs
+              indicatorColor="primary"
+              textColor="primary"
+              value={submitAction}
+              onChange={(_, newValue: any) => setSubmitAction(newValue)}
+              aria-label="add Dataset Example"
+            >
+              {subTabs.map((item) => (
+                <Tab label={item.label} key={item.path} />
+              ))}
+            </Tabs>
+            {subTabs.map((item, index) =>
+              submitAction === index ? <item.component /> : null
+            )}
+          </UploadPaper>
           <FormControl>
             <InputLabel id="upload-images-bucket-name">Bucket</InputLabel>
             <Controller
@@ -180,21 +182,20 @@ export const AddDataset: FC<any> = (props) => {
               )
             }}
           />
-
-          <DialogActions>
-            <Button type="button" color="primary" onClick={props.onClose}>
-              Close
-            </Button>
-            <Button
-              type="submit"
-              color="primary"
-              variant="contained"
-              disabled={!formState.isValid}
-            >
-              {subTabs[submitAction].path}
-            </Button>
-          </DialogActions>
-        </>
+        </DialogContent>
+        <DialogActions>
+          <Button type="button" color="primary" onClick={props.onClose}>
+            Close
+          </Button>
+          <Button
+            type="submit"
+            color="primary"
+            variant="contained"
+            disabled={!formState.isValid}
+          >
+            {subTabs[submitAction].path}
+          </Button>
+        </DialogActions>
       </form>
     </>
   );

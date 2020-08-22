@@ -22,13 +22,13 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop: '0.5rem'
   },
   thumb: {
     display: 'inline-flex',
     borderRadius: '2px',
     border: `1px solid ${theme.palette.grey[200]}`,
-    marginBottom: ' 0.5rem',
     width: '6.25rem',
     height: '6.25rem',
     padding: '0.25rem',
