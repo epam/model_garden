@@ -18,9 +18,6 @@ export const TasksStatuses: React.FC = () => {
     ({ tasksStatuses }) => tasksStatuses.loading
   );
   const tasks = useTypedSelector(({ tasksStatuses }) => tasksStatuses.tasks);
-  const openConformationDialog = useTypedSelector(
-    ({ tasksStatuses }) => tasksStatuses.openConformationDialog
-  );
   const tasksCount = useTypedSelector(
     ({ tasksStatuses }) => tasksStatuses.count
   );
