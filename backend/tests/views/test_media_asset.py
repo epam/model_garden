@@ -254,7 +254,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
         data={
           'bucketId': self.dataset.bucket.id,
           'path': 'foo',
-          'dataset_format': 'VOC',
+          'dataset_format': 'PASCAL_VOC',
         },
       )
 
@@ -276,7 +276,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
         data={
           'bucketId': self.dataset.bucket.id,
           'path': 'foo',
-          'dataset_format': 'VOC',
+          'dataset_format': 'PASCAL_VOC',
         },
       )
       self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -287,7 +287,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
         data={
           'bucketId': self.dataset.bucket.id,
           'path': 'foo',
-          'dataset_format': 'VOC',
+          'dataset_format': 'PASCAL_VOC',
         },
       )
 
@@ -300,7 +300,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
       data={
         'bucketId': 0,
         'path': 'foo',
-        'dataset_format': 'VOC',
+        'dataset_format': 'PASCAL_VOC',
       },
     )
 
