@@ -13,7 +13,7 @@ class LabelingTaskStatus:
 
 
 class DatasetFormat:
-    PASCAL_VOC = 'VOC'
+    PASCAL_VOC = 'PASCAL_VOC'
     YOLO = 'YOLO'
 
 
