@@ -8,7 +8,7 @@ import { dataInit } from '../data';
 const uiSlice = createSlice({
   name: 'ui',
   initialState: {
-    showLoader: false
+    showLoader: false // showLoader flag.
   } as UiState,
   reducers: {},
   extraReducers: (builder) => {
