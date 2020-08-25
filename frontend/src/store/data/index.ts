@@ -48,9 +48,9 @@ export const dataInit = createAsyncThunk('data/init', async () => {
 const dataSlice = createSlice({
   name: 'data',
   initialState: {
-    buckets: [],
-    datasets: [],
-    labelingToolUsers: []
+    buckets: [], // list of buckets that populates the dropdown field.
+    datasets: [], // datasets field to display datasetCard.
+    labelingToolUsers: [] // list of users to populate dropdown , used in dataset and gallery modal.
   } as DataState,
   reducers: {},
   extraReducers: (builder) => {
