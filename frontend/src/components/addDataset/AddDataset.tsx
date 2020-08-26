@@ -164,7 +164,7 @@ export const AddDataset: FC<any> = (props) => {
               defaultValue=""
               as={
                 <Select>
-                  <MenuItem value="VOC">PASCAL VOC</MenuItem>
+                  <MenuItem value="PASCAL_VOC">PASCAL VOC</MenuItem>
                   <MenuItem value="YOLO">YOLO</MenuItem>
                 </Select>
               }
