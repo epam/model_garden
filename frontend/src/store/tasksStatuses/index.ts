@@ -51,7 +51,7 @@ export interface TasksStatusesState {
 const tasksStatusesSlice = createSlice({
   name: 'taskStatuses',
   initialState: {
-    loading: false, // Loading icon flag.
+    loading: false, // Used to show (or not) the icon flag when the TasksStatuses' table is refreshed/loaded.
     actualView: false, // Used to know if the table was updated based on archiveLabelingTask promise statuses.
     count: 0, // Used to know the total ammount of task for pagination.
     tasks: [], // Used to store labeled task info and display task lists.

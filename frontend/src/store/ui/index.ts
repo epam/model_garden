@@ -8,7 +8,7 @@ import { dataInit } from '../data';
 const uiSlice = createSlice({
   name: 'ui',
   initialState: {
-    showLoader: false // showLoader flag.
+    showLoader: false // Used to show (or not) the ProgressLoader's spinner based on the action status.
   } as UiState,
   reducers: {},
   extraReducers: (builder) => {
