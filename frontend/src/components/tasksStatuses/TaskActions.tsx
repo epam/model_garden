@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Button, makeStyles } from '@material-ui/core';
 import { AppState } from '../../store';
-import 'antd/dist/antd.css';
 import './TasksStatuses.css';
 import { CreateTaskDialog } from './createTaskDialog';
 import { ConformationDialog } from '../shared';
