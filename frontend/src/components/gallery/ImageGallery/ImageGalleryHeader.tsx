@@ -1,41 +1,13 @@
 import React from 'react';
-import { makeStyles, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 import { Link, useRouteMatch } from 'react-router-dom';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { useTypedSelector } from '../../../store';
 import { Bucket, Dataset } from '../../../models';
-
-const useStyles = makeStyles((theme) => ({
-  header: {
-    backgroundColor: blueGrey[50],
-    padding: '1rem',
-    margin: '-2.5rem 0 1.5rem'
-  },
-  topRow: {
-    display: 'flex'
-  },
-  backIcon: {
-    fontSize: '1.5rem'
-  },
-  title: {
-    fontSize: '1rem',
-    marginBottom: '1rem'
-  },
-  info: {
-    margin: '0',
-    padding: '0',
-    listStyle: 'none',
-    display: 'flex',
-    '& li': {
-      marginRight: '2.5rem'
-    }
-  }
-}));
+import './styles.scss';
 
 export const ImageGalleryHeader = () => {
-  const classes = useStyles();
-
   const {
     params: { datasetId, bucketId }
   } = useRouteMatch();
@@ -49,19 +21,19 @@ export const ImageGalleryHeader = () => {
   );
 
   return (
-    <header className={classes.header}>
-      <div className={classes.topRow}>
+    <header className="mg-gallery-header">
+      <div className="mg-gallery-top-row">
         <Link to="/gallery">
-          <ArrowBackIosIcon className={classes.backIcon} />
+          <ArrowBackIosIcon className="mg-gallery-back-icon" />
           <Typography variant="srOnly">Back to datasets list</Typography>
         </Link>
-        <h1 className={classes.title}>
+        <h1 className="mg-gallery-title">
           {currentBucket?.name}
           {currentDataset?.path}
         </h1>
       </div>
       <div>
-        <ul className={classes.info}>
+        <ul className="mg-gallery-info">
           <li>ITEMS: {currentDataset?.items_number}</li>
           <li>LABELS: {currentDataset?.xmls_number}</li>
           <li>
