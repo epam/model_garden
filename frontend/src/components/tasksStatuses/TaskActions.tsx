@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Button, makeStyles } from '@material-ui/core';
 import { AppState } from '../../store';
-import './TasksStatuses.css';
 import { CreateTaskDialog } from './createTaskDialog';
 import { ConformationDialog } from '../shared';
 import { connect } from 'react-redux';
@@ -12,6 +11,7 @@ import {
 } from '../../store/tasksStatuses';
 import { setOpenCreateTaskDialog } from '../../store/labelingTask';
 import { LabelingTaskStatus } from '../../models';
+import './styles.scss';
 
 interface TaskActionsProps {
   openConformationDialog: boolean;
