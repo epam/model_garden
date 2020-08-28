@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from 'antd';
-import 'antd/dist/antd.css';
-import './TasksStatuses.css';
 import { TaskActions } from './TaskActions';
 import { useAppDispatch, useTypedSelector } from '../../store';
 import { getLabelingTasks } from '../../store/tasksStatuses';
@@ -11,6 +9,7 @@ import StatusField from './StatusField';
 import { setSelectedRowKeys } from '../../store/tasksStatuses';
 import { Box, IconButton } from '@material-ui/core';
 import { Refresh } from '@material-ui/icons';
+import './styles.scss';
 
 export const TasksStatuses: React.FC = () => {
   const dispatch = useAppDispatch();
