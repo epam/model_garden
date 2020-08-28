@@ -1,0 +1,32 @@
+@import '../../../variables.scss';
+
+.mg-drop-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 1.5rem;
+  border-width: 2px;
+  border-radius: 2px;
+  border-style: dashed;
+  border-color: $blue-6;
+  background-color: $blue-1;
+  color: $blue-6;
+  outline: none;
+  transition: border 0.24s ease-in-out;
+  cursor: pointer;
+
+  &.rejected {
+    border-color: $red-6;
+    background-color: $red-1;
+    color: $red-6;
+  }
+}
+
+.mg-drop-text {
+  width: 100%;
+  text-align: center;
+  margin: 0;
+}
