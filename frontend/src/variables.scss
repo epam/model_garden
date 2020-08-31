@@ -1,3 +1,15 @@
-// Colors
+// Colors and color names based on th Ant Design Color System
+// https://ant.design/docs/spec/colors
 
-$blue-base: #1890ff;
+$gray-4: #f0f0f0;
+
+$red-1: #fff1f0;
+$red-6: #f5222d;
+
+$blue-1: #e6f7ff;
+$blue-6: #1890ff;
+
+// Component and theme colors
+$blue-base: $blue-6;
+
+$border-color: $gray-4;

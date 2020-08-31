@@ -5,7 +5,7 @@ import Alert from '@material-ui/lab/Alert';
 import CloseIcon from '@material-ui/icons/Close';
 import { clearError } from '../../../store/error';
 import { useTypedSelector } from '../../../store';
-import './ErrorAlert.css';
+import './styles.scss';
 
 export const ErrorAlert: React.FC = () => {
   const dispatch = useDispatch();

@@ -1,0 +1,31 @@
+@import '../../../variables.scss';
+
+.mg-gallery-header {
+  background-color: $gray-4;
+  padding: 1rem;
+  margin: -2.5rem 0 1.5rem;
+}
+
+.mg-gallery-top-row {
+  display: flex;
+}
+
+.mg-gallery-back-icon {
+  font-size: 1.5rem;
+}
+
+.mg-gallery-title {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.mg-gallery-info {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+
+  & li {
+    margin-right: 2.5rem;
+  }
+}

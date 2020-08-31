@@ -1,21 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: '1.25rem',
-    fontSize: '1rem'
-  },
-  description: {
-    fontWeight: 400
-  },
-  count: {
-    margin: '0 0 0 0.35rem'
-  }
-});
+import './styles.scss';
 
 interface FilesCounterProps {
   filesCount: number;
@@ -24,11 +8,10 @@ interface FilesCounterProps {
 export const FilesCounter: React.FC<FilesCounterProps> = ({
   filesCount
 }: FilesCounterProps) => {
-  const classes = useStyles();
   return (
-    <dl className={classes.root}>
-      <dt className={classes.description}> Files in Queue:</dt>
-      <dd className={classes.count}>{filesCount}</dd>
+    <dl className="mg-file-counter">
+      <dt className="mg-file-description"> Files in Queue:</dt>
+      <dd className="mg-file-count">{filesCount}</dd>
     </dl>
   );
 };
