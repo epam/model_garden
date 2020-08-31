@@ -25,9 +25,9 @@ import {
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { LabelingProps, FormData } from './util';
-import './CreateTaskDialog.css';
 import { FilesCounter } from './filesCounter';
 import { Bucket, Dataset, LabelingToolUser } from '../../../models';
+import './styles.scss';
 
 export const CustomDialogContent = withStyles({
   root: {
