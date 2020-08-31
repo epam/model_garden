@@ -26,15 +26,9 @@ export const BucketsSelect = (buckets: Bucket[]) =>
       {bucket.name}
     </MenuItem>
   ));
-export type Alert = {
-  show: boolean;
-  severity: Severity;
-  message: string;
-};
-
-export type Severity = 'success' | 'info' | 'warning' | 'error' | undefined;
 
 export type FormData = {
   bucketId: string;
   path: string;
+  format: string;
 };

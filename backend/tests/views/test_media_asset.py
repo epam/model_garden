@@ -140,6 +140,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
       data={
         'bucketId': self.dataset.bucket.id,
         'file': [uploaded_file],
+        'dataset_format': self.dataset.dataset_format,
       },
     )
 
@@ -159,6 +160,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
           'bucketId': self.dataset.bucket.id,
           'file': [uploaded_file],
           'path': 'test',
+          'dataset_format': self.dataset.dataset_format,
         },
       )
 
@@ -184,6 +186,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
       data={
         'bucketId': self.dataset.bucket.id,
         'file': [uploaded_file],
+        'dataset_format': self.dataset.dataset_format,
       },
     )
 
@@ -198,6 +201,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
       data={
         'bucketId': self.dataset.bucket.id,
         'file': [uploaded_file],
+        'dataset_format': self.dataset.dataset_format,
       },
     )
 
@@ -212,6 +216,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
       data={
         'bucketId': self.dataset.bucket.id,
         'file': [uploaded_file],
+        'dataset_format': self.dataset.dataset_format,
       },
     )
 
@@ -227,6 +232,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
       data={
         'bucketId': self.dataset.bucket.id,
         'file': [uploaded_file],
+        'dataset_format': self.dataset.dataset_format,
       },
     )
 
@@ -248,6 +254,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
         data={
           'bucketId': self.dataset.bucket.id,
           'path': 'foo',
+          'dataset_format': 'PASCAL_VOC',
         },
       )
 
@@ -269,6 +276,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
         data={
           'bucketId': self.dataset.bucket.id,
           'path': 'foo',
+          'dataset_format': 'PASCAL_VOC',
         },
       )
       self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -279,6 +287,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
         data={
           'bucketId': self.dataset.bucket.id,
           'path': 'foo',
+          'dataset_format': 'PASCAL_VOC',
         },
       )
 
@@ -291,7 +300,25 @@ class TestMediaAssetViewSet(BaseAPITestCase):
       data={
         'bucketId': 0,
         'path': 'foo',
+        'dataset_format': 'PASCAL_VOC',
       },
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+  def test_delete(self):
+    media_asset = self.test_factory.create_media_asset(dataset=self.dataset)
+    response = self.client.post(
+      path=reverse('mediaasset-delete'),
+      data={'id': [media_asset.id]},
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+  def test_delete_media_asset_does_not_exist(self):
+    response = self.client.post(
+      path=reverse('mediaasset-delete'),
+      data={'id': [0]},
     )
 
     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

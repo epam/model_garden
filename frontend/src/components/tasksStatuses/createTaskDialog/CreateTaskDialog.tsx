@@ -1,107 +1,110 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { useForm, Controller } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { AppState } from '../../../store';
 import {
-  Typography,
+  setOpenCreateTaskDialog,
+  clearUnsignedImagesCount,
+  getUnsignedImagesCount,
+  createLabelingTask
+} from '../../../store/labelingTask';
+import { getDatasets } from '../../../store/data';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
   TextField,
   Select,
   MenuItem,
   Button,
   FormControl,
-  InputLabel
+  InputLabel,
+  DialogActions,
+  withStyles
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import './Task.css';
-import { FilesCounter } from '../filesCounter';
-import { Notification } from '../notification';
+import { LabelingProps, FormData } from './util';
+import './CreateTaskDialog.css';
+import { FilesCounter } from './filesCounter';
 import { Bucket, Dataset, LabelingToolUser } from '../../../models';
-import { FormContainer } from '../../shared';
-import { getDatasets } from '../../../store/data';
-import { DEFAULT_FORM_DATA } from './constants';
-import {
-  clearUnsignedImagesCount,
-  clearTaskUrl
-} from '../../../store/labelingTask';
 
-interface TaskProps {
-  buckets: Bucket[];
-  datasets: Dataset[];
-  users: LabelingToolUser[];
-  filesCount: number;
-  newTaskUrl: string;
-  handleTaskSubmit: (data: FormData) => void;
-  onDataSetChange: (datasetId: string) => void;
-  setShowLoader: Function;
-}
+export const CustomDialogContent = withStyles({
+  root: {
+    paddingBottom: '0'
+  }
+})(DialogContent);
 
-export type FormData = {
-  currentDatasetId: string;
-  taskName: string;
-  user: string | number;
-  filesInTask: number;
-  countOfTasks: number;
-};
+const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
+  const { buckets, datasets, users, filesCount, openCreateTaskDialog } = props;
+  const {
+    getDatasets,
+    getUnsignedImagesCount,
+    createLabelingTask,
+    clearUnsignedImagesCount,
+    setOpenCreateTaskDialog
+  } = props;
 
-export const Task: React.FC<TaskProps> = ({
-  buckets,
-  datasets,
-  users,
-  filesCount,
-  handleTaskSubmit,
-  onDataSetChange,
-  newTaskUrl,
-  setShowLoader
-}: TaskProps) => {
   const [currentBucketId, setCurrentBucketId] = useState('');
   const [currentDataset, setCurrentDataset] = useState({
     id: '',
     path: '',
     bucket: ''
   });
-  const [dataSetField, setDataSetField] = useState('');
-  const [taskName, setTaskName] = useState('');
+  const [datasetField, setdatasetField] = useState('');
   const [counter, setCounter] = useState({
-    filesInTask: DEFAULT_FORM_DATA.FILES_IN_TASK_VALUE.toString(),
-    countOfTasks: DEFAULT_FORM_DATA.COUNT_OF_TASKS.toString()
+    filesInTask: '0',
+    countOfTasks: '0'
   });
-  const dispatch = useDispatch();
 
-  const { handleSubmit, setValue, control, watch, register } = useForm<
+  const { handleSubmit, setValue, control, formState, reset } = useForm<
     FormData
   >({
+    mode: 'onChange',
     defaultValues: {
-      taskName: DEFAULT_FORM_DATA.TASK_NAME,
-      user: DEFAULT_FORM_DATA.USER
+      taskName: '',
+      user: ''
     }
   });
-
-  const { taskName: taskNameValue, user: userValue } = watch([
-    'taskName',
-    'user'
-  ]);
 
   useEffect(() => {
     if (currentBucketId) {
-      dispatch(getDatasets(currentBucketId));
+      getDatasets(currentBucketId);
     }
-  }, [currentBucketId, dispatch]);
+  }, [currentBucketId, getDatasets]);
 
   useEffect(() => {
-    setValue('taskName', taskName);
-  }, [taskName, setValue, currentDataset]);
+    setValue('taskName', currentDataset.path, {
+      shouldValidate: true,
+      shouldDirty: true
+    });
+  }, [setValue, currentDataset]);
 
-  // clear form on a new task is created
-  useEffect(() => {
-    clearForm();
-    dispatch(clearUnsignedImagesCount());
-  }, [dispatch, newTaskUrl]);
+  const resetForm = () => {
+    setCurrentDataset({
+      id: '',
+      path: '',
+      bucket: ''
+    });
+    setdatasetField('');
+    reset({
+      taskName: '',
+      user: ''
+    });
+    setCounter({ filesInTask: '0', countOfTasks: '0' });
+  };
 
   const onSubmit = handleSubmit((data: FormData) => {
     data.filesInTask = Number(counter.filesInTask);
     data.countOfTasks = Number(counter.countOfTasks);
     data.currentDatasetId = currentDataset.id;
-    setShowLoader(true);
-    handleTaskSubmit(data);
+
+    createLabelingTask(data)
+      .then(unwrapResult)
+      .then(() => {
+        resetForm();
+        clearUnsignedImagesCount();
+      });
   });
 
   const handleBucketChange = (
@@ -119,29 +122,18 @@ export const Task: React.FC<TaskProps> = ({
   ) => {
     if (dataset) {
       setCurrentDataset(dataset);
-      setTaskName(dataset.path);
-      onDataSetChange(dataset.id);
+      getUnsignedImagesCount(dataset.id);
       setCounter({ filesInTask: '0', countOfTasks: '0' });
     }
     if (reason === 'clear') {
-      clearForm();
-      dispatch(clearUnsignedImagesCount());
+      resetForm();
+
+      clearUnsignedImagesCount();
     }
   };
 
-  const clearForm = () => {
-    setCurrentDataset({
-      id: '',
-      path: '',
-      bucket: ''
-    });
-    setTaskName('');
-    setDataSetField('');
-    setCounter({ filesInTask: '0', countOfTasks: '0' });
-  };
-
-  const clearTaskData = () => {
-    dispatch(clearTaskUrl());
+  const handleDialogClose = () => {
+    setOpenCreateTaskDialog(false);
   };
 
   const bucketsSelectOptions = buckets.map((bucket: Bucket) => (
@@ -150,7 +142,7 @@ export const Task: React.FC<TaskProps> = ({
     </MenuItem>
   ));
 
-  const usersSelectOptions = users.map((user) => (
+  const usersSelectOptions = users.map((user: LabelingToolUser) => (
     <MenuItem key={user.id} value={user.id}>
       {user.full_name} ({user.email})
     </MenuItem>
@@ -203,10 +195,14 @@ export const Task: React.FC<TaskProps> = ({
   };
 
   return (
-    <>
-      <FormContainer>
-        <Typography variant="h1">Create Tasks</Typography>
-        <form onSubmit={onSubmit}>
+    <Dialog
+      open={openCreateTaskDialog}
+      onClose={handleDialogClose}
+      scroll="body"
+    >
+      <DialogTitle>Create Tasks</DialogTitle>
+      <form onSubmit={onSubmit} className="dialog-form">
+        <CustomDialogContent dividers>
           <FormControl>
             <InputLabel id="task-bucket-name">Bucket</InputLabel>
             <Select
@@ -223,27 +219,20 @@ export const Task: React.FC<TaskProps> = ({
             onChange={handleDatasetChange}
             options={datasets}
             getOptionLabel={(option) => option.path}
-            inputValue={dataSetField}
+            inputValue={datasetField}
             onInputChange={(e: object, value: string) => {
-              setDataSetField(value);
+              setdatasetField(value);
             }}
-            disabled={currentBucketId === DEFAULT_FORM_DATA.BUCKET_ID}
+            disabled={!currentBucketId}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                inputRef={register({
-                  required: true
-                })}
-                name="dataset"
-                label="Dataset"
-              />
+              <TextField {...params} name="dataset" label="Dataset" />
             )}
           />
           <Controller
             name="taskName"
             label="Task Name"
-            defaultValue=""
             control={control}
+            rules={{ required: true }}
             as={<TextField />}
           />
           <div className="task__form-group">
@@ -252,14 +241,15 @@ export const Task: React.FC<TaskProps> = ({
             </div>
             <div className="task__form-item">
               <FormControl>
-                <InputLabel id="task-labeling-tool-user">
+                <InputLabel id="labeling-task-user">
                   Labeling tool user
                 </InputLabel>
                 <Controller
-                  labelId="task-labeling-tool-user"
+                  labelId="labeling-task-user"
                   name="user"
                   label="Labeling tool user"
                   control={control}
+                  rules={{ required: true }}
                   as={<Select>{usersSelectOptions}</Select>}
                 />
               </FormControl>
@@ -287,28 +277,48 @@ export const Task: React.FC<TaskProps> = ({
               />
             </div>
           </div>
+        </CustomDialogContent>
+        <DialogActions>
+          <Button type="button" color="primary" onClick={handleDialogClose}>
+            Close
+          </Button>
           <Button
-            fullWidth={true}
             type="submit"
             color="primary"
             variant="contained"
             disabled={
-              currentBucketId === DEFAULT_FORM_DATA.BUCKET_ID ||
-              currentDataset.id === DEFAULT_FORM_DATA.DATASET ||
-              taskNameValue === DEFAULT_FORM_DATA.TASK_NAME ||
-              userValue === DEFAULT_FORM_DATA.USER ||
-              Number(counter.countOfTasks) ===
-                DEFAULT_FORM_DATA.COUNT_OF_TASKS ||
-              Number(counter.filesInTask) ===
-                DEFAULT_FORM_DATA.FILES_IN_TASK_VALUE
+              currentBucketId === '' ||
+              currentDataset.id === '' ||
+              counter.countOfTasks === '0' ||
+              counter.filesInTask === '0' ||
+              !formState.isValid
             }
           >
             Assign
           </Button>
-        </form>
-      </FormContainer>
-
-      <Notification newTaskUrl={newTaskUrl} onClose={clearTaskData} />
-    </>
+        </DialogActions>
+      </form>
+    </Dialog>
   );
 };
+
+const mapStateToProps = ({ labelingTask, data }: AppState) => ({
+  buckets: data.buckets,
+  datasets: data.datasets,
+  users: data.labelingToolUsers,
+  filesCount: labelingTask.unsignedImagesCount,
+  openCreateTaskDialog: labelingTask.openCreateTaskDialog
+});
+
+const mapDispatchToProps = {
+  setOpenCreateTaskDialog,
+  getDatasets,
+  clearUnsignedImagesCount,
+  getUnsignedImagesCount,
+  createLabelingTask
+};
+
+export const CreateTaskDialog = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LabelingTaskComponent);

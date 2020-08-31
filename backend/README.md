@@ -1,9 +1,10 @@
 # Django Backend
 
 ## Database (not recommended - use docker)
-www.postgresql.org/download
+www.postgresql.org/download (the current ver. 12.3)
 
-See the recommended pass in www.kb.epam.com/display/EPMCMLCV/Databases+and+Storages
+See the recommended password in
+[EPAM Model Garden - PostgresSQL](https://kb.epam.com/display/EPMEMRDMGA/EPAM+Model+Garden+-+PostgresSQL).
 
 Also update the password in `DATABASES = {...}` dict in settings.py
 

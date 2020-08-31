@@ -29,21 +29,10 @@ export const getDatasetsRequest = async (bucketId: string) => {
   }
 };
 
-export const getMediaAssetsRequest = ({ bucketId, datasetId }: any) => {
-  const url = `http://${backendHostPort}/api/media-assets/${
-    bucketId
-      ? `?bucket_Id=${bucketId}${datasetId ? `&dataset_id=${datasetId}` : ''}`
-      : datasetId
-      ? `?dataset_id=${datasetId}`
-      : ''
-  }`;
-  return axios.get(url);
-};
-
 export const getLabelingToolUsersRequest = async () => {
   try {
     return await axios.get(`http://${backendHostPort}/api/cvat-users/`, {
-      timeout: 2000,
+      timeout: 4000,
       timeoutErrorMessage: 'Error getting users. Please confirm you are connected to VPN'
     });
   } catch (error) {
