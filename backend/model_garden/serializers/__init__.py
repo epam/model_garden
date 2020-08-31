@@ -6,7 +6,7 @@ from .labeling_task import (
   LabelingTaskIDSerializer,
   LabelingTaskSerializer,
 )
-from .media_asset import MediaAssetSerializer
+from .media_asset import MediaAssetSerializer, MediaAssetIDSerializer
 
 __all__ = (
   "BucketSerializer",
@@ -17,4 +17,5 @@ __all__ = (
   "LabelingTaskIDSerializer",
   "LabelingTaskSerializer",
   "MediaAssetSerializer",
+  "MediaAssetIDSerializer",
 )

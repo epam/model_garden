@@ -21,9 +21,6 @@ interface ConformationDialogProps {
 }
 
 const useStyles = makeStyles(() => ({
-  actions: {
-    justifyContent: 'flex-end'
-  },
   dangerButton: {
     backgroundColor: amber[800],
     '&:hover': {
@@ -59,14 +56,13 @@ export const ConformationDialog: React.FC<ConformationDialogProps> = ({
       onClose={handleClose}
       aria-labelledby="dialog-title"
       aria-describedby="dialog-content"
-      maxWidth="xs"
     >
       <DialogTitle id="dialog-title">
         <WarningIcon className={classes.warningIcon} />
         {title}
       </DialogTitle>
       <DialogContent id="dialog-content">{children}</DialogContent>
-      <DialogActions className={classes.actions}>
+      <DialogActions>
         {closeButton && (
           <Button onClick={handleClose} variant="contained" color="primary">
             {closeButton}

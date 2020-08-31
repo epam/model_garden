@@ -1,8 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getBuckets, getLabelingToolUsers } from '../data';
 import { getLabelingTasks, archiveLabelingTask, retryLabelingTask } from '../tasksStatuses';
+import { toast } from 'react-toastify';
+import { createLabelingTask } from '../labelingTask';
+import { uploadMediaFiles, addExistingDataset } from '../media';
 
-const helper = (defaultText: string) => (_: any, { error }: any) => error.message || defaultText;
+const helperToast = (defaultText: string, autoClose: any) => (_: any, { error }: any) => {
+  toast.error(error.message || defaultText, { autoClose });
+  return '';
+};
 
 export const errorSlice = createSlice({
   name: 'error',
@@ -13,11 +19,14 @@ export const errorSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getBuckets.rejected, helper('Error getting Buckets'))
-      .addCase(getLabelingToolUsers.rejected, helper('Error Getting Users'))
-      .addCase(getLabelingTasks.rejected, helper('Error getting labeling tasks'))
-      .addCase(archiveLabelingTask.rejected, helper('Error archiving task(s)'))
-      .addCase(retryLabelingTask.rejected, helper('Error retrying labeling task(s)'));
+      .addCase(getBuckets.rejected, helperToast('Error Getting Users', 4000))
+      .addCase(getLabelingToolUsers.rejected, helperToast('Error Getting Users', false))
+      .addCase(getLabelingTasks.rejected, helperToast('Error getting labeling tasks', 4000))
+      .addCase(archiveLabelingTask.rejected, helperToast('Error archiving task(s)', 4000))
+      .addCase(retryLabelingTask.rejected, helperToast('Error retrying labeling task(s)', 4000))
+      .addCase(uploadMediaFiles.rejected, helperToast('Error uploading images', 4000))
+      .addCase(addExistingDataset.rejected, helperToast('Error adding existing dataset', 4000))
+      .addCase(createLabelingTask.rejected, helperToast('Failed to create labeling task', 4000));
   }
 });
 

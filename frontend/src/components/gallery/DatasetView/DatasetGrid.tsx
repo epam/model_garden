@@ -5,18 +5,19 @@ import blueGrey from '@material-ui/core/colors/blueGrey';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import { Empty } from 'antd';
 
-import { Dataset } from '../../models';
-import { useTypedSelector } from '../../store';
+import { Dataset } from '../../../models';
+import { useTypedSelector } from '../../../store';
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    height: '19.6875rem',
+    height: '19.5rem',
     position: 'relative',
     overflow: 'hidden',
+    boxShadow: theme.shadows[4],
     '&:hover': {
-      transition: 'box-shadow 0.3s',
-      boxShadow: theme.shadows[4],
-      transform: 'scale(1.005)'
+      transition: 'all 0.1s ease-in-out',
+      boxShadow: theme.shadows[3],
+      transform: 'scale(1.01)'
     }
   },
   link: {
@@ -55,10 +56,11 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1rem',
     lineHeight: 20 / 16
   },
-  date: {
+  data: {
     marginBottom: '0.625rem',
-    fontSize: '0.75rem',
-    lineHeight: 14 / 12
+    fontSize: '0.73rem',
+    lineHeight: 14 / 12,
+    whiteSpace: 'nowrap'
   },
   items: {
     display: 'flex',
@@ -88,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export const DatasetGrid = ({ searchTerm }: any) => {
+export const DatasetGrid = ({ searchTerm, currentBucketId }: any) => {
   const classes = useStyles();
   const datasets = useTypedSelector(({ data }) =>
     data.datasets.filter((dataset) =>
@@ -97,18 +99,28 @@ export const DatasetGrid = ({ searchTerm }: any) => {
         : true
     )
   );
-  const match = useRouteMatch('/gallery');
+  const match = useRouteMatch();
+
+  if (!currentBucketId) {
+    // we have to make sure we hide datasets if we don't have an active bucketId , otherwise we won't have a bucketID to navigate to
+    return null;
+  }
 
   return (
     <Grid container spacing={2}>
-      {!datasets.length && <Empty className={classes.empty} />}
+      {!datasets.length && (
+        <Empty
+          description="To get started, select the buсket in the list on the top"
+          className={classes.empty}
+        />
+      )}
       {datasets.map((dataset: Dataset) => (
         <Grid item xs={6} sm={4} md={3} lg={2} key={dataset.id}>
           <Paper className={classes.card}>
             <Link
               className={classes.link}
               component={RouterLink}
-              to={`${match?.path}/dataset/${dataset.id}`}
+              to={`${match?.url}/bucket/${currentBucketId}/dataset/${dataset.id}`}
             >
               <div className={classes.imgWrap}>
                 {dataset.preview_image ? (
@@ -124,7 +136,10 @@ export const DatasetGrid = ({ searchTerm }: any) => {
 
               <div className={classes.info}>
                 <strong className={classes.name}>{dataset.path}</strong>
-                <div className={classes.date}>
+                <div className={classes.data}>
+                  Format: {dataset.dataset_format}
+                </div>
+                <div className={classes.data}>
                   Created: {new Date(dataset.created_at).toLocaleString()}
                 </div>
                 <div className={classes.items}>
@@ -133,10 +148,8 @@ export const DatasetGrid = ({ searchTerm }: any) => {
                     <dd>{dataset.items_number}</dd>
                   </dl>
                   <dl>
-                    <dt>XML</dt>
-                    <dd>
-                      {dataset.xmls_number}/{dataset.items_number}
-                    </dd>
+                    <dt>LABELS</dt>
+                    <dd>{dataset.xmls_number}</dd>
                   </dl>
                 </div>
               </div>
