@@ -1,24 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from 'antd';
-import { Box, IconButton } from '@material-ui/core';
-import { Refresh } from '@material-ui/icons';
 import 'antd/dist/antd.css';
 import './TasksStatuses.css';
-import { DropdownButton } from './DropdownButton';
+import { TaskActions } from './TaskActions';
 import { useAppDispatch, useTypedSelector } from '../../store';
-import {
-  archiveLabelingTask,
-  getLabelingTasks,
-  retryLabelingTask
-} from '../../store/tasksStatuses';
+import { getLabelingTasks } from '../../store/tasksStatuses';
 import { TableStateProps, LabelingTaskStatus } from '../../models';
 import { GetColumnSearchProps } from './GetColumnSearchProps';
 import StatusField from './StatusField';
-import { ConformationDialog } from '../shared';
-import {
-  setSelectedRowKeys,
-  setOpenConformationDialog
-} from '../../store/tasksStatuses';
+import { setSelectedRowKeys } from '../../store/tasksStatuses';
+import { Box, IconButton } from '@material-ui/core';
+import { Refresh } from '@material-ui/icons';
 
 export const TasksStatuses: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -26,9 +18,6 @@ export const TasksStatuses: React.FC = () => {
     ({ tasksStatuses }) => tasksStatuses.loading
   );
   const tasks = useTypedSelector(({ tasksStatuses }) => tasksStatuses.tasks);
-  const openConformationDialog = useTypedSelector(
-    ({ tasksStatuses }) => tasksStatuses.openConformationDialog
-  );
   const tasksCount = useTypedSelector(
     ({ tasksStatuses }) => tasksStatuses.count
   );
@@ -172,13 +161,9 @@ export const TasksStatuses: React.FC = () => {
 
   return (
     <div className={'task-statuses'}>
-      <Box display="flex" alignItems="center" marginBottom={1}>
-        <DropdownButton
-          handleArchive={() => dispatch(setOpenConformationDialog(true))}
-          handleRetry={() => {
-            dispatch(retryLabelingTask());
-          }}
-        />
+      <Box display="flex" justifyContent="space-between" marginBottom={1}>
+        <TaskActions />
+
         <IconButton
           aria-label="refresh"
           onClick={() => {
@@ -208,21 +193,6 @@ export const TasksStatuses: React.FC = () => {
         loading={areTasksLoading}
         onChange={handleTableChange as any}
       />
-
-      <ConformationDialog
-        title="Archive Confirmation"
-        closeButton="No, Keep Task(s)"
-        confirmButton="Yes, Archive Task(s)"
-        open={openConformationDialog}
-        setOpen={(isOpen: boolean) =>
-          dispatch(setOpenConformationDialog(isOpen))
-        }
-        handleConfirm={() => {
-          dispatch(archiveLabelingTask());
-        }}
-      >
-        <p>Are you sure you want to archive selected tasks?</p>
-      </ConformationDialog>
     </div>
   );
 };
