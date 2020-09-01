@@ -3,10 +3,11 @@ from collections import namedtuple
 from typing import Iterable
 from unittest import TestCase, mock
 
+from django.test import override_settings
 from parameterized import parameterized
 
 from model_garden.services.s3 import (
-  DELETE_REQUEST_LIMIT, DeleteError, S3Client, image_ext_filter,
+  DELETE_REQUEST_LIMIT, DeleteError, S3Client, image_ext_filter, S3ServiceException,
 )
 
 
@@ -54,6 +55,18 @@ class TestS3Client(TestCase):
     self.bucket_mock.meta.client.download_file.assert_called_once_with(
       self.bucket_name, 'key', 'filename',
     )
+
+  @override_settings(AWS_ACCESS_KEY_ID=None)
+  @override_settings(AWS_SECRET_KEY=None)
+  def test_new_client_with_null_credentials(self):
+    with self.assertRaises(S3ServiceException):
+        S3Client(bucket_name=self.bucket_name)
+
+  @override_settings(AWS_ACCESS_KEY_ID='')
+  @override_settings(AWS_SECRET_KEY='')
+  def test_new_s3_client_with_empty_credentials(self):
+    with self.assertRaises(S3ServiceException):
+        S3Client(bucket_name=self.bucket_name)
 
   def test_upload_file(self):
     self.client.upload_file(filename='filename', key='key')
@@ -190,3 +203,4 @@ class TestImageExtFilter(TestCase):
 
   def test_when_empty_input(self):
     self.assertFalse(image_ext_filter(None))
+
