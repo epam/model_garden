@@ -24,5 +24,5 @@ class Dataset(BaseModel):
         unique_together = [['path', 'bucket']]
 
     def __str__(self):
-        return f"{self.__class__.__name__}(path='{self.path}', bucket='{self.bucket.name}', " \
-               f"dataset_format='{self.dataset_format}')"
+        return (f"{self.__class__.__name__}(path='{self.path}', bucket='{self.bucket.name}', "
+                f"dataset_format='{self.dataset_format}')")
