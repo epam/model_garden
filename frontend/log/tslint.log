@@ -1,0 +1,189 @@
+/home/bsk/doc/coding/model_garden/frontend/src/App.tsx:14:7
+WARNING: 14:7    variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/api/tasksStatuses.api.ts:16:26
+WARNING: 16:26   no-shadowed-variable         Shadowed name: 'params'
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/addDataset/AddDataset.tsx:31:11
+WARNING: 31:11   interface-name               interface name must start with a capitalized I
+WARNING: 37:14   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+WARNING: 70:9    variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+WARNING: 83:9    variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/addDataset/uploadImages/UploadFiles.tsx:5:18
+WARNING: 5:18    interface-name               interface name must start with a capitalized I
+WARNING: 9:11    interface-name               interface name must start with a capitalized I
+WARNING: 46:14   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/addDataset/utils.tsx:5:14
+WARNING: 5:14    variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+WARNING: 14:14   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+WARNING: 23:14   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+WARNING: 30:13   interface-over-type-literal  Use an interface instead of a type literal.
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/gallery/DatasetView/DatasetGrid.tsx:93:14
+WARNING: 93:14   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/gallery/DatasetView/DatasetView.tsx:30:7
+WARNING: 30:7    variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+WARNING: 45:9    variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/gallery/Gallery.tsx:6:14
+WARNING: 6:14    variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/gallery/ImageGallery/ImageCard.tsx:59:7
+WARNING: 59:7    variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+WARNING: 73:14   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+WARNING: 77:18   no-shadowed-variable         Shadowed name: 'fileName'
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/gallery/ImageGallery/ImageGallery.tsx:26:7
+WARNING: 26:7    variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+WARNING: 28:11   no-shadowed-variable         Shadowed name: 'uploadMediaFiles'
+WARNING: 28:29   no-shadowed-variable         Shadowed name: 'imageGalleryInit'
+WARNING: 28:47   no-shadowed-variable         Shadowed name: 'getMediaAssets'
+WARNING: 36:8    comment-format               comment must start with a space
+WARNING: 40:8    comment-format               comment must start with a space
+WARNING: 78:7    comment-format               comment must start with a space
+WARNING: 168:7   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/gallery/ImageGallery/ImageGalleryHeader.tsx:36:14
+WARNING: 36:14   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/gallery/ImageGallery/TaskForm.tsx:20:13
+WARNING: 20:13   interface-over-type-literal  Use an interface instead of a type literal.
+WARNING: 28:14   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/gallery/ImageGallery/TasksTable.tsx:13:14
+WARNING: 13:14   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/shared/conformationDialog/ConformationDialog.tsx:13:11
+WARNING: 13:11   interface-name               interface name must start with a capitalized I
+WARNING: 38:14   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/shared/dropzone/DropZone.tsx:8:14
+WARNING: 8:14    variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/shared/dropzone/utils.ts:13:18
+WARNING: 13:18   interface-name               interface name must start with a capitalized I
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/shared/errorAlert/ErrorAlert.tsx:10:14
+WARNING: 10:14   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/shared/formContainer/FormContainer.tsx:14:11
+WARNING: 14:11   interface-name               interface name must start with a capitalized I
+WARNING: 18:14   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/shared/progressLoader/ProgressLoader.tsx:22:14
+WARNING: 22:14   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/tasksStatuses/GetColumnSearchProps.tsx:6:14
+WARNING: 6:14    variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+WARNING: 24:5    no-shadowed-variable         Shadowed name: 'dataIndex'
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/tasksStatuses/StatusField.tsx:6:11
+WARNING: 6:11    interface-name               interface name must start with a capitalized I
+WARNING: 11:7    variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/tasksStatuses/TaskActions.tsx:17:11
+WARNING: 17:11   interface-name               interface name must start with a capitalized I
+WARNING: 27:7    variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+WARNING: 30:5    no-shadowed-variable         Shadowed name: 'setOpenConformationDialog'
+WARNING: 31:5    no-shadowed-variable         Shadowed name: 'setOpenCreateTaskDialog'
+WARNING: 32:5    no-shadowed-variable         Shadowed name: 'archiveLabelingTask'
+WARNING: 33:5    no-shadowed-variable         Shadowed name: 'retryLabelingTask'
+WARNING: 42:9    variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+WARNING: 116:14  variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/tasksStatuses/TasksStatuses.tsx:15:14
+WARNING: 15:14   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/tasksStatuses/createTaskDialog/CreateTaskDialog.tsx:32:14
+WARNING: 32:14   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+WARNING: 38:7    variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+WARNING: 41:5    no-shadowed-variable         Shadowed name: 'getDatasets'
+WARNING: 42:5    no-shadowed-variable         Shadowed name: 'getUnsignedImagesCount'
+WARNING: 43:5    no-shadowed-variable         Shadowed name: 'createLabelingTask'
+WARNING: 44:5    no-shadowed-variable         Shadowed name: 'clearUnsignedImagesCount'
+WARNING: 45:5    no-shadowed-variable         Shadowed name: 'setOpenCreateTaskDialog'
+WARNING: 164:46  radix                        Missing radix parameter
+WARNING: 167:21  no-shadowed-variable         Shadowed name: 'counter'
+WARNING: 176:46  radix                        Missing radix parameter
+WARNING: 180:21  no-shadowed-variable         Shadowed name: 'counter'
+WARNING: 189:21  no-shadowed-variable         Shadowed name: 'counter'
+WARNING: 321:14  variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/tasksStatuses/createTaskDialog/filesCounter/FilesCounter.tsx:20:11
+WARNING: 20:11   interface-name               interface name must start with a capitalized I
+WARNING: 24:14   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/tasksStatuses/createTaskDialog/notification/Notification.tsx:4:14
+WARNING: 4:14    variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/components/tasksStatuses/createTaskDialog/util.ts:3:18
+WARNING: 3:18    interface-name               interface name must start with a capitalized I
+WARNING: 16:13   interface-over-type-literal  Use an interface instead of a type literal.
+
+/home/bsk/doc/coding/model_garden/frontend/src/models/alert.ts:3:13
+WARNING: 3:13    interface-over-type-literal  Use an interface instead of a type literal.
+
+/home/bsk/doc/coding/model_garden/frontend/src/models/bucket.ts:1:18
+WARNING: 1:18    interface-name               interface name must start with a capitalized I
+
+/home/bsk/doc/coding/model_garden/frontend/src/models/dataset.ts:1:18
+WARNING: 1:18    interface-name               interface name must start with a capitalized I
+
+/home/bsk/doc/coding/model_garden/frontend/src/models/labelingTask.ts:1:18
+WARNING: 1:18    interface-name               interface name must start with a capitalized I
+WARNING: 6:18    interface-name               interface name must start with a capitalized I
+WARNING: 21:18   interface-name               interface name must start with a capitalized I
+WARNING: 25:18   interface-name               interface name must start with a capitalized I
+WARNING: 30:13   interface-over-type-literal  Use an interface instead of a type literal.
+WARNING: 38:13   interface-over-type-literal  Use an interface instead of a type literal.
+
+/home/bsk/doc/coding/model_garden/frontend/src/models/labelingToolUser.ts:2:22
+WARNING: 2:22    variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/models/mediaAssets.ts:1:18
+WARNING: 1:18    interface-name               interface name must start with a capitalized I
+
+/home/bsk/doc/coding/model_garden/frontend/src/models/tableStateProps.ts:1:18
+WARNING: 1:18    interface-name               interface name must start with a capitalized I
+WARNING: 12:18   interface-name               interface name must start with a capitalized I
+
+/home/bsk/doc/coding/model_garden/frontend/src/routerconfig.tsx:7:11
+WARNING: 7:11    interface-name               interface name must start with a capitalized I
+WARNING: 34:14   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+WARNING: 42:14   variable-name                variable name must be in lowerCamelCase or UPPER_CASE
+
+/home/bsk/doc/coding/model_garden/frontend/src/serviceWorker.ts:21:6
+WARNING: 21:6    interface-over-type-literal  Use an interface instead of a type literal.
+
+/home/bsk/doc/coding/model_garden/frontend/src/store/data/index.ts:29:5
+WARNING: 29:5    comment-format               comment must start with a space
+WARNING: 30:5    comment-format               comment must start with a space
+
+/home/bsk/doc/coding/model_garden/frontend/src/store/data/types.ts:3:18
+WARNING: 3:18    interface-name               interface name must start with a capitalized I
+
+/home/bsk/doc/coding/model_garden/frontend/src/store/gallery/types.ts:3:18
+WARNING: 3:18    interface-name               interface name must start with a capitalized I
+
+/home/bsk/doc/coding/model_garden/frontend/src/store/labelingTask/index.ts:7:18
+WARNING: 7:18    interface-name               interface name must start with a capitalized I
+
+/home/bsk/doc/coding/model_garden/frontend/src/store/media/index.ts:6:3
+WARNING: 6:3     comment-format               comment must start with a space
+WARNING: 23:3    comment-format               comment must start with a space
+WARNING: 32:7    comment-format               comment must start with a space
+
+/home/bsk/doc/coding/model_garden/frontend/src/store/media/types.ts:1:18
+WARNING: 1:18    interface-name               interface name must start with a capitalized I
+WARNING: 6:18    interface-name               interface name must start with a capitalized I
+WARNING: 13:18   interface-name               interface name must start with a capitalized I
+
+/home/bsk/doc/coding/model_garden/frontend/src/store/tasksStatuses/index.ts:43:18
+WARNING: 43:18   interface-name               interface name must start with a capitalized I
+
+/home/bsk/doc/coding/model_garden/frontend/src/store/ui/types.ts:1:18
+WARNING: 1:18    interface-name               interface name must start with a capitalized I
+
