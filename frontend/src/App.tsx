@@ -10,6 +10,8 @@ import { Header, TabsContent } from './routerconfig';
 import { Slide } from 'react-toastify';
 import theme from './theme';
 import 'react-toastify/dist/ReactToastify.css';
+import 'antd/dist/antd.css';
+import './styles.scss';
 
 const App: FC = () => {
   const { pathname } = useLocation();
@@ -20,7 +22,7 @@ const App: FC = () => {
   }, [dispatch]);
 
   if (pathname === '/') {
-    return <Redirect to="/add-dataset" />;
+    return <Redirect to="/gallery" />;
   }
 
   return (
