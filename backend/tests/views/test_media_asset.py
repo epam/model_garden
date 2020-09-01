@@ -9,7 +9,10 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 
 from model_garden.models import MediaAsset
+from model_garden.services import S3ServiceException
 from tests import BaseAPITestCase
+
+import botocore.exceptions
 
 
 class TestMediaAssetViewSet(BaseAPITestCase):
@@ -238,6 +241,21 @@ class TestMediaAssetViewSet(BaseAPITestCase):
 
     self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
     self.assertEqual(response.json(), {'message': 's3 error'})
+
+  def test_upload_to_s3_with_missing_credentials(self):
+    self.s3_client_mock.upload_files.side_effect = botocore.exceptions.NoCredentialsError()
+    uploaded_file = SimpleUploadedFile('test.txt', content=b"test", content_type='image')
+    try:
+      self.client.post(
+        path=reverse('mediaasset-upload'),
+        data={
+          'bucketId': self.dataset.bucket.id,
+          'file': [uploaded_file],
+          'dataset_format': self.dataset.dataset_format,
+        },
+      )
+    except S3ServiceException as s3_service_exception:
+      self.assertIn("AWS_ACCESS_KEY_ID and AWS_SECRET_KEY are empty", str(s3_service_exception))
 
   def test_import_s3(self):
     Asset = namedtuple('Asset', 'key')

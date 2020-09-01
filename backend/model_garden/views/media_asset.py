@@ -3,6 +3,7 @@ import io
 import logging
 import zipfile
 
+import botocore.exceptions
 from django.db.utils import IntegrityError
 from django_filters import rest_framework as filters
 from rest_framework import status
@@ -20,7 +21,7 @@ from model_garden.serializers import (
   MediaAssetSerializer,
   MediaAssetIDSerializer,
 )
-from model_garden.services.s3 import S3Client, image_ext_filter
+from model_garden.services.s3 import S3Client, image_ext_filter, S3ServiceException
 from model_garden.utils import strip_s3_key_prefix
 
 logger = logging.getLogger(__name__)
@@ -131,11 +132,16 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
         files_to_upload=((file_obj, media_asset.full_path) for media_asset, file_obj in media_assets_to_upload),
         bucket=bucket_name,
       )
-    except Exception as e:
-      logger.error(f"Failed to upload file to s3: {e}")
+    except botocore.exceptions.NoCredentialsError as s3_credential_exception:
+      logger.error(f"Missing aws s3 credentials: {s3_credential_exception}")
+      raise S3ServiceException(
+        "AWS_ACCESS_KEY_ID and AWS_SECRET_KEY are empty.Set them in backend/model_garden/settings.py.",
+      )
+    except Exception as exception:
+      logger.error(f"Failed to upload file to s3: {exception}")
       raise APIException(
         detail={
-          'message': str(e),
+          'message': str(exception),
         },
       )
 
