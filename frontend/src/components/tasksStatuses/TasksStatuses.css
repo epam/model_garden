@@ -42,12 +42,8 @@
   background-color: #e8ebee !important;
 }
 
-.action-button {
+.task-actions-button {
   margin-right: 0.5rem;
-}
-
-.ant-dropdown-menu-item {
-  padding: 0.5rem 0.75rem;
 }
 
 .search {
