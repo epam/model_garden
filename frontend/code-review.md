@@ -90,7 +90,7 @@ The full issues list is in the `log` folder: cspell.log, eslint.log, tslint.log
 1. Add into README file real data calculation conditions: hardware(CPU, RAM, STORAGE), OS architecture(32/64/...) and version, browser version, input and output data size and type, expectable overall calculation time in described conditions(1Tb animal pictures data for the 1 hour using win10x64/Chrome 84/core i7x4/8GB ram)
 1. Use human readable naming instead of single chars: value, item, prop, stream, result, thread, error
 1. Prefer to format code into less length size lines, more often use newlines to reduce merge conflicts
-1. COmma and math/logic operators place in the end of line to make easier work in the [column selection mode](https://marketplace.visualstudio.com/items?1.temName=erikphansen.vscode-toggle-column-selection)
+1. Comma and math/logic operators place in the end of line to make easier work in the [column selection mode](https://marketplace.visualstudio.com/items?1.temName=erikphansen.vscode-toggle-column-selection)
     * https://eslint.org/docs/rules/object-property-newline
     * https://eslint.org/docs/rules/operator-linebreak
     * https://eslint.org/docs/rules/one-var
@@ -202,7 +202,7 @@ Covering code with data types reduce issues count at the code editing(in IDE) st
 
 Severity: low
 
-Naming is very subjectively. That requires advanced communicating and compromise finding skills. However, approved naming conventions gives solid code reading/understanding speed improvement and significantly reduce code changing "loops" risk during refactoring.
+Naming is very subjectively. Creating naming guide requires advanced communicating and compromise finding skills. However, approved naming conventions gives solid code reading/understanding speed improvement and significantly reduce code changing "loops" risk during refactoring.
 
 1. use the `camelCase` naming notation.
 	* rule: use `npm run lint:spell`
@@ -266,7 +266,15 @@ Naming is very subjectively. That requires advanced communicating and compromise
 
 Severity: moderate
 
-1. Variable is defined but never used
+1. variable is defined but never used. Unused variables, especially in `import` declarations, can slowdown code reading, review and execution.
+	* rule: [@typescript-eslint/no-unused-vars](https://github.com/typescript-eslint/typescript-eslint/blob/v3.10.1/packages/eslint-plugin/docs/rules/no-unused-vars.md)
+	* line: `src/components/gallery/ImageGallery/TaskForm.tsx:56`
+	* example: 
+	```tsx
+		.catch((e: any) => {
+			setCheckList([]);
+		});
+	```
 	* rule: [no-unused-vars](https://github.com/typescript-eslint/typescript-eslint/blob/v3.10.1/packages/eslint-plugin/docs/rules/no-unused-vars.md)
 	* line: `src/components/addDataset/AddDataset.tsx:31`
 	* example: `interface TabPanelProps {`
@@ -309,15 +317,6 @@ Severity: moderate
 	* fix:
 	```tsx
 		import { getLabelingTasks, setSelectedRowKeys } from '../../store/tasksStatuses';
-	```
-1. variable is defined but never used. Unused variables, especially in `import` declarations, can slowdown code reading, review and execution.
-	* rule: [@typescript-eslint/no-unused-vars](https://github.com/typescript-eslint/typescript-eslint/blob/v3.10.1/packages/eslint-plugin/docs/rules/no-unused-vars.md)
-	* line: `src/components/gallery/ImageGallery/TaskForm.tsx:56`
-	* example: 
-	```tsx
-		.catch((e: any) => {
-			setCheckList([]);
-		});
 	```
 1. Arrow function used ambiguously with a conditional expression 
 	* rule: [no-confusing-arrow](https://eslint.org/docs/rules/no-confusing-arrow)
