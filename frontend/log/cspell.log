@@ -1,0 +1,8 @@
+/home/bsk/doc/coding/model_garden/frontend/src/App.tsx:9:40 - Unknown word (routerconfig)
+/home/bsk/doc/coding/model_garden/frontend/src/components/gallery/ImageGallery/ImageCard.tsx:87:27 - Unknown word (toogle)
+/home/bsk/doc/coding/model_garden/frontend/src/components/tasksStatuses/createTaskDialog/CreateTaskDialog.tsx:54:24 - Unknown word (setdataset)
+/home/bsk/doc/coding/model_garden/frontend/src/components/tasksStatuses/createTaskDialog/CreateTaskDialog.tsx:89:5 - Unknown word (setdataset)
+/home/bsk/doc/coding/model_garden/frontend/src/components/tasksStatuses/createTaskDialog/CreateTaskDialog.tsx:224:15 - Unknown word (setdataset)
+/home/bsk/doc/coding/model_garden/frontend/src/serviceWorker.ts:64:20 - Unknown word (onupdatefound)
+/home/bsk/doc/coding/model_garden/frontend/src/serviceWorker.ts:69:26 - Unknown word (onstatechange)
+/home/bsk/doc/coding/model_garden/frontend/src/store/tasksStatuses/index.ts:56:41 - Unknown word (ammount)

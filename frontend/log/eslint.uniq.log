@@ -1,0 +1,30 @@
+
+'archiveLabelingTask' is already declared in the upper scope no-shadow
+'archiveLabelingTask' is missing in props validation react/prop-types
+Argument 'file' should be typed with a non-any type @typescript-eslint/explicit-module-boundary-types
+Arrow function used ambiguously with a conditional expression no-confusing-arrow
+Component definition is missing display name react/display-name
+
+@typescript-eslint/ban-types
+Don't use `{}` as a type. `{}` actually means "any non-nullish value".
+Don't use `Function` as a type. The `Function` type accepts any function-like value.
+Don't use `Object` as a type. The `Object` type actually means "any non-nullish value", so it is marginally better than `unknown`.
+- If you want a type meaning "any object", you probably want `Record<string, unknown>` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead 
+Don't use `object` as a type. The `object` type is currently hard to use ([see this issue](https://github.com/microsoft/TypeScript/issues/21732)).
+
+'e' is defined but never used @typescript-eslint/no-unused-vars
+Expected blank line after variable declarations newline-after-var
+Expected newline after '(' function-paren-newline
+Expected newline before return statement newline-before-return
+'/home/bsk/doc/coding/model_garden/frontend/node_modules/react-toastify/dist/index.js' imported multiple times import/no-duplicates
+Identifier 'assignee_id' is not in camel case camelcase
+["location"] is better written in dot notation dot-notation
+Missing radix parameter radix
+Missing return type on function @typescript-eslint/explicit-function-return-type
+Unexpected any. Specify a different type @typescript-eslint/no-explicit-any
+Unexpected console statement no-console
+Unexpected use of undefined no-undefined
+Unnecessary return statement no-useless-return
+Use an `interface` instead of a `type` @typescript-eslint/consistent-type-definitions
+Useless constructor no-useless-constructor
