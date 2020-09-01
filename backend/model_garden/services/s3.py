@@ -28,9 +28,6 @@ class S3ServiceException(Exception):
 class S3Client:
   def __init__(self, bucket_name: str):
 
-    if not settings.AWS_ACCESS_KEY_ID or not settings.AWS_SECRET_KEY:
-      raise S3ServiceException("AWS_ACCESS_KEY_ID and AWS_SECRET_KEY are empty. Set them in backend/model_garden/settings.py.")
-
     self._s3 = resource(
       's3',
       aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
