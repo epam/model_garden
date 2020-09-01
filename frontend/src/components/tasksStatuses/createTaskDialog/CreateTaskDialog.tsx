@@ -1,42 +1,49 @@
 import React, { useEffect, useState } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useForm, Controller } from 'react-hook-form';
-import { AppState } from '../../store';
+import { AppState } from '../../../store';
 import {
+  setOpenCreateTaskDialog,
   clearUnsignedImagesCount,
   getUnsignedImagesCount,
   createLabelingTask
-} from '../../store/labelingTask';
-import { getDatasets } from '../../store/data';
+} from '../../../store/labelingTask';
+import { getDatasets } from '../../../store/data';
 import {
-  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
   TextField,
   Select,
   MenuItem,
   Button,
   FormControl,
-  InputLabel
+  InputLabel,
+  DialogActions,
+  withStyles
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { LabelingProps } from './util';
-import './LabelingTask.css';
-import { FormContainer } from '../shared';
+import { LabelingProps, FormData } from './util';
+import './CreateTaskDialog.css';
 import { FilesCounter } from './filesCounter';
+import { Bucket, Dataset, LabelingToolUser } from '../../../models';
 
-import { Bucket, Dataset, LabelingToolUser } from '../../models';
+export const CustomDialogContent = withStyles({
+  root: {
+    paddingBottom: '0'
+  }
+})(DialogContent);
 
-export type FormData = {
-  currentDatasetId: string;
-  taskName: string;
-  user: string | number;
-  filesInTask: number;
-  countOfTasks: number;
-};
-
-const LabelingTaskComponent: React.FC<LabelingProps> = (props: any) => {
-  const { buckets, datasets, users, filesCount } = props;
-  const { getDatasets, getUnsignedImagesCount, createLabelingTask } = props;
+const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
+  const { buckets, datasets, users, filesCount, openCreateTaskDialog } = props;
+  const {
+    getDatasets,
+    getUnsignedImagesCount,
+    createLabelingTask,
+    clearUnsignedImagesCount,
+    setOpenCreateTaskDialog
+  } = props;
 
   const [currentBucketId, setCurrentBucketId] = useState('');
   const [currentDataset, setCurrentDataset] = useState({
@@ -49,7 +56,6 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props: any) => {
     filesInTask: '0',
     countOfTasks: '0'
   });
-  const dispatch = useDispatch();
 
   const { handleSubmit, setValue, control, formState, reset } = useForm<
     FormData
@@ -97,7 +103,7 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props: any) => {
       .then(unwrapResult)
       .then(() => {
         resetForm();
-        dispatch(clearUnsignedImagesCount());
+        clearUnsignedImagesCount();
       });
   });
 
@@ -122,8 +128,12 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props: any) => {
     if (reason === 'clear') {
       resetForm();
 
-      dispatch(clearUnsignedImagesCount());
+      clearUnsignedImagesCount();
     }
+  };
+
+  const handleDialogClose = () => {
+    setOpenCreateTaskDialog(false);
   };
 
   const bucketsSelectOptions = buckets.map((bucket: Bucket) => (
@@ -185,10 +195,14 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props: any) => {
   };
 
   return (
-    <>
-      <FormContainer>
-        <Typography variant="h1">Create Tasks</Typography>
-        <form onSubmit={onSubmit}>
+    <Dialog
+      open={openCreateTaskDialog}
+      onClose={handleDialogClose}
+      scroll="body"
+    >
+      <DialogTitle>Create Tasks</DialogTitle>
+      <form onSubmit={onSubmit} className="dialog-form">
+        <CustomDialogContent dividers>
           <FormControl>
             <InputLabel id="task-bucket-name">Bucket</InputLabel>
             <Select
@@ -263,8 +277,12 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props: any) => {
               />
             </div>
           </div>
+        </CustomDialogContent>
+        <DialogActions>
+          <Button type="button" color="primary" onClick={handleDialogClose}>
+            Close
+          </Button>
           <Button
-            fullWidth={true}
             type="submit"
             color="primary"
             variant="contained"
@@ -278,9 +296,9 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props: any) => {
           >
             Assign
           </Button>
-        </form>
-      </FormContainer>
-    </>
+        </DialogActions>
+      </form>
+    </Dialog>
   );
 };
 
@@ -288,11 +306,19 @@ const mapStateToProps = ({ labelingTask, data }: AppState) => ({
   buckets: data.buckets,
   datasets: data.datasets,
   users: data.labelingToolUsers,
-  filesCount: labelingTask.unsignedImagesCount
+  filesCount: labelingTask.unsignedImagesCount,
+  openCreateTaskDialog: labelingTask.openCreateTaskDialog
 });
 
-export const LabelingTask = connect(mapStateToProps, {
+const mapDispatchToProps = {
+  setOpenCreateTaskDialog,
   getDatasets,
+  clearUnsignedImagesCount,
   getUnsignedImagesCount,
   createLabelingTask
-})(LabelingTaskComponent);
+};
+
+export const CreateTaskDialog = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LabelingTaskComponent);

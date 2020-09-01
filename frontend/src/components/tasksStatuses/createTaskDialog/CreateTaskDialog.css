@@ -10,3 +10,9 @@
   padding: 0 0.625rem;
   width: 50%;
 }
+
+@media (min-width: 36rem) {
+  .dialog-form {
+    width: 32rem;
+  }
+}

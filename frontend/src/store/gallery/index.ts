@@ -35,8 +35,8 @@ export const imageGalleryInit = createAsyncThunk(
 const gallerySlice = createSlice({
   name: 'gallery',
   initialState: {
-    mediaAssets: [],
-    tasks: []
+    mediaAssets: [], // Stores media, for now only images related to the datasets.
+    tasks: [] // Used to store labeled task info. Used in gallery and DataSets.
   } as GalleryState,
   reducers: {},
   extraReducers: (builder) => {
