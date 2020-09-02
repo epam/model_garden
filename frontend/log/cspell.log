@@ -1,4 +1,7 @@
-/home/bsk/doc/coding/model_garden/frontend/src/App.tsx:9:40 - Unknown word (routerconfig)
+
+> frontend@0.1.0 lint:spell /home/bsk/doc/coding/model_garden/frontend
+> cspell -c ./.cspell.json '**/*.{js,ts,jsx,tsx}'
+
 /home/bsk/doc/coding/model_garden/frontend/src/components/gallery/ImageGallery/ImageCard.tsx:87:27 - Unknown word (toogle)
 /home/bsk/doc/coding/model_garden/frontend/src/components/tasksStatuses/createTaskDialog/CreateTaskDialog.tsx:54:24 - Unknown word (setdataset)
 /home/bsk/doc/coding/model_garden/frontend/src/components/tasksStatuses/createTaskDialog/CreateTaskDialog.tsx:89:5 - Unknown word (setdataset)
