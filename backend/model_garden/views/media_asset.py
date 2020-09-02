@@ -137,11 +137,11 @@ class MediaAssetViewSet(viewsets.ModelViewSet):
       raise S3ServiceException(
         "AWS_ACCESS_KEY_ID and AWS_SECRET_KEY are empty.Set them in backend/model_garden/settings.py.",
       )
-    except Exception as exception:
-      logger.error(f"Failed to upload file to s3: {exception}")
+    except Exception as s3_exception:
+      logger.error(f"Failed to upload file to s3: {s3_exception}")
       raise APIException(
         detail={
-          'message': str(exception),
+          'message': str(s3_exception),
         },
       )
 
