@@ -18,10 +18,11 @@ class LabelingTaskAdmin(admin.ModelAdmin, FilterCreatedFixture):
     return False
 
   @staticmethod
-  def get_protected_by_status(objs):
+  def get_protected_by_status(tasks):
     return list(map(
-      lambda obj: 'The task with task_id={.task_id} must be in status ARCHIVED.'.format(obj),
-      (obj for obj in objs if obj.status != LabelingTaskStatus.ARCHIVED),
+      lambda task: 'The task with task_id={.task_id} must be in status ARCHIVED OR FAILED.'.format(task),
+      (task for task in tasks if (
+        not (task.status == LabelingTaskStatus.ARCHIVED or task.status == LabelingTaskStatus.FAILED))),
     ))
 
   def get_deleted_objects(self, objs, request):
