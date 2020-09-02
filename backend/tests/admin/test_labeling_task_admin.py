@@ -54,9 +54,9 @@ class TestLabelingTaskAdmin(BaseTestCase):
       LabelingTask(task_id=456, status=LabelingTaskStatus.VALIDATION),
       LabelingTask(task_id=789, status=LabelingTaskStatus.ANNOTATION),
     ]
+    expected_protected_task_ids = (456, 789)
 
     actual_protected = LabelingTaskAdmin.get_protected_by_status(tasks)
-    expected_protected_task_ids = (456, 789)
 
     self.assertEqual(len(actual_protected), 2)
     for index, task_id in enumerate(map(str, expected_protected_task_ids)):
