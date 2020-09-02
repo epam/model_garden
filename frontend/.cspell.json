@@ -3,7 +3,7 @@
     // Version of the setting file.  Always 0.1
     "version": "0.1",
     // language - current active spelling language
-    "language": "en, ru",
+    "language": "en",
     // defaults to false; set to true to allow compound words by default
     // "allowCompoundWords": true,
     // Dictionaries "spanish", "ruby", and "corp-term" will always be checked.
@@ -23,6 +23,7 @@
     "ignorePaths": [
         "**/node_modules/**",
         "**/dist/**",
+        "**/log/**",
         "**/*.sh",
         "**/*.json",
         "**/*.ico",
@@ -34,7 +35,6 @@
     ],
     // words - list of words to be always considered correct
     "words": [
-        "paren"
     ],
     // flagWords - list of words to be always considered incorrect
     // This is useful for offensive words and common spelling errors.
