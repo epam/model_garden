@@ -18,7 +18,7 @@ class TestLabelingTaskAdmin(BaseTestCase):
 
     self.assertListEqual(LabelingTaskAdmin.get_protected_by_status(tasks), [])
 
-  def test_get_protected_by_status_when_all_are_archived_and_failed(self):
+  def test_get_protected_by_status_if_no_valid(self):
     tasks = [
       LabelingTask(status=LabelingTaskStatus.FAILED),
       LabelingTask(status=LabelingTaskStatus.ARCHIVED),
@@ -26,7 +26,7 @@ class TestLabelingTaskAdmin(BaseTestCase):
 
     self.assertListEqual(LabelingTaskAdmin.get_protected_by_status(tasks), [])
 
-  def test_get_protected_by_status_when_all_are_failed(self):
+  def test_get_protected_by_status_all_failed(self):
     tasks = [
       LabelingTask(status=LabelingTaskStatus.FAILED),
       LabelingTask(status=LabelingTaskStatus.FAILED),
@@ -41,21 +41,23 @@ class TestLabelingTaskAdmin(BaseTestCase):
       LabelingTask(task_id=789, status=LabelingTaskStatus.ANNOTATION),
     ]
 
-    got = LabelingTaskAdmin.get_protected_by_status(tasks)
+    actual_protected = LabelingTaskAdmin.get_protected_by_status(tasks)
+    expected_protected_task_ids = (456, 789)
 
-    self.assertEqual(len(got), 2)
-    for index, task_id in enumerate(map(str, (456, 789))):
-      self.assertIn(task_id, got[index])
+    self.assertEqual(len(actual_protected), 2)
+    for index, task_id in enumerate(map(str, expected_protected_task_ids)):
+      self.assertIn(task_id, actual_protected[index])
 
-  def test_get_protected_by_status_when_some_tasks_are_not_failed(self):
+  def test_get_protected_by_status_if_valid(self):
     tasks = [
       LabelingTask(task_id=123, status=LabelingTaskStatus.FAILED),
       LabelingTask(task_id=456, status=LabelingTaskStatus.VALIDATION),
       LabelingTask(task_id=789, status=LabelingTaskStatus.ANNOTATION),
     ]
 
-    got = LabelingTaskAdmin.get_protected_by_status(tasks)
+    actual_protected = LabelingTaskAdmin.get_protected_by_status(tasks)
+    expected_protected_task_ids = (456, 789)
 
-    self.assertEqual(len(got), 2)
-    for index, task_id in enumerate(map(str, (456, 789))):
-      self.assertIn(task_id, got[index])
+    self.assertEqual(len(actual_protected), 2)
+    for index, task_id in enumerate(map(str, expected_protected_task_ids)):
+      self.assertIn(task_id, actual_protected[index])
