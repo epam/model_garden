@@ -1,0 +1,36 @@
+{
+	"": "https://www.npmjs.com/package/jscpd#options",
+	"threshold": 0,
+    "ignore": [
+        "**/__snapshots__/**",
+        "**/node_modules/**",
+        "**/*.min.js",
+        "**/*.map",
+        "**/*.svg",
+        "**/*.jpg",
+        "**/*.jpeg",
+        "**/*.png",
+        "**/*.gif",
+        "**/*.txt",
+        "**/dist/**"
+    ],
+    "absolute": false,
+    "pattern": "**/*.(ts|css|tsx|jsx|html)",
+    "min-tokens": 5,
+    "min-lines": 1,
+    "max-lines": 5000,
+    "max-size": "500kb",
+    "reporters": [
+        "consoleFull", 
+        "markdown", 
+        "badge", 
+        "json", 
+        "html"
+    ],
+    "output": "./log/jscpd",
+    "mode": "weak",
+    "blame": true,
+    "ignoreCase": true,
+    "noSymLinks": true
+}
+
