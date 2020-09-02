@@ -228,7 +228,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
 
   def test_upload_to_s3_fails(self):
     self.s3_client_mock.upload_files.side_effect = Exception("s3 error")
-    uploaded_file = SimpleUploadedFile('test.txt', content=b"test", content_type='image')
+    uploaded_file = SimpleUploadedFile('test.jpg', content=b"test", content_type='image')
 
     response = self.client.post(
       path=reverse('mediaasset-upload'),
@@ -244,7 +244,7 @@ class TestMediaAssetViewSet(BaseAPITestCase):
 
   def test_upload_to_s3_with_missing_credentials(self):
     self.s3_client_mock.upload_files.side_effect = botocore.exceptions.NoCredentialsError()
-    uploaded_file = SimpleUploadedFile('test.txt', content=b"test", content_type='image')
+    uploaded_file = SimpleUploadedFile('test.jpg', content=b"test", content_type='image')
     try:
       self.client.post(
         path=reverse('mediaasset-upload'),
