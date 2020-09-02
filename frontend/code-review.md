@@ -95,12 +95,55 @@ The full issues list is in the `log` folder: cspell.log, eslint.log, tslint.log
     * https://eslint.org/docs/rules/operator-linebreak
     * https://eslint.org/docs/rules/one-var
 
+
+Project Review
+
+https://git.epam.com/epm-emrd/model_garden
+
+Main aim of the review - prepare the project to make it open source. The following items can help you make in more clear    and useful for users and contributors. Big part of the review focused on documentation and description of the project.
+The code reviewed by me don't have red flags, however some of issues to fix described at the bottom.
+
+README 
+    - It would be great to add short information about the main aim of the project
+    - Also it would be good to add clear project description with more details, than described in previous line
+    - No use cases
+    - No information about project statuses and quality gates (most part of the following services provide badges for README):
+        - CI/CD (gitlab ci, travis, GitHub actions, circleci, etc)
+        - versions badge (npm version, etc)
+        - license checker badges (fossa.io)
+        - coverage badge (coveralls.io, codecov.io)
+        - code quality (sonarcloud.io, www.code-inspector.com, codeclimate.com)
+    - No license information (badge and LICENSE.md) 
+    - No contribution guide, issue & PR templates
+    - No link to worked example or/and screenshots 
+    - No support information (EPAM sponsorship, etc.)
+    - No contributors list
+    - No links to sub-projects from main readme (frontend, backend, deploy, etc)
+    - Links to internal EPAM's resources (kb.epam.com, git.epam.com)
+    - Add information about code styles & rules
+
+More info about README for open source projects https://github.com/matiassingers/awesome-readme
+
+Also I recommend use following link for preparation of the project - https://github.com/amilajack/project-checklist 
+
+
+Code & tests
+     - No tests for frontend
+     - Infrastructure for test added in MR looks good, tests should be feature oriented not implementation focused, sometimes it is not easy to write test after code and check logic not implementation - be careful 
+     - Some files too long > 200 lines
+    
+Issues:
+ - const url = `http://${backendHostPort}/api/media-assets/?dataset_id=${datasetId}`; - hardcoded protocol 
+
+
 ## cspell(the text)
 
 Severity: low
 
 Issues in: `spell.log`
+
 Exclude words dictionary: `.cspell-dict-exclude.txt`
+
 Check by: `npm run lint:spell`
 
 1. Use direct web links. Indirect reference can became broken due to overtime limitations. Broken direct links much easier to detect
@@ -117,6 +160,27 @@ Check by: `npm run lint:spell`
 Severity: low
 
 Nothing important
+
+## Copy/paste detection report
+
+Severity: moderate
+
+Check by: `npm run lint:cp`
+
+Code duplicates increase hidden bugs risk, missed during refactoring.
+
+See [full report](log/jscpd/html/index.html)
+
+> Duplications detection: Found 3 exact clones with 35(0.81%) duplicated lines in 87 (5 formats) files.
+
+| Format     | Files analyzed | Total lines | Total tokens | Clones found | Duplicated lines | Duplicated tokens |
+| ---------- | -------------- | ----------- | ------------ | ------------ | ---------------- | ----------------- |
+| javascript | 26             | 855         | 7005         | 0            | 0 (0%)           | 0 (0%)            |
+| tsx        | 27             | 2412        | 19123        | 2            | 23 (0.95%)       | 229 (1.2%)        |
+| typescript | 30             | 918         | 8652         | 1            | 12 (1.31%)       | 90 (1.04%)        |
+| css        | 3              | 95          | 499          | 0            | 0 (0%)           | 0 (0%)            |
+| markup     | 1              | 46          | 253          | 0            | 0 (0%)           | 0 (0%)            |
+| **Total:** | **87**         | **4326**    | **35532**    | **3**        | **35 (0.81%)**   | **319 (0.9%)**    |
 
 ## ESLint
 
