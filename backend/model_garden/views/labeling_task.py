@@ -214,6 +214,8 @@ class LabelingTaskViewSet(ModelViewSet):
       try:
         cvat_service.delete_task(lt.task_id)
       except CVATServiceException as err:
+        if lt.status == LabelingTaskStatus.SAVED:
+          deleted.append(lt)
         logger.error(
           'Unable to delete cvat task %d. Reason: %s', lt.task_id, err,
         )
