@@ -437,6 +437,25 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
 
     self.assertEqual(self.cvat_service_mock.delete_task.call_count, 2)
 
+  def test_archive_save_deleted_task(self):
+    self.cvat_service_mock.delete_task.return_value = CVATServiceException()
+
+    tasks = [
+      self.test_factory.create_labeling_task(status=LabelingTaskStatus.SAVED),
+    ]
+    archived_ids = [t.id for t in tasks]
+
+    response = self.client.patch(
+      path=reverse('labelingtask-archive'),
+      data={'id': archived_ids},
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertSetEqual(set(response.json()['archived']), set(archived_ids))
+    self.assertListEqual(response.json()['errors'], [])
+
+    self.assertEqual(self.cvat_service_mock.delete_task.call_count, 1)
+
   def test_archive_skips_already_archived_tasks(self):
     self.cvat_service_mock.delete_task.return_value = None
 
