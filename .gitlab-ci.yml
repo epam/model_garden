@@ -95,6 +95,8 @@ backend release:
     - pip install awscli
     - cd backend
   script:
+    - export AWS_ACCESS_KEY_ID=$RELEASE_AWS_ACCESS_KEY_ID
+    - export AWS_SECRET_ACCESS_KEY=$RELEASE_AWS_SECRET_ACCESS_KEY
     - $(aws ecr get-login --no-include-email --region eu-central-1)
     # Set deployment tag as commit tag instead of short hash code, if commit tag not empty for current deployment
     - if [ "$CI_COMMIT_TAG" != ""]; then $DEPLOY_TAG:$CI_COMMIT_TAG ; fi; 
@@ -189,8 +191,8 @@ frontend release:
     - pip install awscli
     - cd frontend
   script:
-    - AWS_ACCESS_KEY_ID=$RELEASE_AWS_ACCESS_KEY_ID
-    - AWS_SECRET_ACCESS_KEY=$RELEASE_AWS_SECRET_ACCESS_KEY
+    - export AWS_ACCESS_KEY_ID=$RELEASE_AWS_ACCESS_KEY_ID
+    - export AWS_SECRET_ACCESS_KEY=$RELEASE_AWS_SECRET_ACCESS_KEY
     - $(aws ecr get-login --no-include-email --region eu-central-1)
     # Set deployment tag as commit tag instead of short hash code, if commit tag
     # is not empty for current deployment.
