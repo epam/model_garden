@@ -21,8 +21,13 @@ class DeleteError(NamedTuple):
   version_id: str
 
 
+class S3ServiceException(Exception):
+  pass
+
+
 class S3Client:
   def __init__(self, bucket_name: str):
+
     self._s3 = resource(
       's3',
       aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
