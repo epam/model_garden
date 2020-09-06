@@ -1,15 +1,15 @@
-# EPAM github.com/opencv/cvat Fork
+# Computer Vision Annotation Tool (CVAT)
 
-## EPAM Repo
+## Source Code
 
-https://git.epam.com/epmc-mlcv/cvat
+* [Official CVAT Repo](github.com/opencv/cvat)
 
 ## Installation
 
 ### Install CVAT Locally
 #### Build Docker
-See instructions in 
-https://git.epam.com/epmc-mlcv/cvat/-/blob/master/cvat/apps/documentation/installation.md#windows-10
+See instructions in [Windows 10 CVAT Installation](github.com/opencv/cvat/blob/develop/cvat/apps/documentation/installation.md#windows-10)
+ or in [its internal fork](git.epam.com/epm-emrd/cvat/-/blob/master/cvat/apps/documentation/installation.md#windows-10).
 
 Remember the superuser name and admin to access CVAT admin console. 
 
