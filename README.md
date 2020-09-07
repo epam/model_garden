@@ -50,7 +50,7 @@ The Model Garden tool is an addition to CVAT providing the following functionali
   </tr>
   <tr>
     <td>1</td>
-    <td><a href="www.github.com/tzutalin/labelImg">ithub.com/tzutalin/labelImg</a></td>
+    <td><a href="www.github.com/tzutalin/labelImg">github.com/tzutalin/labelImg</a></td>
     <td><a href="tzutalin.github.io"><i>private</i></a></td>
     <td style="text-align:center">N</td>
     <td style="text-align:center">N</td>
