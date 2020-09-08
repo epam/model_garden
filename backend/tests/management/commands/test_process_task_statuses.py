@@ -4,8 +4,6 @@ from django.core import management
 
 from model_garden.constants import LabelingTaskStatus, AnnotationsFormat
 from tests import BaseTransactionTestCase
-import zipfile
-import tempfile
 
 
 class TestCommand(BaseTransactionTestCase):
@@ -112,12 +110,7 @@ class TestCommand(BaseTransactionTestCase):
     logger_mock.info.assert_called_once_with('No pending labeling tasks found')
 
   def test_handle_missing_all_annotation_filenames(self):
-    with tempfile.NamedTemporaryFile(mode="w+b", delete=True) as temporaryFile:
-      with zipfile.ZipFile(temporaryFile, 'w', zipfile.ZIP_DEFLATED) as zipFile:
-        zipFile.writestr("annotations/", "")
-      temporaryFile.seek(0)
-      self.cvat_service_mock.get_annotations.return_value = temporaryFile.read()
-
+    self.cvat_service_mock.get_annotations.return_value = self.test_zip_file_creation_factory.get_empty_zip_file()
     media_asset = self.test_factory.create_media_asset(filename='test.jpg', assigned=True)
     labeling_task = media_asset.labeling_task
 
