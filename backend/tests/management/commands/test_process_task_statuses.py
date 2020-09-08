@@ -112,8 +112,8 @@ class TestCommand(BaseTransactionTestCase):
 
   def test_handle_missing_all_annotation_filenames(self):
     with tempfile.NamedTemporaryFile(mode="w+b", delete=True) as temporaryFile:
-        self.cvat_service_mock.get_annotations.return_value = self.test_zip_file_factory.get_empty_zip_file_content(
-          temporaryFile, ["annotations/"])
+        self.cvat_service_mock.get_annotations.return_value = (
+          self.test_zip_file_factory.get_empty_zip_file_content(temporaryFile, ["annotations/"]))
 
     media_asset = self.test_factory.create_media_asset(filename='test.jpg', assigned=True)
     labeling_task = media_asset.labeling_task
