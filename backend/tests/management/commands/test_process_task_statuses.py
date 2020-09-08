@@ -1,3 +1,4 @@
+import tempfile
 from unittest import mock
 
 from django.core import management
@@ -24,7 +25,7 @@ class TestCommand(BaseTransactionTestCase):
 
   def test_handle(self):
     media_asset = self.test_factory.create_media_asset(filename='test.jpg', assigned=True)
-    self.cvat_service_mock.get_annotations.return_value = self.test_factory.get_zip_file(
+    self.cvat_service_mock.get_annotations.return_value = self.test_zip_file_factory.get_zip_file_content(
       ('Annotations/test.xml', 'test'),
     )
     labeling_task = media_asset.labeling_task
@@ -74,7 +75,7 @@ class TestCommand(BaseTransactionTestCase):
     self.assertEqual(labeling_task.error, "Failed to get task annotations: CVAT error")
 
   def test_handle_s3_upload_error(self):
-    self.cvat_service_mock.get_annotations.return_value = self.test_factory.get_zip_file(
+    self.cvat_service_mock.get_annotations.return_value = self.test_zip_file_factory.get_zip_file_content(
       ('Annotations/test.xml', 'test'),
     )
     self.s3_client_mock.upload_file_obj.side_effect = Exception('S3 error')
@@ -87,7 +88,7 @@ class TestCommand(BaseTransactionTestCase):
     self.assertEqual(labeling_task.error, "Failed to upload task annotations: S3 error")
 
   def test_handle_missing_one_annotation_filename(self):
-    self.cvat_service_mock.get_annotations.return_value = self.test_factory.get_zip_file(
+    self.cvat_service_mock.get_annotations.return_value = self.test_zip_file_factory.get_zip_file_content(
       ('Annotations/test.xml', 'test'),
     )
     media_asset = self.test_factory.create_media_asset(filename='test.jpg', assigned=True)
@@ -110,7 +111,10 @@ class TestCommand(BaseTransactionTestCase):
     logger_mock.info.assert_called_once_with('No pending labeling tasks found')
 
   def test_handle_missing_all_annotation_filenames(self):
-    self.cvat_service_mock.get_annotations.return_value = self.test_zip_file_creation_factory.get_empty_zip_file()
+    with tempfile.NamedTemporaryFile(mode="w+b", delete=True) as temporaryFile:
+        self.cvat_service_mock.get_annotations.return_value = self.test_zip_file_factory.get_empty_zip_file_content(
+          temporaryFile, ["annotations/"])
+
     media_asset = self.test_factory.create_media_asset(filename='test.jpg', assigned=True)
     labeling_task = media_asset.labeling_task
 
