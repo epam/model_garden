@@ -80,14 +80,14 @@ class BaseTestCase(TestCase):
   def setUp(self):
     super().setUp()
     self.test_factory = Factory()
-    self.test_zip_file_creation_factory = ZipFileContentFactory()
+    self.test_zip_file_factory = ZipFileContentFactory()
 
 
 class BaseAPITestCase(APITestCase):
   def setUp(self):
     super().setUp()
     self.test_factory = Factory()
-    self.test_zip_file_creation_factory = ZipFileContentFactory()
+    self.test_zip_file_factory = ZipFileContentFactory()
 
 
 class BaseTransactionTestCase(TransactionTestCase):
