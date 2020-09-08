@@ -7,6 +7,7 @@ from rest_framework.test import APITestCase
 
 from model_garden.constants import LabelingTaskStatus
 from model_garden.models import Bucket, Dataset, MediaAsset, Labeler, LabelingTask
+from .test_zip_file_creation_factory import ZipFileCreationFactory
 
 
 class Factory:
@@ -103,3 +104,4 @@ class BaseTransactionTestCase(TransactionTestCase):
   def setUp(self):
     super().setUp()
     self.test_factory = Factory()
+    self.test_zip_file_creation_factory = ZipFileCreationFactory()

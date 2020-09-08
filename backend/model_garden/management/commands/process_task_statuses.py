@@ -151,7 +151,7 @@ class Command(BaseCommand):
     logger.info(media_assets_filenames)
     logger.info(annotation_filenames)
 
-    if len(set(annotation_filenames)) == 0:
+    if len(annotation_filenames) == 0:
       raise NoAnnotationException(f"Missing all task annotations for task :{str(labeling_task.task_id)}")
 
     for media_asset in media_assets:
