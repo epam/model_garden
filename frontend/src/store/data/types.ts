@@ -1,6 +1,6 @@
 import { Bucket, Dataset, LabelingToolUser } from '../../models';
 
-export interface DataState {
+export interface IDataState {
   buckets: Bucket[];
   datasets: Dataset[];
   labelingToolUsers: LabelingToolUser[];
