@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useForm, Controller } from 'react-hook-form';
-import { AppState } from '../../../store';
+import { TAppState } from '../../../store';
 import {
   setOpenCreateTaskDialog,
   clearUnsignedImagesCount,
@@ -24,10 +24,10 @@ import {
   withStyles
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { LabelingProps, FormData } from './util';
+import { ILabelingProps, IFormData } from './util';
 import './CreateTaskDialog.css';
 import { FilesCounter } from './filesCounter';
-import { Bucket, Dataset, LabelingToolUser } from '../../../models';
+import { IBucket, IDataset, LabelingToolUser } from '../../../models';
 
 export const CustomDialogContent = withStyles({
   root: {
@@ -35,7 +35,7 @@ export const CustomDialogContent = withStyles({
   }
 })(DialogContent);
 
-const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
+const LabelingTaskComponent: React.FC<ILabelingProps> = (props) => {
   const { buckets, datasets, users, filesCount, openCreateTaskDialog } = props;
   const {
     getDatasets,
@@ -58,7 +58,7 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
   });
 
   const { handleSubmit, setValue, control, formState, reset } = useForm<
-    FormData
+    IFormData
   >({
     mode: 'onChange',
     defaultValues: {
@@ -94,7 +94,7 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
     setCounter({ filesInTask: '0', countOfTasks: '0' });
   };
 
-  const onSubmit = handleSubmit((data: FormData) => {
+  const onSubmit = handleSubmit((data: IFormData) => {
     data.filesInTask = Number(counter.filesInTask);
     data.countOfTasks = Number(counter.countOfTasks);
     data.currentDatasetId = currentDataset.id;
@@ -117,7 +117,7 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
 
   const handleDatasetChange = (
     e: any,
-    dataset: Dataset | null,
+    dataset: IDataset | null,
     reason: string
   ) => {
     if (dataset) {
@@ -136,7 +136,7 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
     setOpenCreateTaskDialog(false);
   };
 
-  const bucketsSelectOptions = buckets.map((bucket: Bucket) => (
+  const bucketsSelectOptions = buckets.map((bucket: IBucket) => (
     <MenuItem key={bucket.id} value={bucket.id}>
       {bucket.name}
     </MenuItem>
@@ -302,7 +302,7 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
   );
 };
 
-const mapStateToProps = ({ labelingTask, data }: AppState) => ({
+const mapStateToProps = ({ labelingTask, data }: TAppState) => ({
   buckets: data.buckets,
   datasets: data.datasets,
   users: data.labelingToolUsers,

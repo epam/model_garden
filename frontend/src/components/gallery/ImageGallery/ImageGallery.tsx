@@ -11,8 +11,8 @@ import {
 import SearchIcon from '@material-ui/icons/Search';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import { Empty } from 'antd';
-import { useTypedSelector, AppState } from '../../../store';
-import { Dataset, Bucket } from '../../../models';
+import { useTypedSelector, TAppState } from '../../../store';
+import { IDataset, IBucket } from '../../../models';
 import { createLabelingTask } from '../../../store/labelingTask';
 import { getMediaAssets, imageGalleryInit } from '../../../store/gallery';
 import { uploadMediaFiles } from '../../../store/media';
@@ -32,11 +32,11 @@ const ImageGallery = (props: any) => {
   } = useRouteMatch();
 
   const currentDataset = datasets.find(
-    (dataset: Dataset) => dataset.id === datasetId
+    (dataset: IDataset) => dataset.id === datasetId
   ); //@todo: update once we change arrays to object
 
   const currentBucket = buckets.find(
-    (bucket: Bucket) => bucket.id === bucketId
+    (bucket: IBucket) => bucket.id === bucketId
   ); //@todo: update once we change arrays to object
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -165,7 +165,7 @@ const ImageGallery = (props: any) => {
   );
 };
 
-const MapStateToProps = ({ gallery, data }: AppState) => ({
+const MapStateToProps = ({ gallery, data }: TAppState) => ({
   photos: gallery.mediaAssets,
   datasets: data.datasets,
   buckets: data.buckets,
