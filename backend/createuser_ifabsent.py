@@ -23,4 +23,4 @@ if __name__ == "__main__":
 
             logger.info(f"Super-user created: {username} - {email}.")
         else:
-            logger.info(f"No super-user created.")
+            logger.info("No super-user created.")
