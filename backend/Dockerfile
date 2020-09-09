@@ -14,12 +14,12 @@ WORKDIR /src
 COPY ./requirements.txt /src/
 RUN pip install --no-cache-dir -U pip && pip install --no-cache-dir -r requirements.txt
 COPY ./model_garden/ /src/model_garden/
-RUN chmod a+x ./manage.py
-RUN chmod a+x ./worker.py
-RUN chmod a+x ./createuser_ifabsent.py
 COPY ./manage.py /src/
 COPY ./worker.py /src/
 COPY ./createuser_ifabsent.py /src/
+RUN chmod a+x manage.py
+RUN chmod a+x worker.py
+RUN chmod a+x createuser_ifabsent.py
 
 RUN apt-get purge -y --auto-remove \
     build-essential \
