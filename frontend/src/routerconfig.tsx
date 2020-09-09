@@ -10,7 +10,7 @@ interface Config {
   path: string;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     minWidth: 'auto',
     paddingLeft: '1rem',

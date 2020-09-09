@@ -27,15 +27,15 @@ export interface LabelingTask {
   images_data: LabelingTaskImagesData;
 }
 
-export type LabelingTaskRequestData = {
+export interface LabelingTaskRequestData {
   task_name: string;
   dataset_id: string;
   assignee_id: string;
   files_in_task: number;
   count_of_tasks: number;
-};
+}
 
-export type LabelingTaskStatus = {
+export interface LabelingTaskStatus {
   id: number;
   url: string;
   name: string;
@@ -56,4 +56,4 @@ export type LabelingTaskStatus = {
   stop_frame?: number;
   frame_filter?: string;
   project?: number;
-};
+}

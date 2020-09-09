@@ -27,8 +27,8 @@ export const BucketsSelect = (buckets: Bucket[]) =>
     </MenuItem>
   ));
 
-export type FormData = {
+export interface FormData {
   bucketId: string;
   path: string;
   format: string;
-};
+}

@@ -37,7 +37,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
     accept
   });
 
-  const classes = makeStyles((theme) => ({
+  const classes = makeStyles(() => ({
     dropField: {
       flex: '1',
       display: 'flex',

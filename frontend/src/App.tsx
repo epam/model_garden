@@ -3,11 +3,11 @@ import { useDispatch } from 'react-redux';
 import { AppBar, CssBaseline } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useLocation, Redirect } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, Slide } from 'react-toastify';
 import { ProgressLoader } from './components';
 import { dataInit } from './store/data';
 import { Header, TabsContent } from './routerconfig';
-import { Slide } from 'react-toastify';
+
 import theme from './theme';
 import 'react-toastify/dist/ReactToastify.css';
 import 'antd/dist/antd.css';

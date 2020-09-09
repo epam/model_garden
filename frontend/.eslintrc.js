@@ -114,7 +114,7 @@ module.exports = {
 		'brace-style': ['warn', '1tbs', { allowSingleLine: true }],
 		'@typescript-eslint/ban-types': 'warn',
 		"complexity": ["warn", { "max": 10 }], // https://eslint.org/docs/rules/complexity
-		'radix': 'warn',
+		'radix': "off",
 		'curly': ['warn', 'all'], // Expected { after 'if' condition
 		'no-unused-vars': 'warn',
 		'no-unused-labels': 'warn',
