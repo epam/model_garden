@@ -1,14 +1,14 @@
-export interface TableStateProps {
+type TStatusFilters = 'annotation' | 'validation' | 'completed' | 'saved' | 'failed' | 'archived';
+
+export interface IFilterProps {
+  filterStatus: TStatusFilters[] | null;
+}
+
+export interface ITableStateProps {
   page: number;
   rowsPerPage: number;
   searchProps: any;
-  filterStatus: FilterProps;
+  filterStatus: IFilterProps;
   sortOrder: 'ascend' | 'descend' | undefined;
   sortField: string | undefined;
-}
-
-type StatusFilters = 'annotation' | 'validation' | 'completed' | 'saved' | 'failed' | 'archived';
-
-export interface FilterProps {
-  filterStatus: StatusFilters[] | null;
 }

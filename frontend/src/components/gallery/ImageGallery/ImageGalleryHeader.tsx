@@ -6,7 +6,7 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { useTypedSelector } from '../../../store';
 import { Bucket, Dataset } from '../../../models';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   header: {
     backgroundColor: blueGrey[50],
     padding: '1rem',

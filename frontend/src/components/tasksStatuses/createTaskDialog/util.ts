@@ -1,6 +1,6 @@
 import { Bucket, Dataset, LabelingToolUser } from '../../../models';
 
-export interface LabelingProps {
+export interface ILabelingProps {
   buckets: Bucket[];
   datasets: Dataset[];
   users: LabelingToolUser[];
@@ -13,10 +13,10 @@ export interface LabelingProps {
   setOpenCreateTaskDialog: any;
 }
 
-export type FormData = {
+export interface IFormData {
   currentDatasetId: string;
   taskName: string;
   user: string | number;
   filesInTask: number;
   countOfTasks: number;
-};
+}
