@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles, MenuItem, Paper, Typography } from '@material-ui/core';
-import { Bucket } from '../../models';
+import { IBucket } from '../../models';
 
 export const UploadPaper = withStyles({
   root: {
