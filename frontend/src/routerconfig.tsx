@@ -4,7 +4,7 @@ import { Route, Switch, Link } from 'react-router-dom';
 
 import { TasksStatuses, Gallery } from './components';
 
-interface Config {
+interface IConfig {
   component: FC;
   label: string;
   path: string;
@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const config: Config[] = [
+const config: IConfig[] = [
   {
     component: Gallery,
     label: 'Gallery',

@@ -17,13 +17,13 @@ const useStyles = makeStyles({
   }
 });
 
-interface FilesCounterProps {
+interface IFilesCounterProps {
   filesCount: number;
 }
 
-export const FilesCounter: React.FC<FilesCounterProps> = ({
+export const FilesCounter: React.FC<IFilesCounterProps> = ({
   filesCount
-}: FilesCounterProps) => {
+}: IFilesCounterProps) => {
   const classes = useStyles();
   return (
     <dl className={classes.root}>

@@ -17,7 +17,7 @@ import {
   FormHelperText
 } from '@material-ui/core';
 
-export interface FormData {
+export interface IFormData {
   taskName: string;
   user: string | number;
   currentDatasetId: string | number;
@@ -33,7 +33,7 @@ export const TaskForm = ({
   setCheckList,
   currentDataset
 }: any) => {
-  const { control, handleSubmit, errors } = useForm<FormData>({});
+  const { control, handleSubmit, errors } = useForm<IFormData>({});
   const users = useTypedSelector(({ data }) => data.labelingToolUsers);
 
   const usersSelectOptions = users.map((user: any) => (
@@ -44,7 +44,7 @@ export const TaskForm = ({
 
   const dispatch = useDispatch();
 
-  const onSubmit = (formData: FormData) => {
+  const onSubmit = (formData: IFormData) => {
     formData.currentDatasetId = currentDataset.id;
     formData.filesInTask = checklist.length;
     formData.countOfTasks = 1;

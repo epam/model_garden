@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { AppState } from '../index';
-import { TableStateProps, LabelingTaskStatus } from '../../models';
+import { TAppState } from '../index';
+import { ITableStateProps, ILabelingTaskStatus } from '../../models';
 import { getLabelingTasksRequest, archiveTaskLabelingRequest, retryLabelingTaskRequest } from '../../api';
 
 export const getLabelingTasks = createAsyncThunk(
   'taskStatuses/fetchLabelingTask',
-  async ({ page, rowsPerPage, searchProps, filterStatus, sortOrder, sortField }: TableStateProps) => {
+  async ({ page, rowsPerPage, searchProps, filterStatus, sortOrder, sortField }: ITableStateProps) => {
     const params: any = {
       page,
       page_size: rowsPerPage
@@ -29,22 +29,22 @@ export const getLabelingTasks = createAsyncThunk(
 );
 
 export const archiveLabelingTask = createAsyncThunk('taskStatuses/archiveLabelingTask', async (_, { getState }) => {
-  const { tasksStatuses } = getState() as AppState;
+  const { tasksStatuses } = getState() as TAppState;
   const response = await archiveTaskLabelingRequest(tasksStatuses.selectedRowKeys);
   return response.data.results;
 });
 
 export const retryLabelingTask = createAsyncThunk('taskStatuses/retryLabelingTask', async (_, { getState }) => {
-  const { tasksStatuses } = getState() as AppState;
+  const { tasksStatuses } = getState() as TAppState;
   const response = await retryLabelingTaskRequest(tasksStatuses.selectedRowKeys);
   return response.data.results;
 });
 
-export interface TasksStatusesState {
+export interface ITasksStatusesState {
   loading: boolean;
   actualView: boolean;
   count: number;
-  tasks: LabelingTaskStatus[];
+  tasks: ILabelingTaskStatus[];
   selectedRowKeys: number[];
   openConformationDialog: boolean;
 }
@@ -57,7 +57,7 @@ const tasksStatusesSlice = createSlice({
     tasks: [], // Used to store labeled task info and display task lists.
     selectedRowKeys: [], // Contains the selected rows from the list.
     openConformationDialog: false
-  } as TasksStatusesState,
+  } as ITasksStatusesState,
   reducers: {
     setSelectedRowKeys: (state, { payload }) => {
       state.selectedRowKeys = payload;
