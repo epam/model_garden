@@ -16,6 +16,7 @@ RUN pip install --no-cache-dir -U pip && pip install --no-cache-dir -r requireme
 COPY ./model_garden/ /src/model_garden/
 COPY ./manage.py /src/
 COPY ./worker.py /src/
+COPY ./createuser_ifabsent.py /src/
 
 RUN apt-get purge -y --auto-remove \
     build-essential \
