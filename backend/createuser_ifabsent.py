@@ -6,6 +6,9 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 
 logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler())
+logger.setLevel(logging.DEBUG)
+
 
 if __name__ == "__main__":
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'model_garden.settings')
@@ -14,10 +17,6 @@ if __name__ == "__main__":
     username = settings.DJANGO_ROOT_USER
     email = settings.DJANGO_ROOT_EMAIL
     password = settings.DJANGO_ROOT_PASSWORD
-
-    username = "mlcv_admin"
-    email = "mlcv_admin@epam.com"
-    password = "mountain_view"
 
     if username is not None and email is not None and password is not None:
         User = get_user_model()
