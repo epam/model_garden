@@ -177,6 +177,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# SUPER USER
+DJANGO_ROOT_USER = env('DJANGO_ROOT_USER', default=None)
+DJANGO_ROOT_EMAIL = env('DJANGO_ROOT_EMAIL', default=None)
+DJANGO_ROOT_PASSWORD = env('DJANGO_ROOT_PASSWORD', default=None)
+
 # AWS
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', default=None)
 AWS_SECRET_KEY = env('AWS_SECRET_KEY', default=None)
