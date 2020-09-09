@@ -11,11 +11,11 @@ import {
   setOpenConformationDialog
 } from '../../store/tasksStatuses';
 import { setOpenCreateTaskDialog } from '../../store/labelingTask';
-import { LabelingTaskStatus } from '../../models';
+import { ILabelingTaskStatus } from '../../models';
 
 interface ITaskActionsProps {
   openConformationDialog: boolean;
-  tasks: LabelingTaskStatus[];
+  tasks: ILabelingTaskStatus[];
   selectedRowKeys: number[];
   setOpenConformationDialog: (state: boolean) => void;
   setOpenCreateTaskDialog: any;
