@@ -6,8 +6,12 @@ export const uploadMediaFilesRequest = async (files: File[], bucketId: string, p
     const formData = new FormData();
     files.forEach((file) => formData.append('file', file));
     formData.append('bucketId', bucketId);
-    if (path) formData.append('path', path);
-    if (format) formData.append('dataset_format', format);
+    if (path) {
+      formData.append('path', path);
+    }
+    if (format) {
+      formData.append('dataset_format', format);
+    }
     return await axios.post(`http://${backendHostPort}/api/media-assets/upload/`, formData, {
       headers: {
         'Content-Type': 'application/zip'
@@ -26,8 +30,12 @@ export const addExistingDatasetRequest = async (bucketId: string, path: string, 
   try {
     const formData = new FormData();
     formData.append('bucketId', bucketId);
-    if (path) formData.append('path', path);
-    if (format) formData.append('dataset_format', format);
+    if (path) {
+      formData.append('path', path);
+    }
+    if (format) {
+      formData.append('dataset_format', format);
+    }
     return await axios.post(`http://${backendHostPort}/api/media-assets/import-s3/`, formData, {
       headers: {
         'Content-Type': 'application/zip'
