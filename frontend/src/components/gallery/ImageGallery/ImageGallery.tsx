@@ -25,7 +25,11 @@ import { connect } from 'react-redux';
 
 const ImageGallery = (props: any) => {
   const { photos, datasets, buckets, tasks } = props;
-  const { uploadMediaFiles, imageGalleryInit, getMediaAssets } = props;
+  const {
+    uploadMediaFiles: propsUploadMediaFiles,
+    imageGalleryInit: propsImageGalleryInit,
+    getMediaAssets: propsGetMediaAssets
+  } = props;
 
   const {
     params: { datasetId, bucketId }
@@ -52,21 +56,21 @@ const ImageGallery = (props: any) => {
   );
 
   useEffect(() => {
-    imageGalleryInit({
+    propsImageGalleryInit({
       bucketId,
       datasetId
     });
-  }, [imageGalleryInit, bucketId, datasetId]);
+  }, [propsImageGalleryInit, bucketId, datasetId]);
 
   const onDrop = (acceptedFiles: any) => {
-    uploadMediaFiles({
+    propsUploadMediaFiles({
       files: acceptedFiles,
       bucketId: currentBucket.id,
       path: currentDataset.path,
       format: currentDataset.dataset_format
     }).then(({ type }: any) => {
       if (type.match('fulfilled')) {
-        getMediaAssets({ datasetId });
+        propsGetMediaAssets({ datasetId });
       }
     });
   };
