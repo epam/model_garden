@@ -38,11 +38,11 @@ export const CustomDialogContent = withStyles({
 const LabelingTaskComponent: React.FC<ILabelingProps> = (props) => {
   const { buckets, datasets, users, filesCount, openCreateTaskDialog } = props;
   const {
-    getDatasets,
-    getUnsignedImagesCount,
-    createLabelingTask,
-    clearUnsignedImagesCount,
-    setOpenCreateTaskDialog
+    getDatasets: propsGetDatasets,
+    getUnsignedImagesCount: propsGetUnsignedImagesCount,
+    createLabelingTask: propsCreateLabelingTask,
+    clearUnsignedImagesCount: propsClearUnsignedImagesCount,
+    setOpenCreateTaskDialog: propsSetOpenCreateTaskDialog
   } = props;
 
   const [currentBucketId, setCurrentBucketId] = useState('');
@@ -69,9 +69,9 @@ const LabelingTaskComponent: React.FC<ILabelingProps> = (props) => {
 
   useEffect(() => {
     if (currentBucketId) {
-      getDatasets(currentBucketId);
+      propsGetDatasets(currentBucketId);
     }
-  }, [currentBucketId, getDatasets]);
+  }, [currentBucketId, propsGetDatasets]);
 
   useEffect(() => {
     setValue('taskName', currentDataset.path, {
@@ -99,11 +99,11 @@ const LabelingTaskComponent: React.FC<ILabelingProps> = (props) => {
     data.countOfTasks = Number(counter.countOfTasks);
     data.currentDatasetId = currentDataset.id;
 
-    createLabelingTask(data)
+    propsCreateLabelingTask(data)
       .then(unwrapResult)
       .then(() => {
         resetForm();
-        clearUnsignedImagesCount();
+        propsClearUnsignedImagesCount();
       });
   });
 
@@ -122,18 +122,18 @@ const LabelingTaskComponent: React.FC<ILabelingProps> = (props) => {
   ) => {
     if (dataset) {
       setCurrentDataset(dataset);
-      getUnsignedImagesCount(dataset.id);
+      propsGetUnsignedImagesCount(dataset.id);
       setCounter({ filesInTask: '0', countOfTasks: '0' });
     }
     if (reason === 'clear') {
       resetForm();
 
-      clearUnsignedImagesCount();
+      propsClearUnsignedImagesCount();
     }
   };
 
   const handleDialogClose = () => {
-    setOpenCreateTaskDialog(false);
+    propsSetOpenCreateTaskDialog(false);
   };
 
   const bucketsSelectOptions = buckets.map((bucket: IBucket) => (

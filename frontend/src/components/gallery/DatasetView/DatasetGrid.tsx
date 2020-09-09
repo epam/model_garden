@@ -5,7 +5,7 @@ import blueGrey from '@material-ui/core/colors/blueGrey';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import { Empty } from 'antd';
 
-import { Dataset } from '../../../models';
+import { IDataset } from '../../../models';
 import { useTypedSelector } from '../../../store';
 
 const useStyles = makeStyles((theme) => ({
@@ -114,7 +114,7 @@ export const DatasetGrid = ({ searchTerm, currentBucketId }: any) => {
           className={classes.empty}
         />
       )}
-      {datasets.map((dataset: Dataset) => (
+      {datasets.map((dataset: IDataset) => (
         <Grid item xs={6} sm={4} md={3} lg={2} key={dataset.id}>
           <Paper className={classes.card}>
             <Link
