@@ -45,6 +45,12 @@ docker-compose up -d worker
 ## Setup Front-end Locally
 
 1. Add [<model_garden_root>/frontend/.env](.env) if absent.
+
+```
+PORT=4200
+REACT_APP_BACKEND_PORT=9000
+```
+
 2. Setup local backend port in [<model_garden_root>/frontend/.env](.env):
 
 ```
