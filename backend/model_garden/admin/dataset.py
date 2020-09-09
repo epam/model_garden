@@ -48,7 +48,8 @@ class DatasetAdmin(admin.ModelAdmin, FilterCreatedFixture):
 
     error_keys: Set[Tuple(str, str)] = set()
     for bucket, assets in bucket_map.items():
-      file_path_to_remove = [asset.full_path for asset in assets] + [asset.full_label_path for asset in assets]
+      file_path_to_remove = ([asset.full_path for asset in assets]
+                             + [asset.full_label_path for asset in assets])
       delete_errors = delete_files_in_s3(
         bucket, file_path_to_remove,
       )
