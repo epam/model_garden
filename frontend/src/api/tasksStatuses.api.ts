@@ -13,8 +13,8 @@ export const getLabelingTasksRequest = async (
   try {
     let resp = await axios.get(`http://${backendHostPort}/api/labeling-tasks/`, {
       params: params,
-      paramsSerializer: (params) => {
-        return qs.stringify(params, { arrayFormat: 'repeat' });
+      paramsSerializer: (serializerParams) => {
+        return qs.stringify(serializerParams, { arrayFormat: 'repeat' });
       }
     });
 

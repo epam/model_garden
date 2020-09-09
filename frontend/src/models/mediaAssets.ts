@@ -1,4 +1,4 @@
-export interface MediaAssets {
+export interface IMediaAssets {
   dataset: string;
   filename: string;
   remote_path: string;

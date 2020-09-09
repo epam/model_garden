@@ -129,7 +129,7 @@ const ImageGallery = (props: any) => {
                     color="primary"
                     variant="contained"
                     startIcon={<AddBoxIcon />}
-                    onClick={(e: any) => setOpenTaskModal(true)}
+                    onClick={() => setOpenTaskModal(true)}
                   >
                     CREATE NEW TASK
                   </Button>

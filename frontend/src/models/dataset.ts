@@ -1,4 +1,4 @@
-export interface Dataset {
+export interface IDataset {
   id: string;
   path: string;
   bucket: string;

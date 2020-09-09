@@ -1,4 +1,4 @@
-export interface Bucket {
+export interface IBucket {
   id: string;
   name: string;
 }

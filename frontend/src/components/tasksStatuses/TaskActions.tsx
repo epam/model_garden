@@ -13,7 +13,7 @@ import {
 import { setOpenCreateTaskDialog } from '../../store/labelingTask';
 import { LabelingTaskStatus } from '../../models';
 
-interface TaskActionsProps {
+interface ITaskActionsProps {
   openConformationDialog: boolean;
   tasks: LabelingTaskStatus[];
   selectedRowKeys: number[];
@@ -23,7 +23,7 @@ interface TaskActionsProps {
   retryLabelingTask: any;
 }
 
-const TaskActionsComponent: React.FC<TaskActionsProps> = (props) => {
+const TaskActionsComponent: React.FC<ITaskActionsProps> = (props) => {
   const { openConformationDialog, tasks, selectedRowKeys } = props;
   const {
     setOpenConformationDialog,

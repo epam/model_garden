@@ -28,12 +28,6 @@ import { UploadFiles } from './uploadImages';
 import '../tasksStatuses/createTaskDialog/CreateTaskDialog.tsx';
 // @todo create component for dialog and put there styles
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: any;
-  value: any;
-}
-
 export const AddDataset: FC<any> = (props) => {
   const location = useLocation() as any;
   const dispatch = useAppDispatch();

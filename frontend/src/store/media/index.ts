@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { UploadFiles, AddExistingDataset, MediaState } from './types';
+import { IUploadFiles, IAddExistingDataset, IMediaState } from './types';
 import { uploadMediaFilesRequest, addExistingDatasetRequest } from '../../api';
 
 //async Thunks
 export const uploadMediaFiles = createAsyncThunk(
   'media/uploadMediaFiles',
-  async ({ files, bucketId, path, format }: UploadFiles) => {
+  async ({ files, bucketId, path, format }: IUploadFiles) => {
     const response = await uploadMediaFilesRequest(files, bucketId, path, format);
     return response.data;
   }
@@ -14,7 +14,7 @@ export const uploadMediaFiles = createAsyncThunk(
 
 export const addExistingDataset = createAsyncThunk(
   'media/addExistingDataset',
-  async ({ bucketId, path, format }: AddExistingDataset) => {
+  async ({ bucketId, path, format }: IAddExistingDataset) => {
     const request = await addExistingDatasetRequest(bucketId, path, format);
     return request.data.imported;
   }
@@ -26,7 +26,7 @@ const mediaSlice = createSlice({
   initialState: {
     addedMediaAssets: undefined, // not really needed right now
     batchName: '' // unused
-  } as MediaState,
+  } as IMediaState,
   reducers: {},
   extraReducers: (builder) => {
     //reducer for async actions

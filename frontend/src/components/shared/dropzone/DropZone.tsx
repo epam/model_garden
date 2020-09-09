@@ -23,7 +23,8 @@ export const DropZone: React.FC<DropZoneProps> = ({
         setIsDialogOpen(true);
       }
       if (acceptedFiles.length) {
-        onDrop?.(acceptedFiles);
+        onDrop?.(acceptedFiles); // eslint-disable-line
+        // eslint-disable-next-line
         setFiles?.(
           acceptedFiles.map((file) =>
             Object.assign(file, {
@@ -36,7 +37,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
     accept
   });
 
-  const classes = makeStyles((theme) => ({
+  const classes = makeStyles(() => ({
     dropField: {
       flex: '1',
       display: 'flex',

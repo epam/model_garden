@@ -4,11 +4,14 @@ import 'antd/dist/antd.css';
 import './TasksStatuses.css';
 import { TaskActions } from './TaskActions';
 import { useAppDispatch, useTypedSelector } from '../../store';
-import { getLabelingTasks } from '../../store/tasksStatuses';
+import {
+  getLabelingTasks,
+  setSelectedRowKeys
+} from '../../store/tasksStatuses';
 import { TableStateProps, LabelingTaskStatus } from '../../models';
 import { GetColumnSearchProps } from './GetColumnSearchProps';
 import StatusField from './StatusField';
-import { setSelectedRowKeys } from '../../store/tasksStatuses';
+
 import { Box, IconButton } from '@material-ui/core';
 import { Refresh } from '@material-ui/icons';
 
