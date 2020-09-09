@@ -25,8 +25,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ba+3plvmjt*ewtn)8no-g%3c@ec!j-g3epc8pnhfz%m7l&+rqj'
+# A key used by Django for an encryption.
+SECRET_KEY = env('DJANGO_SECRET_KEY', default='ba+3plvmjt*ewtn)8no-g%3c@ec!j-g3epc8pnhfz%m7l&+rqj')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -176,6 +176,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# SUPER USER
+DJANGO_ROOT_USER = env('DJANGO_ROOT_USER', default=None)
+DJANGO_ROOT_EMAIL = env('DJANGO_ROOT_EMAIL', default=None)
+DJANGO_ROOT_PASSWORD = env('DJANGO_ROOT_PASSWORD', default=None)
 
 # AWS
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', default=None)
