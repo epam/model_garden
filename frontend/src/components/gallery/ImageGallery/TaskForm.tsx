@@ -17,13 +17,13 @@ import {
   FormHelperText
 } from '@material-ui/core';
 
-export type FormData = {
+export interface FormData {
   taskName: string;
   user: string | number;
   currentDatasetId: string | number;
   filesInTask: number;
   countOfTasks: number;
-};
+}
 
 export const TaskForm = ({
   setOpenTaskModal,
@@ -53,7 +53,7 @@ export const TaskForm = ({
       .then(() => {
         setCheckList([]);
       })
-      .catch((e: any) => {
+      .catch(() => {
         setCheckList([]);
       });
     setOpenTaskModal(false);
@@ -64,7 +64,7 @@ export const TaskForm = ({
       <Dialog
         fullWidth
         open={openTaskModal}
-        onClose={(e: any) => setOpenTaskModal(false)}
+        onClose={() => setOpenTaskModal(false)}
       >
         <DialogTitle> Create Tasks </DialogTitle>
         <form onSubmit={handleSubmit(onSubmit)}>

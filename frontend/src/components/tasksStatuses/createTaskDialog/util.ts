@@ -13,10 +13,10 @@ export interface LabelingProps {
   setOpenCreateTaskDialog: any;
 }
 
-export type FormData = {
+export interface FormData {
   currentDatasetId: string;
   taskName: string;
   user: string | number;
   filesInTask: number;
   countOfTasks: number;
-};
+}

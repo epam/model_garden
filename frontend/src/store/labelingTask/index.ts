@@ -23,7 +23,7 @@ export const createLabelingTask = createAsyncThunk('createLabelingTask', async (
     count_of_tasks: taskData.countOfTasks
   };
   const { headers } = await createLabelingTaskRequest(params);
-  return headers['location'];
+  return headers.location;
 });
 
 const labelingTaskSlice = createSlice({
