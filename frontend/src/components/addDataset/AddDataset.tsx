@@ -18,12 +18,7 @@ import {
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useAppDispatch, useTypedSelector } from '../../store';
 import { addExistingDataset, uploadMediaFiles } from '../../store/media';
-import {
-  UploadPaper,
-  UploadDescription,
-  FormData,
-  BucketsSelect
-} from './utils';
+import { UploadPaper, UploadDescription, BucketsSelect } from './utils';
 import { UploadFiles } from './uploadImages';
 import '../tasksStatuses/createTaskDialog/CreateTaskDialog.tsx';
 // @todo create component for dialog and put there styles

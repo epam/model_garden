@@ -1,8 +1,8 @@
-import { Bucket, Dataset, LabelingToolUser } from '../../../models';
+import { IBucket, IDataset, LabelingToolUser } from '../../../models';
 
 export interface ILabelingProps {
-  buckets: Bucket[];
-  datasets: Dataset[];
+  buckets: IBucket[];
+  datasets: IDataset[];
   users: LabelingToolUser[];
   filesCount: number;
   getUnsignedImagesCount: any;
