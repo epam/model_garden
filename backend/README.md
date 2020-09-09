@@ -3,8 +3,28 @@
 ## Database (not recommended - use docker)
 www.postgresql.org/download (the current ver. 12.3)
 
-See the recommended password in
-[EPAM Model Garden - PostgresSQL](https://kb.epam.com/display/EPMEMRDMGA/EPAM+Model+Garden+-+PostgresSQL).
+<table style="width:100%">
+  <tr>
+    <th style="text-align:center">Name</th>
+    <th style="text-align:center">Value</th>
+  </tr>
+  <tr>
+    <td>Host name/Address</td>
+    <td>model-garden-db-prod-1.<id>.eu-central-1.rds.amazonaws.com</td>
+  </tr>
+  <tr>
+    <td>Username</td>
+    <td>postgres</td>
+  </tr>
+  <tr>
+    <td>Password</td>
+    <td>******</td>
+  </tr>
+  <tr>
+    <td>Port</td>
+    <td>5432</td>
+  </tr>
+</table>
 
 Also update the password in `DATABASES = {...}` dict in settings.py
 
@@ -17,8 +37,22 @@ See in [<model_garden_root>/backend/.env](.env) file.
 Follow all the steps in [CVAT Installation Guide](../cvat/README.md).
 
 ### Add Backend .env File
-Create [<model_garden_root>/backend/.env](.env). Ask colleagues to share this
-file content.
+Create [<model_garden_root>/backend/.env](.env).
+
+```
+AWS_ACCESS_KEY_ID='<ABCDEFGHIJKLMNOPQRST>*'
+AWS_SECRET_KEY='<abcdefghijklmnopqrstuvwxyz0123456789-+/>*'
+
+CVAT_HOST='localhost'
+CVAT_PORT=8080
+CVAT_ROOT_USER_NAME='<cvat_super_user>*'
+CVAT_ROOT_USER_PASSWORD='<cvat_super_user_password>*'
+
+DJANGO_DB_HOST='localhost'
+DJANGO_DB_PORT=5444
+```
+
+<sup>* - environment specific values</sup>
 
 ### Make sure you have Python 3.8 installed
 ```
