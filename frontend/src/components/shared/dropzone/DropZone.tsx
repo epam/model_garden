@@ -23,8 +23,9 @@ export const DropZone: React.FC<DropZoneProps> = ({
         setIsDialogOpen(true);
       }
       if (acceptedFiles.length) {
-        onDrop?.(acceptedFiles);
+        onDrop?.(acceptedFiles); // eslint-disable-line
         setFiles?.(
+          // eslint-disable-line
           acceptedFiles.map((file) =>
             Object.assign(file, {
               preview: isArchive(file) ? zipSvg : URL.createObjectURL(file)
