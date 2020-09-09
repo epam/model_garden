@@ -20,4 +20,7 @@ if __name__ == "__main__":
 
         if not User.objects.filter(username=username).exists():
             User.objects.create_superuser(username, email, password)
-            logger.info(f"Super user created: {username} - {email}")
+
+            logger.info(f"Super-user created: {username} - {email}.")
+        else:
+            logger.info(f"No super-user created.")
