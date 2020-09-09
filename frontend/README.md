@@ -70,6 +70,10 @@ npm install
 npm start
 ```
 
+## Run Linting
+To run additional JS-lint use `npm run lint -s` in 
+[<model_garden_root>/frontend/](frontend) dir.
+
 ## Learn More
 
 This project was bootstrapped with
