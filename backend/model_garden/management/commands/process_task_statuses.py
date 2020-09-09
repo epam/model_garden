@@ -16,6 +16,10 @@ from model_garden.services import CvatService, S3Client
 logger = logging.getLogger(__name__)
 
 
+class NoAnnotationException(Exception):
+  pass
+
+
 class Command(BaseCommand):
   help = "Process tasks statuses"
 
@@ -74,6 +78,9 @@ class Command(BaseCommand):
     for labeling_task, result_future in self._upload_annotations(labeling_tasks=labeling_tasks_to_upload):
       try:
         result_future.result()
+      except NoAnnotationException as noAnnotationException:
+        logger.error(f"{noAnnotationException}")
+        labeling_task.set_failed(error=f"{noAnnotationException}")
       except Exception as e:
         logger.error(f"{e}")
         labeling_task.set_failed(error=f"{e}")
@@ -131,6 +138,7 @@ class Command(BaseCommand):
 
     zip_fp = BytesIO(annotations_content_zip)
     zf = ZipFile(file=zip_fp)
+
     annotation_filenames = {
       os.path.split(zi.filename)[-1]: zf.open(zi) for zi in zf.filelist if
       zi.filename.startswith(self._get_cvat_zip_folderpath(annotation_frmt))
@@ -143,20 +151,22 @@ class Command(BaseCommand):
     logger.info(media_assets_filenames)
     logger.info(annotation_filenames)
 
-    missing_annotation_filenames = media_assets_filenames - set(annotation_filenames)
-    if missing_annotation_filenames:
-      raise Exception(f"Missing task annotations: {', '.join(sorted(missing_annotation_filenames))}")
+    if len(annotation_filenames) == 0:
+      raise NoAnnotationException(f"Missing all task annotations for task :{str(labeling_task.task_id)}")
 
     for media_asset in media_assets:
       try:
         asset_filename = os.path.splitext(media_asset.filename)[0]
         bucket_name = media_asset.dataset.bucket.name
         s3_client = S3Client(bucket_name=bucket_name)
-        s3_client.upload_file_obj(
-          file_obj=annotation_filenames[f"{asset_filename}" + self._get_label_file_extension(annotation_frmt)],
-          bucket=bucket_name,
-          key=media_asset.full_label_path,
-        )
+        file_name = f"{asset_filename}" + self._get_label_file_extension(annotation_frmt)
+        if file_name in annotation_filenames:
+          file_object = annotation_filenames[f"{asset_filename}" + self._get_label_file_extension(annotation_frmt)]
+          s3_client.upload_file_obj(
+            file_obj=file_object,
+            bucket=bucket_name,
+            key=media_asset.full_label_path,
+          )
         logger.info(f"Uploaded annotation '{media_asset.full_label_path}'")
       except Exception as e:
         raise Exception(f"Failed to upload task annotations: {e}")
