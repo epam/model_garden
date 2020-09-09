@@ -1,14 +1,11 @@
+import logging
 import os
 
-import environ
 from django import setup
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
-env = environ.Env()
-dot_env_file_path = '.env'
-if os.path.exists(dot_env_file_path):
-    environ.Env.read_env(dot_env_file_path)
+logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'model_garden.settings')
@@ -23,3 +20,4 @@ if __name__ == "__main__":
 
         if not User.objects.filter(username=username).exists():
             User.objects.create_superuser(username, email, password)
+            logger.info(f"Super user created: {username} - {email}")
