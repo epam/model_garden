@@ -17,6 +17,9 @@ COPY ./model_garden/ /src/model_garden/
 COPY ./manage.py /src/
 COPY ./worker.py /src/
 COPY ./createuser_ifabsent.py /src/
+RUN chmod a+x /src/manage.py
+RUN chmod a+x /src/worker.py
+RUN chmod a+x /src/createuser_ifabsent.py
 
 RUN apt-get purge -y --auto-remove \
     build-essential \
