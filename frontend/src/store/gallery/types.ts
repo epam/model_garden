@@ -1,6 +1,6 @@
-import { LabelingTaskStatus, MediaAssets } from '../../models';
+import { ILabelingTaskStatus, IMediaAssets } from '../../models';
 
-export interface GalleryState {
-  tasks: LabelingTaskStatus[];
-  mediaAssets: MediaAssets[];
+export interface IGalleryState {
+  tasks: ILabelingTaskStatus[];
+  mediaAssets: IMediaAssets[];
 }

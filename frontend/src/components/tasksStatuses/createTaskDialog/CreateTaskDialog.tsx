@@ -148,6 +148,30 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
     </MenuItem>
   ));
 
+  const getCounterTaskArgs = (value: any, name: string) => {
+    const validNames = ['filesInTask', 'countOfTasks'];
+    const counterTaskArgs: any = {};
+
+    if (validNames.includes(name) && counter.countOfTasks === '0') {
+      const calculatedValue = filesCount / parseInt(value);
+      const newCalculatedValue = isNaN(calculatedValue) ? 0 : calculatedValue;
+      const calculatedValueString = Math.ceil(newCalculatedValue);
+
+      const inTask =
+        calculatedValueString !== Infinity
+          ? calculatedValueString.toString()
+          : '0';
+
+      if (name === 'filesInTask') {
+        counterTaskArgs.countOfTasks = inTask;
+      } else if (name === 'countOfTasks') {
+        counterTaskArgs.filesInTask = inTask;
+      }
+    }
+
+    return counterTaskArgs;
+  };
+
   const validateNumber = (event: React.ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name;
     let value = event.target.value;
@@ -155,43 +179,19 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
 
     if (!isNum.test(value) && value !== '') {
       return;
-    } else {
-      if (isNum.test(value) && Number(value) > filesCount) {
-        value = filesCount.toString();
-      }
-
-      if (name === 'filesInTask' && counter.countOfTasks === '0') {
-        const calculatedValue = filesCount / parseInt(value);
-        const newCalculatedValue = isNaN(calculatedValue) ? 0 : calculatedValue;
-        const calculatedValueString = Math.ceil(newCalculatedValue);
-        setCounter((counter) => ({
-          ...counter,
-          countOfTasks:
-            calculatedValueString !== Infinity
-              ? calculatedValueString.toString()
-              : '0',
-          [name]: value
-        }));
-      } else if (name === 'countOfTasks' && counter.filesInTask === '0') {
-        const calculatedValue = filesCount / parseInt(value);
-        const newCalculatedValue = isNaN(calculatedValue) ? 0 : calculatedValue;
-        const calculatedValueString = Math.ceil(newCalculatedValue);
-
-        setCounter((counter) => ({
-          ...counter,
-          filesInTask:
-            calculatedValueString !== Infinity
-              ? calculatedValueString.toString()
-              : '0',
-          [name]: value
-        }));
-      } else {
-        setCounter((counter) => ({
-          ...counter,
-          [name]: value
-        }));
-      }
     }
+
+    if (isNum.test(value) && Number(value) > filesCount) {
+      value = filesCount.toString();
+    }
+
+    const counterArgs = getCounterTaskArgs(value, name);
+
+    setCounter((counterParam) => ({
+      ...counterParam,
+      [name]: value,
+      ...counterArgs
+    }));
   };
 
   return (
