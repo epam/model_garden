@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { GalleryState } from './types';
+import { IGalleryState } from './types';
 import { getLabelingTasksRequest } from '../../api';
 import { getDatasets } from '../data';
 
@@ -37,7 +37,7 @@ const gallerySlice = createSlice({
   initialState: {
     mediaAssets: [], // Stores media, for now only images related to the datasets.
     tasks: [] // Used to store labeled task info. Used in gallery and DataSets.
-  } as GalleryState,
+  } as IGalleryState,
   reducers: {},
   extraReducers: (builder) => {
     builder

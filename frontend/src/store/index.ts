@@ -23,10 +23,10 @@ const store = configureStore({
   devTools: process.env.NODE_ENV !== 'production'
 });
 
-export type AppState = ReturnType<typeof store.getState>;
-export type AppThunk = ThunkAction<void, AppState, unknown, Action<string>>;
-export type AppDispatch = typeof store.dispatch;
-export const useAppDispatch = () => useDispatch<AppDispatch>(); // Export a hook that can be reused to resolve types
-export const useTypedSelector: TypedUseSelectorHook<AppState> = useSelector;
+export type TAppState = ReturnType<typeof store.getState>;
+export type TAppThunk = ThunkAction<void, TAppState, unknown, Action<string>>;
+export type TAppDispatch = typeof store.dispatch;
+export const useAppDispatch = () => useDispatch<TAppDispatch>(); // Export a hook that can be reused to resolve types
+export const useTypedSelector: TypedUseSelectorHook<TAppState> = useSelector;
 
 export default store;

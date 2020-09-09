@@ -142,6 +142,16 @@ module.exports = {
 		'@typescript-eslint/explicit-function-return-type': 0,
 		'@typescript-eslint/explicit-module-boundary-types': 'warn',
 		'@typescript-eslint/no-explicit-any': 0,
+		'no-use-before-define': 'off',
+		'@typescript-eslint/no-use-before-define': [
+			'warn',
+			{
+				functions: false,
+				classes: false,
+				variables: false,
+				typedefs: false
+			}
+		],
 		'camelcase': 0,
 		'no-self-assign': 'warn',
 		'@typescript-eslint/naming-convention': [

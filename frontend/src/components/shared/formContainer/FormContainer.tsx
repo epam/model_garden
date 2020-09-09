@@ -11,13 +11,13 @@ const useStyles = makeStyles({
   }
 });
 
-interface FormContainerProps {
+interface IFormContainerProps {
   children: React.ReactNode | React.ReactNode[];
 }
 
-export const FormContainer: React.FC<FormContainerProps> = ({
+export const FormContainer: React.FC<IFormContainerProps> = ({
   children
-}: FormContainerProps) => {
+}: IFormContainerProps) => {
   const classes = useStyles();
   return (
     <Container maxWidth="sm" className={classes.root}>
