@@ -20,8 +20,8 @@ export const UploadDescription = withStyles({
   }
 })(Typography);
 
-export const BucketsSelect = (buckets: Bucket[]) =>
-  buckets.map((bucket: Bucket) => (
+export const BucketsSelect = (buckets: IBucket[]) =>
+  buckets.map((bucket: IBucket) => (
     <MenuItem key={bucket.id} value={bucket.id}>
       {bucket.name}
     </MenuItem>
