@@ -15,6 +15,10 @@ if __name__ == "__main__":
     email = settings.DJANGO_ROOT_EMAIL
     password = settings.DJANGO_ROOT_PASSWORD
 
+    username = ""
+    email = ""
+    password = ""
+
     if username is not None and email is not None and password is not None:
         User = get_user_model()
 
@@ -23,4 +27,4 @@ if __name__ == "__main__":
 
             logger.info(f"Super-user created: {username} - {email}.")
         else:
-            logger.info("No super-user created.")
+            logger.info(f"Super-user: {username}.")
