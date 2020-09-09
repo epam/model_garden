@@ -1,6 +1,6 @@
 import axios from 'axios';
 import qs from 'qs';
-import { LabelingTaskStatus } from '../models';
+import { ILabelingTaskStatus } from '../models';
 import { backendHostPort } from './environment';
 
 axios.defaults.headers = {
@@ -9,7 +9,7 @@ axios.defaults.headers = {
 
 export const getLabelingTasksRequest = async (
   params: Object
-): Promise<{ count: number; tasks: LabelingTaskStatus[] }> => {
+): Promise<{ count: number; tasks: ILabelingTaskStatus[] }> => {
   try {
     let resp = await axios.get(`http://${backendHostPort}/api/labeling-tasks/`, {
       params: params,
