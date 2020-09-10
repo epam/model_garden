@@ -117,6 +117,7 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
     self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
     self.assertEqual(response.json(), {'message': 'not found'})
     self.cvat_service_mock.create_task.assert_not_called()
+
     media_asset.refresh_from_db()
     self.assertIsNone(media_asset.labeling_task)
 
