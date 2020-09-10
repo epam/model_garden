@@ -117,6 +117,7 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
     self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
     self.assertEqual(response.json(), {'message': 'not found'})
     self.cvat_service_mock.create_task.assert_not_called()
+
     media_asset.refresh_from_db()
     self.assertIsNone(media_asset.labeling_task)
 
@@ -162,6 +163,7 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
           {
             "id": labeling_task.id,
             "name": labeling_task.name,
+            "dataset_id": dataset.id,
             "dataset": dataset.path,
             "labeler": labeling_task.labeler.username,
             "url": 'http://localhost:8080/task/1',
@@ -171,6 +173,16 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
         ],
       },
     )
+
+  def test_not_dataset(self):
+    self.test_factory.create_labeling_task(name='Test labeling task')
+
+    response = self.client.get(
+      path=reverse('labelingtask-list'),
+    )
+
+    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    self.assertEqual(response.json(), {'message': "Dataset for 'test_labeler_1' not found."})
 
   def test_list_same_labeling_task_multiple_media_assets(self):
     dataset = self.test_factory.create_dataset()
@@ -190,8 +202,17 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
     self.assertEqual(response.json()['count'], 1)
 
   def test_list_with_name_filter(self):
-    t1 = self.test_factory.create_labeling_task(name='Test labeling task 1')
-    self.test_factory.create_labeling_task(name='Test labeling task 2')
+    task1 = self.test_factory.create_labeling_task(name='Test labeling task 1')
+    task2 = self.test_factory.create_labeling_task(name='Test labeling task 2')
+    dataset = self.test_factory.create_dataset()
+
+    media_asset1 = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset1.labeling_task = task1
+    media_asset1.save()
+
+    media_asset2 = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset2.labeling_task = task2
+    media_asset2.save()
 
     response = self.client.get(
       path=reverse('labelingtask-list'),
@@ -202,11 +223,20 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
 
     self.assertEqual(response.status_code, status.HTTP_200_OK)
     self.assertEqual(response.json()['count'], 1)
-    self.assertEqual(response.json()['results'][0]['name'], t1.name)
+    self.assertEqual(response.json()['results'][0]['name'], task1.name)
 
   def test_list_with_name_filter_contains(self):
-    self.test_factory.create_labeling_task(name='Test labeling task 1')
-    t2 = self.test_factory.create_labeling_task(name='Test labeling task 2')
+    dataset = self.test_factory.create_dataset()
+    labeling_task1 = self.test_factory.create_labeling_task(name='Test labeling task 1')
+    labeling_task2 = self.test_factory.create_labeling_task(name='Test labeling task 2')
+
+    media_asset1 = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset1.labeling_task = labeling_task1
+    media_asset1.save()
+
+    media_asset2 = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset2.labeling_task = labeling_task2
+    media_asset2.save()
 
     response = self.client.get(
       path=reverse('labelingtask-list'),
@@ -217,7 +247,7 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
 
     self.assertEqual(response.status_code, status.HTTP_200_OK)
     self.assertEqual(response.json()['count'], 1)
-    self.assertEqual(response.json()['results'][0]['name'], t2.name)
+    self.assertEqual(response.json()['results'][0]['name'], labeling_task2.name)
 
   def test_list_with_name_filter_empty_result(self):
     self.test_factory.create_labeling_task(name='Test labeling task 1')
@@ -267,8 +297,17 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
     self.assertEqual(response.json()['count'], 0)
 
   def test_list_with_labeler_filter(self):
-    self.test_factory.create_labeling_task(name='Test labeling task 1')
+    dataset = self.test_factory.create_dataset()
+    labeling_task1 = self.test_factory.create_labeling_task(name='Test labeling task 1')
     labeling_task2 = self.test_factory.create_labeling_task(name='Test labeling task 2')
+
+    media_asset1 = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset1.labeling_task = labeling_task1
+    media_asset1.save()
+
+    media_asset2 = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset2.labeling_task = labeling_task2
+    media_asset2.save()
 
     response = self.client.get(
       path=reverse('labelingtask-list'),
@@ -296,9 +335,22 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
     self.assertEqual(response.json()['count'], 0)
 
   def test_list_with_status_filter(self):
-    self.test_factory.create_labeling_task(name='Test labeling task 1', status=LabelingTaskStatus.ANNOTATION)
-    t2 = self.test_factory.create_labeling_task(name='Test labeling task 2', status=LabelingTaskStatus.VALIDATION)
-    self.test_factory.create_labeling_task(name='Test labeling task 3', status=LabelingTaskStatus.COMPLETED)
+    task1 = self.test_factory.create_labeling_task(name='Test labeling task 1', status=LabelingTaskStatus.ANNOTATION)
+    task2 = self.test_factory.create_labeling_task(name='Test labeling task 2', status=LabelingTaskStatus.VALIDATION)
+    task3 = self.test_factory.create_labeling_task(name='Test labeling task 3', status=LabelingTaskStatus.COMPLETED)
+    dataset = self.test_factory.create_dataset()
+
+    media_asset1 = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset1.labeling_task = task1
+    media_asset1.save()
+
+    media_asset2 = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset2.labeling_task = task2
+    media_asset2.save()
+
+    media_asset3 = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset3.labeling_task = task3
+    media_asset3.save()
 
     response = self.client.get(
       path=reverse('labelingtask-list'),
@@ -309,12 +361,26 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
 
     self.assertEqual(response.status_code, status.HTTP_200_OK)
     self.assertEqual(response.json()['count'], 1)
-    self.assertEqual(response.json()['results'][0]['name'], t2.name)
+    self.assertEqual(response.json()['results'][0]['name'], task2.name)
 
   def test_list_with_multiple_status_filters(self):
-    self.test_factory.create_labeling_task(name='Test labeling task 1', status=LabelingTaskStatus.ANNOTATION)
-    t2 = self.test_factory.create_labeling_task(name='Test labeling task 2', status=LabelingTaskStatus.VALIDATION)
-    t3 = self.test_factory.create_labeling_task(name='Test labeling task 3', status=LabelingTaskStatus.COMPLETED)
+    dataset = self.test_factory.create_dataset()
+
+    task1 = self.test_factory.create_labeling_task(name='Test labeling task 1', status=LabelingTaskStatus.ANNOTATION)
+    task2 = self.test_factory.create_labeling_task(name='Test labeling task 2', status=LabelingTaskStatus.VALIDATION)
+    task3 = self.test_factory.create_labeling_task(name='Test labeling task 3', status=LabelingTaskStatus.COMPLETED)
+
+    media_asset1 = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset1.labeling_task = task1
+    media_asset1.save()
+
+    media_asset2 = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset2.labeling_task = task2
+    media_asset2.save()
+
+    media_asset3 = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset3.labeling_task = task3
+    media_asset3.save()
 
     response = self.client.get(
       path=reverse('labelingtask-list'),
@@ -325,7 +391,7 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
 
     self.assertEqual(response.status_code, status.HTTP_200_OK)
     self.assertEqual(response.json()['count'], 2)
-    self.assertEqual({t['name'] for t in response.json()['results']}, {t2.name, t3.name})
+    self.assertEqual({t['name'] for t in response.json()['results']}, {task2.name, task3.name})
 
   def test_list_with_status_filter_empty_result(self):
     self.test_factory.create_labeling_task(name='Test labeling task 1', status=LabelingTaskStatus.ANNOTATION)
@@ -374,13 +440,22 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
   def test_ordering_by_labeler_name(self):
-    task = self.test_factory.create_labeling_task(name='task 1')
-    task.labeler.username = 'zyx'
-    task.labeler.save()
+    dataset = self.test_factory.create_dataset()
+    task1 = self.test_factory.create_labeling_task(name='task 1')
+    task1.labeler.username = 'zyx'
+    task1.labeler.save()
 
-    task = self.test_factory.create_labeling_task(name='task 2')
-    task.labeler.username = 'abc'
-    task.labeler.save()
+    task2 = self.test_factory.create_labeling_task(name='task 2')
+    task2.labeler.username = 'abc'
+    task2.labeler.save()
+
+    media_asset1 = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset1.labeling_task = task1
+    media_asset1.save()
+
+    media_asset2 = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset2.labeling_task = task2
+    media_asset2.save()
 
     response = self.client.get(
       path=reverse('labelingtask-list'),
@@ -394,8 +469,17 @@ class TestLabelingTaskViewSet(BaseAPITestCase):
     self.assertEqual(response.json()['results'][1]['labeler'], 'abc')
 
   def test_ordering_by_name(self):
-    self.test_factory.create_labeling_task(name='task 1')
-    self.test_factory.create_labeling_task(name='task 2')
+    task1 = self.test_factory.create_labeling_task(name='task 1')
+    task2 = self.test_factory.create_labeling_task(name='task 2')
+    dataset = self.test_factory.create_dataset()
+
+    media_asset1 = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset1.labeling_task = task1
+    media_asset1.save()
+
+    media_asset2 = self.test_factory.create_media_asset(dataset=dataset)
+    media_asset2.labeling_task = task2
+    media_asset2.save()
 
     response = self.client.get(
       path=reverse('labelingtask-list'),
