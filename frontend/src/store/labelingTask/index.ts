@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { LabelingTaskRequestData } from '../../models';
+import { ILabelingTaskRequestData } from '../../models';
 import { createLabelingTaskRequest, getUnsignedImagesCountRequest } from '../../api';
 import { Notification } from '../../components/tasksStatuses/createTaskDialog/notification';
 
-export interface LabelingTasksState {
+export interface ILabelingTasksState {
   unsignedImagesCount: number;
   openCreateTaskDialog: boolean;
 }
@@ -15,7 +15,7 @@ export const getUnsignedImagesCount = createAsyncThunk('fetchUnsignedImagesCount
 });
 
 export const createLabelingTask = createAsyncThunk('createLabelingTask', async (taskData: any) => {
-  const params: LabelingTaskRequestData = {
+  const params: ILabelingTaskRequestData = {
     task_name: taskData.taskName,
     dataset_id: taskData.currentDatasetId,
     assignee_id: taskData.user,
@@ -23,7 +23,7 @@ export const createLabelingTask = createAsyncThunk('createLabelingTask', async (
     count_of_tasks: taskData.countOfTasks
   };
   const { headers } = await createLabelingTaskRequest(params);
-  return headers['location'];
+  return headers.location;
 });
 
 const labelingTaskSlice = createSlice({
@@ -31,7 +31,7 @@ const labelingTaskSlice = createSlice({
   initialState: {
     unsignedImagesCount: 0, // Number of images in the dataset without task
     openCreateTaskDialog: false // Boolean state of the Create Task Dialog Form
-  } as LabelingTasksState,
+  } as ILabelingTasksState,
   reducers: {
     clearUnsignedImagesCount(state) {
       state.unsignedImagesCount = 0;

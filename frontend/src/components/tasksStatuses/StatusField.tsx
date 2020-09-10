@@ -3,12 +3,12 @@ import { Tooltip } from 'antd';
 import { IconButton } from '@material-ui/core';
 import { FileCopy } from '@material-ui/icons';
 
-interface Props {
+interface IProps {
   record: { error: string; status: string };
   text: string;
 }
 
-const StatusField: FC<Props> = ({ record, text }) => {
+const StatusField: FC<IProps> = ({ record, text }) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {

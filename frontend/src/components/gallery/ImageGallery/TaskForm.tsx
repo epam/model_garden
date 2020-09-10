@@ -17,13 +17,13 @@ import {
   FormHelperText
 } from '@material-ui/core';
 
-export type FormData = {
+export interface IFormData {
   taskName: string;
   user: string | number;
   currentDatasetId: string | number;
   filesInTask: number;
   countOfTasks: number;
-};
+}
 
 export const TaskForm = ({
   setOpenTaskModal,
@@ -33,7 +33,7 @@ export const TaskForm = ({
   setCheckList,
   currentDataset
 }: any) => {
-  const { control, handleSubmit, errors } = useForm<FormData>({});
+  const { control, handleSubmit, errors } = useForm<IFormData>({});
   const users = useTypedSelector(({ data }) => data.labelingToolUsers);
 
   const usersSelectOptions = users.map((user: any) => (
@@ -44,7 +44,7 @@ export const TaskForm = ({
 
   const dispatch = useDispatch();
 
-  const onSubmit = (formData: FormData) => {
+  const onSubmit = (formData: IFormData) => {
     formData.currentDatasetId = currentDataset.id;
     formData.filesInTask = checklist.length;
     formData.countOfTasks = 1;
@@ -53,7 +53,7 @@ export const TaskForm = ({
       .then(() => {
         setCheckList([]);
       })
-      .catch((e: any) => {
+      .catch(() => {
         setCheckList([]);
       });
     setOpenTaskModal(false);
@@ -64,7 +64,7 @@ export const TaskForm = ({
       <Dialog
         fullWidth
         open={openTaskModal}
-        onClose={(e: any) => setOpenTaskModal(false)}
+        onClose={() => setOpenTaskModal(false)}
       >
         <DialogTitle> Create Tasks </DialogTitle>
         <form onSubmit={handleSubmit(onSubmit)}>

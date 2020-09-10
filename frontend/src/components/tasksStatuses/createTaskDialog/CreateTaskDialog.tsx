@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useForm, Controller } from 'react-hook-form';
-import { AppState } from '../../../store';
+import { TAppState } from '../../../store';
 import {
   setOpenCreateTaskDialog,
   clearUnsignedImagesCount,
@@ -24,10 +24,10 @@ import {
   withStyles
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { LabelingProps, FormData } from './util';
+import { ILabelingProps, IFormData } from './util';
 import './CreateTaskDialog.css';
 import { FilesCounter } from './filesCounter';
-import { Bucket, Dataset, LabelingToolUser } from '../../../models';
+import { IBucket, IDataset, LabelingToolUser } from '../../../models';
 
 export const CustomDialogContent = withStyles({
   root: {
@@ -35,14 +35,14 @@ export const CustomDialogContent = withStyles({
   }
 })(DialogContent);
 
-const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
+const LabelingTaskComponent: React.FC<ILabelingProps> = (props) => {
   const { buckets, datasets, users, filesCount, openCreateTaskDialog } = props;
   const {
-    getDatasets,
-    getUnsignedImagesCount,
-    createLabelingTask,
-    clearUnsignedImagesCount,
-    setOpenCreateTaskDialog
+    getDatasets: propsGetDatasets,
+    getUnsignedImagesCount: propsGetUnsignedImagesCount,
+    createLabelingTask: propsCreateLabelingTask,
+    clearUnsignedImagesCount: propsClearUnsignedImagesCount,
+    setOpenCreateTaskDialog: propsSetOpenCreateTaskDialog
   } = props;
 
   const [currentBucketId, setCurrentBucketId] = useState('');
@@ -58,7 +58,7 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
   });
 
   const { handleSubmit, setValue, control, formState, reset } = useForm<
-    FormData
+    IFormData
   >({
     mode: 'onChange',
     defaultValues: {
@@ -69,9 +69,9 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
 
   useEffect(() => {
     if (currentBucketId) {
-      getDatasets(currentBucketId);
+      propsGetDatasets(currentBucketId);
     }
-  }, [currentBucketId, getDatasets]);
+  }, [currentBucketId, propsGetDatasets]);
 
   useEffect(() => {
     setValue('taskName', currentDataset.path, {
@@ -94,16 +94,16 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
     setCounter({ filesInTask: '0', countOfTasks: '0' });
   };
 
-  const onSubmit = handleSubmit((data: FormData) => {
+  const onSubmit = handleSubmit((data: IFormData) => {
     data.filesInTask = Number(counter.filesInTask);
     data.countOfTasks = Number(counter.countOfTasks);
     data.currentDatasetId = currentDataset.id;
 
-    createLabelingTask(data)
+    propsCreateLabelingTask(data)
       .then(unwrapResult)
       .then(() => {
         resetForm();
-        clearUnsignedImagesCount();
+        propsClearUnsignedImagesCount();
       });
   });
 
@@ -117,26 +117,26 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
 
   const handleDatasetChange = (
     e: any,
-    dataset: Dataset | null,
+    dataset: IDataset | null,
     reason: string
   ) => {
     if (dataset) {
       setCurrentDataset(dataset);
-      getUnsignedImagesCount(dataset.id);
+      propsGetUnsignedImagesCount(dataset.id);
       setCounter({ filesInTask: '0', countOfTasks: '0' });
     }
     if (reason === 'clear') {
       resetForm();
 
-      clearUnsignedImagesCount();
+      propsClearUnsignedImagesCount();
     }
   };
 
   const handleDialogClose = () => {
-    setOpenCreateTaskDialog(false);
+    propsSetOpenCreateTaskDialog(false);
   };
 
-  const bucketsSelectOptions = buckets.map((bucket: Bucket) => (
+  const bucketsSelectOptions = buckets.map((bucket: IBucket) => (
     <MenuItem key={bucket.id} value={bucket.id}>
       {bucket.name}
     </MenuItem>
@@ -148,6 +148,30 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
     </MenuItem>
   ));
 
+  const getCounterTaskArgs = (value: any, name: string) => {
+    const validNames = ['filesInTask', 'countOfTasks'];
+    const counterTaskArgs: any = {};
+
+    if (validNames.includes(name) && counter.countOfTasks === '0') {
+      const calculatedValue = filesCount / parseInt(value);
+      const newCalculatedValue = isNaN(calculatedValue) ? 0 : calculatedValue;
+      const calculatedValueString = Math.ceil(newCalculatedValue);
+
+      const inTask =
+        calculatedValueString !== Infinity
+          ? calculatedValueString.toString()
+          : '0';
+
+      if (name === 'filesInTask') {
+        counterTaskArgs.countOfTasks = inTask;
+      } else if (name === 'countOfTasks') {
+        counterTaskArgs.filesInTask = inTask;
+      }
+    }
+
+    return counterTaskArgs;
+  };
+
   const validateNumber = (event: React.ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name;
     let value = event.target.value;
@@ -155,43 +179,19 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
 
     if (!isNum.test(value) && value !== '') {
       return;
-    } else {
-      if (isNum.test(value) && Number(value) > filesCount) {
-        value = filesCount.toString();
-      }
-
-      if (name === 'filesInTask' && counter.countOfTasks === '0') {
-        const calculatedValue = filesCount / parseInt(value);
-        const newCalculatedValue = isNaN(calculatedValue) ? 0 : calculatedValue;
-        const calculatedValueString = Math.ceil(newCalculatedValue);
-        setCounter((counter) => ({
-          ...counter,
-          countOfTasks:
-            calculatedValueString !== Infinity
-              ? calculatedValueString.toString()
-              : '0',
-          [name]: value
-        }));
-      } else if (name === 'countOfTasks' && counter.filesInTask === '0') {
-        const calculatedValue = filesCount / parseInt(value);
-        const newCalculatedValue = isNaN(calculatedValue) ? 0 : calculatedValue;
-        const calculatedValueString = Math.ceil(newCalculatedValue);
-
-        setCounter((counter) => ({
-          ...counter,
-          filesInTask:
-            calculatedValueString !== Infinity
-              ? calculatedValueString.toString()
-              : '0',
-          [name]: value
-        }));
-      } else {
-        setCounter((counter) => ({
-          ...counter,
-          [name]: value
-        }));
-      }
     }
+
+    if (isNum.test(value) && Number(value) > filesCount) {
+      value = filesCount.toString();
+    }
+
+    const counterArgs = getCounterTaskArgs(value, name);
+
+    setCounter((counterParam) => ({
+      ...counterParam,
+      [name]: value,
+      ...counterArgs
+    }));
   };
 
   return (
@@ -302,7 +302,7 @@ const LabelingTaskComponent: React.FC<LabelingProps> = (props) => {
   );
 };
 
-const mapStateToProps = ({ labelingTask, data }: AppState) => ({
+const mapStateToProps = ({ labelingTask, data }: TAppState) => ({
   buckets: data.buckets,
   datasets: data.datasets,
   users: data.labelingToolUsers,

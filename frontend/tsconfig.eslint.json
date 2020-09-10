@@ -1,0 +1,20 @@
+{
+    // allow run eslint from cli and check all .ts files
+    // https://github.com/typescript-eslint/typescript-eslint/issues/967
+    "extends": "./tsconfig.json",
+    "include": [
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.jsx",
+      "**/*.js",
+      "**/.*.ts",
+      "**/.*.tsx",
+      "**/.*.jsx",
+      "**/.*.js",
+    ],
+    "exclude": [
+      "node_modules",
+      "dist",
+      "**/*.log"
+    ]
+  }
