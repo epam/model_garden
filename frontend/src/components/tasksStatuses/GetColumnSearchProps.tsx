@@ -21,14 +21,14 @@ export const GetColumnSearchProps = (
   const handleSearch = (
     selectedKeys: Array<string>,
     confirm: any,
-    dataIndex: string
+    paramDataIndex: string
   ) => {
     confirm();
     setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
+    setSearchedColumn(paramDataIndex);
 
     updateSearchState({
-      [dataIndex]: selectedKeys[0]
+      [paramDataIndex]: selectedKeys[0]
     });
   };
 

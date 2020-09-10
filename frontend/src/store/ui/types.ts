@@ -1,3 +1,3 @@
-export interface UiState {
+export interface IUiState {
   showLoader: boolean;
 }
