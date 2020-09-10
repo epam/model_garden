@@ -21,18 +21,12 @@ import { addExistingDataset, uploadMediaFiles } from '../../store/media';
 import {
   UploadPaper,
   UploadDescription,
-  FormData,
-  BucketsSelect
+  BucketsSelect,
+  IFormData
 } from './utils';
 import { UploadFiles } from './uploadImages';
 import '../tasksStatuses/createTaskDialog/CreateTaskDialog.tsx';
 // @todo create component for dialog and put there styles
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: any;
-  value: any;
-}
 
 export const AddDataset: FC<any> = (props) => {
   const location = useLocation() as any;
@@ -49,7 +43,7 @@ export const AddDataset: FC<any> = (props) => {
   );
 
   const { handleSubmit, control, register, reset, formState } = useForm<
-    FormData
+    IFormData
   >({
     mode: 'onChange',
     defaultValues: {

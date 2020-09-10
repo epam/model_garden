@@ -22,7 +22,9 @@ const useStyles = makeStyles({
 export const ProgressLoader: React.FC = () => {
   const showLoader = useTypedSelector(({ ui }) => ui.showLoader);
   const classes = useStyles();
-  if (!showLoader) return null;
+  if (!showLoader) {
+    return null;
+  }
   return (
     <div className={classes.root}>
       <Spin size="large" />

@@ -10,7 +10,7 @@ image/tiff,
 application/zip,
 application/x-zip-compressed`;
 
-export interface DropZoneProps {
+export interface IDropZoneProps {
   setFiles?: Function;
   onDrop?: Function;
 }
