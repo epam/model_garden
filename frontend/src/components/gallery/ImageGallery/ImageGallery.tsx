@@ -11,8 +11,8 @@ import {
 import SearchIcon from '@material-ui/icons/Search';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import { Empty } from 'antd';
-import { useTypedSelector, AppState } from '../../../store';
-import { Dataset, Bucket } from '../../../models';
+import { useTypedSelector, TAppState } from '../../../store';
+import { IDataset, IBucket } from '../../../models';
 import { createLabelingTask } from '../../../store/labelingTask';
 import { getMediaAssets, imageGalleryInit } from '../../../store/gallery';
 import { uploadMediaFiles } from '../../../store/media';
@@ -25,18 +25,22 @@ import { connect } from 'react-redux';
 
 const ImageGallery = (props: any) => {
   const { photos, datasets, buckets, tasks } = props;
-  const { uploadMediaFiles, imageGalleryInit, getMediaAssets } = props;
+  const {
+    uploadMediaFiles: propsUploadMediaFiles,
+    imageGalleryInit: propsImageGalleryInit,
+    getMediaAssets: propsGetMediaAssets
+  } = props;
 
   const {
     params: { datasetId, bucketId }
   } = useRouteMatch();
 
   const currentDataset = datasets.find(
-    (dataset: Dataset) => dataset.id === datasetId
+    (dataset: IDataset) => dataset.id === datasetId
   ); //@todo: update once we change arrays to object
 
   const currentBucket = buckets.find(
-    (bucket: Bucket) => bucket.id === bucketId
+    (bucket: IBucket) => bucket.id === bucketId
   ); //@todo: update once we change arrays to object
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -52,21 +56,21 @@ const ImageGallery = (props: any) => {
   );
 
   useEffect(() => {
-    imageGalleryInit({
+    propsImageGalleryInit({
       bucketId,
       datasetId
     });
-  }, [imageGalleryInit, bucketId, datasetId]);
+  }, [propsImageGalleryInit, bucketId, datasetId]);
 
   const onDrop = (acceptedFiles: any) => {
-    uploadMediaFiles({
+    propsUploadMediaFiles({
       files: acceptedFiles,
       bucketId: currentBucket.id,
       path: currentDataset.path,
       format: currentDataset.dataset_format
     }).then(({ type }: any) => {
       if (type.match('fulfilled')) {
-        getMediaAssets({ datasetId });
+        propsGetMediaAssets({ datasetId });
       }
     });
   };
@@ -129,7 +133,7 @@ const ImageGallery = (props: any) => {
                     color="primary"
                     variant="contained"
                     startIcon={<AddBoxIcon />}
-                    onClick={(e: any) => setOpenTaskModal(true)}
+                    onClick={() => setOpenTaskModal(true)}
                   >
                     CREATE NEW TASK
                   </Button>
@@ -165,7 +169,7 @@ const ImageGallery = (props: any) => {
   );
 };
 
-const MapStateToProps = ({ gallery, data }: AppState) => ({
+const MapStateToProps = ({ gallery, data }: TAppState) => ({
   photos: gallery.mediaAssets,
   datasets: data.datasets,
   buckets: data.buckets,

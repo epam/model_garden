@@ -1,7 +1,7 @@
-export type Severity = 'success' | 'info' | 'warning' | 'error' | undefined;
+export type TSeverity = 'success' | 'info' | 'warning' | 'error' | undefined;
 
-export type Alert = {
+export interface IAlert {
   show: boolean;
-  severity: Severity;
+  severity: TSeverity;
   message: string;
-};
+}

@@ -10,7 +10,7 @@ import WarningIcon from '@material-ui/icons/Warning';
 import { makeStyles } from '@material-ui/core/styles';
 import amber from '@material-ui/core/colors/amber';
 
-interface ConformationDialogProps {
+interface IConformationDialogProps {
   title: string;
   children?: React.ReactNode | React.ReactNode[] | undefined;
   closeButton?: string | undefined;
@@ -35,7 +35,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-export const ConformationDialog: React.FC<ConformationDialogProps> = ({
+export const ConformationDialog: React.FC<IConformationDialogProps> = ({
   title,
   children,
   closeButton,
@@ -43,7 +43,7 @@ export const ConformationDialog: React.FC<ConformationDialogProps> = ({
   handleConfirm,
   open,
   setOpen
-}: ConformationDialogProps) => {
+}: IConformationDialogProps) => {
   const classes = useStyles();
 
   const handleClose = () => {
