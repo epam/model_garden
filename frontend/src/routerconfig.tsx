@@ -4,13 +4,13 @@ import { Route, Switch, Link } from 'react-router-dom';
 
 import { TasksStatuses, Gallery } from './components';
 
-interface Config {
+interface IConfig {
   component: FC;
   label: string;
   path: string;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     minWidth: 'auto',
     paddingLeft: '1rem',
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const config: Config[] = [
+const config: IConfig[] = [
   {
     component: Gallery,
     label: 'Gallery',

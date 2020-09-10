@@ -1,8 +1,8 @@
-import { Bucket, Dataset, LabelingToolUser } from '../../../models';
+import { IBucket, IDataset, LabelingToolUser } from '../../../models';
 
-export interface LabelingProps {
-  buckets: Bucket[];
-  datasets: Dataset[];
+export interface ILabelingProps {
+  buckets: IBucket[];
+  datasets: IDataset[];
   users: LabelingToolUser[];
   filesCount: number;
   getUnsignedImagesCount: any;
@@ -13,10 +13,10 @@ export interface LabelingProps {
   setOpenCreateTaskDialog: any;
 }
 
-export type FormData = {
+export interface IFormData {
   currentDatasetId: string;
   taskName: string;
   user: string | number;
   filesInTask: number;
   countOfTasks: number;
-};
+}
