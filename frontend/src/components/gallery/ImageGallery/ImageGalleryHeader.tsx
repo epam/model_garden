@@ -4,9 +4,9 @@ import blueGrey from '@material-ui/core/colors/blueGrey';
 import { Link, useRouteMatch } from 'react-router-dom';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { useTypedSelector } from '../../../store';
-import { Bucket, Dataset } from '../../../models';
+import { IBucket, IDataset } from '../../../models';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   header: {
     backgroundColor: blueGrey[50],
     padding: '1rem',
@@ -41,11 +41,11 @@ export const ImageGalleryHeader = () => {
   } = useRouteMatch();
 
   const currentBucket = useTypedSelector((state) => state.data.buckets).find(
-    (bucket: Bucket) => bucket.id === bucketId
+    (bucket: IBucket) => bucket.id === bucketId
   );
 
   const currentDataset = useTypedSelector((state) => state.data.datasets).find(
-    (dataset: Dataset) => dataset.id === datasetId
+    (dataset: IDataset) => dataset.id === datasetId
   );
 
   return (

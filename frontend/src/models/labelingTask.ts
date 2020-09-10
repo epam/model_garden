@@ -1,13 +1,13 @@
-export interface LabelingTaskLabel {
+export interface ILabelingTaskLabel {
   name: string;
   attributes: [];
 }
 
-export interface LabelingTaskData {
+export interface ILabelingTaskData {
   name: string;
   owner: number;
   assignee: number;
-  labels: LabelingTaskLabel[];
+  labels: ILabelingTaskLabel[];
   image_quality: number;
   z_order?: boolean;
   segment_size?: string;
@@ -18,24 +18,24 @@ export interface LabelingTaskData {
   segments?: [];
 }
 
-export interface LabelingTaskImagesData {
+export interface ILabelingTaskImagesData {
   remote_files: string[];
 }
 
-export interface LabelingTask {
-  task_data: LabelingTaskData;
-  images_data: LabelingTaskImagesData;
+export interface ILabelingTask {
+  task_data: ILabelingTaskData;
+  images_data: ILabelingTaskImagesData;
 }
 
-export type LabelingTaskRequestData = {
+export interface ILabelingTaskRequestData {
   task_name: string;
   dataset_id: string;
   assignee_id: string;
   files_in_task: number;
   count_of_tasks: number;
-};
+}
 
-export type LabelingTaskStatus = {
+export interface ILabelingTaskStatus {
   id: number;
   url: string;
   name: string;
@@ -56,4 +56,4 @@ export type LabelingTaskStatus = {
   stop_frame?: number;
   frame_filter?: string;
   project?: number;
-};
+}

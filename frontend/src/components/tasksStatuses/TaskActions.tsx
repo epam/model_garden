@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Button, makeStyles } from '@material-ui/core';
-import { AppState } from '../../store';
+import { TAppState } from '../../store';
 import './TasksStatuses.css';
 import { CreateTaskDialog } from './createTaskDialog';
 import { ConformationDialog } from '../shared';
@@ -11,11 +11,11 @@ import {
   setOpenConformationDialog
 } from '../../store/tasksStatuses';
 import { setOpenCreateTaskDialog } from '../../store/labelingTask';
-import { LabelingTaskStatus } from '../../models';
+import { ILabelingTaskStatus } from '../../models';
 
-interface TaskActionsProps {
+interface ITaskActionsProps {
   openConformationDialog: boolean;
-  tasks: LabelingTaskStatus[];
+  tasks: ILabelingTaskStatus[];
   selectedRowKeys: number[];
   setOpenConformationDialog: (state: boolean) => void;
   setOpenCreateTaskDialog: any;
@@ -23,13 +23,13 @@ interface TaskActionsProps {
   retryLabelingTask: any;
 }
 
-const TaskActionsComponent: React.FC<TaskActionsProps> = (props) => {
+const TaskActionsComponent: React.FC<ITaskActionsProps> = (props) => {
   const { openConformationDialog, tasks, selectedRowKeys } = props;
   const {
-    setOpenConformationDialog,
-    setOpenCreateTaskDialog,
-    archiveLabelingTask,
-    retryLabelingTask
+    setOpenConformationDialog: propsSetOpenConformationDialog,
+    setOpenCreateTaskDialog: propsSetOpenCreateTaskDialog,
+    archiveLabelingTask: propsArchiveLabelingTask,
+    retryLabelingTask: propsRetryLabelingTask
   } = props;
 
   const classes = makeStyles((theme) => ({
@@ -57,7 +57,7 @@ const TaskActionsComponent: React.FC<TaskActionsProps> = (props) => {
           color="primary"
           size="small"
           className={classes.button}
-          onClick={() => setOpenCreateTaskDialog(true)}
+          onClick={() => propsSetOpenCreateTaskDialog(true)}
         >
           Create
         </Button>
@@ -65,7 +65,7 @@ const TaskActionsComponent: React.FC<TaskActionsProps> = (props) => {
           variant="outlined"
           color="primary"
           size="small"
-          onClick={() => setOpenConformationDialog(true)}
+          onClick={() => propsSetOpenConformationDialog(true)}
           disabled={isArchiveDisabled}
           className={classes.button}
         >
@@ -75,7 +75,7 @@ const TaskActionsComponent: React.FC<TaskActionsProps> = (props) => {
           variant="outlined"
           color="primary"
           size="small"
-          onClick={() => retryLabelingTask()}
+          onClick={() => propsRetryLabelingTask()}
           disabled={isRetryDisabled}
           className={classes.button}
         >
@@ -90,8 +90,8 @@ const TaskActionsComponent: React.FC<TaskActionsProps> = (props) => {
         closeButton="No, Keep Task(s)"
         confirmButton="Yes, Archive Task(s)"
         open={openConformationDialog}
-        setOpen={(isOpen: boolean) => setOpenConformationDialog(isOpen)}
-        handleConfirm={() => archiveLabelingTask()}
+        setOpen={(isOpen: boolean) => propsSetOpenConformationDialog(isOpen)}
+        handleConfirm={() => propsArchiveLabelingTask()}
       >
         <p>Are you sure you want to archive selected tasks?</p>
       </ConformationDialog>
@@ -99,7 +99,7 @@ const TaskActionsComponent: React.FC<TaskActionsProps> = (props) => {
   );
 };
 
-const mapStateToProps = ({ tasksStatuses }: AppState) => ({
+const mapStateToProps = ({ tasksStatuses }: TAppState) => ({
   tasks: tasksStatuses.tasks,
   selectedRowKeys: tasksStatuses.selectedRowKeys,
   openConformationDialog: tasksStatuses.openConformationDialog

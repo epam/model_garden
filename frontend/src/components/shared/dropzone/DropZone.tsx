@@ -4,11 +4,11 @@ import { useDropzone } from 'react-dropzone';
 import zipSvg from '../../../assets/zip.svg';
 import { blue, red } from '@material-ui/core/colors';
 import { ConformationDialog } from '../conformationDialog';
-import { isArchive, accept, DropZoneProps } from './utils';
-export const DropZone: React.FC<DropZoneProps> = ({
+import { isArchive, accept, IDropZoneProps } from './utils';
+export const DropZone: React.FC<IDropZoneProps> = ({
   setFiles,
   onDrop
-}: DropZoneProps) => {
+}: IDropZoneProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const {
@@ -23,7 +23,8 @@ export const DropZone: React.FC<DropZoneProps> = ({
         setIsDialogOpen(true);
       }
       if (acceptedFiles.length) {
-        onDrop?.(acceptedFiles);
+        onDrop?.(acceptedFiles); // eslint-disable-line
+        // eslint-disable-next-line
         setFiles?.(
           acceptedFiles.map((file) =>
             Object.assign(file, {
@@ -36,7 +37,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
     accept
   });
 
-  const classes = makeStyles((theme) => ({
+  const classes = makeStyles(() => ({
     dropField: {
       flex: '1',
       display: 'flex',

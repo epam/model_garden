@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Table } from 'antd';
-import { LabelingTaskStatus } from '../../../models';
+import { ILabelingTaskStatus } from '../../../models';
 import { makeStyles } from '@material-ui/core';
 import StatusField from '../../tasksStatuses/StatusField';
 
@@ -33,7 +33,7 @@ export const TasksTable = ({ tasks }: any) => {
       title: 'Task name',
       dataIndex: 'name',
       key: 'name',
-      render: (name: string, record: LabelingTaskStatus) => {
+      render: (name: string, record: ILabelingTaskStatus) => {
         if (record.status !== 'archived') {
           return (
             <a href={record.url} target="_blank" rel="noopener noreferrer">

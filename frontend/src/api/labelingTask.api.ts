@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { LabelingTaskRequestData } from '../models';
+import { ILabelingTaskRequestData } from '../models';
 import { backendHostPort } from './environment';
 
 axios.defaults.headers = {
@@ -23,7 +23,7 @@ export const getUnsignedImagesCountRequest = async (datasetId: string) => {
   }
 };
 
-export const createLabelingTaskRequest = async (taskData: LabelingTaskRequestData) => {
+export const createLabelingTaskRequest = async (taskData: ILabelingTaskRequestData) => {
   try {
     return await axios.post(`http://${backendHostPort}/api/labeling-tasks/`, taskData);
   } catch (error) {

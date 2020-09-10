@@ -2,12 +2,12 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import { DropZone } from '../../shared/dropzone';
 
-export interface ExtendedFile extends File {
+export interface IExtendedFile extends File {
   preview: string;
 }
 
-interface UploadFilesProps {
-  files: ExtendedFile[];
+interface IUploadFilesProps {
+  files: IExtendedFile[];
   setFiles: Function;
 }
 
@@ -43,10 +43,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export const UploadFiles: React.FC<UploadFilesProps> = ({
+export const UploadFiles: React.FC<IUploadFilesProps> = ({
   files,
   setFiles
-}: UploadFilesProps) => {
+}: IUploadFilesProps) => {
   const classes = useStyles();
 
   const tumbs = files.map((file) => {

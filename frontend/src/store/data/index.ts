@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { DataState } from './types';
-import { Dataset } from '../../models';
+import { IDataState } from './types';
+import { IDataset } from '../../models';
 import { getBucketsRequest, getDatasetsRequest, getLabelingToolUsersRequest } from '../../api';
 
 export const getBuckets = createAsyncThunk('fetchBuckets', async () => {
@@ -12,7 +12,7 @@ export const getBuckets = createAsyncThunk('fetchBuckets', async () => {
 export const getDatasets = createAsyncThunk('data/fetchDatasets', async (bucketId: string) => {
   const response = await getDatasetsRequest(bucketId);
   return [...response.data.results]
-    .sort((a: Dataset, b: Dataset) => (a.path > b.path ? 1 : -1))
+    .sort((a: IDataset, b: IDataset) => (a.path > b.path ? 1 : -1))
     .map((dataset) => ({
       ...dataset,
       id: `${dataset.id}`,
@@ -51,7 +51,7 @@ const dataSlice = createSlice({
     buckets: [], // list of buckets that populates the dropdown field.
     datasets: [], // datasets field to display datasetCard.
     labelingToolUsers: [] // list of users to populate dropdown , used in dataset and gallery modal.
-  } as DataState,
+  } as IDataState,
   reducers: {},
   extraReducers: (builder) => {
     builder

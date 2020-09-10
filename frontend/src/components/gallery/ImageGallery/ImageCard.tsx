@@ -9,7 +9,7 @@ import {
 import blueGrey from '@material-ui/core/colors/blueGrey';
 import GetAppIcon from '@material-ui/icons/GetApp';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   card: {
     position: 'relative',
     overflow: 'hidden',
@@ -74,11 +74,11 @@ export const ImageCard = ({ image, setCheckList, checklist }: any) => {
   const classes = useStyles();
   const { remote_path, remote_label_path, filename: fileName } = image;
 
-  const check = (fileName: string) =>
+  const check = (fileNameParam: string) =>
     setCheckList((ps: string[]) =>
       ps
-        .filter((x) => ![fileName].includes(x))
-        .concat([fileName].filter((x) => !ps.includes(x)))
+        .filter((x) => ![fileNameParam].includes(x))
+        .concat([fileNameParam].filter((x) => !ps.includes(x)))
     );
 
   return (
