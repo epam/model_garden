@@ -55,7 +55,7 @@ backend:
   variables:
     AWS_DEFAULT_REGION: eu-central-1
     DOCKER_HOST: tcp://localhost:2375/
-    REPOSITORY_URL: 363712795748.dkr.ecr.eu-central-1.amazonaws.com/model_garden_backend
+    REPOSITORY_URL: $PROD_BACKEND_ECR_URI
     #Set for deployment tag commit short hash code as default
     DEPLOY_TAG: $CI_COMMIT_SHORT_SHA
   before_script:
@@ -120,7 +120,7 @@ backend dev:
   variables:
     AWS_DEFAULT_REGION: eu-central-1
     DOCKER_HOST: tcp://localhost:2375/
-    REPOSITORY_URL: 363712795748.dkr.ecr.eu-central-1.amazonaws.com/model_garden_backend
+    REPOSITORY_URL: $DEV_BACKEND_ECR_URI
   before_script:
     - apk add --no-cache curl jq python3 py-pip
     - pip install awscli
@@ -151,7 +151,7 @@ frontend:
   variables:
     AWS_DEFAULT_REGION: eu-central-1
     DOCKER_HOST: tcp://localhost:2375/
-    REPOSITORY_URL: 363712795748.dkr.ecr.eu-central-1.amazonaws.com/model_garden_frontend
+    REPOSITORY_URL: $PROD_FRONTEND_ECR_URI
     #Set for deployment tag commit short hash code as default
     DEPLOY_TAG: $CI_COMMIT_SHORT_SHA
   before_script:
@@ -219,7 +219,7 @@ frontend dev:
   variables:
     AWS_DEFAULT_REGION: eu-central-1
     DOCKER_HOST: tcp://localhost:2375/
-    REPOSITORY_URL: 363712795748.dkr.ecr.eu-central-1.amazonaws.com/model_garden_frontend
+    REPOSITORY_URL: $DEV_FRONTEND_ECR_URI
   before_script:
     - apk add --no-cache curl jq python3 py-pip
     - pip install awscli
