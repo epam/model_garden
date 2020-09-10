@@ -4,11 +4,14 @@ import 'antd/dist/antd.css';
 import './TasksStatuses.css';
 import { TaskActions } from './TaskActions';
 import { useAppDispatch, useTypedSelector } from '../../store';
-import { getLabelingTasks } from '../../store/tasksStatuses';
-import { TableStateProps, LabelingTaskStatus } from '../../models';
+import {
+  getLabelingTasks,
+  setSelectedRowKeys
+} from '../../store/tasksStatuses';
+import { ITableStateProps, ILabelingTaskStatus } from '../../models';
 import { GetColumnSearchProps } from './GetColumnSearchProps';
 import StatusField from './StatusField';
-import { setSelectedRowKeys } from '../../store/tasksStatuses';
+
 import { Box, IconButton } from '@material-ui/core';
 import { Refresh } from '@material-ui/icons';
 
@@ -28,7 +31,7 @@ export const TasksStatuses: React.FC = () => {
     ({ tasksStatuses }) => tasksStatuses.selectedRowKeys
   );
 
-  const [tableState, setTableState] = useState<TableStateProps>({
+  const [tableState, setTableState] = useState<ITableStateProps>({
     page: 1,
     rowsPerPage: 10,
     searchProps: {},
@@ -76,7 +79,7 @@ export const TasksStatuses: React.FC = () => {
       showSorterTooltip: false,
       filtered: tableState.searchProps.name,
       ...GetColumnSearchProps('name', updateSearchState, resetSearchState),
-      render: (name: string, record: LabelingTaskStatus) => {
+      render: (name: string, record: ILabelingTaskStatus) => {
         if (record.status !== 'archived') {
           return (
             <a href={record.url} target="_blank" rel="noopener noreferrer">
@@ -140,7 +143,7 @@ export const TasksStatuses: React.FC = () => {
     }
   ) => {
     localStorage.setItem('taskStatusFilter', JSON.stringify(filter.status));
-    setTableState((prevState: TableStateProps) => ({
+    setTableState((prevState: ITableStateProps) => ({
       ...prevState,
       page: pagination.current,
       filterStatus: filter.status,

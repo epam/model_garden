@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, AnyAction } from '@reduxjs/toolkit';
-import { UiState } from './types';
+import { IUiState } from './types';
 import { uploadMediaFiles, addExistingDataset } from '../media';
 import { getMediaAssets } from '../gallery';
 import { createLabelingTask } from '../labelingTask';
@@ -9,7 +9,7 @@ const uiSlice = createSlice({
   name: 'ui',
   initialState: {
     showLoader: false // Used to show (or not) the ProgressLoader's spinner based on the action status.
-  } as UiState,
+  } as IUiState,
   reducers: {},
   extraReducers: (builder) => {
     builder

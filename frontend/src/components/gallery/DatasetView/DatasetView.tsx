@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bucket } from '../../../models';
+import { IBucket } from '../../../models';
 import {
   Container,
   Grid,
@@ -60,7 +60,7 @@ const DatasetView = () => {
               value={currentBucketId}
               onChange={HandleChange}
             >
-              {buckets.map((bucket: Bucket, index: any) => (
+              {buckets.map((bucket: IBucket, index: any) => (
                 <MenuItem key={index} value={bucket.id}>
                   {bucket.name}
                 </MenuItem>
