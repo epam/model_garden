@@ -1,3 +1,4 @@
+from rest_framework.exceptions import ValidationError
 from rest_framework import serializers
 
 from model_garden.models import Labeler, LabelingTask
@@ -42,6 +43,8 @@ class LabelingTaskSerializer(serializers.ModelSerializer):
     media_asset = obj.media_assets.first()
     if media_asset is not None:
       return media_asset.dataset.id
+    else:
+      raise ValidationError(detail={"message": f"Dataset for '{obj.labeler.username}' not found."})
 
 
 class LabelingTaskIDSerializer(serializers.Serializer):
