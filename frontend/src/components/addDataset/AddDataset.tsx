@@ -92,25 +92,35 @@ export const AddDataset: FC<any> = (props) => {
     }
   });
 
+  const UploadImagesComp = Object.assign(
+    (navProps: any) => (
+      <UploadFiles {...navProps} files={files} setFiles={setFiles} />
+    ),
+    { displayName: 'UploadImagesComp' }
+  );
+
+  const UploadDescriptionComp = Object.assign(
+    () => (
+      <UploadDescription variant="body2">
+        <span>
+          Images should be already upload to the bucket (e.g. by CyberDuck) and
+          not to be referenced in the database yet
+        </span>
+      </UploadDescription>
+    ),
+    { displayName: 'UploadDescriptionComp' }
+  );
+
   const subTabs = [
     {
       label: 'upload images',
       path: 'upload',
-      component: (navProps: any) => (
-        <UploadFiles {...navProps} files={files} setFiles={setFiles} />
-      )
+      component: UploadImagesComp
     },
     {
       label: 'add Existing Bucket Path',
       path: 'add',
-      component: () => (
-        <UploadDescription variant="body2">
-          <span>
-            Images should be already upload to the bucket (e.g. by CyberDuck)
-            and not to be referenced in the database yet
-          </span>
-        </UploadDescription>
-      )
+      component: UploadDescriptionComp
     }
   ];
 

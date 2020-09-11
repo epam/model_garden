@@ -31,7 +31,7 @@ export const getLabelingTasksRequest = async (
   }
 };
 
-export const archiveTaskLabelingRequest = async (taskIds: Array<number>) => {
+export const archiveTaskLabelingRequest = async (taskIds: Array<number>): Promise<any> => {
   try {
     return await axios.patch(`http://${backendHostPort}/api/labeling-tasks/archive/`, { id: taskIds });
   } catch (error) {
@@ -43,7 +43,7 @@ export const archiveTaskLabelingRequest = async (taskIds: Array<number>) => {
   }
 };
 
-export const retryLabelingTaskRequest = async (taskIds: Array<number>) => {
+export const retryLabelingTaskRequest = async (taskIds: Array<number>): Promise<any> => {
   try {
     return await axios.patch(`http://${backendHostPort}/api/labeling-tasks/retry/`, { id: taskIds });
   } catch (error) {
