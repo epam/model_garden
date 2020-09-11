@@ -1,8 +1,8 @@
 # Django Backend
 
-## Database (not recommended - use docker)
+## Database
 
-### Local Database
+### Local Database (not recommended - use docker)
 www.postgresql.org/download (the current ver. 12.3)
 
 <table style="width:100%">
@@ -31,7 +31,7 @@ www.postgresql.org/download (the current ver. 12.3)
 Also update the password in `DATABASES = {...}` dict in
 [settings.py](model_garden/settings.py).
 
-### Database Docker Container
+### Local Database Docker Container
 1. Update `POSTGRES_PASSWORD` in
 [<model_garden_root>/docker-compose.yml](../docker-compose.yml).
 
