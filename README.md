@@ -32,6 +32,9 @@ The Model Garden tool is an addition to CVAT providing the following functionali
  * collaborative usage of datasets through web interface
  * prevent labeling tool crash consequences
 
+**NOTE**: The currently supported version of CVAT backend API is
+ [0.6.1](www.github.com/openvinotoolkit/cvat/tree/v0.6.1).
+
 ### Top Existing Solutions
 
 <table style="width:100%">
