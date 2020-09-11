@@ -69,6 +69,13 @@ export const TasksStatuses: React.FC = () => {
     });
   };
 
+  const TaskStatusComp = Object.assign(
+    (text: string, record: { error: string; status: string }) => (
+      <StatusField text={text} record={record} />
+    ),
+    { displayName: 'TaskStatusComp' }
+  );
+
   const TASK_STATUSES_COLUMNS = [
     {
       title: 'Task Name',
@@ -112,9 +119,7 @@ export const TasksStatuses: React.FC = () => {
       dataIndex: 'status',
       key: 'status',
       sorter: true,
-      render: (text: string, record: { error: string; status: string }) => (
-        <StatusField text={text} record={record} />
-      ),
+      render: TaskStatusComp,
       filters: [
         { text: 'annotation', value: 'annotation' },
         { text: 'validation', value: 'validation' },
