@@ -1,7 +1,12 @@
 import axios from 'axios';
 import { backendHostPort } from './environment';
 
-export const uploadMediaFilesRequest = async (files: File[], bucketId: string, path: string, format: string) => {
+export const uploadMediaFilesRequest = async (
+  files: File[],
+  bucketId: string,
+  path: string,
+  format: string
+): Promise<any> => {
   try {
     const formData = new FormData();
     files.forEach((file) => formData.append('file', file));
@@ -26,7 +31,7 @@ export const uploadMediaFilesRequest = async (files: File[], bucketId: string, p
   }
 };
 
-export const addExistingDatasetRequest = async (bucketId: string, path: string, format: string) => {
+export const addExistingDatasetRequest = async (bucketId: string, path: string, format: string): Promise<any> => {
   try {
     const formData = new FormData();
     formData.append('bucketId', bucketId);
