@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-export const ImageGalleryHeader = () => {
+export const ImageGalleryHeader = (): JSX.Element => {
   const classes = useStyles();
 
   const {
