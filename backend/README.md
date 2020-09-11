@@ -1,6 +1,8 @@
 # Django Backend
 
 ## Database (not recommended - use docker)
+
+### Local Database
 www.postgresql.org/download (the current ver. 12.3)
 
 <table style="width:100%">
@@ -10,7 +12,7 @@ www.postgresql.org/download (the current ver. 12.3)
   </tr>
   <tr>
     <td>Host name/Address</td>
-    <td>model-garden-db-prod-1.<id>.eu-central-1.rds.amazonaws.com</td>
+    <td>model-garden-db-prod-1.&lt;id&gt;.eu-central-1.rds.amazonaws.com</td>
   </tr>
   <tr>
     <td>Username</td>
@@ -26,7 +28,18 @@ www.postgresql.org/download (the current ver. 12.3)
   </tr>
 </table>
 
-Also update the password in `DATABASES = {...}` dict in settings.py
+Also update the password in `DATABASES = {...}` dict in
+[settings.py](model_garden/settings.py).
+
+### Database Docker Container
+1. Update `POSTGRES_PASSWORD` in
+[<model_garden_root>/docker-compose.yml](../docker-compose.yml).
+
+2. From [<model_garden_root>](..) run 
+`docker-compose exec postgres psql -U postgres -W <password> model_garden`.
+
+Also update the password in `DATABASES = {...}` dict in
+[settings.py](model_garden/settings.py).
 
 ## Superuser
 See in [<model_garden_root>/backend/.env](.env) file.
