@@ -3,11 +3,19 @@ import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { Input, Button } from 'antd';
 
+interface IGetColumnSearchProps {
+  filterDropdown: any;
+  filterIcon: any;
+  onFilter: any;
+  onFilterDropdownVisibleChange: any;
+  render: any;
+}
+
 export const GetColumnSearchProps = (
   dataIndex: string,
   updateSearchState: Function,
   resetSearchState: Function
-) => {
+): IGetColumnSearchProps => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   let searchInput: Input | null;
@@ -31,14 +39,30 @@ export const GetColumnSearchProps = (
       [paramDataIndex]: selectedKeys[0]
     });
   };
+  const SearchOutlinedComp = Object.assign(
+    (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+    { displayName: 'SearchOutlinedComp' }
+  );
 
-  return {
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters
-    }: any) => (
+  const HighlighterComp = Object.assign(
+    (text: string) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text.toString()}
+        />
+      ) : (
+        text
+      ),
+    { displayName: 'HighlighterComp' }
+  );
+
+  const FilterDropdownComp = Object.assign(
+    ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
       <div className="search">
         <Input
           ref={(node) => {
@@ -70,9 +94,12 @@ export const GetColumnSearchProps = (
         </Button>
       </div>
     ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
-    ),
+    { displayName: 'FilterDropdownComp' }
+  );
+
+  return {
+    filterDropdown: FilterDropdownComp,
+    filterIcon: SearchOutlinedComp,
     onFilter: (value: string, record: any) =>
       record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
     onFilterDropdownVisibleChange: (visible: boolean) => {
@@ -80,16 +107,6 @@ export const GetColumnSearchProps = (
         setTimeout(() => searchInput && searchInput.select());
       }
     },
-    render: (text: string) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text.toString()}
-        />
-      ) : (
-        text
-      )
+    render: HighlighterComp
   };
 };

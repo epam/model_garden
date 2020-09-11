@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from '@material-ui/core';
 
-export const Notification = (newTaskUrl: any) => (
+export const Notification = (newTaskUrl: string): JSX.Element => (
   <>
     <Link
       href={newTaskUrl}

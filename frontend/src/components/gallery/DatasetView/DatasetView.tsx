@@ -27,7 +27,7 @@ const useStyles = makeStyles({
   }
 });
 
-const DatasetView = () => {
+const DatasetView = (): JSX.Element => {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const buckets = useTypedSelector(({ data }) => data.buckets);
