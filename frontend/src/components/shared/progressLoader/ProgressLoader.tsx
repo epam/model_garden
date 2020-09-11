@@ -6,7 +6,7 @@ import { useTypedSelector } from '../../../store';
 const useStyles = makeStyles({
   root: {
     position: 'fixed',
-    zIndex: 1300,
+    zIndex: 1400,
     right: '0',
     bottom: '0',
     top: '0',
