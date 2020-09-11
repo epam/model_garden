@@ -90,7 +90,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export const DatasetGrid = ({ searchTerm, currentBucketId }: any) => {
+export const DatasetGrid = ({
+  searchTerm,
+  currentBucketId
+}: any): JSX.Element | null => {
   const classes = useStyles();
   const datasets = useTypedSelector(({ data }) =>
     data.datasets.filter((dataset) =>

@@ -20,7 +20,7 @@ export const UploadDescription = withStyles({
   }
 })(Typography);
 
-export const BucketsSelect = (buckets: IBucket[]) =>
+export const BucketsSelect = (buckets: IBucket[]): Array<JSX.Element> =>
   buckets.map((bucket: IBucket) => (
     <MenuItem key={bucket.id} value={bucket.id}>
       {bucket.name}
