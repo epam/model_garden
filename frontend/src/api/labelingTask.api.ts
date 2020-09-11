@@ -6,7 +6,7 @@ axios.defaults.headers = {
   'Content-Type': 'application/json'
 };
 
-export const getUnsignedImagesCountRequest = async (datasetId: string) => {
+export const getUnsignedImagesCountRequest = async (datasetId: string): Promise<any> => {
   try {
     return await axios.get(`http://${backendHostPort}/api/media-assets/`, {
       params: {
@@ -23,7 +23,7 @@ export const getUnsignedImagesCountRequest = async (datasetId: string) => {
   }
 };
 
-export const createLabelingTaskRequest = async (taskData: ILabelingTaskRequestData) => {
+export const createLabelingTaskRequest = async (taskData: ILabelingTaskRequestData): Promise<any> => {
   try {
     return await axios.post(`http://${backendHostPort}/api/labeling-tasks/`, taskData);
   } catch (error) {

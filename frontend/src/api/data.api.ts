@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { backendHostPort } from './environment';
 
-export const getBucketsRequest = async () => {
+export const getBucketsRequest = async (): Promise<any> => {
   try {
     return await axios.get(`http://${backendHostPort}/api/buckets/`);
   } catch (error) {
@@ -13,7 +13,7 @@ export const getBucketsRequest = async () => {
   }
 };
 
-export const getDatasetsRequest = async (bucketId: string) => {
+export const getDatasetsRequest = async (bucketId: string): Promise<any> => {
   try {
     return await axios.get(`http://${backendHostPort}/api/datasets/`, {
       params: {
@@ -29,7 +29,7 @@ export const getDatasetsRequest = async (bucketId: string) => {
   }
 };
 
-export const getLabelingToolUsersRequest = async () => {
+export const getLabelingToolUsersRequest = async (): Promise<any> => {
   try {
     return await axios.get(`http://${backendHostPort}/api/cvat-users/`, {
       timeout: 4000,
