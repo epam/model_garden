@@ -34,7 +34,11 @@ See in [<model_garden_root>/backend/.env](.env) file.
 ## Installation
 
 ### CVAT Installation
-Follow all the steps in [CVAT Installation Guide](../cvat/README.md).
+1. Follow all the steps in [CVAT Installation Guide](../cvat/README.md).
+
+2. Add to the installed CVAT a superuser with `CVAT_ROOT_USER_NAME` and
+ `CVAT_ROOT_USER_PASSWORD` specified in [<model_garden_root>/backend/.env](.env)
+ (see [Add Backend .env File](#add-backend-env-file) below).
 
 **NOTE**: The currently supported version of CVAT backend API is
  [0.6.1](www.github.com/openvinotoolkit/cvat/tree/v0.6.1).
