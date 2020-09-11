@@ -35,11 +35,21 @@ Also update the password in `DATABASES = {...}` dict in
 1. Update `POSTGRES_PASSWORD` in
 [<model_garden_root>/docker-compose.yml](../docker-compose.yml).
 
-2. From [<model_garden_root>](..) run 
-`docker-compose exec postgres psql -U postgres -W <password> model_garden`.
-
 Also update the password in `DATABASES = {...}` dict in
 [settings.py](model_garden/settings.py).
+
+2. Run the database container:
+
+```
+docker-compose up -d postgres
+```
+
+The is no need to build the image, because
+ [postgres:12-alpine](www.github.com/docker-library/postgres/tree/master/12/alpine)
+ is already pre-build.
+
+Run from [<model_garden_root>](..) `docker-compose exec postgres psql
+ -U postgres -W <password> model_garden` to access the database via command line.
 
 ## Superuser
 See in [<model_garden_root>/backend/.env](.env) file.
@@ -113,12 +123,12 @@ $ pip install -r requirements.txt -r test-requirements.txt
 ### Run Migrations
 Migrate the database from [<model_garden_root>/backend/](backend) dir:
 ```
-$ python .\manage.py migrate
+$ python ./manage.py migrate
 ```
 ### Reset Database
 Reset the database from [<model_garden_root>/backend/](backend) dir:
 ```
-$ python .\manage.py reset_db
+$ python ./manage.py reset_db
 ```
 
 ### Reload fixtures
