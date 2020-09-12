@@ -63,8 +63,15 @@ See in [<model_garden_root>/backend/.env](.env) file.
  `CVAT_ROOT_USER_PASSWORD` specified in [<model_garden_root>/backend/.env](.env)
  (see [Add Backend .env File](#add-backend-env-file) below).
 
+### CVAT API
+
 **NOTE**: The currently supported version of CVAT backend API is
  [0.6.1](www.github.com/openvinotoolkit/cvat/tree/v0.6.1).
+
+[<model_garden_root>/backend/CVAT.postman_collection.json](CVAT.postman_collection.json)
+ is prepared for [Postman API debug client](www.postman.com) to evaluate used
+ backend API calls to CVAT API in isolation from Model Garden code itself (see a
+ guide about [Collections In Postman](www.toolsqa.com/postman/collections-in-postman)).  
 
 ### Add Backend .env File
 Create [<model_garden_root>/backend/.env](.env).
