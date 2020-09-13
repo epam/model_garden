@@ -1,6 +1,6 @@
 ![Model Prototyping Sequence Diagram](docs/images/screen_model_garden_gallery.png)
 
-<div align="center"><h2>Model Garden</h2></div>
+<div align="center"><h2>Computer Vision Model Garden</h2></div>
 
 ## Goals and Prerequisites
 
