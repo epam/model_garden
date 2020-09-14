@@ -1,5 +1,6 @@
 import logging
 import os
+import posixpath
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from io import BytesIO
 from typing import List
@@ -13,6 +14,8 @@ from django.utils import timezone
 from model_garden.constants import LabelingTaskStatus, AnnotationsFormat, DatasetFormat
 from model_garden.models import LabelingTask, Dataset
 from model_garden.services import CvatService, S3Client
+from model_garden.path_utils import remove_leading_slash
+
 logger = logging.getLogger(__name__)
 
 
@@ -159,10 +162,11 @@ class Command(BaseCommand):
         asset_filename = os.path.splitext(media_asset.filename)[0]
         bucket_name = media_asset.dataset.bucket.name
         s3_client = S3Client(bucket_name=bucket_name)
-        file_name = f"{asset_filename}" + self._get_label_file_extension(annotation_frmt)
-        if file_name in annotation_filenames:
+        labeling_file_name = f"{asset_filename}" + self._get_label_file_extension(annotation_frmt)
+        if labeling_file_name in annotation_filenames:
           file_object = annotation_filenames[f"{asset_filename}" + self._get_label_file_extension(annotation_frmt)]
-          media_asset.labeling_asset_filepath = media_asset.full_label_path
+          media_asset.labeling_asset_filepath = posixpath.join(
+            remove_leading_slash(dataset.path), labeling_file_name)
           s3_client.upload_file_obj(
             file_obj=file_object,
             bucket=bucket_name,
