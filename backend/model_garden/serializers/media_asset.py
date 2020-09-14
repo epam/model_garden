@@ -39,6 +39,6 @@ class MediaAssetSerializer(serializers.ModelSerializer):
     if obj.labeling_task and (obj.labeling_task.status == LabelingTaskStatus.SAVED
                               or obj.labeling_task.status == LabelingTaskStatus.ARCHIVED):
       if obj.labeling_asset_filepath:
-        return obj.remote_label_path
+        return obj.labeling_asset_filepath
       else:
         return None
