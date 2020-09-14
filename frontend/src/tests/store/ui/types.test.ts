@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'; // Helper to use jest snippets
 
-describe('Tests for ui types', () => {
+xdescribe('Tests for ui types', () => {
   // Tests goes here
   it('this is a sample test', () => {});
 });

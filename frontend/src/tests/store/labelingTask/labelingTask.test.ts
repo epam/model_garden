@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'; // Helper to use jest snippets
 
-describe('Tests for labelingTask store and reducers', () => {
+xdescribe('Tests for labelingTask store and reducers', () => {
   // Tests goes here
   it('this is a sample test', () => {});
 });
