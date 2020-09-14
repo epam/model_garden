@@ -5,6 +5,7 @@ from io import BytesIO
 from typing import List
 from zipfile import ZipFile
 
+
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
@@ -12,8 +13,6 @@ from django.utils import timezone
 from model_garden.constants import LabelingTaskStatus, AnnotationsFormat, DatasetFormat
 from model_garden.models import LabelingTask, Dataset
 from model_garden.services import CvatService, S3Client
-from model_garden.utils import remove_path_prefix
-
 logger = logging.getLogger(__name__)
 
 
@@ -163,13 +162,13 @@ class Command(BaseCommand):
         file_name = f"{asset_filename}" + self._get_label_file_extension(annotation_frmt)
         if file_name in annotation_filenames:
           file_object = annotation_filenames[f"{asset_filename}" + self._get_label_file_extension(annotation_frmt)]
-          media_asset.labeling_asset_filepath = remove_path_prefix(dataset.path, '/') + '/' +file_name
+          media_asset.labeling_asset_filepath = media_asset.full_label_path
           s3_client.upload_file_obj(
             file_obj=file_object,
             bucket=bucket_name,
             key=media_asset.full_label_path,
           )
-        media_asset.save()
+          media_asset.save()
         logger.info(f"Uploaded annotation '{media_asset.full_label_path}'")
       except Exception as e:
         raise Exception(f"Failed to upload task annotations: {e}")
