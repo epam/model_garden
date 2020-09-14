@@ -165,8 +165,8 @@ class Command(BaseCommand):
         labeling_file_name = f"{asset_filename}" + self._get_label_file_extension(annotation_frmt)
         if labeling_file_name in annotation_filenames:
           file_object = annotation_filenames[f"{asset_filename}" + self._get_label_file_extension(annotation_frmt)]
-          media_asset.labeling_asset_filepath = posixpath.join(
-            remove_leading_slash(dataset.path), labeling_file_name)
+          media_asset.labeling_asset_filepath = remove_leading_slash(
+            posixpath.join(dataset.path, labeling_file_name))
           s3_client.upload_file_obj(
             file_obj=file_object,
             bucket=bucket_name,

@@ -1,3 +1,4 @@
+""" File and URL path modification helpers """
 
 
 POSIX_SLASH = '/'
