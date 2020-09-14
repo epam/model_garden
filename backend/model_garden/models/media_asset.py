@@ -13,6 +13,7 @@ class MediaAsset(BaseModel):
     related_name='media_assets',
   )
   filename = models.CharField(max_length=512)
+  labeling_asset_filepath = models.CharField(max_length=512, blank=True, null=True)
   labeling_task = models.ForeignKey(
     'LabelingTask',
     null=True,

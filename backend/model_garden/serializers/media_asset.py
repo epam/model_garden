@@ -38,4 +38,7 @@ class MediaAssetSerializer(serializers.ModelSerializer):
   def get_remote_label_path(self, obj: MediaAsset) -> str:
     if obj.labeling_task and (obj.labeling_task.status == LabelingTaskStatus.SAVED
                               or obj.labeling_task.status == LabelingTaskStatus.ARCHIVED):
-      return obj.remote_label_path
+      if not obj.labeling_asset_filepath:
+        return None
+      else:
+        return obj.remote_label_path
