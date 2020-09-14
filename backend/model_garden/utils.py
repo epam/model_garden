@@ -25,9 +25,3 @@ def strip_s3_key_prefix(prefix: str, key: str, delimiter: str = '/') -> str:
     return suffix[len(delimiter):]
 
   return suffix
-
-
-def remove_path_prefix(path: str, prefix: str) -> str:
-  if path.startswith(prefix):
-    return path[len(prefix):]
-  return path
