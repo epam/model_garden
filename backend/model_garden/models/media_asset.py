@@ -41,6 +41,7 @@ class MediaAsset(BaseModel):
     else:
       return f"{self.full_path}.xml"
 
+# TODO:remove deprecated remote_label_path property
   @property
   def remote_label_path(self):
     if self.dataset.dataset_format == DatasetFormat.YOLO:
