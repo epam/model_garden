@@ -1,6 +1,8 @@
 # Django Backend
 
-## Database (not recommended - use docker)
+## Database
+
+### Local Database (not recommended - use docker)
 www.postgresql.org/download (the current ver. 12.3)
 
 <table style="width:100%">
@@ -10,7 +12,7 @@ www.postgresql.org/download (the current ver. 12.3)
   </tr>
   <tr>
     <td>Host name/Address</td>
-    <td>model-garden-db-prod-1.<id>.eu-central-1.rds.amazonaws.com</td>
+    <td>model-garden-db-prod-1.&lt;id&gt;.eu-central-1.rds.amazonaws.com</td>
   </tr>
   <tr>
     <td>Username</td>
@@ -26,7 +28,28 @@ www.postgresql.org/download (the current ver. 12.3)
   </tr>
 </table>
 
-Also update the password in `DATABASES = {...}` dict in settings.py
+Also update the password in `DATABASES = {...}` dict in
+[settings.py](model_garden/settings.py).
+
+### Local Database Docker Container
+1. Update `POSTGRES_PASSWORD` in
+[<model_garden_root>/docker-compose.yml](../docker-compose.yml).
+
+Also update the password in `DATABASES = {...}` dict in
+[settings.py](model_garden/settings.py).
+
+2. Run the database container:
+
+```
+docker-compose up -d postgres
+```
+
+The is no need to build the image, because
+ [postgres:12-alpine](www.github.com/docker-library/postgres/tree/master/12/alpine)
+ is already pre-build.
+
+Run from [<model_garden_root>](..) `docker-compose exec postgres psql
+ -U postgres -W <password> model_garden` to access the database via command line.
 
 ## Superuser
 See in [<model_garden_root>/backend/.env](.env) file.
@@ -34,7 +57,21 @@ See in [<model_garden_root>/backend/.env](.env) file.
 ## Installation
 
 ### CVAT Installation
-Follow all the steps in [CVAT Installation Guide](../cvat/README.md).
+1. Follow all the steps in [CVAT Installation Guide](../cvat/README.md).
+
+2. Add to the installed CVAT a superuser with `CVAT_ROOT_USER_NAME` and
+ `CVAT_ROOT_USER_PASSWORD` specified in [<model_garden_root>/backend/.env](.env)
+ (see [Add Backend .env File](#add-backend-env-file) below).
+
+### CVAT API
+
+**NOTE**: The currently supported version of CVAT backend API is
+ [0.6.1](www.github.com/openvinotoolkit/cvat/tree/v0.6.1).
+
+[<model_garden_root>/backend/CVAT.postman_collection.json](CVAT.postman_collection.json)
+ is prepared for [Postman API debug client](www.postman.com) to evaluate used
+ backend API calls to CVAT API in isolation from Model Garden code itself (see a
+ guide about [Collections In Postman](www.toolsqa.com/postman/collections-in-postman)).  
 
 ### Add Backend .env File
 Create [<model_garden_root>/backend/.env](.env).
@@ -93,12 +130,12 @@ $ pip install -r requirements.txt -r test-requirements.txt
 ### Run Migrations
 Migrate the database from [<model_garden_root>/backend/](backend) dir:
 ```
-$ python .\manage.py migrate
+$ python ./manage.py migrate
 ```
 ### Reset Database
 Reset the database from [<model_garden_root>/backend/](backend) dir:
 ```
-$ python .\manage.py reset_db
+$ python ./manage.py reset_db
 ```
 
 ### Reload fixtures
