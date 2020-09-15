@@ -26,7 +26,8 @@ class TestMediaAssetSerializer(BaseTestCase):
     labeling_task = self.test_factory.create_labeling_task(status=LabelingTaskStatus.SAVED)
     media_asset = self.test_factory.create_media_asset()
     media_asset.labeling_task = labeling_task
-    media_asset.save(update_fields=('labeling_task',))
+    media_asset.labeling_asset_filepath = media_asset.remote_label_path
+    media_asset.save(update_fields=('labeling_task', 'labeling_asset_filepath'))
 
     serializer = MediaAssetSerializer(media_asset)
 
@@ -36,7 +37,27 @@ class TestMediaAssetSerializer(BaseTestCase):
         'dataset_id': media_asset.dataset.id,
         'filename': media_asset.filename,
         'remote_path': media_asset.remote_path,
-        'remote_label_path': media_asset.remote_label_path,
+        'remote_label_path': media_asset.labeling_asset_filepath,
+        'labeling_task_name': media_asset.labeling_task.name,
+      },
+    )
+
+  def test_serialize_with_remote_label_path_null(self):
+    labeling_task = self.test_factory.create_labeling_task(status=LabelingTaskStatus.SAVED)
+    media_asset = self.test_factory.create_media_asset()
+    media_asset.labeling_task = labeling_task
+    media_asset.labeling_asset_filepath = None
+    media_asset.save(update_fields=('labeling_task', 'labeling_asset_filepath'))
+
+    serializer = MediaAssetSerializer(media_asset)
+
+    self.assertEqual(
+      serializer.data,
+      {
+        'dataset_id': media_asset.dataset.id,
+        'filename': media_asset.filename,
+        'remote_path': media_asset.remote_path,
+        'remote_label_path': media_asset.labeling_asset_filepath,
         'labeling_task_name': media_asset.labeling_task.name,
       },
     )
