@@ -13,6 +13,7 @@ class MediaAsset(BaseModel):
     related_name='media_assets',
   )
   filename = models.CharField(max_length=512)
+  labeling_asset_filepath = models.CharField(max_length=512, blank=True, null=True)
   labeling_task = models.ForeignKey(
     'LabelingTask',
     null=True,
@@ -34,12 +35,14 @@ class MediaAsset(BaseModel):
     return urljoin(self.dataset.bucket.url, quote(self.full_path))
 
   @property
+  # TODO: return
   def full_label_path(self):
     if self.dataset.dataset_format == DatasetFormat.YOLO:
       return f"{self.full_path}.txt"
     else:
       return f"{self.full_path}.xml"
 
+  # TODO:remove deprecated remote_label_path property
   @property
   def remote_label_path(self):
     if self.dataset.dataset_format == DatasetFormat.YOLO:
