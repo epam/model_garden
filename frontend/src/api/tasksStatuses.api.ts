@@ -11,7 +11,7 @@ export const getLabelingTasksRequest = async (
   params: Object
 ): Promise<{ count: number; tasks: ILabelingTaskStatus[] }> => {
   try {
-    let resp = await axios.get(`http://${backendHostPort}/api/labeling-tasks/`, {
+    let resp = await axios.get(`${backendHostPort}/api/labeling-tasks/`, {
       params: params,
       paramsSerializer: (serializerParams) => {
         return qs.stringify(serializerParams, { arrayFormat: 'repeat' });
@@ -33,7 +33,7 @@ export const getLabelingTasksRequest = async (
 
 export const archiveTaskLabelingRequest = async (taskIds: Array<number>): Promise<any> => {
   try {
-    return await axios.patch(`http://${backendHostPort}/api/labeling-tasks/archive/`, { id: taskIds });
+    return await axios.patch(`${backendHostPort}/api/labeling-tasks/archive/`, { id: taskIds });
   } catch (error) {
     if (error && error.response) {
       throw new Error(error.response.data.message);
@@ -45,7 +45,7 @@ export const archiveTaskLabelingRequest = async (taskIds: Array<number>): Promis
 
 export const retryLabelingTaskRequest = async (taskIds: Array<number>): Promise<any> => {
   try {
-    return await axios.patch(`http://${backendHostPort}/api/labeling-tasks/retry/`, { id: taskIds });
+    return await axios.patch(`${backendHostPort}/api/labeling-tasks/retry/`, { id: taskIds });
   } catch (error) {
     if (error && error.response) {
       throw new Error(error.response.data.message);
