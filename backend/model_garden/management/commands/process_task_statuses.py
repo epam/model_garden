@@ -163,6 +163,8 @@ class Command(BaseCommand):
         labeling_file_name = f"{asset_filename}" + self._get_label_file_extension(annotation_frmt)
         if labeling_file_name in annotation_filenames:
           file_object = annotation_filenames[f"{asset_filename}" + self._get_label_file_extension(annotation_frmt)]
+
+          # TODO:remove deprecated remote_label_path property
           media_asset.labeling_asset_filepath = media_asset.remote_label_path
           s3_client.upload_file_obj(
             file_obj=file_object,
