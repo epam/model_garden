@@ -35,13 +35,14 @@ class MediaAsset(BaseModel):
     return urljoin(self.dataset.bucket.url, quote(self.full_path))
 
   @property
+  # TODO: return
   def full_label_path(self):
     if self.dataset.dataset_format == DatasetFormat.YOLO:
       return f"{self.full_path}.txt"
     else:
       return f"{self.full_path}.xml"
 
-# TODO:remove deprecated remote_label_path property
+  # TODO:remove deprecated remote_label_path property
   @property
   def remote_label_path(self):
     if self.dataset.dataset_format == DatasetFormat.YOLO:

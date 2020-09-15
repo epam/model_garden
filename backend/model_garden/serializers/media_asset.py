@@ -35,11 +35,12 @@ class MediaAssetSerializer(serializers.ModelSerializer):
     if obj.labeling_task:
       return obj.labeling_task.name
 
-# TODO:return labeling_asset_filepath independently from status
   def get_remote_label_path(self, obj: MediaAsset) -> str:
+    # TODO:return labeling_asset_filepath independently from status
     if obj.labeling_task and (obj.labeling_task.status == LabelingTaskStatus.SAVED
                               or obj.labeling_task.status == LabelingTaskStatus.ARCHIVED):
       if obj.labeling_asset_filepath:
         return obj.labeling_asset_filepath
       else:
+        # TODO:return missing whitespace
         return None
