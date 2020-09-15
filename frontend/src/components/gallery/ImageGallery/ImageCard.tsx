@@ -70,7 +70,11 @@ const StyledCheckboxLabel = withStyles({
   }
 })(FormControlLabel);
 
-export const ImageCard = ({ image, setCheckList, checklist }: any) => {
+export const ImageCard = ({
+  image,
+  setCheckList,
+  checklist
+}: any): JSX.Element => {
   const classes = useStyles();
   const { remote_path, remote_label_path, filename: fileName } = image;
 

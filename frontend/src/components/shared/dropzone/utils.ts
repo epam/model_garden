@@ -1,4 +1,5 @@
-export const isArchive = (file: any) => file.type === 'application/zip' || file.type === 'application/x-zip-compressed';
+export const isArchive = (file: any): boolean =>
+  file.type === 'application/zip' || file.type === 'application/x-zip-compressed';
 
 export const accept = `
 image/bmp,

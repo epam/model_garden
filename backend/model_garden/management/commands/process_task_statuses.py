@@ -5,6 +5,7 @@ from io import BytesIO
 from typing import List
 from zipfile import ZipFile
 
+
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
@@ -159,14 +160,18 @@ class Command(BaseCommand):
         asset_filename = os.path.splitext(media_asset.filename)[0]
         bucket_name = media_asset.dataset.bucket.name
         s3_client = S3Client(bucket_name=bucket_name)
-        file_name = f"{asset_filename}" + self._get_label_file_extension(annotation_frmt)
-        if file_name in annotation_filenames:
+        labeling_file_name = f"{asset_filename}" + self._get_label_file_extension(annotation_frmt)
+        if labeling_file_name in annotation_filenames:
           file_object = annotation_filenames[f"{asset_filename}" + self._get_label_file_extension(annotation_frmt)]
+
+          # TODO:remove deprecated remote_label_path property
+          media_asset.labeling_asset_filepath = media_asset.remote_label_path
           s3_client.upload_file_obj(
             file_obj=file_object,
             bucket=bucket_name,
             key=media_asset.full_label_path,
           )
+          media_asset.save()
         logger.info(f"Uploaded annotation '{media_asset.full_label_path}'")
       except Exception as e:
         raise Exception(f"Failed to upload task annotations: {e}")
