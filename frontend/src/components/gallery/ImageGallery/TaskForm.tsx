@@ -32,7 +32,7 @@ export const TaskForm = ({
   checklist,
   setCheckList,
   currentDataset
-}: any) => {
+}: any): JSX.Element => {
   const { control, handleSubmit, errors } = useForm<IFormData>({});
   const users = useTypedSelector(({ data }) => data.labelingToolUsers);
 
