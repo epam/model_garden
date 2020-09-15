@@ -3,7 +3,7 @@ import { backendHostPort } from './environment';
 
 export const getBucketsRequest = async (): Promise<any> => {
   try {
-    return await axios.get(`http://${backendHostPort}/api/buckets/`);
+    return await axios.get(`${backendHostPort}/api/buckets/`);
   } catch (error) {
     if (error && error.response) {
       throw new Error(error.response.data.message);
@@ -15,7 +15,7 @@ export const getBucketsRequest = async (): Promise<any> => {
 
 export const getDatasetsRequest = async (bucketId: string): Promise<any> => {
   try {
-    return await axios.get(`http://${backendHostPort}/api/datasets/`, {
+    return await axios.get(`${backendHostPort}/api/datasets/`, {
       params: {
         bucket_id: bucketId
       }
@@ -31,7 +31,7 @@ export const getDatasetsRequest = async (bucketId: string): Promise<any> => {
 
 export const getLabelingToolUsersRequest = async (): Promise<any> => {
   try {
-    return await axios.get(`http://${backendHostPort}/api/cvat-users/`, {
+    return await axios.get(`${backendHostPort}/api/cvat-users/`, {
       timeout: 4000,
       timeoutErrorMessage: 'Error getting users. Please confirm you are connected to VPN'
     });

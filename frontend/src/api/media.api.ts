@@ -17,7 +17,7 @@ export const uploadMediaFilesRequest = async (
     if (format) {
       formData.append('dataset_format', format);
     }
-    return await axios.post(`http://${backendHostPort}/api/media-assets/upload/`, formData, {
+    return await axios.post(`${backendHostPort}/api/media-assets/upload/`, formData, {
       headers: {
         'Content-Type': 'application/zip'
       }
@@ -41,7 +41,7 @@ export const addExistingDatasetRequest = async (bucketId: string, path: string, 
     if (format) {
       formData.append('dataset_format', format);
     }
-    return await axios.post(`http://${backendHostPort}/api/media-assets/import-s3/`, formData, {
+    return await axios.post(`${backendHostPort}/api/media-assets/import-s3/`, formData, {
       headers: {
         'Content-Type': 'application/zip'
       }

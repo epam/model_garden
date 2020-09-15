@@ -8,7 +8,7 @@ axios.defaults.headers = {
 
 export const getUnsignedImagesCountRequest = async (datasetId: string): Promise<any> => {
   try {
-    return await axios.get(`http://${backendHostPort}/api/media-assets/`, {
+    return await axios.get(`${backendHostPort}/api/media-assets/`, {
       params: {
         dataset_id: datasetId,
         is_pending: true
@@ -25,7 +25,7 @@ export const getUnsignedImagesCountRequest = async (datasetId: string): Promise<
 
 export const createLabelingTaskRequest = async (taskData: ILabelingTaskRequestData): Promise<any> => {
   try {
-    return await axios.post(`http://${backendHostPort}/api/labeling-tasks/`, taskData);
+    return await axios.post(`${backendHostPort}/api/labeling-tasks/`, taskData);
   } catch (error) {
     if (error && error.response) {
       throw new Error(error.response.data.message);
