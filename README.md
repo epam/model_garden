@@ -1,6 +1,6 @@
 ![Model Prototyping Sequence Diagram](docs/images/screen_model_garden_gallery.png)
 
-<div align="center"><h2>Model Garden</h2></div>
+<div align="center"><h2>Computer Vision Model Garden</h2></div>
 
 ## Goals and Prerequisites
 
@@ -31,6 +31,9 @@ The Model Garden tool is an addition to CVAT providing the following functionali
   datasets using CVAT tool
  * collaborative usage of datasets through web interface
  * prevent labeling tool crash consequences
+
+**NOTE**: The currently supported version of CVAT backend API is
+ [0.6.1](www.github.com/openvinotoolkit/cvat/tree/v0.6.1).
 
 ### Top Existing Solutions
 
@@ -146,6 +149,25 @@ The example of [Continuous Deployment](https://en.wikipedia.org/wiki/Continuous_
  to the cloud container registry as well as the cloud update is set with help of
  [GitLab CI/CD](docs.gitlab.com/ee/ci/) [.gitlab-ci.yml](.gitlab-ci.yml) file.
 
+[.gitlab-ci.yml](.gitlab-ci.yml) file needs the following 
+[GitLab CI/CD nvironment variables](https://docs.gitlab.com/ee/ci/variables/) set:
+
+```
+DEV_AWS_ACCESS_KEY_ID=<ABCDEFGHIJKLMNOPQRST>*
+DEV_AWS_SECRET_ACCESS_KEY=<abcdefghijklmnopqrstuvwxyz0123456789-+/>*
+DEV_BACKEND_ECR_URI=123456789000.dkr.ecr.eu-central-1.amazonaws.com/model_garden_backend
+DEV_FRONTEND_ECR_URI=123456789000.dkr.ecr.eu-central-1.amazonaws.com/model_garden_frontend
+
+PROD_AWS_ACCESS_KEY_ID='<ABCDEFGHIJKLMNOPQRST>*'
+PROD_AWS_SECRET_ACCESS_KEY=<abcdefghijklmnopqrstuvwxyz0123456789-+/>*'
+PROD_BACKEND_ECR_URI=123456789000.dkr.ecr.eu-central-1.amazonaws.com/model_garden_backend
+PROD_FRONTEND_ECR_URI=123456789000.dkr.ecr.eu-central-1.amazonaws.com/model_garden_frontend
+
+RELEASE_AWS_ACCESS_KEY_ID='<ABCDEFGHIJKLMNOPQRST>*'
+RELEASE_AWS_SECRET_ACCESS_KEY=<abcdefghijklmnopqrstuvwxyz0123456789-+/>*'
+RELEASE_BACKEND_ECR_URI=123456789000.dkr.ecr.eu-central-1.amazonaws.com/model_garden_backend
+RELEASE_FRONTEND_ECR_UR=123456789000.dkr.ecr.eu-central-1.amazonaws.com/model_garden_frontend
+``` 
 
 ## Installation
 

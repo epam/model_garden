@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export const TasksTable = ({ tasks }: any) => {
+export const TasksTable = ({ tasks }: any): JSX.Element => {
   const classes = useStyles();
   const [filterState, setFilterState] = useState(
     JSON.parse(localStorage.getItem('datasetStatusFilter') as any) || [
@@ -20,6 +20,13 @@ export const TasksTable = ({ tasks }: any) => {
       'saved',
       'failed'
     ]
+  );
+
+  const StatusFieldComp = Object.assign(
+    (text: string, record: { error: string; status: string }) => {
+      return <StatusField text={text} record={record} />;
+    },
+    { displayName: 'StatusFieldComp' }
   );
 
   const TASK_STATUSES_COLUMNS = [
@@ -55,9 +62,7 @@ export const TasksTable = ({ tasks }: any) => {
       dataIndex: 'status',
       key: 'status',
       sorter: true,
-      render: (text: string, record: { error: string; status: string }) => {
-        return <StatusField text={text} record={record} />;
-      },
+      render: StatusFieldComp,
       filters: [
         { text: 'annotation', value: 'annotation' },
         { text: 'validation', value: 'validation' },
