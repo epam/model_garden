@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # A key used by Django for an encryption.
-SECRET_KEY = env('DJANGO_SECRET_KEY', default='None')
+SECRET_KEY = env('DJANGO_SECRET_KEY', default=None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -194,8 +194,8 @@ CVAT_API_URL = f"http://{CVAT_HOST}:{CVAT_PORT}/api/{CVAT_API_VERSION}"
 CVAT_PUBLIC_HOST = env('CVAT_PUBLIC_HOST', default=CVAT_HOST)
 CVAT_PUBLIC_PORT = env('CVAT_PUBLIC_PORT', default=CVAT_PORT)
 CVAT_PUBLIC_URL = f"http://{CVAT_PUBLIC_HOST}:{CVAT_PUBLIC_PORT}"
-CVAT_ROOT_USER_NAME = env('CVAT_ROOT_USER_NAME', default='')
-CVAT_ROOT_USER_PASSWORD = env('CVAT_ROOT_USER_PASSWORD', default='')
+CVAT_ROOT_USER_NAME = env('CVAT_ROOT_USER_NAME', default='test_labler')
+CVAT_ROOT_USER_PASSWORD = env('CVAT_ROOT_USER_PASSWORD', default='***********')
 
 # Task statuses worker
 TASK_STATUSES_WORKER_CHUNK_SIZE = env('TASK_STATUSES_WORKER_CHUNK_SIZE', cast=int, default=5)

@@ -13,7 +13,7 @@ class TestCvatUserViewSet(BaseAPITestCase):
     self.cvat_service_mock = self.cvat_service_cls_mock.return_value
     self.cvat_service_mock.get_users.return_value = [{
       "id": 1,
-      "username": "",
+      "username": "test_labler",
       "first_name": "Epam",
       "last_name": "Labler",
       "email": "epam@labler.com",
