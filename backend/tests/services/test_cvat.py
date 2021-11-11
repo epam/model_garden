@@ -21,7 +21,7 @@ class TestCvatService(TestCase):
         {
           "url": "http://localhost:8080/api/v1/users/1",
           "id": 1,
-          "username": "",
+          "username": "labler",
           "first_name": "Epam",
           "last_name": "Labler",
           "email": "epam@labler.com",
@@ -77,8 +77,8 @@ class TestCvatService(TestCase):
       {
         "url": "http://localhost:8080/api/v1/users/1",
         "id": 1,
-        "username": "",
-        "first_name": "Epam",
+        "username": "labler",
+        "first_name": "Labler",
         "last_name": "Labler",
         "email": "epam@labler.com",
       },
@@ -94,8 +94,8 @@ class TestCvatService(TestCase):
     self.session_mock.get.return_value.json.return_value = {
       'url': 'http://localhost:8080/api/v1/users/1',
       'id': 1,
-      'username': '',
-      'first_name': 'Epam',
+      'username': 'labler',
+      'first_name': 'Labler',
       'last_name': 'Labler',
       'email': 'epam@labler.com',
       'groups': [
@@ -109,7 +109,7 @@ class TestCvatService(TestCase):
     }
     user = CvatService().get_user(user_id=1)
 
-    self.assertEqual(user['username'], '')
+    self.assertEqual(user['username'], 'labler')
 
   def test_create_task(self):
     data = {
