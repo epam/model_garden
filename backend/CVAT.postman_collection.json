@@ -40,7 +40,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\":\"test_labler\",\r\n    \"first_name\":\"Epam\",\r\n    \"last_name\":\"Labler\",\r\n    \"email\":\"epam@labler.com\",\r\n    \"password1\":\"Epam123Labler\",\r\n    \"password2\":\"Epam123Labler\"\r\n}"
+					"raw": "{\r\n    \"username\":\"\",\r\n    \"first_name\":\"Epam\",\r\n    \"last_name\":\"Labler\",\r\n    \"email\":\"epam@labler.com\",\r\n    \"password1\":\"Epam123Labler\",\r\n    \"password2\":\"Epam123Labler\"\r\n}"
 				},
 				"url": {
 					"raw": "http://localhost:7000/api/v1/auth/register",
@@ -109,7 +109,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"username\": \"test_labler\",\r\n  \"email\": \"test_labler@epam.com\",\r\n  \"password\": \"***********\"\r\n}"
+					"raw": "{\r\n  \"username\": \"\",\r\n  \"email\": \"@epam.com\",\r\n  \"password\": \"\"\r\n}"
 				},
 				"url": {
 					"raw": "http://18.197.217.172:8080/api/v1/auth/login",
