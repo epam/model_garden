@@ -3,7 +3,7 @@
 ## Database
 
 ### Local Database (not recommended - use docker)
-www.postgresql.org/download (the current ver. 12.3)
+[www.postgresql.org/download](http://www.postgresql.org/download) (the current ver. 12.3)
 
 <table style="width:100%">
   <tr>
@@ -45,14 +45,14 @@ docker-compose up -d postgres
 ```
 
 The is no need to build the image, because
- [postgres:12-alpine](www.github.com/docker-library/postgres/tree/master/12/alpine)
+ [postgres:12-alpine](http://www.github.com/docker-library/postgres/tree/master/12/alpine)
  is already pre-build.
 
 Run from [<model_garden_root>](..) `docker-compose exec postgres psql
  -U postgres -W <password> model_garden` to access the database via command line.
 
 ## Superuser
-See in [<model_garden_root>/backend/.env](.env) file.
+See in [<model_garden_root>/backend/.env]() file.
 
 ## Installation
 
@@ -60,21 +60,21 @@ See in [<model_garden_root>/backend/.env](.env) file.
 1. Follow all the steps in [CVAT Installation Guide](../cvat/README.md).
 
 2. Add to the installed CVAT a superuser with `CVAT_ROOT_USER_NAME` and
- `CVAT_ROOT_USER_PASSWORD` specified in [<model_garden_root>/backend/.env](.env)
+ `CVAT_ROOT_USER_PASSWORD` specified in [<model_garden_root>/backend/.env]()
  (see [Add Backend .env File](#add-backend-env-file) below).
 
 ### CVAT API
 
 **NOTE**: The currently supported version of CVAT backend API is
- [0.6.1](www.github.com/openvinotoolkit/cvat/tree/v0.6.1).
+ [0.6.1](http://www.github.com/openvinotoolkit/cvat/tree/v0.6.1).
 
 [<model_garden_root>/backend/CVAT.postman_collection.json](CVAT.postman_collection.json)
- is prepared for [Postman API debug client](www.postman.com) to evaluate used
+ is prepared for [Postman API debug client](http://www.postman.com) to evaluate used
  backend API calls to CVAT API in isolation from Model Garden code itself (see a
- guide about [Collections In Postman](www.toolsqa.com/postman/collections-in-postman)).  
+ guide about [Collections In Postman](http://www.toolsqa.com/postman/collections-in-postman)).  
 
 ### Add Backend .env File
-Create [<model_garden_root>/backend/.env](.env).
+Create [<model_garden_root>/backend/.env]().
 
 ```
 AWS_ACCESS_KEY_ID='<ABCDEFGHIJKLMNOPQRST>*'
@@ -128,12 +128,12 @@ $ pip install -r requirements.txt -r test-requirements.txt
 ```
 
 ### Run Migrations
-Migrate the database from [<model_garden_root>/backend/](backend) dir:
+Migrate the database from [<model_garden_root>/backend/](../backend) dir:
 ```
 $ python ./manage.py migrate
 ```
 ### Reset Database
-Reset the database from [<model_garden_root>/backend/](backend) dir:
+Reset the database from [<model_garden_root>/backend/](../backend) dir:
 ```
 $ python ./manage.py reset_db
 ```
@@ -161,7 +161,7 @@ python worker.py
 ```
 
 ## PyCharm
-See www.stackoverflow.com/questions/33868806/configuring-pycharm-with-existing-virtualenv
+See http://www.stackoverflow.com/questions/33868806/configuring-pycharm-with-existing-virtualenv
 
 ## Docker
 

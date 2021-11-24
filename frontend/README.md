@@ -13,7 +13,7 @@
 **🐍 Python Django and Postgres**
 
 ## Table of Contents
-- [Install docker](https://docs.docker.com/get-docker/)
+- [Install docker](http://docs.docker.com/get-docker/)
 - [Run Database and Backend from Docker](#run-database-and-backend-from-docker)
 - [Setup Front-end Locally](#setup-front-end-locally)
 
@@ -54,13 +54,13 @@ PORT=4200
 REACT_APP_BACKEND_PORT=9000
 ```
 
-3. Install packages in [<model_garden_root>/frontend/](frontend) dir
+3. Install packages in [<model_garden_root>/frontend/](../frontend) dir
 
 ```
 npm install
 ```
 
-4. Run front-end in [<model_garden_root>/frontend/](frontend) dir
+4. Run front-end in [<model_garden_root>/frontend/](../frontend) dir
 
 ```
 npm start
@@ -68,9 +68,9 @@ npm start
 
 ## Run Linting
 To run additional JS-lint use `npm run lint -s` in 
-[<model_garden_root>/frontend/](frontend) dir.
+[<model_garden_root>/frontend/](../frontend) dir.
 
 ## Learn More
 
 This project was bootstrapped with
-[Create React App](https://github.com/facebook/create-react-app).
+[Create React App](http://www.github.com/facebook/create-react-app).
