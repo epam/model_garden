@@ -71,7 +71,7 @@ model_garden_postgres_1   docker-entrypoint.sh postgres    Up      0.0.0.0:5444-
 #### Overview
 
 Model Garden Project can be automatically deployed with help of 
- [GitLab CI/CD](docs.gitlab.com/ee/ci/) [.gitlab-ci.yml](../.gitlab-ci.yml) file,
+ [GitLab CI/CD](http://docs.gitlab.com/ee/ci/) [.gitlab-ci.yml](../.gitlab-ci.yml) file,
  if the following AWS components are configured:
  * AWS RDS Postgres instance
  * Backend Task Definition (from
@@ -80,7 +80,7 @@ Model Garden Project can be automatically deployed with help of
   [<model_garden_root>/frontend/Dockerfile](../frontend/Dockerfile) docker)
  * model-garden ECR Cluster with model-garden-backend and model-garden-frontend
   AWS Fargate services created using backend and frontend Task Definitions  
- * [Application Load Balancer](www.aws.amazon.com/elasticloadbalancing)
+ * [Application Load Balancer](http://www.aws.amazon.com/elasticloadbalancing)
  
  ![Model Garden AWS Deployment Diagram](../docs/images/deploy/deploy_model_garden_aws_diagram.png)
 

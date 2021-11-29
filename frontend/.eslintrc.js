@@ -15,7 +15,7 @@ module.exports = {
 	},
 	parser: '@typescript-eslint/parser', // https://github.com/typescript-eslint/typescript-eslint#readme
 	parserOptions: {
-		// https://www.npmjs.com/package/@typescript-eslint/parser
+		// http://www.npmjs.com/package/@typescript-eslint/parser
 		project: ['./tsconfig.eslint.json'],
 		ecmaFeatures: {
 			tsx: true,
@@ -25,7 +25,7 @@ module.exports = {
 	settings: { // https://github.com/yannickcr/eslint-plugin-react#configuration
 		react: {
 			import: {
-				// https://www.npmjs.com/package/eslint-plugin-import
+				// http://www.npmjs.com/package/eslint-plugin-import
 				extensions: [
 					'.js',
 					// '.jsx',
