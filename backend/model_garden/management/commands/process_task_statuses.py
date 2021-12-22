@@ -124,6 +124,12 @@ class Command(BaseCommand):
     else:
       return AnnotationsFormat.PASCAL_VOB_ZIP_1_1
 
+  def generate_empty_file(self):
+    bytesIO = BytesIO()
+    bytesIO.write(b'')
+    bytesIO.seek(0)
+    return bytesIO
+
   def _upload_labeling_task_annotations(self, labeling_task: LabelingTask):
     dataset = labeling_task.media_assets.first().dataset
     annotation_frmt = self._get_annotations_format(dataset)
@@ -163,15 +169,16 @@ class Command(BaseCommand):
         labeling_file_name = f"{asset_filename}" + self._get_label_file_extension(annotation_frmt)
         if labeling_file_name in annotation_filenames:
           file_object = annotation_filenames[f"{asset_filename}" + self._get_label_file_extension(annotation_frmt)]
-
-          # TODO:remove deprecated remote_label_path property
-          media_asset.labeling_asset_filepath = media_asset.remote_label_path
-          s3_client.upload_file_obj(
-            file_obj=file_object,
-            bucket=bucket_name,
-            key=media_asset.full_label_path,
-          )
-          media_asset.save()
+        else:
+          file_object = self.generate_empty_file()
+        # TODO:remove deprecated remote_label_path property
+        media_asset.labeling_asset_filepath = media_asset.remote_label_path
+        s3_client.upload_file_obj(
+          file_obj=file_object,
+          bucket=bucket_name,
+          key=media_asset.full_label_path,
+        )
+        media_asset.save()
         logger.info(f"Uploaded annotation '{media_asset.full_label_path}'")
       except Exception as e:
         raise Exception(f"Failed to upload task annotations: {e}")

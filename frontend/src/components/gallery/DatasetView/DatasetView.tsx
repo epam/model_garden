@@ -1,5 +1,5 @@
+import { Pagination } from 'antd';
 import React, { useState, useEffect } from 'react';
-import { IBucket } from '../../../models';
 import {
   Container,
   Grid,
@@ -10,30 +10,38 @@ import {
   TextField,
   InputAdornment,
   Button,
-  makeStyles,
-  Dialog
+  makeStyles
 } from '@material-ui/core';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import SearchIcon from '@material-ui/icons/Search';
+
+import { IBucket } from '../../../models';
 import { useTypedSelector, useAppDispatch } from '../../../store';
 import { getDatasets } from '../../../store/data';
 import { DatasetGrid } from './DatasetGrid';
-import { AddDataset } from '../../addDataset';
+import { AddDatasetModal } from '../../addDatasetModal';
 
 const useStyles = makeStyles({
   button: {
     paddingTop: '0.4375rem',
     paddingBottom: '0.4375rem'
+  },
+  pagination: {
+    marginTop: '2rem'
   }
 });
 
-const DatasetView = (): JSX.Element => {
+export const DatasetView = (): JSX.Element => {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const buckets = useTypedSelector(({ data }) => data.buckets);
   const [currentBucketId, setCurrentBucketId] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [isCreatingTask, setIsCreatingTask] = useState(false);
+  const [datasetLength, setDatasetLength] = useState(0);
+  const [paginationOffset, setPaginationOffset] = useState(0);
+  const [paginationMaxItems, setPaginationMaxItems] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     if (buckets.length === 1) {
@@ -46,6 +54,14 @@ const DatasetView = (): JSX.Element => {
     setCurrentBucketId(value);
     dispatch(getDatasets(value));
   };
+
+  const paginationIndexChange = (page: any, pageSize: any) => {
+    setCurrentPage(page);
+    setPaginationOffset((page - 1) * paginationMaxItems);
+    setPaginationMaxItems(pageSize);
+  };
+
+  const datasetLengthChange = (length: number) => setDatasetLength(length);
 
   return (
     <Container maxWidth={'xl'}>
@@ -100,17 +116,36 @@ const DatasetView = (): JSX.Element => {
           </Button>
         </Grid>
       </Grid>
-      <DatasetGrid searchTerm={searchTerm} currentBucketId={currentBucketId} />
+      <DatasetGrid
+        searchTerm={searchTerm}
+        currentBucketId={currentBucketId}
+        datasetLengthChange={datasetLengthChange}
+        paginationConfig={{
+          offsetStart: paginationOffset,
+          offsetEnd: paginationMaxItems + paginationOffset
+        }}
+      />
 
-      <Dialog
-        open={isCreatingTask}
-        onClose={() => setIsCreatingTask(false)}
-        scroll="body"
+      <Grid
+        container
+        justify="flex-end"
+        spacing={2}
+        className={classes.pagination}
       >
-        <AddDataset onClose={() => setIsCreatingTask(false)} />
-      </Dialog>
+        <Pagination
+          current={currentPage}
+          showSizeChanger={!!datasetLength}
+          disabled={!datasetLength}
+          onChange={paginationIndexChange}
+          pageSize={paginationMaxItems}
+          total={datasetLength}
+        />
+      </Grid>
+
+      <AddDatasetModal
+        visible={isCreatingTask}
+        onClose={() => setIsCreatingTask(false)}
+      />
     </Container>
   );
 };
-
-export default DatasetView;

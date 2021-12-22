@@ -8,3 +8,7 @@ export interface IDataset {
   xmls_number: number;
   dataset_format: string;
 }
+
+export interface IDatasetsResponse {
+  results: IDataset[];
+}

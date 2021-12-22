@@ -1,56 +1,17 @@
-import axios from 'axios';
 import qs from 'qs';
-import { ILabelingTaskStatus } from '../models';
-import { backendHostPort } from './environment';
+import { getRequest, patchRequest, BE_HOST_PORT } from './api.service';
+import { ILabelingTasksResponse } from '../models';
 
-axios.defaults.headers = {
-  'Content-Type': 'application/json'
-};
-
-export const getLabelingTasksRequest = async (
-  params: Object
-): Promise<{ count: number; tasks: ILabelingTaskStatus[] }> => {
-  try {
-    let resp = await axios.get(`${backendHostPort}/api/labeling-tasks/`, {
-      params: params,
-      paramsSerializer: (serializerParams) => {
-        return qs.stringify(serializerParams, { arrayFormat: 'repeat' });
-      }
-    });
-
-    return {
-      tasks: resp.data.results,
-      count: resp.data.count
-    };
-  } catch (error) {
-    if (error && error.response) {
-      throw new Error(error.response.data.message);
-    } else {
-      throw error;
+export const getLabelingTasksRequest = (params: Object) =>
+  getRequest<ILabelingTasksResponse>(`${BE_HOST_PORT}/api/labeling-tasks/`, {
+    params,
+    paramsSerializer: (serializerParams: any) => {
+      return qs.stringify(serializerParams, { arrayFormat: 'repeat' });
     }
-  }
-};
+  });
 
-export const archiveTaskLabelingRequest = async (taskIds: Array<number>): Promise<any> => {
-  try {
-    return await axios.patch(`${backendHostPort}/api/labeling-tasks/archive/`, { id: taskIds });
-  } catch (error) {
-    if (error && error.response) {
-      throw new Error(error.response.data.message);
-    } else {
-      throw error;
-    }
-  }
-};
+export const archiveTaskLabelingRequest = (taskIds: Array<number>) =>
+  patchRequest(`${BE_HOST_PORT}/api/labeling-tasks/archive/`, { id: taskIds });
 
-export const retryLabelingTaskRequest = async (taskIds: Array<number>): Promise<any> => {
-  try {
-    return await axios.patch(`${backendHostPort}/api/labeling-tasks/retry/`, { id: taskIds });
-  } catch (error) {
-    if (error && error.response) {
-      throw new Error(error.response.data.message);
-    } else {
-      throw error;
-    }
-  }
-};
+export const retryLabelingTaskRequest = (id: Array<number>) =>
+  patchRequest(`${BE_HOST_PORT}/api/labeling-tasks/retry/`, { id });

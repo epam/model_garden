@@ -6,6 +6,10 @@ from model_garden.constants import LabelingTaskStatus
 from model_garden.models import Dataset
 
 
+class DatasetIDSerializer(serializers.Serializer):
+  id = serializers.IntegerField(read_only=True)
+
+
 class DatasetSerializer(serializers.ModelSerializer):
   path = serializers.CharField(
     allow_blank=True,

@@ -1,6 +1,6 @@
 from .bucket import BucketSerializer
 from .cvat_user import CvatUserSerializer
-from .dataset import DatasetSerializer, DatasetRawPathSerializer
+from .dataset import DatasetSerializer, DatasetRawPathSerializer, DatasetIDSerializer
 from .labeling_task import (
   LabelingTaskCreateSerializer,
   LabelingTaskIDSerializer,
@@ -13,6 +13,7 @@ __all__ = (
   "CvatUserSerializer",
   "DatasetRawPathSerializer",
   "DatasetSerializer",
+  "DatasetIDSerializer",
   "LabelingTaskCreateSerializer",
   "LabelingTaskIDSerializer",
   "LabelingTaskSerializer",

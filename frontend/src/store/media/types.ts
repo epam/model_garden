@@ -1,13 +1,14 @@
+export interface IFilePreview extends File {
+  preview: string;
+}
+
 export interface IMediaState {
-  addedMediaAssets?: number;
+  imported: number;
   batchName: string;
 }
 
-export interface IUploadFiles {
-  files: File[];
-  bucketId: string;
-  path: string;
-  format: string;
+export interface IUploadFiles extends IAddExistingDataset {
+  files: IFilePreview[];
 }
 
 export interface IAddExistingDataset {

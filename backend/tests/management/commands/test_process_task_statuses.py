@@ -101,6 +101,10 @@ class TestCommand(BaseTransactionTestCase):
     labeling_task.refresh_from_db()
     labeling_task2.refresh_from_db()
 
+    self.s3_client_mock.upload_file_obj.assert_has_calls([
+      mock.call(file_obj=mock.ANY, bucket=media_asset.dataset.bucket.name, key='test_path/test.jpg.xml'),
+      mock.call(file_obj=mock.ANY, bucket=media_asset.dataset.bucket.name, key='test_path/test2.jpg.xml')])
+
     self.assertEqual(labeling_task.error, None)
     self.assertEqual(labeling_task2.error, None)
 

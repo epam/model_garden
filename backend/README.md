@@ -89,7 +89,7 @@ DJANGO_DB_HOST='localhost'
 DJANGO_DB_PORT=5444
 ```
 
-<sup>* - environment specific values</sup>
+<sup>* - environment specific values. Ask the team to provide the real values.</sup>
 
 ### Make sure you have Python 3.8 installed
 ```

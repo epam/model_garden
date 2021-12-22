@@ -1,3 +1,8 @@
+export interface ILabelingTasksResponse {
+  results: ILabelingTaskStatus[];
+  count: number;
+}
+
 export interface ILabelingTaskLabel {
   name: string;
   attributes: [];
