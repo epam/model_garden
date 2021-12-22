@@ -3,7 +3,7 @@ import { IUiState } from './types';
 import { uploadMediaFiles, addExistingDataset } from '../media';
 import { getMediaAssets } from '../gallery';
 import { createLabelingTask } from '../labelingTask';
-import { dataInit } from '../data';
+import { dataInit, removeDataset } from '../data';
 
 const uiSlice = createSlice({
   name: 'ui',
@@ -15,9 +15,14 @@ const uiSlice = createSlice({
     builder
       .addMatcher(
         (action: AnyAction): action is PayloadAction<{}> => {
-          return [addExistingDataset, getMediaAssets, uploadMediaFiles, createLabelingTask, dataInit].some((thunk) =>
-            thunk.pending.match(action)
-          );
+          return [
+            addExistingDataset,
+            getMediaAssets,
+            uploadMediaFiles,
+            createLabelingTask,
+            dataInit,
+            removeDataset
+          ].some((thunk) => thunk.pending.match(action));
         },
         (state) => {
           state.showLoader = true;

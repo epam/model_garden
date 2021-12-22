@@ -1,10 +1,12 @@
-import React from 'react';
-import { makeStyles, Typography } from '@material-ui/core';
+import React, { useState } from 'react';
+import { makeStyles, Typography, Button, Tooltip } from '@material-ui/core';
 import blueGrey from '@material-ui/core/colors/blueGrey';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, useRouteMatch, Redirect } from 'react-router-dom';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { useTypedSelector } from '../../../store';
 import { IBucket, IDataset } from '../../../models';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { ConformationDialog } from '../../shared';
 
 const useStyles = makeStyles(() => ({
   header: {
@@ -30,11 +32,19 @@ const useStyles = makeStyles(() => ({
     '& li': {
       marginRight: '2.5rem'
     }
+  },
+  lastHeaderItem: {
+    marginLeft: 'auto'
   }
 }));
 
-export const ImageGalleryHeader = (): JSX.Element => {
+export const ImageGalleryHeader = ({
+  removeDataset,
+  areTasks
+}: any): JSX.Element => {
   const classes = useStyles();
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [deleteDataset, setDeleteDataset] = useState(false);
 
   const {
     params: { datasetId, bucketId }
@@ -48,8 +58,18 @@ export const ImageGalleryHeader = (): JSX.Element => {
     (dataset: IDataset) => dataset.id === datasetId
   );
 
+  const handleDeleteDataset = () => {
+    removeDataset({ datasetId, bucketId }).then(({ type }: any) => {
+      if (type.match('fulfilled')) {
+        setDeleteDataset(true);
+      }
+    });
+    setOpenConfirmDialog(false);
+  };
+
   return (
     <header className={classes.header}>
+      {deleteDataset ? <Redirect to="/gallery" /> : null}
       <div className={classes.topRow}>
         <Link to="/gallery">
           <ArrowBackIosIcon className={classes.backIcon} />
@@ -59,6 +79,25 @@ export const ImageGalleryHeader = (): JSX.Element => {
           {currentBucket?.name}
           {currentDataset?.path}
         </h1>
+        <Tooltip
+          title={
+            areTasks
+              ? 'Dataset has active tasks. Please archive them before'
+              : ''
+          }
+          arrow
+        >
+          <span className={classes.lastHeaderItem}>
+            <Button
+              color="primary"
+              startIcon={<DeleteIcon />}
+              disabled={areTasks}
+              onClick={() => setOpenConfirmDialog(true)}
+            >
+              DELETE DATASET
+            </Button>
+          </span>
+        </Tooltip>
       </div>
       <div>
         <ul className={classes.info}>
@@ -71,6 +110,16 @@ export const ImageGalleryHeader = (): JSX.Element => {
           <li>FORMAT: {currentDataset?.dataset_format}</li>
         </ul>
       </div>
+      <ConformationDialog
+        title="Delete Dataset Confirmation"
+        closeButton="No, Keep Dataset"
+        confirmButton="Yes, Delete Dataset"
+        open={openConfirmDialog}
+        setOpen={(isOpen: boolean) => setOpenConfirmDialog(isOpen)}
+        handleConfirm={handleDeleteDataset}
+      >
+        <p>Are you sure you want to delete the current dataset?</p>
+      </ConformationDialog>
     </header>
   );
 };

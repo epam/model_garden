@@ -1,12 +1,14 @@
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+
+import { isProd } from '../utils';
 import { uiReducer } from './ui';
 import { errorReducer } from './error';
 import { dataReducer } from './data';
 import { mediaReducer } from './media';
 import { labelingTaskReducer } from './labelingTask';
-import { configureStore } from '@reduxjs/toolkit';
 import { tasksStatusesReducer } from './tasksStatuses';
 import { galleryReducer } from './gallery';
 
@@ -20,7 +22,7 @@ const store = configureStore({
     tasksStatuses: tasksStatusesReducer,
     gallery: galleryReducer
   },
-  devTools: process.env.NODE_ENV !== 'production'
+  devTools: !isProd()
 });
 
 export type TAppState = ReturnType<typeof store.getState>;

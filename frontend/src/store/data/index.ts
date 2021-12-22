@@ -1,29 +1,39 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { IDataState } from './types';
-import { IDataset } from '../../models';
-import { getBucketsRequest, getDatasetsRequest, getLabelingToolUsersRequest } from '../../api';
+
+import { compose, addSlashIfAbsentInField, stringifyField } from '../../utils';
+import { IDataset, IBucket, LabelingToolUser } from '../../models';
+import { getBucketsRequest, getDatasetsRequest, getLabelingToolUsersRequest, deleteDatasetRequest } from '../../api';
+
+interface IDataState {
+  buckets: IBucket[];
+  datasets: IDataset[];
+  labelingToolUsers: LabelingToolUser[];
+}
+
+const getDataState = (
+  buckets: IBucket[] = [],
+  datasets: IDataset[] = [],
+  labelingToolUsers: LabelingToolUser[] = []
+): IDataState => ({
+  buckets,
+  datasets,
+  labelingToolUsers
+});
 
 export const getBuckets = createAsyncThunk('fetchBuckets', async () => {
   const response = await getBucketsRequest();
-  return response.data.results.map((item: any) => ({ ...item, id: `${item.id}` }));
+  return response.results.map(stringifyField('id'));
 });
 
 export const getDatasets = createAsyncThunk('data/fetchDatasets', async (bucketId: string) => {
-  const response = await getDatasetsRequest(bucketId);
-  return [...response.data.results]
-    .sort((a: IDataset, b: IDataset) => (a.path > b.path ? 1 : -1))
-    .map((dataset) => ({
-      ...dataset,
-      id: `${dataset.id}`,
-      path: `${dataset.path.split('')[0] === '/' ? '' : '/'}${dataset.path}`
-    }));
+  const data = await getDatasetsRequest(bucketId);
+  return data.results
+    .sort((a, b) => (a.path > b.path ? 1 : -1))
+    .map(compose<IDataset>(stringifyField('id'))(addSlashIfAbsentInField('path')));
 });
 
-export const getLabelingToolUsers = createAsyncThunk('fetchUsers', async () => {
-  const response = await getLabelingToolUsersRequest();
-  return response.data;
-});
+export const getLabelingToolUsers = createAsyncThunk('fetchUsers', getLabelingToolUsersRequest);
 
 export const dataInit = createAsyncThunk('data/init', async () => {
   //special thunk that loads buckets and users in one action
@@ -40,18 +50,18 @@ export const dataInit = createAsyncThunk('data/init', async () => {
     toast.error(bucketsResponse.reason.message || 'Error fetching Buckets', { autoClose: false });
   }
 
-  return {
-    buckets: (bucketsResponse as any).value?.data.results.map((item: any) => ({ ...item, id: `${item.id}` })) ?? [],
-    labelingToolUsers: (usersResponse as any).value?.data ?? []
-  };
+  return getDataState(
+    (bucketsResponse as any).value?.results.map(stringifyField('id')) ?? [],
+    [],
+    (usersResponse as any).value || []
+  );
 });
+
+export const removeDataset = createAsyncThunk('data/removeDataset', deleteDatasetRequest);
+
 const dataSlice = createSlice({
   name: 'data',
-  initialState: {
-    buckets: [], // list of buckets that populates the dropdown field.
-    datasets: [], // datasets field to display datasetCard.
-    labelingToolUsers: [] // list of users to populate dropdown , used in dataset and gallery modal.
-  } as IDataState,
+  initialState: getDataState(),
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -67,6 +77,14 @@ const dataSlice = createSlice({
       .addCase(dataInit.fulfilled, (state, { payload }) => {
         state.buckets = payload.buckets;
         state.labelingToolUsers = payload.labelingToolUsers;
+      })
+      .addCase(removeDataset.fulfilled, () => {
+        toast.success('Dataset has been deleted', { autoClose: 6000 });
+      })
+      .addCase(removeDataset.rejected, (state, { error }) => {
+        // TODO: check error.message nesting. Does "Action" have "error" field?
+        // Probably it should be: payload.message | payload.error.message?
+        toast.error(`Error: ${error.message || 'Something went wrong, Dataset NOT Deleted.'}`, { autoClose: 4000 });
       });
   }
 });

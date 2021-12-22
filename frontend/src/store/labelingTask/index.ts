@@ -4,15 +4,20 @@ import { ILabelingTaskRequestData } from '../../models';
 import { createLabelingTaskRequest, getUnsignedImagesCountRequest } from '../../api';
 import { Notification } from '../../components/tasksStatuses/createTaskDialog/notification';
 
-export interface ILabelingTasksState {
-  unsignedImagesCount: number;
-  openCreateTaskDialog: boolean;
+interface ILabelingTasksState {
+  unsignedImagesCount: number; // Number of images in the dataset without task
+  openCreateTaskDialog: boolean; // Boolean state of the Create Task Dialog Form
 }
 
-export const getUnsignedImagesCount = createAsyncThunk('fetchUnsignedImagesCount', async (datasetId: string) => {
-  const response = await getUnsignedImagesCountRequest(datasetId);
-  return response.data.count;
+const getTasksState = (
+  unsignedImagesCount: number = 0,
+  openCreateTaskDialog: boolean = false
+): ILabelingTasksState => ({
+  unsignedImagesCount,
+  openCreateTaskDialog
 });
+
+export const getUnsignedImagesCount = createAsyncThunk('fetchUnsignedImagesCount', getUnsignedImagesCountRequest);
 
 export const createLabelingTask = createAsyncThunk('createLabelingTask', async (taskData: any) => {
   const params: ILabelingTaskRequestData = {
@@ -28,10 +33,7 @@ export const createLabelingTask = createAsyncThunk('createLabelingTask', async (
 
 const labelingTaskSlice = createSlice({
   name: 'labelingTask',
-  initialState: {
-    unsignedImagesCount: 0, // Number of images in the dataset without task
-    openCreateTaskDialog: false // Boolean state of the Create Task Dialog Form
-  } as ILabelingTasksState,
+  initialState: getTasksState(),
   reducers: {
     clearUnsignedImagesCount(state) {
       state.unsignedImagesCount = 0;
@@ -43,7 +45,7 @@ const labelingTaskSlice = createSlice({
   extraReducers: (builder) =>
     builder
       .addCase(getUnsignedImagesCount.fulfilled, (state, action) => {
-        state.unsignedImagesCount = action.payload;
+        state.unsignedImagesCount = action.payload.count;
       })
       .addCase(createLabelingTask.fulfilled, (_, action) => {
         toast.success(Notification(action.payload), { autoClose: 6000 });

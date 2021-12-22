@@ -1,5 +1,11 @@
 import React from 'react';
-import { withStyles, MenuItem, Paper, Typography } from '@material-ui/core';
+import {
+  withStyles,
+  MenuItem,
+  Paper,
+  Typography,
+  StyledComponentProps
+} from '@material-ui/core';
 import { IBucket } from '../../models';
 
 export const UploadPaper = withStyles({
@@ -18,7 +24,12 @@ export const UploadDescription = withStyles({
     alignItems: 'center',
     padding: '1.25rem'
   }
-})(Typography);
+})((props: StyledComponentProps) => (
+  <Typography className={props.classes?.root} variant="body2">
+    Images should be already upload to the bucket (e.g. by CyberDuck) and not to
+    be referenced in the database yet
+  </Typography>
+));
 
 export const BucketsSelect = (buckets: IBucket[]): Array<JSX.Element> =>
   buckets.map((bucket: IBucket) => (

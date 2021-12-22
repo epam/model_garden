@@ -11,6 +11,9 @@ import {
 import SearchIcon from '@material-ui/icons/Search';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import { Empty } from 'antd';
+import { connect } from 'react-redux';
+
+import { isProd, includesIgnoreCase } from '../../../utils';
 import { useTypedSelector, TAppState } from '../../../store';
 import { IDataset, IBucket } from '../../../models';
 import { createLabelingTask } from '../../../store/labelingTask';
@@ -21,14 +24,15 @@ import { ImageGalleryHeader } from './ImageGalleryHeader';
 import { TasksTable } from './TasksTable';
 import { DropZone } from '../../shared';
 import { TaskForm } from './TaskForm';
-import { connect } from 'react-redux';
+import { removeDataset } from '../../../store/data';
 
-const ImageGallery = (props: any) => {
+const ImageGalleryComponent = (props: any) => {
   const { photos, datasets, buckets, tasks } = props;
   const {
     uploadMediaFiles: propsUploadMediaFiles,
     imageGalleryInit: propsImageGalleryInit,
-    getMediaAssets: propsGetMediaAssets
+    getMediaAssets: propsGetMediaAssets,
+    removeDataset: propsRemoveDataset
   } = props;
 
   const {
@@ -48,11 +52,11 @@ const ImageGallery = (props: any) => {
   const [checklist, setCheckList] = useState([]);
 
   const filteredPhotos = useTypedSelector(({ gallery }) =>
-    gallery.mediaAssets.filter((photo) =>
-      searchTerm
-        ? photo.filename.toLowerCase().includes(searchTerm.toLowerCase())
-        : true
-    )
+    searchTerm
+      ? gallery.mediaAssets.filter((photo) =>
+          includesIgnoreCase(photo.filename, searchTerm)
+        )
+      : gallery.mediaAssets
   );
 
   useEffect(() => {
@@ -85,9 +89,12 @@ const ImageGallery = (props: any) => {
 
   return (
     <>
-      <ImageGalleryHeader />
+      <ImageGalleryHeader
+        removeDataset={propsRemoveDataset}
+        areTasks={!!tasks.length}
+      />
       <Container maxWidth={'xl'}>
-        <TasksTable tasks={tasks} />
+        <TasksTable tasks={tasks} datasetId={datasetId} />
         {!photos.length && (
           <Link
             to={{
@@ -121,7 +128,7 @@ const ImageGallery = (props: any) => {
             />
           </Grid>
 
-          {process.env.NODE_ENV !== 'production' && (
+          {!isProd() && (
             <Grid item xs={12} sm={6} md={3}>
               <Tooltip
                 title={!checklist.length ? 'No images selected' : ''}
@@ -149,6 +156,7 @@ const ImageGallery = (props: any) => {
           {filteredPhotos.map((image: any) => (
             <Grid item xs={6} sm={4} md={3} lg={2} key={image.remote_path}>
               <ImageCard
+                datasetFormat={currentDataset.dataset_format}
                 image={image}
                 checklist={checklist}
                 setCheckList={setCheckList}
@@ -169,15 +177,21 @@ const ImageGallery = (props: any) => {
   );
 };
 
-const MapStateToProps = ({ gallery, data }: TAppState) => ({
+const mapStateToProps = ({ gallery, data }: TAppState) => ({
   photos: gallery.mediaAssets,
   datasets: data.datasets,
   buckets: data.buckets,
   tasks: gallery.tasks
 });
 
-export default connect(MapStateToProps, {
+const mapActionsToProps = {
   imageGalleryInit,
   uploadMediaFiles,
-  getMediaAssets
-})(ImageGallery);
+  getMediaAssets,
+  removeDataset
+};
+
+export const ImageGallery = connect(
+  mapStateToProps,
+  mapActionsToProps
+)(ImageGalleryComponent);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link as RouterLink, useRouteMatch } from 'react-router-dom';
 import { makeStyles, Grid, Link, Paper } from '@material-ui/core';
 import blueGrey from '@material-ui/core/colors/blueGrey';
@@ -7,6 +7,7 @@ import { Empty } from 'antd';
 
 import { IDataset } from '../../../models';
 import { useTypedSelector } from '../../../store';
+import { includesIgnoreCase } from '../../../utils';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -92,17 +93,27 @@ const useStyles = makeStyles((theme) => ({
 
 export const DatasetGrid = ({
   searchTerm,
-  currentBucketId
+  currentBucketId,
+  datasetLengthChange,
+  paginationConfig
 }: any): JSX.Element | null => {
   const classes = useStyles();
-  const datasets = useTypedSelector(({ data }) =>
-    data.datasets.filter((dataset) =>
-      searchTerm
-        ? dataset.path.toLowerCase().includes(searchTerm.toLowerCase())
-        : true
-    )
+
+  const results = useTypedSelector(({ data }) =>
+    searchTerm
+      ? data.datasets.filter((dataset) =>
+          includesIgnoreCase(dataset.path, searchTerm)
+        )
+      : data.datasets
   );
+
+  const { offsetStart, offsetEnd } = paginationConfig;
+  const datasets = results.slice(offsetStart, offsetEnd);
   const match = useRouteMatch();
+  useEffect(() => datasetLengthChange(results.length), [
+    datasetLengthChange,
+    results.length
+  ]);
 
   if (!currentBucketId) {
     // we have to make sure we hide datasets if we don't have an active bucketId , otherwise we won't have a bucketID to navigate to

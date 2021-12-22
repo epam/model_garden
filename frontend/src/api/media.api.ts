@@ -1,56 +1,39 @@
-import axios from 'axios';
-import { backendHostPort } from './environment';
+import { BE_HOST_PORT, postRequest } from './api.service';
+import { IUploadFiles, IAddExistingDataset, IFilePreview } from '../store/media/types';
 
-export const uploadMediaFilesRequest = async (
-  files: File[],
-  bucketId: string,
-  path: string,
-  format: string
-): Promise<any> => {
-  try {
-    const formData = new FormData();
-    files.forEach((file) => formData.append('file', file));
-    formData.append('bucketId', bucketId);
-    if (path) {
-      formData.append('path', path);
-    }
-    if (format) {
-      formData.append('dataset_format', format);
-    }
-    return await axios.post(`${backendHostPort}/api/media-assets/upload/`, formData, {
-      headers: {
-        'Content-Type': 'application/zip'
-      }
+interface IUploadResponse {
+  message: string;
+}
+
+interface IAddExistingDataResponse {
+  imported: number;
+}
+
+type RequestData = IUploadFiles | IAddExistingDataset;
+
+const getUrl = (path: string) => `${BE_HOST_PORT}/api/media-assets/${path}/`;
+
+const getFormData = (data: RequestData): FormData => {
+  const formData = new FormData();
+  formData.append('bucketId', data.bucketId);
+  formData.append('path', data.path);
+  formData.append('dataset_format', data.format);
+
+  if ((data as IUploadFiles).files) {
+    (data as IUploadFiles).files.forEach((file: IFilePreview) => {
+      formData.append('file', file);
     });
-  } catch (error) {
-    if (error && error.response) {
-      throw new Error(error.response.data.message);
-    } else {
-      throw error;
-    }
   }
+
+  return formData;
 };
 
-export const addExistingDatasetRequest = async (bucketId: string, path: string, format: string): Promise<any> => {
-  try {
-    const formData = new FormData();
-    formData.append('bucketId', bucketId);
-    if (path) {
-      formData.append('path', path);
+const makeReuest = <IRes, IReq extends RequestData>(path: string) => (data: IReq) =>
+  postRequest<IRes>(getUrl(path), getFormData(data), {
+    headers: {
+      'Content-Type': 'application/zip'
     }
-    if (format) {
-      formData.append('dataset_format', format);
-    }
-    return await axios.post(`${backendHostPort}/api/media-assets/import-s3/`, formData, {
-      headers: {
-        'Content-Type': 'application/zip'
-      }
-    });
-  } catch (error) {
-    if (error && error.response) {
-      throw new Error(error.response.data.message);
-    } else {
-      throw error;
-    }
-  }
-};
+  });
+
+export const uploadMediaFilesRequest = makeReuest<IUploadResponse, IUploadFiles>('upload');
+export const addExistingDatasetRequest = makeReuest<IAddExistingDataResponse, IAddExistingDataset>('import-s3');

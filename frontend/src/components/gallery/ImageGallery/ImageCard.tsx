@@ -1,15 +1,14 @@
-import React from 'react';
-import {
-  makeStyles,
-  withStyles,
-  Paper,
-  Checkbox,
-  FormControlLabel
-} from '@material-ui/core';
+import React, { useState, useRef, useLayoutEffect } from 'react';
+import { makeStyles, Paper, Checkbox } from '@material-ui/core';
+import { Modal } from 'antd';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 import GetAppIcon from '@material-ui/icons/GetApp';
 
-const useStyles = makeStyles(() => ({
+import { StyledCheckboxLabel } from './StyledCheckboxLabel';
+import { isProd } from '../../../utils';
+import { initCanvas, check } from './utils';
+
+const useStyles = makeStyles((theme) => ({
   card: {
     position: 'relative',
     overflow: 'hidden',
@@ -32,11 +31,16 @@ const useStyles = makeStyles(() => ({
     height: '8.4375rem',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    cursor: 'pointer'
   },
   img: {
     maxHeight: '100%',
     maxWidth: '100%'
+  },
+  canvas: {
+    width: '100%',
+    height: 'auto'
   },
   download: {
     color: 'white',
@@ -53,59 +57,54 @@ const useStyles = makeStyles(() => ({
     '&:hover': {
       backgroundColor: blueGrey[800]
     }
+  },
+  imgPreview: {
+    position: 'relative'
   }
 }));
-
-const StyledCheckboxLabel = withStyles({
-  root: {
-    width: '100%',
-    margin: '-0.75rem 0 0 -0.75rem'
-  },
-  label: {
-    whiteSpace: 'nowrap',
-    fontSize: '0.875rem',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    fontWeight: 500
-  }
-})(FormControlLabel);
 
 export const ImageCard = ({
   image,
   setCheckList,
-  checklist
+  checklist,
+  datasetFormat
 }: any): JSX.Element => {
   const classes = useStyles();
   const { remote_path, remote_label_path, filename: fileName } = image;
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const [isOpenImagePreview, setOpenImagePreview] = useState(false);
 
-  const check = (fileNameParam: string) =>
-    setCheckList((ps: string[]) =>
-      ps
-        .filter((x) => ![fileNameParam].includes(x))
-        .concat([fileNameParam].filter((x) => !ps.includes(x)))
-    );
+  useLayoutEffect(() => {
+    if (isOpenImagePreview) {
+      initCanvas(canvas.current, datasetFormat, remote_label_path, remote_path);
+    }
+  }, [isOpenImagePreview, datasetFormat, remote_label_path, remote_path]);
 
   return (
     <Paper className={classes.card}>
       <div className={classes.info}>
         {/* todo: Feature toogle. Remove after BE API will be ready */}
-        {process.env.NODE_ENV !== 'production' ? (
+        {isProd() ? (
+          <strong className={classes.filename} title={fileName}>
+            {fileName}
+          </strong>
+        ) : (
           <StyledCheckboxLabel
             title={fileName}
             label={fileName}
             checked={checklist.includes(fileName)}
-            onChange={() => check(fileName)}
+            onChange={() => check(setCheckList, fileName)}
             control={<Checkbox size="small" />}
           />
-        ) : (
-          <strong className={classes.filename} title={fileName}>
-            {fileName}
-          </strong>
         )}
         {image.labeling_task_name && `Task: ${image.labeling_task_name}`}
       </div>
 
-      <div className={classes.imgWrap}>
+      <div
+        className={classes.imgWrap}
+        onClick={() => setOpenImagePreview(true)}
+        title="Click to open preview"
+      >
         <img className={classes.img} src={remote_path} alt={fileName}></img>
       </div>
       {remote_label_path && (
@@ -118,6 +117,17 @@ export const ImageCard = ({
           Download Label <GetAppIcon />
         </button>
       )}
+      {/* TODO: Remove Modal from each Image component. Keep only one Modal instance on the page */}
+      <Modal
+        title={fileName}
+        visible={isOpenImagePreview}
+        onCancel={() => setOpenImagePreview(false)}
+        footer={null}
+      >
+        <div className={classes.imgPreview}>
+          <canvas className={classes.canvas} ref={canvas}></canvas>
+        </div>
+      </Modal>
     </Paper>
   );
 };

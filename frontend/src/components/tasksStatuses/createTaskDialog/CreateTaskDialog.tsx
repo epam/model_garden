@@ -201,7 +201,7 @@ const LabelingTaskComponent: React.FC<ILabelingProps> = (props) => {
       scroll="body"
     >
       <DialogTitle>Create Tasks</DialogTitle>
-      <form onSubmit={onSubmit} className="dialog-form">
+      <form onSubmit={onSubmit}>
         <CustomDialogContent dividers>
           <FormControl>
             <InputLabel id="task-bucket-name">Bucket</InputLabel>

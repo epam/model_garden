@@ -1,36 +1,13 @@
-import axios from 'axios';
 import { ILabelingTaskRequestData } from '../models';
-import { backendHostPort } from './environment';
+import { BE_HOST_PORT, getRequest, rawPostRequest } from './api.service';
 
-axios.defaults.headers = {
-  'Content-Type': 'application/json'
-};
-
-export const getUnsignedImagesCountRequest = async (datasetId: string): Promise<any> => {
-  try {
-    return await axios.get(`${backendHostPort}/api/media-assets/`, {
-      params: {
-        dataset_id: datasetId,
-        is_pending: true
-      }
-    });
-  } catch (error) {
-    if (error && error.response) {
-      throw new Error(error.response.data.message);
-    } else {
-      throw error;
+export const getUnsignedImagesCountRequest = (dataset_id: string) =>
+  getRequest<{ count: number }>(`${BE_HOST_PORT}/api/media-assets/`, {
+    params: {
+      dataset_id,
+      is_pending: true
     }
-  }
-};
+  });
 
-export const createLabelingTaskRequest = async (taskData: ILabelingTaskRequestData): Promise<any> => {
-  try {
-    return await axios.post(`${backendHostPort}/api/labeling-tasks/`, taskData);
-  } catch (error) {
-    if (error && error.response) {
-      throw new Error(error.response.data.message);
-    } else {
-      throw error;
-    }
-  }
-};
+export const createLabelingTaskRequest = (taskData: ILabelingTaskRequestData) =>
+  rawPostRequest<any>(`${BE_HOST_PORT}/api/labeling-tasks/`, taskData);
